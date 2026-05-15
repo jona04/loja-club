@@ -9,6 +9,8 @@ A Loja Club será uma plataforma multi-tenant de ecommerce. Segurança é críti
 - pedidos;
 - endereços;
 - transações;
+- arquivos de personalização enviados por clientes;
+- modelos 3D;
 - permissões;
 - domínios;
 - webhooks de pagamento.
@@ -25,6 +27,7 @@ A Loja Club será uma plataforma multi-tenant de ecommerce. Segurança é críti
 8. Uploads devem ser validados.
 9. Ações sensíveis devem gerar auditoria.
 10. Admins internos devem ter acesso controlado.
+11. Arte enviada por cliente deve ser privada por padrão.
 
 ## Autenticação
 
@@ -115,9 +118,27 @@ Uploads devem validar:
 - limite por plano;
 - quantidade por produto.
 
-Imagens devem ir para S3.
+Imagens, artes de personalização e modelos 3D devem ir para S3.
 
 Não salvar arquivos no backend.
+
+## Personalização 3D
+
+Arquivos de personalização são sensíveis porque podem conter marcas, imagens pessoais, logos de clientes ou material comercial.
+
+Regras:
+
+- validar upload do cliente;
+- separar arquivos por `store_id`;
+- usar URLs assinadas para arquivos privados;
+- não expor arquivo original em URL pública permanente;
+- limitar tamanho e quantidade por sessão;
+- registrar acesso do lojista a arquivos enviados pelo cliente;
+- congelar a personalização aprovada no pedido;
+- impedir que sessão editável altere pedido já criado.
+
+Modelos 3D globais da Loja Club podem ser públicos via CDN quando não contiverem dados sensíveis.
+Arquivos enviados pelo cliente não devem seguir a mesma regra dos assets públicos.
 
 ## Pagamentos
 
@@ -187,6 +208,7 @@ Dados típicos:
 - endereço;
 - histórico de pedidos;
 - dados de entrega.
+- arquivos enviados em personalização.
 
 Medidas necessárias:
 
@@ -205,6 +227,8 @@ Registrar:
 - login;
 - falhas de login;
 - alterações de produto;
+- alteração de configuração de personalização;
+- acesso a arte enviada pelo cliente;
 - alteração de preço;
 - alteração de conta de pagamento;
 - alteração de domínio;
@@ -247,4 +271,4 @@ Cuidado com wildcard amplo em APIs autenticadas.
 
 ## Decisão canônica
 
-A segurança da Loja Club depende principalmente de isolamento por `store_id`, permissões fortes no backend, validação de webhooks, não armazenar dados sensíveis de pagamento, auditoria e gestão segura de segredos.
+A segurança da Loja Club depende principalmente de isolamento por `store_id`, permissões fortes no backend, validação de webhooks, não armazenar dados sensíveis de pagamento, auditoria, gestão segura de segredos e tratamento privado dos arquivos de personalização.

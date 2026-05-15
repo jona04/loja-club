@@ -23,6 +23,7 @@ usuário acessa loja
 loja tem produtos
 loja tem pedidos
 loja tem clientes
+loja tem personalizações
 ```
 
 E não:
@@ -207,6 +208,7 @@ Isso se aplica a:
 - clientes;
 - pedidos;
 - carrinhos;
+- sessões de personalização;
 - cupons;
 - frete;
 - pagamentos;

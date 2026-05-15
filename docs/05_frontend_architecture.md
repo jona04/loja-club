@@ -59,6 +59,7 @@ Responsabilidades:
 - dashboard de vendas;
 - produtos;
 - pedidos;
+- personalizações;
 - clientes;
 - checkout;
 - pagamentos;
@@ -108,6 +109,7 @@ Responsabilidades:
 - gerenciar planos;
 - ver webhooks com erro;
 - gerenciar templates/layouts;
+- gerenciar biblioteca global de modelos 3D;
 - consultar logs de auditoria;
 - suporte ao lojista.
 
@@ -128,17 +130,20 @@ Responsabilidades:
 - homepage;
 - página de categoria;
 - página de produto;
+- editor de personalização 3D;
 - carrinho;
 - checkout;
 - páginas institucionais;
 - SEO;
 - renderização do template escolhido;
 - leitura de configurações públicas da loja;
-- navegação rápida com cache/CDN.
+- navegação rápida com cache/CDN;
+- botão flutuante de WhatsApp, quando configurado pela loja.
 
 Tecnologia recomendada:
 
-- Next.js para storefront público.
+- Next.js para storefront público;
+- Three.js para editor 3D de produtos personalizáveis.
 
 Motivos:
 
@@ -148,15 +153,19 @@ Motivos:
 - boa experiência em páginas públicas;
 - melhor adequação para ecommerce público.
 
-Alternativa para acelerar a V1:
+Motivos para Three.js:
 
-- usar Vite também no storefront inicialmente.
+- roda no navegador;
+- permite manipular modelos 3D no produto;
+- permite aplicar imagem enviada pelo cliente como textura;
+- permite gerar preview visual antes de adicionar ao carrinho.
 
 Decisão recomendada:
 
 - usar React/Vite do template para painel;
 - usar React/Vite para admin interno em projeto separado;
-- usar Next.js para loja pública.
+- usar Next.js para loja pública desde a V1;
+- usar Three.js no storefront para personalização 3D.
 
 ## Containers frontend
 
@@ -231,6 +240,7 @@ Menu sugerido:
 Dashboard
 Produtos
 Pedidos
+Personalizações
 Clientes
 Checkout
 Pagamentos
@@ -253,6 +263,24 @@ Exemplo:
 ```text
 Admin João acessou a Loja X em modo suporte às 14:32.
 ```
+
+## Personalização 3D no storefront
+
+Produtos personalizáveis devem abrir um editor 3D no `frontend-storefront`.
+
+Fluxo:
+
+1. cliente acessa produto personalizável;
+2. clica em `Personalizar`;
+3. storefront carrega modelo 3D publicado pela Loja Club;
+4. cliente envia imagem;
+5. cliente ajusta cor, posição, escala e rotação conforme o modelo permitir;
+6. sessão é salva automaticamente;
+7. cliente aprova visualmente;
+8. item personalizado é adicionado ao carrinho.
+
+O editor deve salvar o estado no backend para permitir continuidade depois.
+Quando o pedido for criado, a personalização aprovada deve ficar congelada no item do pedido.
 
 ## Decisão canônica
 

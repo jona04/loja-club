@@ -10,6 +10,9 @@ Essa decisão resolve três necessidades:
 2. permitir controle de acesso por usuário;
 3. permitir bloqueio de funcionalidades por plano.
 
+A V1 também terá personalização 3D de produtos.
+Esse módulo deve ser controlado por plano e permissão, porque será um diferencial importante para brindes, gráficas e comunicação visual.
+
 ## Modelo de usuários
 
 Um usuário pode gerenciar várias lojas.
@@ -92,6 +95,7 @@ Pode:
 
 - gerenciar produtos;
 - gerenciar pedidos;
+- gerenciar personalizações;
 - gerenciar clientes;
 - alterar layout;
 - configurar checkout;
@@ -188,6 +192,7 @@ Não pode:
 | Dashboard | `dashboard.view` |
 | Produtos | `catalog.view` |
 | Pedidos | `orders.view` |
+| Personalizações | `customization.view` |
 | Clientes | `customers.view` |
 | Checkout | `checkout.view` |
 | Pagamentos | `payments.view` |
@@ -211,6 +216,17 @@ catalog.product.update
 catalog.product.delete
 catalog.inventory.update
 catalog.category.manage
+catalog.product_customization.update
+```
+
+### Personalizações
+
+```text
+customization.view
+customization.sessions.view
+customization.files.download
+customization.production_status.update
+customization.models.assign
 ```
 
 ### Pedidos
@@ -330,6 +346,8 @@ platform.plans.update
 platform.webhooks.view
 platform.audit.view
 platform.support.impersonate
+platform.3d_models.view
+platform.3d_models.manage
 ```
 
 ## Regra de autorização

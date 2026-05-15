@@ -14,6 +14,7 @@ Não basta o sistema funcionar localmente. É necessário saber quando:
 - e-mail não foi enviado;
 - loja está com erro;
 - pagamento está inconsistente.
+- personalização 3D está falhando.
 
 ## Ferramentas sugeridas
 
@@ -42,6 +43,7 @@ Campos úteis:
 - gateway;
 - order id;
 - payment transaction id.
+- customization session id.
 
 ## Health checks
 
@@ -73,6 +75,17 @@ O health check público pode ser simples. Health checks internos podem validar d
 - pagamentos recusados;
 - falhas ao chamar gateway;
 - tempo entre pedido e confirmação.
+
+### Personalização 3D
+
+- sessões iniciadas;
+- sessões aprovadas;
+- sessões abandonadas;
+- uploads com erro;
+- tempo médio até aprovação;
+- falhas ao carregar modelo 3D;
+- falhas ao salvar sessão;
+- pedidos com produto personalizado.
 
 ### Webhooks
 
@@ -119,6 +132,8 @@ Alertas recomendados:
 - worker indisponível;
 - certificado perto de expirar;
 - taxa de pagamento com erro incomum.
+- falhas de upload de personalização acima de limite;
+- falhas de carregamento de modelos 3D acima de limite.
 
 ## Auditoria operacional
 
@@ -127,6 +142,8 @@ A tabela `audit_logs` deve registrar ações importantes de negócio.
 Exemplos:
 
 - alteração de preço;
+- alteração de modelo 3D vinculado ao produto;
+- acesso a arquivo de personalização;
 - alteração de gateway;
 - reembolso;
 - cancelamento de pedido;
@@ -141,6 +158,7 @@ O admin interno deve permitir investigar:
 - status da loja;
 - status do domínio;
 - últimos pedidos;
+- últimas personalizações;
 - últimos webhooks;
 - status do gateway;
 - logs de erro relevantes;
@@ -173,4 +191,4 @@ Todas devem gerar auditoria.
 
 ## Decisão canônica
 
-A V1 precisa ter logs, Sentry, CloudWatch, health checks, auditoria de negócio e visibilidade específica para checkout, pagamentos e webhooks.
+A V1 precisa ter logs, Sentry, CloudWatch, health checks, auditoria de negócio e visibilidade específica para checkout, personalização 3D, pagamentos e webhooks.

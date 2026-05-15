@@ -20,6 +20,8 @@ Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídic
 - Política de responsabilidade por entrega.
 - Política de entrega combinada.
 - Política de responsabilidade por produto.
+- Política de arte enviada pelo cliente.
+- Política de produção personalizada.
 - Política de uso aceitável.
 - Definição de que a Loja Club é plataforma tecnológica, não vendedora.
 - Definição de que o lojista é o vendedor oficial.
@@ -38,6 +40,8 @@ A Loja Club:
 - fornece infraestrutura de loja;
 - integra checkout ao gateway;
 - recebe comissão via split;
+- fornece biblioteca de modelos 3D;
+- fornece ferramenta de personalização visual;
 - não vende os produtos;
 - não entrega os produtos;
 - não emite nota fiscal dos produtos dos lojistas;
@@ -48,6 +52,7 @@ A Loja Club:
 O lojista:
 
 - vende o produto;
+- produz ou terceiriza a produção personalizada;
 - define preço;
 - gerencia estoque;
 - entrega o produto;
@@ -56,7 +61,15 @@ O lojista:
 - emite nota fiscal quando aplicável;
 - responde por troca/devolução;
 - responde por produto com defeito;
+- responde por divergência entre arte aprovada e produto entregue;
 - responde por chargebacks comerciais.
+
+O cliente final:
+
+- envia a arte quando personaliza produto;
+- deve aprovar visualmente a personalização antes da compra;
+- responde pelo direito de uso das imagens, logos ou marcas que enviar, conforme termos;
+- deve conferir dados e arte antes de confirmar o pedido.
 
 O gateway:
 
@@ -77,3 +90,6 @@ O gateway:
 - [ ] Definir política de bloqueio de loja.
 - [ ] Definir política de chargeback.
 - [ ] Definir política de LGPD.
+- [ ] Definir termos para upload de arte pelo cliente.
+- [ ] Definir responsabilidade sobre marcas/logos enviados pelo cliente.
+- [ ] Definir regra para divergência entre preview aprovado e produto entregue.

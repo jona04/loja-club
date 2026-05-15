@@ -20,6 +20,7 @@ Menu recomendado:
 Dashboard
 Produtos
 Pedidos
+Personalizações
 Clientes
 Checkout
 Pagamentos
@@ -45,6 +46,7 @@ A primeira tela deve mostrar:
 - status da loja;
 - status do pagamento/gateway;
 - produtos ativos;
+- personalizações recentes;
 - alertas importantes;
 - atalhos para cadastrar produto e ver pedidos.
 
@@ -82,7 +84,25 @@ Funcionalidades:
 - definir categoria;
 - definir preço;
 - definir slug;
+- marcar produto como personalizável;
+- vincular modelo 3D disponível;
 - marcar produto como destaque.
+
+### Produtos personalizáveis
+
+O lojista deve conseguir ativar personalização 3D em produtos compatíveis.
+
+Na V1, os modelos 3D são criados e publicados pela Loja Club.
+O lojista escolhe um modelo disponível para o produto, como caneca, squeeze ou camisa.
+
+Funcionalidades:
+
+- habilitar/desabilitar personalização;
+- escolher modelo 3D publicado pela Loja Club;
+- definir se cor do produto pode ser alterada;
+- definir observações de produção;
+- ver preview básico do modelo;
+- manter imagens tradicionais para listagem e fallback.
 
 ## Pedidos
 
@@ -94,12 +114,33 @@ Funcionalidades:
 - ver detalhe do pedido;
 - ver cliente;
 - ver itens comprados;
+- ver personalização aprovada, quando houver;
 - ver pagamento;
 - atualizar status operacional;
 - adicionar nota interna;
 - cancelar pedido quando permitido;
 - solicitar/processar reembolso se permitido;
 - ver histórico de status.
+
+## Personalizações
+
+O painel deve ter uma área para acompanhar personalizações de produtos.
+
+Objetivo:
+
+- ver sessões recentes de personalização;
+- identificar clientes que enviaram arte;
+- abrir preview do produto personalizado;
+- verificar arquivo original enviado;
+- entender se a arte parece possível de produzir;
+- acessar pedido vinculado, quando existir.
+- acompanhar a sessão quase em tempo real a partir do autosave do cliente.
+
+Na V1, não haverá chat interno completo.
+A loja pode usar o botão de WhatsApp configurado no storefront para conversar com o cliente quando ele pedir ajuda ou quando houver um pedido claro.
+
+O lojista não deve alterar a arte aprovada pelo cliente sem gerar uma nova aprovação.
+O pedido precisa preservar o que o cliente confirmou no storefront.
 
 ## Clientes
 
@@ -281,9 +322,10 @@ A V1 deve ter checklist inicial:
 1. Criar loja
 2. Escolher layout
 3. Cadastrar primeiro produto
-4. Configurar pagamento
-5. Configurar entrega
-6. Publicar loja
+4. Vincular modelo 3D, se o produto for personalizável
+5. Configurar pagamento
+6. Configurar entrega
+7. Publicar loja
 ```
 
 Isso ajuda o lojista a chegar mais rápido na primeira venda.

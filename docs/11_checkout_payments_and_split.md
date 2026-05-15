@@ -43,18 +43,20 @@ A comissão da Loja Club será definida pelo plano da loja.
 ## Fluxo de checkout
 
 1. Cliente adiciona produtos ao carrinho.
-2. Cliente inicia checkout.
-3. Sistema valida estoque e valores.
-4. Cliente escolhe forma de entrega.
-5. Sistema cria pedido pendente.
-6. Sistema cria transação/cobrança no gateway.
-7. Gateway processa pagamento.
-8. Gateway aplica split.
-9. Gateway envia webhook.
-10. Backend valida webhook.
-11. Backend atualiza transação.
-12. Backend atualiza pedido.
-13. Cliente e lojista recebem notificação.
+2. Se houver produto personalizável, cliente aprova a personalização antes do checkout.
+3. Cliente inicia checkout.
+4. Sistema valida estoque, valores e personalizações aprovadas.
+5. Cliente escolhe forma de entrega.
+6. Sistema cria pedido pendente.
+7. Sistema congela a personalização nos itens do pedido.
+8. Sistema cria transação/cobrança no gateway.
+9. Gateway processa pagamento.
+10. Gateway aplica split.
+11. Gateway envia webhook.
+12. Backend valida webhook.
+13. Backend atualiza transação.
+14. Backend atualiza pedido.
+15. Cliente e lojista recebem notificação.
 
 ## Pedido pendente
 
@@ -71,11 +73,37 @@ Esse pedido precisa registrar:
 - endereço;
 - itens;
 - preços no momento da compra;
+- personalizações aprovadas;
 - frete;
 - método de entrega;
 - desconto;
 - total;
 - status.
+
+## Produtos personalizáveis no checkout
+
+Produtos personalizáveis em 3D só podem avançar para checkout quando a personalização estiver aprovada.
+
+Regra:
+
+```text
+cart_item de produto customizable_3d exige customization_session status approved
+```
+
+Ao criar o pedido, o sistema deve copiar a personalização para o item do pedido.
+
+Dados que devem ser congelados:
+
+- modelo 3D usado;
+- versão do modelo;
+- JSON de parâmetros;
+- imagem original enviada pelo cliente;
+- preview renderizado;
+- snapshot aprovado;
+- data da aprovação.
+
+Depois que o pedido for criado, alterações na sessão original não podem mudar o pedido.
+Se o cliente quiser alterar a arte, deve gerar nova personalização ou novo item.
 
 ## Entrega combinada
 
@@ -272,10 +300,12 @@ Todo webhook deve validar:
 | Gateway indisponível | Gateway |
 | Produto não entregue | Lojista |
 | Produto com defeito | Lojista |
+| Arte personalizada enviada pelo cliente | Cliente/lojista, conforme termos |
+| Produção diferente da arte aprovada | Lojista |
 | Entrega combinada não realizada | Lojista |
 | Checkout da plataforma fora do ar | Loja Club |
 | Erro técnico no sistema | Loja Club |
 
 ## Decisão canônica
 
-A V1 usará gateway com split. A Loja Club não reterá valores. O checkout criará pedido pendente, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.
+A V1 usará gateway com split. A Loja Club não reterá valores. O checkout criará pedido pendente, congelará personalizações aprovadas, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.

@@ -14,6 +14,7 @@ Definir padrões visuais para:
 - admin da plataforma;
 - storefront público;
 - templates das lojas;
+- editor de personalização 3D;
 - e-mails transacionais.
 
 ## Painel do lojista
@@ -33,6 +34,7 @@ Itens a definir:
 - modais;
 - feedback de erro/sucesso;
 - componentes de upload;
+- componentes de visualização de personalização;
 - seletor de loja.
 
 ## Admin da plataforma
@@ -72,15 +74,34 @@ Detalhar depois:
 - header/menu.
 -->
 
+## Editor de personalização 3D
+
+Itens a definir:
+
+- botão `Personalizar`;
+- área do canvas 3D;
+- controles de upload de arte;
+- seletor de cor;
+- controles de posição, escala e rotação;
+- estado de salvamento automático;
+- botão de aprovação visual;
+- preview no carrinho;
+- preview no pedido;
+- aviso de qualidade/baixa resolução, se possível;
+- botão flutuante de WhatsApp.
+
 ## Customização da V1
 
-Na V1, permitir:
+Na V1, a customização visual da loja deve permitir:
 
 - escolher template;
 - logo;
 - banner principal;
 - texto principal;
 - produtos em destaque.
+
+A personalização 3D é uma customização do produto, não do layout da loja.
+Ela deve ter padrões próprios de interface.
 
 Preparar banco para futuro:
 
@@ -97,6 +118,7 @@ Templates necessários:
 - confirmação de conta;
 - recuperação de senha;
 - novo pedido para lojista;
+- nova personalização aprovada para lojista;
 - pedido criado para cliente;
 - pagamento aprovado;
 - pedido enviado;
@@ -110,5 +132,7 @@ Templates necessários:
 - [ ] Definir componentes padrão do painel.
 - [ ] Criar mockups do painel.
 - [ ] Criar mockups dos 2 templates públicos.
+- [ ] Criar mockup do editor 3D.
+- [ ] Definir estados do editor 3D.
 - [ ] Definir padrão de e-mails.
 - [ ] Definir estados vazios e mensagens.

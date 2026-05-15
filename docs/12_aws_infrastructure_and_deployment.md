@@ -70,7 +70,7 @@ Serviços:
 | ALB | Load balancer |
 | RDS PostgreSQL | Banco principal |
 | ElastiCache Redis | Cache/fila/locks |
-| S3 | Imagens e arquivos |
+| S3 | Imagens, arquivos, artes e modelos 3D |
 | CloudFront | CDN |
 | Route 53 | DNS |
 | ACM | SSL/TLS |
@@ -135,14 +135,23 @@ S3 armazena:
 - thumbnails;
 - banners;
 - logos;
+- modelos 3D;
+- texturas;
+- artes enviadas por clientes;
+- snapshots aprovados de personalização;
 - arquivos públicos controlados.
 
 CloudFront entrega:
 
 - imagens;
+- modelos 3D públicos;
+- texturas públicas;
 - assets estáticos;
 - arquivos públicos;
 - possivelmente storefront.
+
+Arquivos enviados por clientes em personalização devem usar acesso controlado.
+Eles podem ficar no S3, mas não devem ser tratados como assets públicos permanentes.
 
 ## Banco
 
@@ -175,7 +184,8 @@ Redis será usado para:
 - rate limit;
 - locks;
 - filas leves;
-- sessões temporárias.
+- sessões temporárias;
+- sessões de personalização.
 
 ## Load balancer
 

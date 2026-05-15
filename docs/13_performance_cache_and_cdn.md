@@ -11,6 +11,7 @@ A performance virá de:
 - cache;
 - CDN;
 - imagens otimizadas;
+- modelos 3D otimizados;
 - filas assíncronas;
 - paginação;
 - separação entre vitrine pública e operações administrativas.
@@ -23,6 +24,7 @@ A performance virá de:
 4. Tarefas pesadas não devem rodar dentro da requisição.
 5. Relatórios não devem impactar checkout ou vitrine.
 6. Toda query comercial deve usar `store_id`.
+7. Modelos 3D devem ser otimizados para web antes de publicação.
 
 ## Cache com Redis
 
@@ -38,6 +40,7 @@ Redis será usado para:
 - rate limit;
 - locks de checkout;
 - sessões temporárias;
+- sessões de personalização;
 - fila leve se necessário.
 
 ## Chaves de cache sugeridas
@@ -50,6 +53,8 @@ store:{store_id}:home
 store:{store_id}:categories
 store:{store_id}:product:{slug}
 store:{store_id}:menu
+customization_session:{session_id}
+product_3d_model:{model_id}:{version_id}
 ```
 
 ## Invalidação de cache
@@ -81,6 +86,8 @@ limpar domain:{host}
 CloudFront deve entregar:
 
 - imagens;
+- modelos 3D públicos;
+- texturas públicas;
 - thumbnails;
 - banners;
 - logos;
@@ -117,11 +124,30 @@ Não carregar imagem original gigante na vitrine.
 
 Não processar imagem dentro da requisição principal.
 
+## Modelos 3D
+
+Modelos 3D devem ser preparados para web.
+
+Cuidados:
+
+- usar formato otimizado, preferencialmente GLB;
+- limitar tamanho do arquivo;
+- comprimir texturas;
+- versionar modelos;
+- servir assets públicos por CDN;
+- cachear por versão do modelo;
+- evitar carregar editor 3D em produto que não é personalizável.
+
+Arquivos enviados pelo cliente para personalização não devem ser tratados como assets públicos permanentes.
+Devem usar URLs assinadas quando forem acessados pelo lojista ou pelo próprio cliente.
+
 ## Fila assíncrona
 
 Tarefas para fila:
 
 - geração de thumbnails;
+- geração de previews/snapshots de personalização, se feita no backend;
+- limpeza de sessões de personalização expiradas;
 - envio de e-mail;
 - processamento de webhook;
 - atualização de relatório;
@@ -152,6 +178,7 @@ A performance começa no banco.
 
 - `store_id + slug` em produtos;
 - `store_id + status` em produtos/pedidos;
+- `store_id + product_id + status` em sessões de personalização;
 - `store_id + created_at` em pedidos;
 - `store_id + customer_id` em pedidos;
 - `host` em domínios;
@@ -164,6 +191,7 @@ Checkout deve ser rápido e seguro.
 Cuidados:
 
 - validar estoque no momento da criação do pedido;
+- validar personalização aprovada antes de criar pedido;
 - evitar chamadas externas desnecessárias antes de criar pedido;
 - usar locks quando necessário;
 - não processar pagamento sem pedido pendente;
@@ -196,4 +224,4 @@ Assim, é possível subir mais containers para atender mais tráfego.
 
 ## Decisão canônica
 
-A performance da V1 será garantida por PostgreSQL bem indexado, Redis para cache, S3/CloudFront para imagens, fila assíncrona para tarefas pesadas e frontends stateless escaláveis em containers.
+A performance da V1 será garantida por PostgreSQL bem indexado, Redis para cache, S3/CloudFront para imagens e modelos 3D, fila assíncrona para tarefas pesadas e frontends stateless escaláveis em containers.

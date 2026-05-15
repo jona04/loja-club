@@ -29,20 +29,6 @@ O template já traz uma base full-stack com:
 - GitHub Actions;
 - Sentry.
 
-## Decisão
-
-Não vamos substituir o template por Django.
-
-Motivos:
-
-- o usuário já conhece e já usou esse template;
-- acelera muito a base do projeto;
-- encaixa bem em um produto API-first;
-- facilita integração com frontend React;
-- gera client baseado no OpenAPI;
-- combina bem com checkout, gateways e webhooks;
-- já vem com Docker e Traefik;
-- é mais próximo do stack que será usado no produto.
 
 ## O que será mantido
 
@@ -84,9 +70,10 @@ Alterações principais:
 8. Adicionar gateway com split.
 9. Adicionar worker/fila.
 10. Adicionar upload para S3.
-11. Adicionar CDN para imagens.
-12. Adicionar admin interno da plataforma em frontend próprio.
-13. Adicionar módulos de ecommerce.
+11. Adicionar CDN para imagens e assets públicos.
+12. Adicionar personalização 3D de produtos.
+13. Adicionar admin interno da plataforma em frontend próprio.
+14. Adicionar módulos de ecommerce.
 
 ## Estrutura backend desejada
 
@@ -107,6 +94,7 @@ backend/
       domains/
       catalog/
       media/
+      product_customization/
       storefront/
       cart/
       checkout/
@@ -201,12 +189,13 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 8. Criar permissões por loja.
 9. Criar módulos de ecommerce.
 10. Separar storefront em projeto próprio.
-11. Criar admin interno em projeto frontend próprio.
-12. Adicionar S3/CDN.
-13. Adicionar Redis/fila.
-14. Adicionar gateway com split.
-15. Preparar staging com Traefik.
-16. Preparar produção AWS.
+11. Criar suporte a produtos personalizáveis em 3D.
+12. Criar admin interno em projeto frontend próprio.
+13. Adicionar S3/CDN.
+14. Adicionar Redis/fila.
+15. Adicionar gateway com split.
+16. Preparar staging com Traefik.
+17. Preparar produção AWS.
 
 ## Decisão canônica
 

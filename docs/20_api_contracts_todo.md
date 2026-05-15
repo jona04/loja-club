@@ -51,6 +51,21 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - variações;
 - estoque;
 - imagens.
+- configurar produto personalizável;
+- vincular modelo 3D ao produto.
+
+### Product Customization
+
+- listar modelos 3D disponíveis;
+- obter configuração de personalização do produto;
+- iniciar sessão de personalização;
+- obter sessão de personalização;
+- atualizar estado da sessão;
+- enviar imagem/arte do cliente;
+- gerar/registrar preview;
+- aprovar personalização;
+- listar sessões da loja;
+- expirar sessão abandonada.
 
 ### Storefront Public
 
@@ -66,6 +81,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 
 - criar carrinho;
 - adicionar item;
+- adicionar item personalizado;
 - atualizar quantidade;
 - remover item;
 - aplicar cupom;
@@ -75,6 +91,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 
 - iniciar checkout;
 - validar carrinho;
+- validar personalizações aprovadas;
 - calcular frete;
 - listar métodos de entrega disponíveis;
 - selecionar método de entrega;
@@ -107,6 +124,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 
 - listar pedidos;
 - obter detalhe;
+- obter personalização do item;
 - atualizar status;
 - cancelar;
 - adicionar nota;
@@ -143,6 +161,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - listar usuários;
 - listar webhooks;
 - gerenciar planos;
+- gerenciar biblioteca de modelos 3D;
 - ver auditoria.
 
 ## TODO

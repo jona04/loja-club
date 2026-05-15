@@ -28,21 +28,19 @@ Decisão pendente:
 Escolher gateway principal da V1.
 ```
 
-## Storefront: Next.js ou Vite
-
-Recomendação:
+## Storefront Next.js
 
 ```text
-Next.js para loja pública.
+Decisão fechada: usar Next.js no frontend-storefront desde a V1.
 ```
 
-Mas para acelerar, pode-se começar com Vite.
+Motivos:
 
-Decisão pendente:
-
-```text
-Confirmar se storefront V1 será Next.js desde o início.
-```
+- SEO;
+- cache/CDN;
+- renderização server-side;
+- metadata dinâmica;
+- evitar refatoração futura de loja pública.
 
 ## Infra inicial
 
@@ -126,6 +124,29 @@ Decisão pendente:
 Definir visual exato dos 2 templates.
 ```
 
+## Personalização 3D na V1
+
+Decisão assumida:
+
+```text
+A V1 deve incluir personalização 3D de produtos com Three.js.
+```
+
+Escopo definido:
+
+- modelos 3D criados pela Loja Club;
+- lojista vincula modelo ao produto;
+- cliente envia arte e personaliza no storefront;
+- sessão fica salva;
+- arte aprovada fica congelada no pedido;
+- WhatsApp será o canal de conversa da V1.
+
+Decisões pendentes:
+
+```text
+Definir lista exata dos primeiros modelos 3D e formatos finais dos assets.
+```
+
 ## Frete na V1
 
 Sugestão:
@@ -166,7 +187,8 @@ Confirmar se a V1 apenas informa que nota fiscal é responsabilidade do lojista.
 Sugestão:
 
 ```text
-Fora da V1. Apenas escolha entre layouts prontos.
+Editor visual de layout da loja fica fora da V1.
+Personalização 3D de produto entra na V1.
 ```
 
 Decisão pendente:

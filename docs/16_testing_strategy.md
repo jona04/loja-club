@@ -9,6 +9,7 @@ O foco da V1 deve ser testar:
 - isolamento multi-tenant;
 - permissões;
 - catálogo;
+- personalização 3D;
 - checkout;
 - pagamentos/webhooks;
 - pedidos;
@@ -62,6 +63,21 @@ Testar:
 - mesmo slug pode existir em lojas diferentes, se permitido;
 - upload de imagem valida tipo/tamanho.
 
+### Personalização 3D
+
+Testar:
+
+- produto simples não exige personalização;
+- produto `customizable_3d` exige sessão aprovada para ir ao checkout;
+- cliente consegue iniciar sessão;
+- estado da sessão é salvo;
+- upload de arte valida tipo/tamanho;
+- preview/snapshot é registrado;
+- sessão aprovada é vinculada ao carrinho;
+- pedido congela a personalização;
+- alteração posterior da sessão não altera pedido criado;
+- lojista só vê personalizações da própria loja.
+
 ### Layout
 
 Testar:
@@ -78,6 +94,7 @@ Testar:
 
 - carrinho cria pedido pendente;
 - preço do pedido fica congelado no momento da compra;
+- personalização aprovada fica congelada no pedido;
 - estoque é validado;
 - pedido não vira pago sem webhook;
 - pagamento recusado atualiza pedido;
@@ -116,6 +133,7 @@ Testar:
 - alteração de layout salva;
 - criação de produto;
 - visualização de pedidos.
+- visualização de personalizações.
 
 ### Storefront
 
@@ -124,6 +142,8 @@ Testar:
 - domínio resolve loja;
 - home carrega;
 - produto carrega;
+- editor 3D carrega em produto personalizável;
+- sessão de personalização é retomada;
 - categoria carrega;
 - carrinho funciona;
 - checkout inicia.
@@ -136,12 +156,15 @@ Fluxos principais:
 2. Criar loja.
 3. Escolher subdomínio.
 4. Cadastrar produto.
-5. Escolher layout.
-6. Abrir loja pública.
-7. Adicionar produto ao carrinho.
-8. Criar pedido.
-9. Simular webhook de pagamento aprovado.
-10. Ver pedido no painel.
+5. Vincular modelo 3D, se produto for personalizável.
+6. Escolher layout.
+7. Abrir loja pública.
+8. Personalizar produto.
+9. Aprovar arte.
+10. Adicionar produto ao carrinho.
+11. Criar pedido.
+12. Simular webhook de pagamento aprovado.
+13. Ver pedido e personalização no painel.
 
 ## Mocks
 
@@ -172,10 +195,11 @@ Antes de produção, testar:
 - listagem de produtos;
 - home pública;
 - página de produto;
+- editor de personalização 3D;
 - criação de carrinho;
 - criação de pedido;
 - webhook.
 
 ## Decisão canônica
 
-A estratégia de testes deve priorizar multi-tenancy, permissões, checkout, webhooks e isolamento de dados. Esses são os pontos mais críticos para evitar falhas graves na Loja Club.
+A estratégia de testes deve priorizar multi-tenancy, permissões, personalização 3D, checkout, webhooks e isolamento de dados. Esses são os pontos mais críticos para evitar falhas graves na Loja Club.

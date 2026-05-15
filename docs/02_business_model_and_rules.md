@@ -4,6 +4,8 @@
 
 A Loja Club será um SaaS de ecommerce com possibilidade de comissão por venda.
 
+O foco comercial inicial será em lojas de brindes, gráficas e comunicação visual, porque a personalização 3D é um diferencial forte para esse público.
+
 O modelo recomendado para a V1 é:
 
 - mensalidade fixa por loja;
@@ -49,6 +51,8 @@ A Loja Club fornece tecnologia. O lojista vende o produto.
 | Produto | Lojista |
 | Estoque | Lojista |
 | Preço | Lojista |
+| Qualidade da arte enviada pelo cliente | Cliente/lojista, conforme termos |
+| Produção do item personalizado | Lojista |
 | Entrega | Lojista |
 | Entrega combinada | Lojista |
 | Troca/devolução | Lojista |
@@ -57,6 +61,7 @@ A Loja Club fornece tecnologia. O lojista vende o produto.
 | Processamento do pagamento | Gateway |
 | Split de pagamento | Gateway |
 | Infraestrutura da loja | Loja Club |
+| Modelos 3D publicados pela plataforma | Loja Club |
 | Painel administrativo | Loja Club |
 | Segurança da plataforma | Loja Club |
 | Disponibilidade técnica | Loja Club |
@@ -119,6 +124,8 @@ Exemplo:
 | Produtos | até limite inicial | maior limite | limite alto/ilimitado |
 | Usuários da equipe | 1 ou 2 | até 5 | mais usuários |
 | Templates | 1 ou 2 | 2 | 2 |
+| Personalização 3D | limitada | incluída | maior limite |
+| Modelos 3D disponíveis | básicos | principais | mais modelos |
 | Relatórios | básico | básico+ | mais completo |
 | Comissão | maior | média | menor |
 
@@ -158,6 +165,8 @@ Ainda precisam ser detalhados:
 - política de privacidade;
 - política de produtos proibidos;
 - política de chargeback;
+- política de arte enviada pelo cliente;
+- responsabilidade por produção personalizada;
 - política de suspensão de loja;
 - responsabilidade em caso de falha do gateway;
 - responsabilidade em caso de falha de entrega;

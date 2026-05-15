@@ -4,7 +4,11 @@
 
 A **Loja Club** será uma plataforma SaaS multi-tenant de ecommerce, permitindo que várias empresas criem e operem suas próprias lojas virtuais dentro de uma infraestrutura única.
 
-A proposta é entregar uma solução semelhante ao conceito de plataformas como Shopify: o lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Loja Club, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
+A proposta é entregar uma solução com a base operacional de uma plataforma como Shopify, mas com um diferencial inicial claro: atender primeiro empresas de brindes, gráficas, comunicação visual e produtos personalizados.
+
+O lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Loja Club, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
+
+Além do ecommerce comum, a Loja Club deve permitir produtos personalizáveis em 3D. O cliente escolhe um produto, como uma caneca, squeeze ou camisa, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho.
 
 ## Posicionamento
 
@@ -16,6 +20,9 @@ A plataforma deve oferecer:
 - painel administrativo do lojista;
 - cadastro de produtos;
 - imagens e mídia;
+- biblioteca de modelos 3D criada pela Loja Club;
+- produtos personalizáveis;
+- sessão de personalização salva;
 - carrinho;
 - checkout;
 - pagamento com split;
@@ -40,15 +47,18 @@ O lojista deve conseguir:
 4. Configurar identidade básica da loja.
 5. Escolher entre dois templates prontos na V1.
 6. Cadastrar produtos e imagens.
-7. Configurar checkout e pagamento.
-8. Definir frete simples, retirada local ou entrega combinada.
-9. Publicar a loja.
-10. Receber pedidos.
-11. Ver clientes.
-12. Convidar membros da equipe.
-13. Controlar permissões por usuário.
-14. Ver relatórios básicos.
-15. Conectar domínio próprio, se esta funcionalidade for mantida dentro da V1.
+7. Marcar produtos como personalizáveis quando fizer sentido.
+8. Vincular produtos a modelos 3D disponíveis na biblioteca da Loja Club.
+9. Configurar checkout e pagamento.
+10. Definir frete simples, retirada local ou entrega combinada.
+11. Publicar a loja.
+12. Receber pedidos.
+13. Ver personalizações aprovadas pelo cliente.
+14. Ver clientes.
+15. Convidar membros da equipe.
+16. Controlar permissões por usuário.
+17. Ver relatórios básicos.
+18. Conectar domínio próprio, se esta funcionalidade for mantida dentro da V1.
 
 ## Experiência do cliente final
 
@@ -65,12 +75,16 @@ O cliente final deve conseguir:
 1. Navegar pela loja.
 2. Ver categorias e produtos.
 3. Ver detalhes do produto.
-4. Adicionar ao carrinho.
-5. Finalizar compra.
-6. Escolher forma de entrega.
-7. Pagar via gateway.
-8. Receber confirmação de pedido.
-9. Se escolher entrega combinada, manter contato com a loja para combinar o envio.
+4. Personalizar produtos 3D quando disponível.
+5. Salvar e continuar uma personalização depois.
+6. Aprovar visualmente a arte antes de adicionar ao carrinho.
+7. Adicionar ao carrinho.
+8. Finalizar compra.
+9. Escolher forma de entrega.
+10. Pagar via gateway.
+11. Receber confirmação de pedido.
+12. Se escolher entrega combinada, manter contato com a loja para combinar o envio.
+13. Usar WhatsApp da loja para tirar dúvidas quando disponível.
 
 ## Escopo da V1
 
@@ -84,6 +98,11 @@ A V1 deve incluir:
 - subdomínio automático;
 - catálogo;
 - upload de imagens;
+- biblioteca de modelos 3D gerenciada pela Loja Club;
+- produtos personalizáveis em 3D;
+- upload de arte pelo cliente final;
+- sessão de personalização persistida;
+- preview aprovado anexado ao pedido;
 - dois templates públicos;
 - painel do lojista;
 - carrinho;
@@ -109,7 +128,10 @@ A V1 não deve começar com:
 
 - marketplace com vários vendedores no mesmo carrinho;
 - app store;
-- editor visual avançado;
+- editor visual avançado de layout da loja;
+- chat interno completo;
+- upload de modelo 3D pelo lojista;
+- marketplace de modelos 3D de terceiros;
 - temas infinitos;
 - ERP;
 - automação de marketing avançada;
@@ -130,3 +152,7 @@ O foco não é copiar todas as funcionalidades de uma plataforma madura. O foco 
 
 Um diferencial importante é permitir que lojas locais vendam online sem depender apenas de transportadora tradicional.
 Quando fizer sentido para a região, a loja poderá oferecer entrega combinada, usando contato direto com o cliente e serviços locais como 99, Uber, motoboy próprio ou alternativas semelhantes.
+
+Outro diferencial central é a personalização 3D.
+A Loja Club começa nichada para um público que sente essa dor todos os dias: brindes, gráficas e comunicação visual.
+Ao mesmo tempo, a plataforma continua atendendo lojistas de ecommerce comum que só precisam cadastrar fotos, variações, preço e estoque.

@@ -42,6 +42,8 @@ Exemplos:
 | `plans` | Planos da Loja Club |
 | `platform_settings` | Configurações globais |
 | `theme_templates` | Templates globais disponíveis |
+| `product_3d_models` | Modelos 3D globais criados pela Loja Club |
+| `product_3d_model_versions` | Versões dos modelos 3D |
 | `feature_flags` | Flags de recursos |
 | `platform_admin_roles` | Papéis globais internos |
 
@@ -60,13 +62,18 @@ Exemplos:
 | `product_variants` | Sim |
 | `categories` | Sim |
 | `product_images` | Sim |
+| `product_customization_settings` | Sim |
+| `product_customization_sessions` | Sim |
+| `product_customization_uploads` | Sim |
 | `inventory_items` | Sim |
 | `customers` | Sim |
 | `customer_addresses` | Sim |
 | `carts` | Sim |
 | `cart_items` | Sim |
+| `cart_item_customizations` | Sim |
 | `orders` | Sim |
 | `order_items` | Sim |
+| `order_item_customizations` | Sim |
 | `payment_accounts` | Sim |
 | `payment_transactions` | Sim |
 | `shipping_zones` | Sim |
@@ -106,6 +113,38 @@ Exemplos:
 | `inventory_items` | Estoque |
 | `collections` | Vitrines/coleções |
 
+### Personalização 3D
+
+| Tabela | Função |
+|---|---|
+| `product_3d_models` | Biblioteca global de modelos 3D da Loja Club |
+| `product_3d_model_versions` | Versões dos arquivos e parâmetros do modelo |
+| `product_customization_settings` | Configuração de personalização por produto/loja |
+| `product_customization_sessions` | Sessões salvas de personalização do cliente |
+| `product_customization_uploads` | Arquivos enviados pelo cliente |
+| `cart_item_customizations` | Personalização aprovada no carrinho |
+| `order_item_customizations` | Cópia congelada da personalização no pedido |
+
+Campos importantes em `product_customization_sessions`:
+
+```text
+store_id
+product_id
+customer_id
+cart_id
+model_id
+model_version_id
+status
+state_json
+preview_url
+approved_snapshot_url
+expires_at
+approved_at
+```
+
+O `state_json` guarda parâmetros como cor, posição, escala, rotação, imagem aplicada e área utilizada.
+O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `order_item_customizations`.
+
 ### Cliente final
 
 | Tabela | Função |
@@ -128,6 +167,7 @@ Exemplos:
 |---|---|
 | `orders` | Pedido principal |
 | `order_items` | Itens comprados |
+| `order_item_customizations` | Personalização congelada no item |
 | `order_addresses` | Endereço de entrega/cobrança |
 | `order_status_history` | Histórico do pedido |
 | `order_notes` | Notas internas |
@@ -206,6 +246,10 @@ A performance depende muito dos índices compostos com `store_id`.
 | `products` | `store_id + slug` |
 | `products` | `store_id + status` |
 | `products` | `store_id + created_at` |
+| `product_customization_settings` | `store_id + product_id` |
+| `product_customization_sessions` | `store_id + product_id + status` |
+| `product_customization_sessions` | `store_id + customer_id + status` |
+| `order_item_customizations` | `store_id + order_id` |
 | `categories` | `store_id + slug` |
 | `customers` | `store_id + email` |
 | `orders` | `store_id + created_at` |
@@ -228,6 +272,8 @@ A performance depende muito dos índices compostos com `store_id`.
 6. Separar consultas de leitura pública das consultas administrativas.
 7. Evitar joins desnecessários na loja pública.
 8. Usar cache para dados pouco mutáveis.
+9. Congelar personalização aprovada no item do pedido.
+10. Não depender de sessão editável para reproduzir pedido já criado.
 
 ## Status de pedido
 

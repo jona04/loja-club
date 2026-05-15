@@ -18,6 +18,7 @@ A arquitetura terá:
 - Redis;
 - worker assíncrono;
 - storage de imagens;
+- storage de modelos 3D e artes enviadas por clientes;
 - CDN;
 - gateway de pagamento;
 - fila/tarefas assíncronas;
@@ -111,6 +112,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `tenancy` | resolução de loja e contexto multi-tenant |
 | `catalog` | produtos, categorias, variações |
 | `media` | upload e imagens |
+| `product_customization` | modelos 3D, sessões de personalização e arte aprovada |
 | `storefront` | dados para loja pública |
 | `cart` | carrinho |
 | `checkout` | fluxo de checkout |
@@ -140,8 +142,10 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 11. A Loja Club não deve reter dinheiro de lojista.
 12. Arquivos e imagens devem ficar fora do backend, em storage próprio.
 13. Imagens públicas devem ser entregues por CDN.
-14. Tarefas pesadas devem ir para fila.
-15. Relatórios pesados não devem impactar a navegação pública.
+14. Modelos 3D e artes enviadas por clientes devem ficar em storage próprio, com controle de acesso.
+15. A personalização aprovada pelo cliente deve ser congelada no carrinho/pedido.
+16. Tarefas pesadas devem ir para fila.
+17. Relatórios pesados não devem impactar a navegação pública.
 
 ## Estratégia de crescimento
 

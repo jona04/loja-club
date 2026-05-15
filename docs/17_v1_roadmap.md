@@ -94,6 +94,7 @@ Entregas:
 - estoque;
 - status publicado/rascunho;
 - upload de imagens;
+- produto `simple` e `customizable_3d`;
 - S3;
 - worker para thumbnails;
 - CloudFront para imagens;
@@ -105,7 +106,28 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens.
 ```
 
-## Etapa 6 — Storefront público
+## Etapa 6 — Personalização 3D de produtos
+
+Entregas:
+
+- módulo `product_customization`;
+- biblioteca inicial de modelos 3D;
+- modelos de caneca, squeeze e camisa;
+- configuração de produto personalizável;
+- sessão de personalização salva;
+- upload de arte pelo cliente;
+- preview/snapshot aprovado;
+- vínculo da personalização com carrinho;
+- cópia congelada da personalização no pedido;
+- visualização da personalização no painel do lojista.
+
+Resultado:
+
+```text
+Cliente personaliza produto em 3D, aprova a arte e o lojista recebe exatamente o que foi aprovado.
+```
+
+## Etapa 7 — Storefront público
 
 Entregas:
 
@@ -113,9 +135,11 @@ Entregas:
 - roteamento por domínio/subdomínio;
 - home pública;
 - página de produto;
+- editor 3D com Three.js;
 - página de categoria;
 - menu;
 - rodapé;
+- botão flutuante de WhatsApp;
 - busca simples, se couber;
 - cache público básico.
 
@@ -125,7 +149,7 @@ Resultado:
 Loja pública abre em nomedaloja.loja.club.
 ```
 
-## Etapa 7 — Layouts/templates
+## Etapa 8 — Layouts/templates
 
 Entregas:
 
@@ -145,18 +169,20 @@ Resultado:
 Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 ```
 
-## Etapa 8 — Carrinho
+## Etapa 9 — Carrinho
 
 Entregas:
 
 - criar carrinho;
 - adicionar item;
+- adicionar item personalizado;
 - remover item;
 - alterar quantidade;
 - aplicar cupom básico;
 - calcular subtotal;
 - validar estoque;
 - persistência temporária.
+- vínculo com sessão de personalização aprovada.
 
 Resultado:
 
@@ -164,7 +190,7 @@ Resultado:
 Cliente final consegue montar carrinho.
 ```
 
-## Etapa 9 — Checkout
+## Etapa 10 — Checkout
 
 Entregas:
 
@@ -175,6 +201,7 @@ Entregas:
 - revisão do pedido;
 - criação de pedido pendente;
 - congelamento de preços;
+- congelamento da personalização aprovada;
 - sessão de checkout;
 - preparação para gateway.
 
@@ -184,7 +211,7 @@ Resultado:
 Carrinho vira pedido pending_payment.
 ```
 
-## Etapa 10 — Pagamentos e split
+## Etapa 11 — Pagamentos e split
 
 Entregas:
 
@@ -205,7 +232,7 @@ Resultado:
 Cliente paga, gateway divide valores e pedido é atualizado por webhook.
 ```
 
-## Etapa 11 — Pedidos
+## Etapa 12 — Pedidos
 
 Entregas:
 
@@ -215,6 +242,9 @@ Entregas:
 - histórico;
 - dados do cliente;
 - itens;
+- personalização aprovada por item;
+- arquivos enviados pelo cliente;
+- status de arte/produção;
 - notas internas;
 - alteração de status operacional;
 - cancelamento, se permitido.
@@ -225,7 +255,7 @@ Resultado:
 Lojista consegue operar vendas recebidas.
 ```
 
-## Etapa 12 — Clientes
+## Etapa 13 — Clientes
 
 Entregas:
 
@@ -242,7 +272,7 @@ Resultado:
 Lojista visualiza clientes da própria loja.
 ```
 
-## Etapa 13 — Frete e cupons
+## Etapa 14 — Frete e cupons
 
 Entregas:
 
@@ -261,7 +291,7 @@ Resultado:
 Loja consegue vender com regras básicas de entrega e desconto.
 ```
 
-## Etapa 14 — Billing da Loja Club
+## Etapa 15 — Billing da Loja Club
 
 Entregas:
 
@@ -280,7 +310,7 @@ Resultado:
 Loja Club começa a monetizar por mensalidade e/ou comissão.
 ```
 
-## Etapa 15 — Admin da plataforma
+## Etapa 16 — Admin da plataforma
 
 Entregas:
 
@@ -292,6 +322,7 @@ Entregas:
 - ver usuários;
 - ver pedidos por loja;
 - ver webhooks com erro;
+- gerenciar modelos 3D globais;
 - gerenciar planos;
 - ver comissões;
 - auditoria.
@@ -302,7 +333,7 @@ Resultado:
 Equipe Loja Club consegue operar a plataforma.
 ```
 
-## Etapa 16 — Segurança e observabilidade
+## Etapa 17 — Segurança e observabilidade
 
 Entregas:
 
@@ -313,6 +344,8 @@ Entregas:
 - rate limit;
 - validação de webhooks;
 - política de segredos;
+- segurança de uploads de arte;
+- URLs assinadas para arquivos privados;
 - backups;
 - logs estruturados;
 - alertas mínimos.
@@ -323,12 +356,13 @@ Resultado:
 Sistema pronto para produção controlada.
 ```
 
-## Etapa 17 — Infra AWS
+## Etapa 18 — Infra AWS
 
 Entregas:
 
 - S3;
 - CloudFront;
+- storage para modelos 3D e artes de clientes;
 - RDS;
 - Redis/ElastiCache;
 - ECS/Fargate ou EC2 staging;
@@ -344,12 +378,14 @@ Resultado:
 Loja Club publicada com infraestrutura real.
 ```
 
-## Etapa 18 — Beta com lojas reais
+## Etapa 19 — Beta com lojas reais
 
 Entregas:
 
 - cadastrar primeiras lojas;
+- priorizar brindes, gráficas e comunicação visual;
 - testar vendas reais;
+- testar personalização 3D real;
 - validar fluxo de pagamento;
 - validar split;
 - validar suporte;
@@ -370,14 +406,18 @@ A V1 está pronta quando:
 - lojista cria loja;
 - subdomínio funciona;
 - lojista cadastra produto;
+- lojista vincula modelo 3D a produto personalizável;
 - lojista escolhe layout;
 - loja pública abre;
+- cliente personaliza produto em 3D;
+- cliente aprova arte;
 - cliente adiciona ao carrinho;
 - cliente finaliza checkout;
 - pagamento é processado;
 - webhook confirma pedido;
 - split é aplicado;
 - lojista vê pedido no painel;
+- lojista vê arte personalizada aprovada;
 - cliente recebe confirmação;
 - admin Loja Club consegue monitorar;
 - isolamento multi-tenant está testado.

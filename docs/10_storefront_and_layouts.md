@@ -6,6 +6,8 @@ O storefront é a loja pública do lojista.
 
 Ele será acessado por subdomínio ou domínio próprio.
 
+Além das páginas tradicionais de ecommerce, o storefront deve suportar produtos personalizáveis em 3D para lojas de brindes, gráficas e comunicação visual.
+
 Exemplos:
 
 ```text
@@ -26,7 +28,16 @@ Motivos:
 - possibilidade de cache;
 - melhor adequação para ecommerce.
 
-Para acelerar a V1, é possível começar com React/Vite, mas a recomendação final para loja pública é Next.js.
+Para produtos personalizáveis, o storefront deve usar Three.js no navegador.
+O editor 3D é uma experiência interativa da página de produto, não um frontend separado.
+
+Decisão:
+
+```text
+O storefront deve usar Next.js desde a V1.
+```
+
+Não começar com React/Vite no storefront, para evitar refatoração posterior em SEO, roteamento, cache e renderização.
 
 ## Resolução da loja
 
@@ -66,12 +77,14 @@ frontend-storefront/
       classic/
         HomePage
         ProductPage
+        ProductCustomizer
         CategoryPage
         CartPage
         CheckoutPage
       modern/
         HomePage
         ProductPage
+        ProductCustomizer
         CategoryPage
         CartPage
         CheckoutPage
@@ -195,8 +208,52 @@ Deve mostrar:
 - variações;
 - disponibilidade;
 - opções de entrega;
+- indicação de produto personalizável, quando aplicável;
 - botão comprar/adicionar ao carrinho;
+- botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
+
+Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
+O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
+
+## Editor de personalização 3D
+
+O editor deve permitir personalização do produto usando modelo 3D.
+
+Recursos da V1:
+
+- carregar modelo 3D publicado pela Loja Club;
+- upload de imagem/arte pelo cliente;
+- escrever nomes e frases dentro da area personalizável;
+- quando houver escrita permitir editar fonte, cores, tamanho e etc;
+- escolha de cor do produto quando o modelo permitir;
+- mover arte e escrita dentro da área imprimível;
+- ajustar escala;
+- ajustar rotação;
+- ver preview em tempo real;
+- salvar sessão automaticamente;
+- aprovar personalização antes de adicionar ao carrinho.
+
+Exemplo de produtos:
+
+- caneca;
+- squeeze;
+- camisa;
+- ecobag;
+- copo;
+- placa;
+- adesivo;
+- outros podem surgir com o tempo.
+
+A sessão salva permite que o cliente continue depois, especialmente quando tiver dúvida e conversar com a loja pelo WhatsApp.
+
+O editor deve gerar ou salvar:
+
+- parâmetros da personalização;
+- imagem original enviada;
+- preview da personalização;
+- snapshot aprovado;
+- versão do modelo 3D usado.
 
 ### Opções de entrega no produto
 
@@ -231,6 +288,7 @@ Deve mostrar:
 - cupom;
 - frete estimado;
 - opção de entrega escolhida;
+- preview da personalização, se o item for personalizável;
 - botão para checkout.
 
 ## Checkout
@@ -244,6 +302,7 @@ Deve:
 - exibir frete;
 - permitir entrega combinada quando habilitada pela loja;
 - criar pedido pendente;
+- anexar personalização aprovada ao pedido;
 - redirecionar ou integrar gateway;
 - aguardar confirmação por webhook.
 
@@ -255,4 +314,4 @@ A loja entrará em contato após a compra para combinar a entrega.
 
 ## Decisão canônica
 
-A V1 terá 2 templates prontos. O lojista poderá escolher o template no painel, visualizar preview e aplicar. Ao salvar, o storefront público deve refletir a alteração usando os dados da loja e o template ativo salvo no banco.
+A V1 terá 2 templates prontos e suporte a produtos personalizáveis em 3D. O lojista poderá escolher o template no painel, visualizar preview e aplicar. Produtos comuns usam fotos normais. Produtos personalizáveis abrem editor 3D no storefront, salvam a sessão do cliente e congelam a arte aprovada no pedido.
