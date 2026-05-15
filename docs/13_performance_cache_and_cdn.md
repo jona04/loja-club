@@ -174,7 +174,8 @@ Exemplos:
 
 A performance começa no banco.
 
-Índices obrigatórios:
+Esta seção lista índices principais de performance.
+A lista completa fica em [Database Strategy](./07_database_strategy.md).
 
 - `store_id + slug` em produtos;
 - `store_id + status` em produtos/pedidos;

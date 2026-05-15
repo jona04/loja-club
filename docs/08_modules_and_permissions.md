@@ -13,23 +13,36 @@ Essa decisão resolve três necessidades:
 A V1 também terá personalização 3D de produtos.
 Esse módulo deve ser controlado por plano e permissão, porque será um diferencial importante para brindes, gráficas e comunicação visual.
 
-## Modelo de usuários
+## Tipos de identidade
 
-Um usuário pode gerenciar várias lojas.
+Existem três grupos diferentes:
+
+| Tipo | Descrição | Acesso |
+|---|---|---|
+| Admin Loja Club | Equipe interna da plataforma | `frontend-admin` |
+| Lojista/equipe | Usuários que operam uma loja | `frontend-dashboard` |
+| Cliente final | Comprador da loja | `frontend-storefront` |
+
+Admins e lojistas usam `account_users`.
+Clientes finais usam `customer_profiles` e podem comprar sem login.
+
+## Modelo de usuários da loja
+
+Um `account_user` pode gerenciar várias lojas.
 
 Uma loja pode ter vários usuários.
 
 Modelo conceitual:
 
 ```text
-User
+AccountUser
 Store
 StoreMember
 Role
 Permission
 ```
 
-## User
+## AccountUser
 
 Representa a pessoa que acessa a plataforma.
 
@@ -72,118 +85,17 @@ Support na Loja C
 
 ## Papéis padrão
 
-### Owner
+As regras devem ser positivas: cada papel recebe uma lista explícita de permissões.
+Tudo que não estiver na lista do papel é bloqueado.
 
-Dono da loja.
+Papéis iniciais:
 
-Tem acesso total.
-
-Pode:
-
-- gerenciar tudo;
-- alterar plano;
-- convidar/remover admins;
-- transferir propriedade;
-- excluir ou solicitar exclusão da loja;
-- alterar dados críticos.
-
-### Admin
-
-Administrador da loja.
-
-Pode:
-
-- gerenciar produtos;
-- gerenciar pedidos;
-- gerenciar personalizações;
-- gerenciar clientes;
-- alterar layout;
-- configurar checkout;
-- configurar frete;
-- convidar equipe;
-- ver relatórios.
-
-Não deve poder, por padrão:
-
-- transferir propriedade;
-- excluir loja;
-- alterar dados críticos de cobrança sem permissão explícita.
-
-### Manager
-
-Gerente operacional.
-
-Pode:
-
-- produtos;
-- pedidos;
-- clientes;
-- estoque;
-- cupons;
-- relatórios básicos.
-
-Não pode:
-
-- alterar plano;
-- alterar gateway;
-- alterar domínio;
-- gerenciar equipe.
-
-### Support
-
-Atendimento.
-
-Pode:
-
-- ver pedidos;
-- ver clientes;
-- adicionar notas;
-- atualizar status operacional permitido.
-
-Não pode:
-
-- alterar preço;
-- excluir produto;
-- configurar pagamento;
-- alterar layout;
-- reembolsar sem permissão extra.
-
-### Catalog
-
-Responsável pelo catálogo.
-
-Pode:
-
-- criar produto;
-- editar produto;
-- alterar imagens;
-- alterar estoque;
-- alterar categorias.
-
-Não pode:
-
-- ver relatórios financeiros;
-- configurar pagamento;
-- reembolsar pedido;
-- alterar equipe.
-
-### Marketing
-
-Responsável por aparência e promoções.
-
-Pode:
-
-- alterar banners;
-- alterar páginas;
-- alterar layout;
-- criar cupons;
-- ver relatórios simples.
-
-Não pode:
-
-- configurar gateway;
-- reembolsar pedido;
-- alterar equipe.
+- `owner`;
+- `admin`;
+- `manager`;
+- `support`;
+- `catalog`;
+- `marketing`.
 
 ## Módulos do painel
 
@@ -207,13 +119,19 @@ Não pode:
 
 ## Permissões granulares
 
+### Dashboard
+
+```text
+dashboard.view
+```
+
 ### Produtos
 
 ```text
 catalog.product.view
 catalog.product.create
 catalog.product.update
-catalog.product.delete
+catalog.product.archive
 catalog.inventory.update
 catalog.category.manage
 catalog.product_customization.update
@@ -246,7 +164,7 @@ orders.export
 customers.view
 customers.update
 customers.export
-customers.delete
+customers.archive
 ```
 
 ### Checkout
@@ -282,7 +200,7 @@ layout.assets.update
 shipping.view
 shipping.create
 shipping.update
-shipping.delete
+shipping.archive
 shipping.private_delivery.update
 ```
 
@@ -292,7 +210,7 @@ shipping.private_delivery.update
 discounts.view
 discounts.create
 discounts.update
-discounts.delete
+discounts.archive
 ```
 
 ### Relatórios
@@ -309,8 +227,8 @@ reports.financial.view
 domains.view
 domains.create
 domains.update
-domains.delete
 domains.verify
+domains.archive
 ```
 
 ### Equipe
@@ -329,6 +247,235 @@ billing.view
 billing.update_plan
 billing.view_invoices
 ```
+
+### Configurações
+
+```text
+settings.view
+settings.update
+settings.archive_store
+```
+
+## Permissões por papel da loja
+
+### Owner
+
+O `owner` tem todas as permissões de loja:
+
+```text
+dashboard.view
+catalog.view
+catalog.product.view
+catalog.product.create
+catalog.product.update
+catalog.product.archive
+catalog.inventory.update
+catalog.category.manage
+catalog.product_customization.update
+customization.view
+customization.sessions.view
+customization.files.download
+customization.production_status.update
+customization.models.assign
+orders.view
+orders.update_status
+orders.cancel
+orders.refund
+orders.add_note
+orders.export
+customers.view
+customers.update
+customers.export
+customers.archive
+checkout.view
+checkout.update
+checkout.policies.update
+payments.view
+payments.connect_account
+payments.update_methods
+payments.view_transactions
+payments.manage_refunds
+layout.view
+layout.preview
+layout.update
+layout.assets.update
+shipping.view
+shipping.create
+shipping.update
+shipping.archive
+shipping.private_delivery.update
+discounts.view
+discounts.create
+discounts.update
+discounts.archive
+reports.view
+reports.export
+reports.financial.view
+domains.view
+domains.create
+domains.update
+domains.verify
+domains.archive
+team.view
+team.invite
+team.update_role
+team.remove
+billing.view
+billing.update_plan
+billing.view_invoices
+settings.view
+settings.update
+settings.archive_store
+```
+
+### Admin
+
+```text
+dashboard.view
+catalog.view
+catalog.product.view
+catalog.product.create
+catalog.product.update
+catalog.product.archive
+catalog.inventory.update
+catalog.category.manage
+catalog.product_customization.update
+customization.view
+customization.sessions.view
+customization.files.download
+customization.production_status.update
+customization.models.assign
+orders.view
+orders.update_status
+orders.cancel
+orders.add_note
+orders.export
+customers.view
+customers.update
+customers.export
+checkout.view
+checkout.update
+checkout.policies.update
+payments.view
+payments.update_methods
+payments.view_transactions
+layout.view
+layout.preview
+layout.update
+layout.assets.update
+shipping.view
+shipping.create
+shipping.update
+shipping.archive
+shipping.private_delivery.update
+discounts.view
+discounts.create
+discounts.update
+discounts.archive
+reports.view
+reports.export
+domains.view
+domains.create
+domains.update
+domains.verify
+team.view
+team.invite
+team.update_role
+billing.view
+billing.view_invoices
+settings.view
+settings.update
+```
+
+### Manager
+
+```text
+dashboard.view
+catalog.view
+catalog.product.view
+catalog.product.create
+catalog.product.update
+catalog.inventory.update
+catalog.category.manage
+customization.view
+customization.sessions.view
+customization.files.download
+customization.production_status.update
+orders.view
+orders.update_status
+orders.add_note
+orders.export
+customers.view
+customers.update
+customers.export
+checkout.view
+payments.view
+payments.view_transactions
+shipping.view
+discounts.view
+discounts.create
+discounts.update
+reports.view
+reports.export
+settings.view
+```
+
+### Support
+
+```text
+dashboard.view
+customization.view
+customization.sessions.view
+orders.view
+orders.update_status
+orders.add_note
+customers.view
+checkout.view
+shipping.view
+settings.view
+```
+
+### Catalog
+
+```text
+dashboard.view
+catalog.view
+catalog.product.view
+catalog.product.create
+catalog.product.update
+catalog.product.archive
+catalog.inventory.update
+catalog.category.manage
+catalog.product_customization.update
+customization.view
+customization.sessions.view
+customization.models.assign
+layout.view
+layout.preview
+settings.view
+```
+
+### Marketing
+
+```text
+dashboard.view
+catalog.view
+catalog.product.view
+customization.view
+layout.view
+layout.preview
+layout.update
+layout.assets.update
+discounts.view
+discounts.create
+discounts.update
+discounts.archive
+reports.view
+settings.view
+```
+
+Todas as permissões de loja acima estão contempladas em pelo menos um papel.
+Quando uma permissão nova for criada, este mapa precisa ser atualizado junto.
 
 ## Permissões globais do admin da plataforma
 
@@ -349,6 +496,18 @@ platform.support.impersonate
 platform.3d_models.view
 platform.3d_models.manage
 ```
+
+Papéis globais iniciais:
+
+| Papel | Permissões |
+|---|---|
+| `platform_owner` | todas as permissões globais |
+| `platform_ops` | `platform.stores.view`, `platform.stores.block`, `platform.stores.unblock`, `platform.users.view`, `platform.plans.view`, `platform.webhooks.view`, `platform.audit.view`, `platform.support.impersonate`, `platform.3d_models.view` |
+| `platform_finance` | `platform.stores.view`, `platform.plans.view`, `platform.plans.update`, `platform.audit.view` |
+| `platform_support` | `platform.stores.view`, `platform.users.view`, `platform.webhooks.view`, `platform.audit.view`, `platform.support.impersonate`, `platform.3d_models.view` |
+| `platform_catalog` | `platform.3d_models.view`, `platform.3d_models.manage` |
+
+Todas as permissões globais estão contempladas em pelo menos um papel global.
 
 ## Regra de autorização
 
@@ -402,7 +561,7 @@ Ações sensíveis devem gerar logs:
 - alterar conta de pagamento;
 - alterar domínio;
 - convidar usuário;
-- remover usuário;
+- remover acesso de usuário;
 - alterar permissões;
 - cancelar pedido;
 - reembolsar pedido;

@@ -51,7 +51,7 @@ Opções:
 
 Recomendação:
 
-- staging/beta: EC2 + Docker Compose + Traefik;
+- dev/beta: EC2 + Docker Compose + Traefik;
 - produção V1: ECS/Fargate + ALB + RDS.
 
 Decisão pendente:

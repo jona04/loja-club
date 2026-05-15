@@ -6,6 +6,15 @@ A Loja Club V1 será construída como um **monólito modular em FastAPI**, usand
 
 O sistema será multi-tenant: várias lojas dentro da mesma plataforma, usando uma infraestrutura central e um banco compartilhado com separação por `store_id`.
 
+Existem três identidades diferentes:
+
+- admin interno da Loja Club;
+- lojista/equipe da loja;
+- cliente final da loja.
+
+Admins e lojistas usam `account_users`.
+Clientes finais usam `customer_profiles` e podem comprar sem login.
+
 ## Componentes principais
 
 A arquitetura terá:
@@ -37,7 +46,7 @@ A arquitetura terá:
 | `scheduler` | Tarefas agendadas |
 | `postgres` | Banco principal em desenvolvimento local |
 | `redis` | Cache, locks e fila leve |
-| `traefik` | Reverse proxy local/staging |
+| `traefik` | Reverse proxy local/dev |
 | `mailcatcher` | Captura de e-mails em desenvolvimento |
 | `adminer` | Acesso técnico ao banco em desenvolvimento |
 
@@ -74,9 +83,9 @@ Para produção V1, a sugestão é:
 - Sentry para erros;
 - SES para e-mails.
 
-## Staging barato
+## Dev remoto barato
 
-Para staging ou beta inicial, uma alternativa barata é:
+Para dev remoto ou beta inicial, uma alternativa barata é:
 
 - EC2;
 - Docker Compose;
@@ -118,7 +127,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `checkout` | fluxo de checkout |
 | `payments` | gateway, split e webhooks |
 | `orders` | pedidos |
-| `customers` | clientes finais |
+| `customers` | clientes finais, guest sessions e histórico por loja |
 | `shipping` | frete e entrega |
 | `discounts` | cupons |
 | `billing` | planos e cobrança da Loja Club |
@@ -144,8 +153,10 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 13. Imagens públicas devem ser entregues por CDN.
 14. Modelos 3D e artes enviadas por clientes devem ficar em storage próprio, com controle de acesso.
 15. A personalização aprovada pelo cliente deve ser congelada no carrinho/pedido.
-16. Tarefas pesadas devem ir para fila.
-17. Relatórios pesados não devem impactar a navegação pública.
+16. Cliente final pode comprar sem login obrigatório.
+17. Registros de negócio usam soft delete/status arquivado.
+18. Tarefas pesadas devem ir para fila.
+19. Relatórios pesados não devem impactar a navegação pública.
 
 ## Estratégia de crescimento
 

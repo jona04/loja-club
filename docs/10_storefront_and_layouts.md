@@ -48,7 +48,7 @@ Fluxo:
 1. usuário acessa `empresa.loja.club`;
 2. storefront lê o host;
 3. consulta backend ou cache;
-4. backend busca em `domains`;
+4. backend busca em `domain_hosts`;
 5. encontra `store_id`;
 6. carrega dados públicos da loja;
 7. renderiza template ativo.
@@ -95,11 +95,11 @@ frontend-storefront/
 Tabelas:
 
 ```text
-theme_templates
-store_theme_settings
+content_theme_templates
+content_store_theme_settings
 ```
 
-### theme_templates
+### content_theme_templates
 
 Templates globais.
 
@@ -113,7 +113,7 @@ Campos sugeridos:
 | `is_active` | Se está disponível |
 | `preview_image_url` | Imagem de preview |
 
-### store_theme_settings
+### content_store_theme_settings
 
 Configuração da loja.
 
@@ -291,6 +291,12 @@ Deve mostrar:
 - preview da personalização, se o item for personalizável;
 - botão para checkout.
 
+O carrinho deve funcionar sem login.
+Antes do checkout, ele fica associado a uma sessão anônima com cookie seguro e validade de 30 dias.
+Se o cliente voltar no mesmo navegador, o carrinho deve ser restaurado.
+
+Depois que o cliente informar e-mail ou telefone, a loja pode enviar link seguro para continuar compra.
+
 ## Checkout
 
 Pode ser parte do storefront.
@@ -305,6 +311,9 @@ Deve:
 - anexar personalização aprovada ao pedido;
 - redirecionar ou integrar gateway;
 - aguardar confirmação por webhook.
+
+Checkout não deve exigir senha ou cadastro prévio.
+Ao preencher dados de contato, o sistema cria ou atualiza o customer daquela loja.
 
 Quando o cliente escolher entrega combinada, o checkout deve mostrar uma mensagem clara:
 

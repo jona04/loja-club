@@ -15,6 +15,18 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - recuperação de senha;
 - refresh token, se aplicável.
 
+Auth é para `account_users`: admin Loja Club, lojista e equipe.
+Cliente final não precisa usar login na V1.
+
+### Guest Session
+
+- criar sessão anônima;
+- recuperar sessão anônima;
+- renovar expiração;
+- vincular sessão a customer no checkout;
+- gerar token seguro para continuar compra;
+- validar token seguro.
+
 ### Stores
 
 - criar loja;
@@ -38,14 +50,14 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - verificar disponibilidade;
 - adicionar domínio próprio;
 - verificar DNS;
-- definir domínio principal.
+- arquivar domínio.
 
 ### Catalog
 
 - listar produtos;
 - criar produto;
 - atualizar produto;
-- excluir/desativar produto;
+- arquivar produto;
 - publicar/despublicar;
 - categorias;
 - variações;
@@ -80,10 +92,12 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 ### Cart
 
 - criar carrinho;
+- recuperar carrinho por sessão anônima;
+- recuperar carrinho por token seguro;
 - adicionar item;
 - adicionar item personalizado;
 - atualizar quantidade;
-- remover item;
+- remover item do carrinho;
 - aplicar cupom;
 - obter resumo.
 
@@ -92,6 +106,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - iniciar checkout;
 - validar carrinho;
 - validar personalizações aprovadas;
+- identificar ou criar customer no checkout;
 - calcular frete;
 - listar métodos de entrega disponíveis;
 - selecionar método de entrega;
@@ -136,6 +151,9 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - obter cliente;
 - histórico de pedidos;
 - endereços.
+- arquivar cliente;
+- gerar link seguro para continuar compra;
+- gerar link seguro para acompanhar pedido.
 
 ### Layout
 

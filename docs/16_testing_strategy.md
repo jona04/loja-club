@@ -10,6 +10,7 @@ O foco da V1 deve ser testar:
 - permissões;
 - catálogo;
 - personalização 3D;
+- guest checkout;
 - checkout;
 - pagamentos/webhooks;
 - pedidos;
@@ -92,6 +93,9 @@ Testar:
 
 Testar:
 
+- cliente compra sem login;
+- carrinho anônimo é recuperado no mesmo navegador;
+- carrinho pode ser recuperado por token seguro depois de contato informado;
 - carrinho cria pedido pendente;
 - preço do pedido fica congelado no momento da compra;
 - personalização aprovada fica congelada no pedido;

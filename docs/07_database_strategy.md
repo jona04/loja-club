@@ -34,16 +34,34 @@ Desvantagens:
 
 Tabelas globais não pertencem a uma loja específica.
 
+## Padrão de nomes
+
+Toda tabela deve ter prefixo do domínio.
+
+Exemplos:
+
+```text
+account_users
+store_members
+catalog_products
+shipping_methods
+customization_sessions
+order_orders
+```
+
+Evitar nomes soltos como `users`, `products`, `orders` ou `domains`.
+O nome da tabela deve indicar o contexto antes de abrir relacionamentos.
+
 Exemplos:
 
 | Tabela | Função |
 |---|---|
-| `users` | Usuários da plataforma |
-| `plans` | Planos da Loja Club |
+| `account_users` | Usuários da plataforma |
+| `billing_plans` | Planos da Loja Club |
 | `platform_settings` | Configurações globais |
-| `theme_templates` | Templates globais disponíveis |
-| `product_3d_models` | Modelos 3D globais criados pela Loja Club |
-| `product_3d_model_versions` | Versões dos modelos 3D |
+| `content_theme_templates` | Templates globais disponíveis |
+| `customization_3d_models` | Modelos 3D globais criados pela Loja Club |
+| `customization_3d_model_versions` | Versões dos modelos 3D |
 | `feature_flags` | Flags de recursos |
 | `platform_admin_roles` | Papéis globais internos |
 
@@ -56,34 +74,35 @@ Exemplos:
 | Tabela | Tem `store_id`? |
 |---|---|
 | `store_members` | Sim |
-| `domains` | Sim |
+| `domain_hosts` | Sim |
 | `store_settings` | Sim |
-| `products` | Sim |
-| `product_variants` | Sim |
-| `categories` | Sim |
-| `product_images` | Sim |
-| `product_customization_settings` | Sim |
-| `product_customization_sessions` | Sim |
-| `product_customization_uploads` | Sim |
-| `inventory_items` | Sim |
-| `customers` | Sim |
+| `catalog_products` | Sim |
+| `catalog_product_variants` | Sim |
+| `catalog_categories` | Sim |
+| `catalog_product_images` | Sim |
+| `customization_product_settings` | Sim |
+| `customization_sessions` | Sim |
+| `customization_uploads` | Sim |
+| `catalog_inventory_items` | Sim |
+| `customer_profiles` | Sim |
 | `customer_addresses` | Sim |
-| `carts` | Sim |
+| `customer_guest_sessions` | Sim |
+| `cart_carts` | Sim |
 | `cart_items` | Sim |
-| `cart_item_customizations` | Sim |
-| `orders` | Sim |
+| `customization_cart_items` | Sim |
+| `order_orders` | Sim |
 | `order_items` | Sim |
-| `order_item_customizations` | Sim |
+| `customization_order_items` | Sim |
 | `payment_accounts` | Sim |
 | `payment_transactions` | Sim |
 | `shipping_zones` | Sim |
 | `shipping_methods` | Sim |
 | `shipping_rates` | Sim |
 | `shipping_method_rules` | Sim |
-| `coupons` | Sim |
-| `pages` | Sim |
-| `menus` | Sim |
-| `store_theme_settings` | Sim |
+| `discount_coupons` | Sim |
+| `content_pages` | Sim |
+| `content_menus` | Sim |
+| `content_store_theme_settings` | Sim |
 | `media_files` | Sim |
 
 ## Tabelas principais
@@ -92,44 +111,45 @@ Exemplos:
 
 | Tabela | Função |
 |---|---|
-| `users` | Usuários que acessam a plataforma |
-| `stores` | Lojas/tenants |
+| `account_users` | Usuários que acessam dashboard/admin |
+| `store_stores` | Lojas/tenants |
 | `store_members` | Ligação usuário-loja |
 | `store_roles` | Papéis por loja |
 | `store_permissions` | Permissões disponíveis |
 | `store_member_permissions` | Permissões customizadas, se necessário |
-| `domains` | Domínios/subdomínios |
+| `domain_hosts` | Domínios/subdomínios da loja |
 | `store_settings` | Configurações da loja |
 
 ### Catálogo
 
 | Tabela | Função |
 |---|---|
-| `products` | Produto principal |
-| `product_variants` | Variações |
-| `product_images` | Imagens do produto |
-| `categories` | Categorias |
-| `product_categories` | Produto/categoria |
-| `inventory_items` | Estoque |
-| `collections` | Vitrines/coleções |
+| `catalog_products` | Produto principal |
+| `catalog_product_variants` | Variações |
+| `catalog_product_images` | Imagens do produto |
+| `catalog_categories` | Categorias |
+| `catalog_product_categories` | Produto/categoria |
+| `catalog_inventory_items` | Estoque |
+| `catalog_collections` | Vitrines/coleções |
 
 ### Personalização 3D
 
 | Tabela | Função |
 |---|---|
-| `product_3d_models` | Biblioteca global de modelos 3D da Loja Club |
-| `product_3d_model_versions` | Versões dos arquivos e parâmetros do modelo |
-| `product_customization_settings` | Configuração de personalização por produto/loja |
-| `product_customization_sessions` | Sessões salvas de personalização do cliente |
-| `product_customization_uploads` | Arquivos enviados pelo cliente |
-| `cart_item_customizations` | Personalização aprovada no carrinho |
-| `order_item_customizations` | Cópia congelada da personalização no pedido |
+| `customization_3d_models` | Biblioteca global de modelos 3D da Loja Club |
+| `customization_3d_model_versions` | Versões dos arquivos e parâmetros do modelo |
+| `customization_product_settings` | Configuração de personalização por produto/loja |
+| `customization_sessions` | Sessões salvas de personalização do cliente |
+| `customization_uploads` | Arquivos enviados pelo cliente |
+| `customization_cart_items` | Personalização aprovada no carrinho |
+| `customization_order_items` | Cópia congelada da personalização no pedido |
 
-Campos importantes em `product_customization_sessions`:
+Campos importantes em `customization_sessions`:
 
 ```text
 store_id
 product_id
+guest_session_id
 customer_id
 cart_id
 model_id
@@ -142,22 +162,26 @@ expires_at
 approved_at
 ```
 
-O `state_json` guarda parâmetros como cor, posição, escala, rotação, imagem aplicada e área utilizada.
-O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `order_item_customizations`.
+O `state_json` guarda parâmetros como cor, posição, escala, rotação, imagem aplicada, textos e área utilizada.
+O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `customization_order_items`.
+
+Sessões de personalização expiram em 30 dias quando não viram pedido.
+Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio.
 
 ### Cliente final
 
 | Tabela | Função |
 |---|---|
-| `customers` | Clientes da loja |
+| `customer_profiles` | Clientes finais da loja |
 | `customer_addresses` | Endereços |
 | `customer_consents` | Consentimentos LGPD |
+| `customer_guest_sessions` | Sessões anônimas de carrinho/personalização |
 
 ### Carrinho e checkout
 
 | Tabela | Função |
 |---|---|
-| `carts` | Carrinho |
+| `cart_carts` | Carrinho |
 | `cart_items` | Itens do carrinho |
 | `checkout_sessions` | Sessões de checkout |
 
@@ -165,14 +189,14 @@ O pedido não deve depender da sessão viva: ao criar pedido, copiar a personali
 
 | Tabela | Função |
 |---|---|
-| `orders` | Pedido principal |
+| `order_orders` | Pedido principal |
 | `order_items` | Itens comprados |
-| `order_item_customizations` | Personalização congelada no item |
+| `customization_order_items` | Personalização congelada no item |
 | `order_addresses` | Endereço de entrega/cobrança |
 | `order_status_history` | Histórico do pedido |
 | `order_notes` | Notas internas |
-| `fulfillments` | Entrega/envio |
-| `refunds` | Reembolsos |
+| `order_fulfillments` | Entrega/envio |
+| `order_refunds` | Reembolsos |
 
 ### Pagamentos
 
@@ -181,19 +205,19 @@ O pedido não deve depender da sessão viva: ao criar pedido, copiar a personali
 | `payment_accounts` | Conta/recebedor do lojista |
 | `payment_transactions` | Transações |
 | `payment_webhooks` | Eventos recebidos do gateway |
-| `split_rules` | Regras de comissão |
-| `chargebacks` | Contestação/chargeback |
+| `payment_split_rules` | Regras de comissão |
+| `payment_chargebacks` | Contestação/chargeback |
 
 ### Layout e conteúdo
 
 | Tabela | Função |
 |---|---|
-| `theme_templates` | Templates globais |
-| `store_theme_settings` | Template ativo e configurações |
-| `pages` | Páginas da loja |
-| `menus` | Menus |
-| `menu_items` | Itens do menu |
-| `banners` | Banners |
+| `content_theme_templates` | Templates globais |
+| `content_store_theme_settings` | Template ativo e configurações |
+| `content_pages` | Páginas da loja |
+| `content_menus` | Menus |
+| `content_menu_items` | Itens do menu |
+| `content_banners` | Banners |
 
 ### Frete e cupons
 
@@ -203,8 +227,8 @@ O pedido não deve depender da sessão viva: ao criar pedido, copiar a personali
 | `shipping_methods` | Métodos de entrega |
 | `shipping_rates` | Taxas de frete |
 | `shipping_method_rules` | Regras por cidade/região e tipo de entrega |
-| `coupons` | Cupons |
-| `coupon_redemptions` | Uso dos cupons |
+| `discount_coupons` | Cupons |
+| `discount_coupon_redemptions` | Uso dos cupons |
 
 Tipos iniciais de método de entrega:
 
@@ -222,45 +246,100 @@ Ele deve permitir regras por cidade, região ou estado, mas não precisa calcula
 
 | Tabela | Função |
 |---|---|
-| `plans` | Planos |
-| `plan_features` | Recursos por plano |
-| `store_subscriptions` | Assinatura da loja |
-| `subscription_invoices` | Cobranças da mensalidade |
-| `platform_commissions` | Comissões por venda |
+| `billing_plans` | Planos |
+| `billing_plan_features` | Recursos por plano |
+| `billing_store_subscriptions` | Assinatura da loja |
+| `billing_subscription_invoices` | Cobranças da mensalidade |
+| `billing_platform_commissions` | Comissões por venda |
 
 ### Auditoria
 
 | Tabela | Função |
 |---|---|
 | `audit_logs` | Ações críticas |
-| `login_events` | Logins |
-| `security_events` | Eventos de segurança |
+| `account_login_events` | Logins |
+| `audit_security_events` | Eventos de segurança |
 
-## Índices essenciais
+## Soft delete
+
+Não deve existir hard delete em registros de negócio.
+
+Regra:
+
+```text
+deleted_at
+deleted_by_user_id
+delete_reason
+```
+
+Quando uma ação parecer exclusão, o sistema deve arquivar ou marcar status.
+
+Exemplos:
+
+- produto removido vira `archived`;
+- loja removida vira `archived`;
+- cupom removido vira `archived`;
+- membro removido recebe `removed_at`;
+- sessão expirada vira `expired`;
+- domínio removido vira `inactive` ou `archived`.
+
+Arquivos binários temporários sem valor de auditoria podem ser removidos do storage conforme política de retenção, mantendo o registro de histórico no banco.
+
+## Índices completos iniciais
 
 A performance depende muito dos índices compostos com `store_id`.
 
 | Tabela | Índice recomendado |
 |---|---|
-| `domains` | `host` único |
-| `products` | `store_id + slug` |
-| `products` | `store_id + status` |
-| `products` | `store_id + created_at` |
-| `product_customization_settings` | `store_id + product_id` |
-| `product_customization_sessions` | `store_id + product_id + status` |
-| `product_customization_sessions` | `store_id + customer_id + status` |
-| `order_item_customizations` | `store_id + order_id` |
-| `categories` | `store_id + slug` |
-| `customers` | `store_id + email` |
-| `orders` | `store_id + created_at` |
-| `orders` | `store_id + status` |
-| `orders` | `store_id + customer_id` |
-| `carts` | `store_id + customer_id` |
+| `account_users` | `email` único |
+| `store_stores` | `slug` único |
+| `store_members` | `store_id + user_id` único quando ativo |
+| `domain_hosts` | `host` único |
+| `domain_hosts` | `store_id + status` |
+| `catalog_products` | `store_id + slug` único quando ativo |
+| `catalog_products` | `store_id + status` |
+| `catalog_products` | `store_id + created_at` |
+| `catalog_product_variants` | `store_id + product_id + status` |
+| `catalog_product_images` | `store_id + product_id + position` |
+| `catalog_categories` | `store_id + slug` único quando ativo |
+| `catalog_inventory_items` | `store_id + product_id + variant_id` |
+| `customization_product_settings` | `store_id + product_id` único |
+| `customization_sessions` | `store_id + product_id + status` |
+| `customization_sessions` | `store_id + guest_session_id + status` |
+| `customization_sessions` | `store_id + customer_id + status` |
+| `customization_sessions` | `expires_at + status` |
+| `customization_uploads` | `store_id + customization_session_id` |
+| `customization_cart_items` | `store_id + cart_item_id` único |
+| `customization_order_items` | `store_id + order_id` |
+| `customization_order_items` | `store_id + order_item_id` único |
+| `customer_profiles` | `store_id + email` quando email existir |
+| `customer_profiles` | `store_id + phone` quando phone existir |
+| `customer_guest_sessions` | `guest_session_id` único |
+| `customer_guest_sessions` | `store_id + expires_at` |
+| `cart_carts` | `store_id + guest_session_id + status` |
+| `cart_carts` | `store_id + customer_id + status` |
+| `cart_items` | `store_id + cart_id` |
+| `checkout_sessions` | `store_id + cart_id + status` |
+| `checkout_sessions` | `expires_at + status` |
+| `order_orders` | `store_id + created_at` |
+| `order_orders` | `store_id + status` |
+| `order_orders` | `store_id + customer_id` |
+| `order_items` | `store_id + order_id` |
+| `order_status_history` | `store_id + order_id + created_at` |
 | `payment_transactions` | `store_id + gateway_transaction_id` |
 | `payment_webhooks` | `gateway_event_id` único |
 | `shipping_methods` | `store_id + type + is_active` |
-| `store_members` | `store_id + user_id` único |
+| `shipping_rates` | `store_id + shipping_method_id` |
+| `discount_coupons` | `store_id + code` único quando ativo |
+| `content_pages` | `store_id + slug` único quando ativo |
+| `content_menus` | `store_id + location` |
+| `content_store_theme_settings` | `store_id` único |
+| `billing_store_subscriptions` | `store_id + status` |
+| `billing_platform_commissions` | `store_id + order_id` |
+| `audit_logs` | `store_id + created_at` |
+| `account_login_events` | `user_id + created_at` |
 | `media_files` | `store_id + id` |
+| `media_files` | `store_id + owner_type + owner_id` |
 
 ## Regras de query
 
@@ -312,7 +391,7 @@ Alembic será usado para migrações.
 Regras:
 
 - toda alteração de schema deve gerar migration;
-- migrations precisam rodar em staging antes de produção;
+- migrations precisam rodar em dev antes de produção;
 - não fazer alterações manuais em produção;
 - criar índices junto com a feature;
 - evitar migrations destrutivas sem plano de rollback.

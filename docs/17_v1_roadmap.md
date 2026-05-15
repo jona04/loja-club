@@ -54,7 +54,7 @@ Entregas:
 - criação de loja;
 - seleção de loja ativa;
 - subdomínio automático;
-- tabela domains;
+- tabela `domain_hosts`;
 - resolução por host;
 - isolamento por store_id;
 - testes de isolamento.
@@ -155,8 +155,8 @@ Entregas:
 
 - template `classic`;
 - template `modern`;
-- tabela `theme_templates`;
-- tabela `store_theme_settings`;
+- tabela `content_theme_templates`;
+- tabela `content_store_theme_settings`;
 - tela Layout da Loja;
 - preview;
 - aplicar template;
@@ -174,9 +174,12 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 Entregas:
 
 - criar carrinho;
+- sessão anônima de carrinho;
+- recuperação de carrinho no mesmo navegador;
+- token seguro para continuar compra;
 - adicionar item;
 - adicionar item personalizado;
-- remover item;
+- remover item do carrinho;
 - alterar quantidade;
 - aplicar cupom básico;
 - calcular subtotal;
@@ -195,6 +198,7 @@ Cliente final consegue montar carrinho.
 Entregas:
 
 - dados do cliente;
+- criação/atualização de customer sem login;
 - endereço;
 - frete simples;
 - entrega combinada;
@@ -365,11 +369,11 @@ Entregas:
 - storage para modelos 3D e artes de clientes;
 - RDS;
 - Redis/ElastiCache;
-- ECS/Fargate ou EC2 staging;
+- ECS/Fargate ou EC2 dev;
 - Route 53;
 - SSL;
 - GitHub Actions;
-- deploy staging;
+- deploy dev;
 - deploy production.
 
 Resultado:

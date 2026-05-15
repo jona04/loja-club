@@ -47,16 +47,18 @@ A comissão da Loja Club será definida pelo plano da loja.
 3. Cliente inicia checkout.
 4. Sistema valida estoque, valores e personalizações aprovadas.
 5. Cliente escolhe forma de entrega.
-6. Sistema cria pedido pendente.
-7. Sistema congela a personalização nos itens do pedido.
-8. Sistema cria transação/cobrança no gateway.
-9. Gateway processa pagamento.
-10. Gateway aplica split.
-11. Gateway envia webhook.
-12. Backend valida webhook.
-13. Backend atualiza transação.
-14. Backend atualiza pedido.
-15. Cliente e lojista recebem notificação.
+6. Cliente informa contato e endereço sem criar senha.
+7. Sistema cria ou atualiza customer da loja.
+8. Sistema cria pedido pendente.
+9. Sistema congela a personalização nos itens do pedido.
+10. Sistema cria transação/cobrança no gateway.
+11. Gateway processa pagamento.
+12. Gateway aplica split.
+13. Gateway envia webhook.
+14. Backend valida webhook.
+15. Backend atualiza transação.
+16. Backend atualiza pedido.
+17. Cliente e lojista recebem notificação.
 
 ## Pedido pendente
 
@@ -70,6 +72,7 @@ Esse pedido precisa registrar:
 
 - loja;
 - cliente;
+- guest session, se a compra começou anônima;
 - endereço;
 - itens;
 - preços no momento da compra;

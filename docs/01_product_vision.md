@@ -86,6 +86,10 @@ O cliente final deve conseguir:
 12. Se escolher entrega combinada, manter contato com a loja para combinar o envio.
 13. Usar WhatsApp da loja para tirar dúvidas quando disponível.
 
+O cliente final não precisa criar conta nem fazer login para comprar.
+Antes do checkout, carrinho e personalização serão mantidos por sessão anônima.
+No checkout, ao informar nome, e-mail e telefone, o sistema cria ou atualiza o customer daquela loja.
+
 ## Escopo da V1
 
 A V1 deve ser completa o suficiente para operar lojas reais.
@@ -110,6 +114,8 @@ A V1 deve incluir:
 - gateway com split;
 - pedidos;
 - clientes;
+- compra sem login obrigatório;
+- carrinho anônimo recuperável por sessão;
 - frete simples;
 - entrega combinada para envio local/particular;
 - cupons básicos;
@@ -119,6 +125,7 @@ A V1 deve incluir:
 - admin interno;
 - observabilidade mínima;
 - segurança básica forte;
+- soft delete para registros de negócio;
 - deploy com Docker;
 - infraestrutura AWS barata, mas escalável.
 

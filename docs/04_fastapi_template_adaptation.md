@@ -44,7 +44,7 @@ Do template original, vamos manter:
 - recuperação de senha;
 - e-mails;
 - Docker Compose;
-- Traefik local/staging;
+- Traefik local/dev;
 - frontend React/Vite para painel;
 - Tailwind/shadcn;
 - OpenAPI client gerado;
@@ -159,7 +159,7 @@ Ele pode reaproveitar componentes, client OpenAPI e padrões visuais, mas não d
 O Traefik será mantido para:
 
 - desenvolvimento local;
-- staging;
+- dev remoto;
 - beta barato em EC2;
 - roteamento por subdomínio;
 - simulação de URLs reais;
@@ -194,7 +194,7 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 13. Adicionar S3/CDN.
 14. Adicionar Redis/fila.
 15. Adicionar gateway com split.
-16. Preparar staging com Traefik.
+16. Preparar dev remoto com Traefik.
 17. Preparar produção AWS.
 
 ## Decisão canônica

@@ -28,6 +28,8 @@ A documentação está em português por enquanto. A estrutura de pastas e nomes
 20. [API Contracts TODO](./20_api_contracts_todo.md)
 21. [Design System TODO](./21_design_system_todo.md)
 22. [Product Customization 3D](./22_product_customization_3d.md)
+23. [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md)
+24. [V2 Ideas](./24_v2_ideas.md)
 
 ## Decisões canônicas até agora
 
@@ -47,8 +49,11 @@ A documentação está em português por enquanto. A estrutura de pastas e nomes
 - A V1 terá **personalização 3D de produtos** usando modelos criados pela Loja Club.
 - O lojista poderá alterar o template ativo no painel, salvar e refletir imediatamente na loja pública.
 - Produtos comuns continuarão funcionando com fotos, variações e carrinho tradicional.
+- O cliente final poderá comprar e personalizar sem login obrigatório.
+- Carrinhos e personalizações anônimas terão sessão com validade.
+- O projeto usa soft delete/status arquivado em vez de delete físico para registros de negócio.
 - O painel do lojista será dividido por módulos, permitindo bloqueio por permissão e por plano.
 - Um usuário poderá gerenciar várias lojas, e uma loja poderá ter vários usuários.
 - A V1 deve ser completa e funcional, mas sem microserviços e sem Kubernetes no primeiro momento.
-- Para desenvolvimento e staging barato, Traefik + Docker Compose fazem sentido.
+- Para local e dev remoto, Traefik + Docker Compose fazem sentido.
 - Para produção V1 mais robusta na AWS, a sugestão é ECS/Fargate + ALB + RDS + S3 + CloudFront.

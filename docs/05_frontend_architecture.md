@@ -169,7 +169,7 @@ Decisão recomendada:
 
 ## Containers frontend
 
-No desenvolvimento/staging:
+No local/dev:
 
 ```text
 frontend-dashboard
@@ -198,6 +198,7 @@ O dashboard usa autenticação do usuário.
 O admin interno usa autenticação de usuários internos da Loja Club e permissões globais da plataforma.
 
 O storefront público usa APIs públicas, identificando a loja pelo domínio da requisição.
+Carrinho e personalização podem funcionar sem login usando sessão anônima com validade.
 
 ## Seleção de loja ativa no dashboard
 

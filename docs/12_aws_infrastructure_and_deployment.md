@@ -14,9 +14,13 @@ A Loja Club deve ter pelo menos:
 
 ```text
 local
-staging
+dev
 production
 ```
+
+`local` roda na máquina de desenvolvimento.
+`dev` é um ambiente remoto na nuvem, parecido com local, mas com domínios, variáveis e serviços configurados para teste compartilhado.
+`production` é o ambiente real dos lojistas e clientes.
 
 ## Desenvolvimento local
 
@@ -37,7 +41,7 @@ adminer
 mailcatcher
 ```
 
-## Staging barato
+## Dev remoto barato
 
 Sugestão:
 
@@ -95,7 +99,7 @@ Serviços:
 Traefik será usado em:
 
 - local;
-- staging;
+- dev;
 - possível produção inicial barata em EC2.
 
 Roteamento:
@@ -175,7 +179,7 @@ maior instância
 
 Opções:
 
-1. Redis container no staging barato.
+1. Redis container no dev remoto barato.
 2. ElastiCache em produção.
 
 Redis será usado para:
@@ -244,7 +248,7 @@ Fluxo sugerido:
 2. GitHub Actions roda testes;
 3. build das imagens Docker;
 4. push para ECR;
-5. deploy em staging;
+5. deploy em dev;
 6. validação;
 7. deploy em produção.
 
@@ -252,7 +256,7 @@ Fluxo sugerido:
 
 Antes de atualizar aplicação:
 
-- rodar migrations em staging;
+- rodar migrations em dev;
 - validar;
 - rodar migrations em produção com cuidado;
 - atualizar containers.
@@ -265,7 +269,7 @@ Para V1 barata, a expectativa inicial pode ficar em faixa controlada se usar:
 - poucos containers;
 - logs controlados;
 - CloudFront/S3 com baixo tráfego;
-- staging econômico;
+- dev econômico;
 - evitar NAT Gateway se possível;
 - evitar EKS/Kubernetes.
 
@@ -281,4 +285,4 @@ Para V1 barata, a expectativa inicial pode ficar em faixa controlada se usar:
 
 ## Decisão canônica
 
-A Loja Club usará Docker desde o começo. Local e staging podem usar Docker Compose + Traefik. Produção V1 recomendada: ECS/Fargate + ALB + RDS PostgreSQL + Redis/ElastiCache + S3 + CloudFront.
+A Loja Club usará Docker desde o começo. Local e dev remoto podem usar Docker Compose + Traefik. Produção V1 recomendada: ECS/Fargate + ALB + RDS PostgreSQL + Redis/ElastiCache + S3 + CloudFront.

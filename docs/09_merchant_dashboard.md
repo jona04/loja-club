@@ -76,7 +76,7 @@ Funcionalidades:
 - listar produtos;
 - criar produto;
 - editar produto;
-- excluir/desativar produto;
+- arquivar/desativar produto;
 - publicar/despublicar;
 - gerenciar imagem;
 - gerenciar variações;
@@ -251,8 +251,10 @@ Funcionalidades:
 - alterar subdomínio se permitido;
 - conectar domínio próprio, se estiver na V1;
 - ver status de verificação;
-- instruções de DNS;
-- definir domínio principal.
+- instruções de DNS.
+
+Uma loja pode ter vários domínios ativos.
+Não haverá domínio principal na V1.
 
 ## Equipe
 
@@ -312,7 +314,7 @@ A loja pode ter estados:
 | `paused` | Loja pausada pelo lojista |
 | `suspended` | Loja suspensa pela plataforma |
 | `blocked` | Loja bloqueada por regra crítica |
-| `deleted` | Loja removida/arquivada |
+| `archived` | Loja arquivada por soft delete |
 
 ## Onboarding do lojista
 

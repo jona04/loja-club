@@ -28,6 +28,7 @@ A Loja Club será uma plataforma multi-tenant de ecommerce. Segurança é críti
 9. Ações sensíveis devem gerar auditoria.
 10. Admins internos devem ter acesso controlado.
 11. Arte enviada por cliente deve ser privada por padrão.
+12. Registros de negócio devem usar soft delete.
 
 ## Autenticação
 
@@ -216,7 +217,7 @@ Medidas necessárias:
 - base legal definida;
 - controle de acesso;
 - logs de ações sensíveis;
-- exclusão/anonymização quando aplicável;
+- anonimização quando aplicável;
 - consentimentos quando necessários;
 - minimização de dados.
 
@@ -237,6 +238,21 @@ Registrar:
 - cancelamento de pedido;
 - reembolso;
 - acesso de suporte.
+
+## Soft delete
+
+Não usar hard delete para registros de negócio.
+
+Exemplos:
+
+- produto arquivado;
+- loja arquivada;
+- domínio arquivado;
+- cupom arquivado;
+- customer arquivado;
+- sessão expirada.
+
+Isso permite auditoria, investigação de suporte e recuperação quando necessário.
 
 ## Backups
 

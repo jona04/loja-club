@@ -48,7 +48,7 @@ Isso permite:
 | `StoreMember` | Ligação entre usuário e loja |
 | `Role` | Papel do usuário dentro da loja |
 | `Permission` | Permissão granular |
-| `Domain` | Domínio/subdomínio da loja |
+| `DomainHost` | Domínio/subdomínio da loja |
 
 ## Resolução da loja pelo domínio
 
@@ -64,12 +64,25 @@ Fluxo:
 
 1. Requisição chega no storefront.
 2. O storefront/backend lê o `Host`.
-3. Busca na tabela `domains`.
+3. Busca na tabela `domain_hosts`.
 4. Encontra o `store_id`.
 5. Carrega dados públicos daquela loja.
 6. Toda consulta usa aquele `store_id`.
 
-## Tabela domains
+## Tabela domain_hosts
+
+Uma mesma loja pode ter mais de um host.
+
+Exemplo:
+
+```text
+brindesfortaleza.loja.club
+www.brindesfortaleza.com.br
+brindesfortaleza.com.br
+```
+
+A V1 não terá conceito de domínio principal.
+Qualquer host ativo ligado à loja deve renderizar a mesma loja.
 
 Campos sugeridos:
 
@@ -81,10 +94,10 @@ Campos sugeridos:
 | `type` | `platform_subdomain` ou `custom_domain` |
 | `status` | `pending`, `active`, `failed`, `blocked` |
 | `ssl_status` | `pending`, `issued`, `failed` |
-| `is_primary` | Domínio principal da loja |
 | `verified_at` | Data de verificação |
 | `created_at` | Criação |
 | `updated_at` | Atualização |
+| `deleted_at` | Arquivamento/remoção lógica |
 
 ## Subdomínio automático
 
@@ -155,7 +168,7 @@ www.empresa.com.br CNAME custom.loja.club
 
 ## Traefik e wildcard
 
-No desenvolvimento/staging, Traefik pode rotear:
+No desenvolvimento local/dev, Traefik pode rotear:
 
 ```text
 api.loja.club        -> backend-api

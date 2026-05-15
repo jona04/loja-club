@@ -129,6 +129,9 @@ O modelo deve informar limites seguros:
 - tamanho máximo do upload;
 - aviso de baixa resolução quando possível.
 
+O estado salvo deve ser suficiente para restaurar o editor exatamente no ponto em que o cliente parou.
+Isso inclui textos, imagens, cor do produto, posição, escala, rotação, face/lado do modelo e área imprimível usada.
+
 ## Sessão de personalização
 
 Quando o cliente abrir o editor, o sistema deve criar uma sessão de personalização.
@@ -137,6 +140,8 @@ Essa sessão deve ser salva para permitir:
 
 - continuar depois;
 - recuperar se o cliente recarregar a página;
+- continuar sem login usando sessão anônima;
+- recuperar por link seguro depois que informar e-mail/telefone;
 - adicionar ao carrinho com segurança;
 - anexar a arte aprovada ao pedido;
 - permitir que o lojista visualize o que o cliente estava montando.
@@ -145,6 +150,8 @@ Dados da sessão:
 
 - loja;
 - produto;
+- guest session;
+- customer, se já existir;
 - modelo 3D usado;
 - parâmetros escolhidos;
 - arquivos enviados pelo cliente;
@@ -152,6 +159,16 @@ Dados da sessão:
 - status da sessão;
 - data de expiração;
 - referência do carrinho, se houver.
+
+Validade:
+
+```text
+30 dias
+```
+
+Depois disso, a sessão deve virar `expired`.
+O registro deve continuar no banco por soft delete/status para auditoria.
+Arquivos temporários não aprovados podem seguir política de limpeza, mas sem apagar o histórico de negócio.
 
 Status sugeridos:
 
