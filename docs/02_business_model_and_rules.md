@@ -50,6 +50,7 @@ A Loja Club fornece tecnologia. O lojista vende o produto.
 | Estoque | Lojista |
 | Preço | Lojista |
 | Entrega | Lojista |
+| Entrega combinada | Lojista |
 | Troca/devolução | Lojista |
 | Nota fiscal | Lojista |
 | Atendimento ao consumidor | Lojista |

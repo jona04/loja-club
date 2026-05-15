@@ -132,12 +132,19 @@ Sugestão:
 
 - frete fixo;
 - frete grátis por valor mínimo;
-- retirada local.
+- retirada local;
+- entrega combinada.
 
 Decisão pendente:
 
 ```text
 Confirmar se haverá integração com Correios/transportadora na V1 ou não.
+```
+
+Decisão já assumida:
+
+```text
+A V1 deve permitir entrega combinada sem integração automática com apps.
 ```
 
 ## Nota fiscal

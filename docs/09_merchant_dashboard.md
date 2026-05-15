@@ -146,8 +146,23 @@ Funcionalidades:
 - frete fixo;
 - frete grátis acima de valor mínimo;
 - retirada local;
+- entrega combinada;
 - regiões de entrega;
 - prazo estimado manual.
+
+### Entrega combinada
+
+A entrega combinada permite que a loja venda para clientes próximos e combine o envio depois da compra.
+
+Uso esperado:
+
+- cliente está na mesma cidade, região metropolitana ou estado da loja física;
+- loja pode entregar por motoboy próprio;
+- loja pode combinar envio por aplicativo, como 99, Uber ou similar da região;
+- cliente e loja conversam após a venda para fechar prazo, valor e forma de envio.
+
+Na V1, essa opção não precisa integrar diretamente com aplicativos.
+Ela deve deixar claro no checkout e no pedido que a entrega será combinada com a loja após a compra.
 
 ## Layout da loja
 

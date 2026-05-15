@@ -22,6 +22,7 @@ A plataforma deve oferecer:
 - pedidos;
 - clientes;
 - frete simples;
+- entrega combinada;
 - cupons;
 - layouts prontos;
 - domínio/subdomínio;
@@ -40,7 +41,7 @@ O lojista deve conseguir:
 5. Escolher entre dois templates prontos na V1.
 6. Cadastrar produtos e imagens.
 7. Configurar checkout e pagamento.
-8. Definir frete simples ou retirada local.
+8. Definir frete simples, retirada local ou entrega combinada.
 9. Publicar a loja.
 10. Receber pedidos.
 11. Ver clientes.
@@ -66,8 +67,10 @@ O cliente final deve conseguir:
 3. Ver detalhes do produto.
 4. Adicionar ao carrinho.
 5. Finalizar compra.
-6. Pagar via gateway.
-7. Receber confirmação de pedido.
+6. Escolher forma de entrega.
+7. Pagar via gateway.
+8. Receber confirmação de pedido.
+9. Se escolher entrega combinada, manter contato com a loja para combinar o envio.
 
 ## Escopo da V1
 
@@ -89,6 +92,7 @@ A V1 deve incluir:
 - pedidos;
 - clientes;
 - frete simples;
+- entrega combinada para envio local/particular;
 - cupons básicos;
 - notificações por e-mail;
 - planos da Loja Club;
@@ -123,3 +127,6 @@ A V1 não deve começar com:
 A V1 precisa ser simples para construir, mas real o suficiente para vender.
 
 O foco não é copiar todas as funcionalidades de uma plataforma madura. O foco é construir uma base sólida, multi-tenant, segura, modular e capaz de receber lojistas reais.
+
+Um diferencial importante é permitir que lojas locais vendam online sem depender apenas de transportadora tradicional.
+Quando fizer sentido para a região, a loja poderá oferecer entrega combinada, usando contato direto com o cliente e serviços locais como 99, Uber, motoboy próprio ou alternativas semelhantes.

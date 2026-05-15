@@ -194,8 +194,23 @@ Deve mostrar:
 - descrição;
 - variações;
 - disponibilidade;
+- opções de entrega;
 - botão comprar/adicionar ao carrinho;
 - produtos relacionados simples.
+
+### Opções de entrega no produto
+
+A página de produto deve deixar visível quais formas de entrega a loja oferece.
+
+Opções esperadas na V1:
+
+- frete fixo;
+- frete grátis acima de valor mínimo;
+- retirada local;
+- entrega combinada.
+
+Para entrega combinada, o texto deve explicar que a loja entrará em contato após a compra para combinar envio particular, como motoboy, 99, Uber ou serviço semelhante da região.
+Essa opção é útil para clientes próximos da loja física, especialmente na mesma cidade, região metropolitana ou estado.
 
 ## Página de categoria
 
@@ -215,6 +230,7 @@ Deve mostrar:
 - subtotal;
 - cupom;
 - frete estimado;
+- opção de entrega escolhida;
 - botão para checkout.
 
 ## Checkout
@@ -226,9 +242,16 @@ Deve:
 - coletar dados do cliente;
 - coletar endereço;
 - exibir frete;
+- permitir entrega combinada quando habilitada pela loja;
 - criar pedido pendente;
 - redirecionar ou integrar gateway;
 - aguardar confirmação por webhook.
+
+Quando o cliente escolher entrega combinada, o checkout deve mostrar uma mensagem clara:
+
+```text
+A loja entrará em contato após a compra para combinar a entrega.
+```
 
 ## Decisão canônica
 

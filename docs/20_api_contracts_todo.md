@@ -76,8 +76,23 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - iniciar checkout;
 - validar carrinho;
 - calcular frete;
+- listar métodos de entrega disponíveis;
+- selecionar método de entrega;
 - criar pedido pendente;
 - criar pagamento.
+
+### Shipping
+
+- listar métodos de entrega da loja;
+- criar método de entrega;
+- atualizar método de entrega;
+- ativar/desativar método de entrega;
+- configurar frete fixo;
+- configurar frete grátis;
+- configurar retirada local;
+- configurar entrega combinada;
+- definir regiões atendidas;
+- definir mensagem exibida no checkout.
 
 ### Payments
 

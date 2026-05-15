@@ -45,15 +45,16 @@ A comissão da Loja Club será definida pelo plano da loja.
 1. Cliente adiciona produtos ao carrinho.
 2. Cliente inicia checkout.
 3. Sistema valida estoque e valores.
-4. Sistema cria pedido pendente.
-5. Sistema cria transação/cobrança no gateway.
-6. Gateway processa pagamento.
-7. Gateway aplica split.
-8. Gateway envia webhook.
-9. Backend valida webhook.
-10. Backend atualiza transação.
-11. Backend atualiza pedido.
-12. Cliente e lojista recebem notificação.
+4. Cliente escolhe forma de entrega.
+5. Sistema cria pedido pendente.
+6. Sistema cria transação/cobrança no gateway.
+7. Gateway processa pagamento.
+8. Gateway aplica split.
+9. Gateway envia webhook.
+10. Backend valida webhook.
+11. Backend atualiza transação.
+12. Backend atualiza pedido.
+13. Cliente e lojista recebem notificação.
 
 ## Pedido pendente
 
@@ -71,9 +72,41 @@ Esse pedido precisa registrar:
 - itens;
 - preços no momento da compra;
 - frete;
+- método de entrega;
 - desconto;
 - total;
 - status.
+
+## Entrega combinada
+
+A V1 deve suportar uma opção de entrega combinada.
+
+Nome sugerido:
+
+```text
+private_delivery
+```
+
+Essa modalidade representa envio particular negociado entre cliente e loja depois da compra.
+
+Exemplos:
+
+- motoboy próprio;
+- 99;
+- Uber;
+- aplicativo local de entrega;
+- entrega manual combinada por telefone ou WhatsApp.
+
+Regras:
+
+- a loja decide se essa opção fica disponível;
+- pode ser limitada por cidade, região ou estado;
+- o checkout deve informar que a entrega será combinada após a compra;
+- o pedido deve registrar que a entrega depende de contato com a loja;
+- a Loja Club não calcula automaticamente preço, prazo ou disponibilidade de aplicativos;
+- a responsabilidade pela entrega continua sendo do lojista.
+
+Essa opção permite vendas locais com mais flexibilidade, especialmente para lojas físicas que atendem clientes próximos.
 
 ## Confirmação por webhook
 
@@ -239,6 +272,7 @@ Todo webhook deve validar:
 | Gateway indisponível | Gateway |
 | Produto não entregue | Lojista |
 | Produto com defeito | Lojista |
+| Entrega combinada não realizada | Lojista |
 | Checkout da plataforma fora do ar | Loja Club |
 | Erro técnico no sistema | Loja Club |
 

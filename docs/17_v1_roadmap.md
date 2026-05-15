@@ -171,6 +171,7 @@ Entregas:
 - dados do cliente;
 - endereço;
 - frete simples;
+- entrega combinada;
 - revisão do pedido;
 - criação de pedido pendente;
 - congelamento de preços;
@@ -248,6 +249,7 @@ Entregas:
 - frete fixo;
 - frete grátis por valor mínimo;
 - retirada local;
+- entrega combinada;
 - cupom percentual;
 - cupom valor fixo;
 - validade;

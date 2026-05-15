@@ -267,6 +267,7 @@ shipping.view
 shipping.create
 shipping.update
 shipping.delete
+shipping.private_delivery.update
 ```
 
 ### Cupons

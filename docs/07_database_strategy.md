@@ -69,7 +69,10 @@ Exemplos:
 | `order_items` | Sim |
 | `payment_accounts` | Sim |
 | `payment_transactions` | Sim |
+| `shipping_zones` | Sim |
 | `shipping_methods` | Sim |
+| `shipping_rates` | Sim |
+| `shipping_method_rules` | Sim |
 | `coupons` | Sim |
 | `pages` | Sim |
 | `menus` | Sim |
@@ -159,8 +162,21 @@ Exemplos:
 | `shipping_zones` | Regiões de entrega |
 | `shipping_methods` | Métodos de entrega |
 | `shipping_rates` | Taxas de frete |
+| `shipping_method_rules` | Regras por cidade/região e tipo de entrega |
 | `coupons` | Cupons |
 | `coupon_redemptions` | Uso dos cupons |
+
+Tipos iniciais de método de entrega:
+
+```text
+fixed_shipping
+free_shipping
+local_pickup
+private_delivery
+```
+
+O tipo `private_delivery` representa entrega combinada entre cliente e loja.
+Ele deve permitir regras por cidade, região ou estado, mas não precisa calcular automaticamente preço ou prazo na V1.
 
 ### Billing da Loja Club
 
@@ -198,6 +214,7 @@ A performance depende muito dos índices compostos com `store_id`.
 | `carts` | `store_id + customer_id` |
 | `payment_transactions` | `store_id + gateway_transaction_id` |
 | `payment_webhooks` | `gateway_event_id` único |
+| `shipping_methods` | `store_id + type + is_active` |
 | `store_members` | `store_id + user_id` único |
 | `media_files` | `store_id + id` |
 

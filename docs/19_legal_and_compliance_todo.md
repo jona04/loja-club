@@ -18,6 +18,7 @@ Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídic
 - Política de suspensão de loja.
 - Política de reembolso.
 - Política de responsabilidade por entrega.
+- Política de entrega combinada.
 - Política de responsabilidade por produto.
 - Política de uso aceitável.
 - Definição de que a Loja Club é plataforma tecnológica, não vendedora.
@@ -50,6 +51,7 @@ O lojista:
 - define preço;
 - gerencia estoque;
 - entrega o produto;
+- responde por entrega combinada com o cliente;
 - atende o cliente;
 - emite nota fiscal quando aplicável;
 - responde por troca/devolução;
