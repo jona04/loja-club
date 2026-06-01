@@ -172,10 +172,16 @@ Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registr
 
 | Tabela | Função |
 |---|---|
-| `customer_profiles` | Clientes finais da loja |
-| `customer_addresses` | Endereços |
+| `customer_profiles` | Clientes finais da loja (chaves: `email` normalizado e `phone_e164`) |
+| `customer_addresses` | Endereços (vários por customer) |
+| `customer_auth_identities` | Credenciais de login do cliente: senha e Google/OAuth |
+| `customer_verification_codes` | Códigos de uso único (e-mail/SMS/WhatsApp) para recuperação e login |
 | `customer_consents` | Consentimentos LGPD |
 | `customer_guest_sessions` | Sessões anônimas de carrinho/personalização |
+
+O `customer_profiles` guarda o e-mail normalizado e o `phone_e164` como chaves de identidade/deduplicação por loja.
+O nome segue a regra de primeiro-nome-vence (ver [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md)).
+Login por código, senha ou Google sincroniza no mesmo customer via `customer_auth_identities`.
 
 ### Carrinho e checkout
 
@@ -312,8 +318,11 @@ A performance depende muito dos índices compostos com `store_id`.
 | `customization_cart_items` | `store_id + cart_item_id` único |
 | `customization_order_items` | `store_id + order_id` |
 | `customization_order_items` | `store_id + order_item_id` único |
-| `customer_profiles` | `store_id + email` quando email existir |
-| `customer_profiles` | `store_id + phone` quando phone existir |
+| `customer_profiles` | `store_id + email` único quando email existir |
+| `customer_profiles` | `store_id + phone_e164` único quando phone existir |
+| `customer_auth_identities` | `store_id + provider + provider_subject` único |
+| `customer_auth_identities` | `store_id + customer_id` |
+| `customer_verification_codes` | `store_id + customer_id + expires_at` |
 | `customer_guest_sessions` | `guest_session_id` único |
 | `customer_guest_sessions` | `store_id + expires_at` |
 | `cart_carts` | `store_id + guest_session_id + status` |

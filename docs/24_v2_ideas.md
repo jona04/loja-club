@@ -40,16 +40,23 @@ Na V2, pode existir chat interno com:
 
 ## Conta do cliente final
 
-Na V1, compra sem login é prioridade.
+> Movido para a V1. A compra sem login continua sendo a prioridade, mas a V1 agora prevê uma conta opcional do cliente.
+> Detalhes em [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md).
 
-Na V2, pode existir área do cliente com:
+Já previsto para a V1 (após o lançamento de teste):
 
-- login mágico;
-- histórico de pedidos;
-- carrinhos salvos;
-- personalizações salvas;
+- login por código (e-mail/SMS/WhatsApp), senha ou Google;
+- área do cliente com histórico de pedidos;
 - endereços;
-- recompra.
+- editar perfil;
+- sincronização entre compra como convidado e conta.
+
+Continua como ideia de V2/futuro:
+
+- carrinhos salvos sincronizados entre dispositivos de forma proativa;
+- recompra em 1 clique;
+- recomendações e fidelidade;
+- preferências avançadas e notificações personalizadas.
 
 ## Modelos 3D avançados
 
