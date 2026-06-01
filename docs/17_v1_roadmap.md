@@ -2,16 +2,45 @@
 
 ## Objetivo
 
-Construir uma primeira versão completa, funcional e capaz de operar lojas reais na Loja Club.
+Construir uma primeira versão da Loja Club capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-## Etapa 1 — Fundação do projeto
+A prioridade é colocar a plataforma **no ar para teste o quanto antes**: uma loja real navegável, personalizável em 3D e recebendo pedidos, deixando a **integração de pagamento/split para o final**.
+
+Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
+
+## Situação atual (2026-06-01)
+
+> Até aqui, os commits do projeto foram **somente de documentação**. O código ainda é o **Full Stack FastAPI Template** praticamente sem alterações:
+>
+> - `backend/app/models.py` só tem `User` e `Item`;
+> - `PROJECT_NAME` ainda é `"Full Stack FastAPI Project"` (branding Loja Club pendente);
+> - o frontend ainda é o painel padrão do template (login/signup/items);
+> - não existe `Store`, `store_id`, módulos, storefront Next.js nem admin.
+>
+> Ou seja: a **Etapa 1 está apenas parcialmente feita** (projeto gerado pelo template) e as demais ainda não começaram.
+
+## Como ler este roadmap
+
+- As etapas estão agrupadas em **fases**.
+- O **marco de lançamento para teste** acontece ao fim da Fase 4, **antes** de pagamentos.
+- **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
+- **Pagamento e billing** ficam **ao final**, conforme prioridade do projeto.
+- Há dois critérios de conclusão no fim do documento: um de **lançamento para teste** (sem pagamento) e um de **V1 completa** (com pagamento/split).
+
+---
+
+## Fase 0 — Fundação
+
+### Etapa 1 — Fundação do projeto
+
+> Parcialmente feito: o projeto já foi gerado a partir do template. Faltam o branding e a configuração descritos abaixo.
 
 Entregas:
 
-- criar projeto a partir do Full Stack FastAPI Template;
-- configurar nome Loja Club;
+- criar projeto a partir do Full Stack FastAPI Template; *(feito)*
+- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend); *(pendente)*
 - configurar variáveis de ambiente;
 - rodar Docker Compose local;
 - validar backend;
@@ -25,15 +54,15 @@ Entregas:
 Resultado:
 
 ```text
-Projeto base rodando localmente com backend, frontend, banco e proxy.
+Projeto base rodando localmente com backend, frontend, banco e proxy, já com a cara da Loja Club.
 ```
 
-## Etapa 2 — Refatoração modular
+### Etapa 2 — Refatoração modular
 
 Entregas:
 
 - separar backend em módulos;
-- remover exemplos genéricos do template;
+- remover exemplos genéricos do template (`items`);
 - criar base de services/repositories/routes/schemas por módulo;
 - definir padrões internos;
 - preparar base para multi-tenancy.
@@ -44,7 +73,11 @@ Resultado:
 Template transformado em monólito modular.
 ```
 
-## Etapa 3 — Multi-tenancy e lojas
+---
+
+## Fase 1 — Núcleo multi-tenant e painel
+
+### Etapa 3 — Multi-tenancy e lojas
 
 Entregas:
 
@@ -65,7 +98,7 @@ Resultado:
 Usuário cria loja e os dados ficam isolados por store_id.
 ```
 
-## Etapa 4 — Painel do lojista base
+### Etapa 4 — Painel do lojista base
 
 Entregas:
 
@@ -84,7 +117,11 @@ Resultado:
 Lojista consegue acessar e gerenciar sua loja básica.
 ```
 
-## Etapa 5 — Catálogo e mídia
+---
+
+## Fase 2 — Catálogo, mídia e 3D
+
+### Etapa 5 — Catálogo e mídia
 
 Entregas:
 
@@ -106,7 +143,7 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens.
 ```
 
-## Etapa 6 — Personalização 3D de produtos
+### Etapa 6 — Personalização 3D de produtos
 
 Entregas:
 
@@ -127,11 +164,17 @@ Resultado:
 Cliente personaliza produto em 3D, aprova a arte e o lojista recebe exatamente o que foi aprovado.
 ```
 
-## Etapa 7 — Storefront público
+---
+
+## Fase 3 — Loja pública
+
+### Etapa 7 — Storefront público (Next.js)
+
+> Decisão fechada (docs 05/10/18): o storefront usa **Next.js** desde a V1, com **Three.js** para o editor 3D.
 
 Entregas:
 
-- projeto `frontend-storefront`;
+- projeto `frontend-storefront` em Next.js;
 - roteamento por domínio/subdomínio;
 - home pública;
 - página de produto;
@@ -149,7 +192,7 @@ Resultado:
 Loja pública abre em nomedaloja.loja.club.
 ```
 
-## Etapa 8 — Layouts/templates
+### Etapa 8 — Layouts/templates
 
 Entregas:
 
@@ -169,7 +212,38 @@ Resultado:
 Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 ```
 
-## Etapa 9 — Carrinho
+---
+
+## Fase 4 — Venda sem pagamento online
+
+> Objetivo da fase: deixar a loja pronta para **receber pedidos reais sem o gateway**.
+> O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
+> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 5.
+
+### Etapa 9 — Frete e cupons (base)
+
+> Movido para antes do carrinho: carrinho (Etapa 10) e checkout (Etapa 11) dependem destas regras.
+
+Entregas:
+
+- frete fixo;
+- frete grátis por valor mínimo;
+- retirada local;
+- entrega combinada (`private_delivery`);
+- regiões atendidas (cidade/região/estado), sem cálculo automático;
+- cupom percentual;
+- cupom valor fixo;
+- validade;
+- limite de uso;
+- pedido mínimo.
+
+Resultado:
+
+```text
+Loja tem regras básicas de entrega e desconto disponíveis para o carrinho e o checkout.
+```
+
+### Etapa 10 — Carrinho
 
 Entregas:
 
@@ -184,7 +258,7 @@ Entregas:
 - aplicar cupom básico;
 - calcular subtotal;
 - validar estoque;
-- persistência temporária.
+- persistência temporária;
 - vínculo com sessão de personalização aprovada.
 
 Resultado:
@@ -193,7 +267,7 @@ Resultado:
 Cliente final consegue montar carrinho.
 ```
 
-## Etapa 10 — Checkout
+### Etapa 11 — Checkout sem pagamento online
 
 Entregas:
 
@@ -203,40 +277,20 @@ Entregas:
 - frete simples;
 - entrega combinada;
 - revisão do pedido;
-- criação de pedido pendente;
+- criação de pedido `pending_payment`;
 - congelamento de preços;
 - congelamento da personalização aprovada;
 - sessão de checkout;
-- preparação para gateway.
+- **pagamento combinado fora da plataforma** (Pix manual/transferência/WhatsApp), com mensagem pós-compra explicando como o pagamento será combinado;
+- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 5).
 
 Resultado:
 
 ```text
-Carrinho vira pedido pending_payment.
+Carrinho vira pedido pending_payment; o pagamento é combinado entre loja e cliente.
 ```
 
-## Etapa 11 — Pagamentos e split
-
-Entregas:
-
-- integração com gateway escolhido;
-- criação de recebedor/subconta;
-- payment account por loja;
-- criação de transação;
-- split automático;
-- webhook assinado;
-- idempotência;
-- status de pagamento;
-- atualização de pedido;
-- testes de webhook.
-
-Resultado:
-
-```text
-Cliente paga, gateway divide valores e pedido é atualizado por webhook.
-```
-
-## Etapa 12 — Pedidos
+### Etapa 12 — Pedidos
 
 Entregas:
 
@@ -251,6 +305,7 @@ Entregas:
 - status de arte/produção;
 - notas internas;
 - alteração de status operacional;
+- marcação manual de pagamento recebido (enquanto não há gateway);
 - cancelamento, se permitido.
 
 Resultado:
@@ -259,7 +314,7 @@ Resultado:
 Lojista consegue operar vendas recebidas.
 ```
 
-## Etapa 13 — Clientes
+### Etapa 13 — Clientes
 
 Entregas:
 
@@ -276,26 +331,77 @@ Resultado:
 Lojista visualiza clientes da própria loja.
 ```
 
-## Etapa 14 — Frete e cupons
+### Etapa 14 — Notificações essenciais + deploy mínimo de teste
+
+> Esta etapa fecha o que falta para colocar a loja no ar e ver o fluxo funcionando de ponta a ponta.
 
 Entregas:
 
-- frete fixo;
-- frete grátis por valor mínimo;
-- retirada local;
-- entrega combinada;
-- cupom percentual;
-- cupom valor fixo;
-- validade;
-- limite de uso.
+- e-mail de **pedido criado** para o cliente;
+- e-mail de **novo pedido** para o lojista;
+- e-mails reaproveitando a base de e-mail do template (SES/SMTP);
+- deploy mínimo remoto: **EC2 + Docker Compose + Traefik + RDS + S3 + CloudFront**;
+- DNS wildcard `*.loja.club` + SSL;
+- health checks básicos (`/health`).
 
 Resultado:
 
 ```text
-Loja consegue vender com regras básicas de entrega e desconto.
+Loja real no ar, recebendo pedidos, com pagamento combinado fora da plataforma.
 ```
 
-## Etapa 15 — Billing da Loja Club
+---
+
+## 🚀 Marco — Lançamento para teste (MVP no ar)
+
+Este é o ponto que você pediu para alcançar o quanto antes. A plataforma pode ir ao ar para teste **sem pagamento online** quando:
+
+- lojista cria conta;
+- lojista cria loja;
+- subdomínio funciona;
+- lojista cadastra produto (simples e personalizável);
+- lojista vincula modelo 3D a produto personalizável;
+- lojista escolhe layout;
+- loja pública abre em `nomedaloja.loja.club`;
+- cliente navega, personaliza produto em 3D e aprova a arte;
+- cliente adiciona ao carrinho;
+- cliente finaliza checkout sem login;
+- pedido é criado como `pending_payment`;
+- pagamento é combinado fora da plataforma;
+- lojista vê o pedido e a arte aprovada no painel;
+- cliente e lojista recebem e-mail do pedido;
+- isolamento multi-tenant está testado.
+
+---
+
+## Fase 5 — Monetização e pagamentos (pós-teste)
+
+> Conforme a prioridade do projeto, o pagamento entra **depois** do lançamento para teste.
+> Aqui o pagamento combinado é substituído (ou complementado) pelo gateway com split.
+
+### Etapa 15 — Pagamentos e split
+
+Entregas:
+
+- escolha e integração com o gateway (decisão pendente: Pagar.me / Mercado Pago / Asaas — ver `18_open_decisions.md`);
+- criação de recebedor/subconta;
+- payment account por loja;
+- criação de transação;
+- split automático;
+- webhook assinado;
+- idempotência;
+- status de pagamento;
+- atualização de pedido por webhook;
+- substituir o "pagamento combinado" pelo gateway no checkout;
+- testes de webhook.
+
+Resultado:
+
+```text
+Cliente paga, gateway divide valores e pedido é atualizado por webhook.
+```
+
+### Etapa 16 — Billing da Loja Club
 
 Entregas:
 
@@ -314,7 +420,11 @@ Resultado:
 Loja Club começa a monetizar por mensalidade e/ou comissão.
 ```
 
-## Etapa 16 — Admin da plataforma
+---
+
+## Fase 6 — Operação da plataforma e produção
+
+### Etapa 17 — Admin da plataforma
 
 Entregas:
 
@@ -337,14 +447,14 @@ Resultado:
 Equipe Loja Club consegue operar a plataforma.
 ```
 
-## Etapa 17 — Segurança e observabilidade
+### Etapa 18 — Segurança e observabilidade
 
 Entregas:
 
 - auditoria;
 - Sentry;
 - CloudWatch;
-- health checks;
+- health checks completos;
 - rate limit;
 - validação de webhooks;
 - política de segredos;
@@ -360,7 +470,9 @@ Resultado:
 Sistema pronto para produção controlada.
 ```
 
-## Etapa 18 — Infra AWS
+### Etapa 19 — Infra AWS de produção
+
+> O deploy mínimo de teste já foi feito na Etapa 14. Aqui consolidamos a infraestrutura de produção.
 
 Entregas:
 
@@ -369,9 +481,9 @@ Entregas:
 - storage para modelos 3D e artes de clientes;
 - RDS;
 - Redis/ElastiCache;
-- ECS/Fargate ou EC2 dev;
+- ECS/Fargate (produção robusta);
 - Route 53;
-- SSL;
+- SSL/ACM;
 - GitHub Actions;
 - deploy dev;
 - deploy production.
@@ -382,7 +494,7 @@ Resultado:
 Loja Club publicada com infraestrutura real.
 ```
 
-## Etapa 19 — Beta com lojas reais
+### Etapa 20 — Beta com lojas reais
 
 Entregas:
 
@@ -402,26 +514,37 @@ Resultado:
 V1 validada com lojistas reais.
 ```
 
-## Critério de V1 pronta
+---
 
-A V1 está pronta quando:
+## Critério de lançamento para teste (sem pagamento)
 
-- lojista cria conta;
-- lojista cria loja;
+A plataforma está pronta para ir ao ar em teste quando:
+
+- lojista cria conta e loja;
 - subdomínio funciona;
-- lojista cadastra produto;
-- lojista vincula modelo 3D a produto personalizável;
+- lojista cadastra produto simples e personalizável;
+- lojista vincula modelo 3D ao produto personalizável;
 - lojista escolhe layout;
 - loja pública abre;
-- cliente personaliza produto em 3D;
-- cliente aprova arte;
+- cliente personaliza produto em 3D e aprova a arte;
 - cliente adiciona ao carrinho;
-- cliente finaliza checkout;
-- pagamento é processado;
+- cliente finaliza checkout sem login;
+- pedido é criado como `pending_payment`;
+- pagamento é combinado fora da plataforma;
+- lojista vê pedido e arte aprovada no painel;
+- cliente e lojista recebem e-mail do pedido;
+- isolamento multi-tenant está testado.
+
+## Critério de V1 completa (com pagamento/split)
+
+A V1 está completa quando, além de tudo acima:
+
+- pagamento é processado pelo gateway;
 - webhook confirma pedido;
 - split é aplicado;
-- lojista vê pedido no painel;
-- lojista vê arte personalizada aprovada;
-- cliente recebe confirmação;
+- comissão da Loja Club é registrada;
+- billing/assinatura está ativo (se definido na V1);
 - admin Loja Club consegue monitorar;
-- isolamento multi-tenant está testado.
+- segurança e observabilidade mínimas estão no ar;
+- infraestrutura de produção está consolidada;
+- beta validado com lojistas reais.
