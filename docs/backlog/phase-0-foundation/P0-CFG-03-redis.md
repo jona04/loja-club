@@ -24,7 +24,7 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
 - `backend/pyproject.toml`: dependência do cliente `redis` (async).
 - `backend/app/core/config.py`: `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD` (opcional), `REDIS_DB` e `@computed_field REDIS_URL`.
 - `backend/app/core/cache.py`: `get_redis()` + helpers de get/set com TTL e prefixo de chave.
-- Health check `/health/redis` (stub que dá `PING`).
+- Health checks **top-level** `/health` e `/health/redis` (este faz `PING`), seguindo o padrão do doc [15](../../15_observability_and_operations.md). `/health/db` e demais são completados na Fase 4.
 
 ## Fora de escopo (o que NÃO entra)
 - Chaves de cache de domínio/storefront e invalidação → Fases 1/3.
@@ -37,19 +37,20 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
 - `backend/pyproject.toml` (alterar) — dep `redis`.
 - `backend/app/core/config.py` (alterar) — settings de Redis.
 - `backend/app/core/cache.py` (criar) — cliente + helpers.
-- `backend/app/api/routes/utils.py` (alterar) — `/health/redis`.
+- `backend/app/main.py` (alterar) — endpoints `/health` e `/health/redis` **top-level** (fora de `/api/v1`).
 
 ## Passos
 1. Adicionar o serviço `redis` no compose + porta no override.
 2. Declarar a dependência `redis` no `pyproject.toml`.
 3. Settings + `REDIS_URL` em `config.py`.
 4. `cache.py` com `get_redis()` e helpers `cache_get`/`cache_set(ttl, prefix)`.
-5. `/health/redis` fazendo `PING`.
+5. `/health` e `/health/redis` (este fazendo `PING` no Redis), top-level.
 
 ## Definition of Done
 - [ ] `redis` sobe no `docker compose` e o backend conecta.
-- [ ] `GET /api/v1/utils/health/redis` retorna OK.
+- [ ] `GET /health/redis` retorna OK.
 - [ ] `cache_set`/`cache_get` funcionam num teste manual.
 
 ## Notas / Reconciliações
 - Em dev local, Redis é container; em dev online (Fase 5) pode ser container no EC2 ou ElastiCache (doc [12](../../12_aws_infrastructure_and_deployment.md)).
+- **Reconciliação:** o template tem `/api/v1/utils/health-check/` (usado no `healthcheck` do `compose.yml`). Padronizar para `/health*` do doc [15](../../15_observability_and_operations.md) e **atualizar o `test:` do healthcheck do backend no `compose.yml`** para a nova URL.

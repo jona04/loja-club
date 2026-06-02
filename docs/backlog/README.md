@@ -32,6 +32,10 @@ Fase     → pasta (ex.: phase-0-foundation/) com um README de índice
 - O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
 - **Materialização just-in-time:** só a **Fase 0** já está quebrada em tasks (pasta `phase-0-foundation/`). As **Fases 1–6 seguem como arquivo único** (esboço) até começarmos cada uma — aí viram pasta com tasks.
 
+## Fundações & Gargalos (leitura obrigatória)
+
+Antes de qualquer fase, ver [`_foundations-and-bottlenecks.md`](./_foundations-and-bottlenecks.md): invariantes e decisões cross-fase (global/i18n, multi-tenancy, dinheiro, API, abstrações, segurança) + os gargalos antecipados. **Não é uma fase** — os itens base já viraram tasks na Fase 0; os demais entram nas fases respectivas.
+
 ## Regra de ouro (alinhamento código ↔ docs)
 
 1. O **código imita a lógica dos docs**. Não inventar lógica de negócio nova no código.
@@ -77,6 +81,7 @@ Estas decisões alinham o template aos docs e evitam divergência:
 7. **APIs do painel** sob `/api/v1/stores/{store_id}/...`; **APIs públicas do storefront** resolvem a loja pelo header `Host` (doc [06](../06_multitenancy_and_domains.md)/[08](../08_modules_and_permissions.md)).
 8. **Pagamento fica para a Fase 5.** Até lá, checkout cria pedido `pending_payment` e o pagamento é combinado fora da plataforma (doc [17](../17_v1_roadmap.md)).
 9. **Ambiente:** toda a V1 é **dev**. Fases 0–4 rodam **local** (Docker Compose); Fases 5–6 sobem **no ar na AWS (EC2)**. **Storage:** AWS S3 + CloudFront **reais desde o dev local** (sem MinIO), via boto3. Produção (ECS/Fargate) é **pós-V1**. Doc [12](../12_aws_infrastructure_and_deployment.md).
+10. **Global desde a base — nada assume Brasil.** Dinheiro é sempre `(valor + moeda ISO 4217)` (expoente não fixo em 2); telefone **E.164 para qualquer país** (lib, sem `+55` hard-coded); endereço **país-aware** (ISO 3166-1); `currency`/`locale` por loja e por cliente; timestamps em **UTC**. Base em `P0-MOD-05`; convenções completas no doc de Fundações.
 
 ## Decisões pendentes que afetam o MVP
 

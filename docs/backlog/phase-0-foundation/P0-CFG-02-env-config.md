@@ -24,6 +24,7 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
 - `.env`: `BACKEND_CORS_ORIGINS` incluindo `http://app.localhost.tiangolo.com`, `http://admin.localhost.tiangolo.com` e o padrão de subdomínios de loja usado no dev.
 - `.env`: `SECRET_KEY` forte; `FIRST_SUPERUSER`/`FIRST_SUPERUSER_PASSWORD` reais.
 - `config.py`: derivar hosts da plataforma a partir de `DOMAIN` (helpers `api_host`, `app_host`, `admin_host` e base para wildcard de storefront).
+- `.env` + `config.py`: `PLATFORM_DEFAULT_CURRENCY` (ISO 4217, ex.: `USD`/`BRL`) e `PLATFORM_DEFAULT_LOCALE` (ex.: `pt-BR`) como **fallback global** (ver `P0-MOD-05`). Loja e cliente terão a própria moeda/locale nas fases seguintes.
 
 ## Fora de escopo (o que NÃO entra)
 - DNS/SSL real, `*.loja.club` → Fase 5 (`P5-INFRA-*`).
