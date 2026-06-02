@@ -49,15 +49,15 @@ Opções:
 1. EC2 + Docker Compose + Traefik + RDS.
 2. ECS/Fargate + ALB + RDS.
 
-Recomendação:
+Recomendação (decidido):
 
-- dev/beta: EC2 + Docker Compose + Traefik;
-- produção V1: ECS/Fargate + ALB + RDS.
+- **toda a V1 é dev**: Fases 0–4 local; Fases 5–6 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
+- **produção robusta (pós-V1)**: ECS/Fargate + ALB + RDS.
 
-Decisão pendente:
+Decisão:
 
 ```text
-Definir se a primeira produção será EC2 barata ou ECS/Fargate.
+V1 = dev em EC2 (Fases 5–6). ECS/Fargate fica para a produção pós-V1.
 ```
 
 ## Domínio próprio na V1

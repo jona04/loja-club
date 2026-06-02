@@ -6,7 +6,9 @@ Construir uma primeira versão da Loja Club capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-A prioridade é colocar a plataforma **no ar para teste o quanto antes**: uma loja real navegável, personalizável em 3D e recebendo pedidos, deixando a **integração de pagamento/split para o final**.
+> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–4 rodam **local** (na máquina do desenvolvedor) e as Fases 5–6 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 4), deixando a **integração de pagamento/split para o final** (Fase 5).
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
 
@@ -24,14 +26,16 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
-- O **marco de lançamento para teste** acontece ao fim da Fase 4, **antes** de pagamentos.
+- **Toda a V1 é dev:** Fases 0–4 **local**; Fases 5–6 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
+- Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
+- O **marco do MVP (dev local)** acontece ao fim da Fase 4, **antes** de subir para a AWS e de pagamentos.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Pagamento, conta do cliente e billing** ficam **ao final**, conforme prioridade do projeto.
-- Há dois critérios de conclusão no fim do documento: um de **lançamento para teste** (sem pagamento) e um de **V1 completa** (com pagamento/split).
+- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 5–6.
+- Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
 
 ---
 
-## Fase 0 — Fundação
+## Fase 0 — Fundação (dev local)
 
 ### Etapa 1 — Fundação do projeto
 
@@ -48,7 +52,7 @@ Entregas:
 - validar banco;
 - configurar Redis;
 - configurar estrutura base de módulos;
-- configurar CI inicial;
+- configurar CI inicial (lint/testes);
 - configurar lint/testes básicos.
 
 Resultado:
@@ -75,7 +79,7 @@ Template transformado em monólito modular.
 
 ---
 
-## Fase 1 — Núcleo multi-tenant e painel
+## Fase 1 — Núcleo multi-tenant e painel (dev local)
 
 ### Etapa 3 — Multi-tenancy e lojas
 
@@ -102,7 +106,7 @@ Usuário cria loja e os dados ficam isolados por store_id.
 
 Entregas:
 
-- painel em `app.loja.club`;
+- painel em `app.loja.club` (local: `app.localhost.tiangolo.com`);
 - login;
 - seleção de loja ativa;
 - menu modular;
@@ -119,9 +123,11 @@ Lojista consegue acessar e gerenciar sua loja básica.
 
 ---
 
-## Fase 2 — Catálogo, mídia e 3D
+## Fase 2 — Catálogo, mídia e 3D (dev local)
 
 ### Etapa 5 — Catálogo e mídia
+
+> Mídia já usa **AWS S3 + CloudFront reais** a partir do dev local (bucket/distribuição de dev). Sem MinIO.
 
 Entregas:
 
@@ -132,7 +138,7 @@ Entregas:
 - status publicado/rascunho;
 - upload de imagens;
 - produto `simple` e `customizable_3d`;
-- S3;
+- S3 (AWS real, ambiente dev);
 - worker para thumbnails;
 - CloudFront para imagens;
 - testes de catálogo.
@@ -140,7 +146,7 @@ Entregas:
 Resultado:
 
 ```text
-Lojista consegue cadastrar produtos reais com imagens.
+Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFront).
 ```
 
 ### Etapa 6 — Personalização 3D de produtos
@@ -166,7 +172,7 @@ Cliente personaliza produto em 3D, aprova a arte e o lojista recebe exatamente o
 
 ---
 
-## Fase 3 — Loja pública
+## Fase 3 — Loja pública (dev local)
 
 ### Etapa 7 — Storefront público (Next.js)
 
@@ -189,7 +195,7 @@ Entregas:
 Resultado:
 
 ```text
-Loja pública abre em nomedaloja.loja.club.
+Loja pública abre em nomedaloja.loja.club (local: *.localhost.tiangolo.com).
 ```
 
 ### Etapa 8 — Layouts/templates
@@ -214,9 +220,9 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ---
 
-## Fase 4 — Venda sem pagamento online
+## Fase 4 — Venda sem pagamento online (dev local)
 
-> Objetivo da fase: deixar a loja pronta para **receber pedidos reais sem o gateway**.
+> Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem o gateway**.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
 > (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 5.
 
@@ -334,38 +340,36 @@ Resultado:
 Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, mesmo sem cadastro.
 ```
 
-### Etapa 14 — Notificações essenciais + deploy mínimo de teste
+### Etapa 14 — Notificações essenciais + finalização local
 
-> Esta etapa fecha o que falta para colocar a loja no ar e ver o fluxo funcionando de ponta a ponta.
+> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 5.
 
 Entregas:
 
-- e-mail de **pedido criado** para o cliente;
-- e-mail de **novo pedido** para o lojista;
-- e-mails reaproveitando a base de e-mail do template (SES/SMTP);
-- deploy mínimo remoto: **EC2 + Docker Compose + Traefik + RDS + S3 + CloudFront**;
-- DNS wildcard `*.loja.club` + SSL;
-- health checks básicos (`/health`).
+- e-mail de **pedido criado** para o cliente (Mailcatcher no dev local);
+- e-mail de **novo pedido** para o lojista (Mailcatcher no dev local);
+- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente local;
+- fluxo completo validado de ponta a ponta no Docker Compose local.
 
 Resultado:
 
 ```text
-Loja real no ar, recebendo pedidos, com pagamento combinado fora da plataforma.
+MVP rodando 100% local, recebendo pedidos, com pagamento combinado fora da plataforma.
 ```
 
 ---
 
-## 🚀 Marco — Lançamento para teste (MVP no ar)
+## 🚀 Marco — MVP funcionando local
 
-Este é o ponto que você pediu para alcançar o quanto antes. A plataforma pode ir ao ar para teste **sem pagamento online** quando:
+Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodando local** de ponta a ponta, **sem pagamento online**. Atingido quando:
 
 - lojista cria conta;
 - lojista cria loja;
-- subdomínio funciona;
+- subdomínio funciona (local);
 - lojista cadastra produto (simples e personalizável);
 - lojista vincula modelo 3D a produto personalizável;
 - lojista escolhe layout;
-- loja pública abre em `nomedaloja.loja.club`;
+- loja pública abre no subdomínio local;
 - cliente navega, personaliza produto em 3D e aprova a arte;
 - cliente adiciona ao carrinho;
 - cliente finaliza checkout sem login;
@@ -373,17 +377,36 @@ Este é o ponto que você pediu para alcançar o quanto antes. A plataforma pode
 - pedido é criado como `pending_payment`;
 - pagamento é combinado fora da plataforma;
 - lojista vê o pedido e a arte aprovada no painel;
-- cliente e lojista recebem e-mail do pedido;
+- cliente e lojista recebem e-mail do pedido (Mailcatcher);
 - isolamento multi-tenant está testado.
 
 ---
 
-## Fase 5 — Pós-lançamento: conta do cliente, pagamentos e monetização
+## Fase 5 — Dev online na AWS (EC2)
 
-> Conforme a prioridade do projeto, estas etapas entram **depois** do lançamento para teste.
-> A conta do cliente e o gateway de pagamento são adições à experiência já validada no MVP.
+> Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
 
-### Etapa 15 — Conta e login do cliente
+### Etapa 15 — Deploy do ambiente dev na AWS (EC2)
+
+Entregas:
+
+- provisionar **EC2 + Docker Compose + Traefik**;
+- **RDS PostgreSQL**;
+- **Redis** (container no EC2 ou ElastiCache);
+- **S3 + CloudFront** do ambiente online (a implementação já existe desde o dev local);
+- **Route 53** com wildcard `*.loja.club` + `api.`/`app.`;
+- **SSL** via Traefik/Let's Encrypt (ACM depois);
+- **SES/SMTP real** para os e-mails;
+- **não expor** Adminer/Mailcatcher/Traefik dashboard;
+- health checks acessíveis.
+
+Resultado:
+
+```text
+Sistema no ar (dev), em EC2, pronto para receber webhooks de pagamento.
+```
+
+### Etapa 16 — Conta e login do cliente
 
 > Detalhes em `23_customer_identity_and_guest_checkout.md`. No MVP o cliente já é identificado por e-mail/telefone; aqui ele ganha login e área própria, sincronizando com o que comprou como convidado.
 
@@ -405,7 +428,7 @@ Resultado:
 Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
 ```
 
-### Etapa 16 — Pagamentos e split
+### Etapa 17 — Pagamentos e split
 
 Entregas:
 
@@ -427,7 +450,7 @@ Resultado:
 Cliente paga, gateway divide valores e pedido é atualizado por webhook.
 ```
 
-### Etapa 17 — Billing da Loja Club
+### Etapa 18 — Billing da Loja Club
 
 Entregas:
 
@@ -448,9 +471,9 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ---
 
-## Fase 6 — Operação da plataforma e produção
+## Fase 6 — Operação da plataforma, CI/CD e beta
 
-### Etapa 18 — Admin da plataforma
+### Etapa 19 — Admin da plataforma
 
 Entregas:
 
@@ -473,7 +496,7 @@ Resultado:
 Equipe Loja Club consegue operar a plataforma.
 ```
 
-### Etapa 19 — Segurança e observabilidade
+### Etapa 20 — Segurança e observabilidade
 
 Entregas:
 
@@ -493,34 +516,27 @@ Entregas:
 Resultado:
 
 ```text
-Sistema pronto para produção controlada.
+Ambiente dev online pronto para uso controlado.
 ```
 
-### Etapa 20 — Infra AWS de produção
-
-> O deploy mínimo de teste já foi feito na Etapa 14. Aqui consolidamos a infraestrutura de produção.
+### Etapa 21 — CI/CD
 
 Entregas:
 
-- S3;
-- CloudFront;
-- storage para modelos 3D e artes de clientes;
-- RDS;
-- Redis/ElastiCache;
-- ECS/Fargate (produção robusta);
-- Route 53;
-- SSL/ACM;
-- GitHub Actions;
-- deploy dev;
-- deploy production.
+- GitHub Actions: lint + type check + testes;
+- build das imagens Docker;
+- push para registry (ECR/registry escolhido);
+- deploy automatizado para o **EC2 (dev online)**;
+- disciplina de migrations (rodar em dev antes);
+- rollback básico.
 
 Resultado:
 
 ```text
-Loja Club publicada com infraestrutura real.
+Deploy automatizado do ambiente dev na AWS a cada merge.
 ```
 
-### Etapa 21 — Beta com lojas reais
+### Etapa 22 — Beta com lojas reais
 
 Entregas:
 
@@ -537,17 +553,33 @@ Entregas:
 Resultado:
 
 ```text
-V1 validada com lojistas reais.
+V1 validada com lojistas reais (no ambiente dev online da AWS).
 ```
 
 ---
 
-## Critério de lançamento para teste (sem pagamento)
+## Pós-V1 — Produção robusta (fora do escopo da V1)
 
-A plataforma está pronta para ir ao ar em teste quando:
+> Não entra na V1. Quando a V1 (dev) estiver validada, migrar para produção trocando a orquestração por serviços gerenciados, **mantendo backend, banco e storage**:
+
+- ECS/Fargate + ECR;
+- ALB;
+- ACM;
+- RDS Multi-AZ / read replicas conforme necessidade;
+- ElastiCache;
+- autoescala;
+- estratégia de certificado para domínios próprios dos lojistas.
+
+Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+
+---
+
+## Critério do MVP (dev local, sem pagamento)
+
+O MVP está pronto (rodando local) quando:
 
 - lojista cria conta e loja;
-- subdomínio funciona;
+- subdomínio funciona (local);
 - lojista cadastra produto simples e personalizável;
 - lojista vincula modelo 3D ao produto personalizável;
 - lojista escolhe layout;
@@ -562,10 +594,11 @@ A plataforma está pronta para ir ao ar em teste quando:
 - cliente e lojista recebem e-mail do pedido;
 - isolamento multi-tenant está testado.
 
-## Critério de V1 completa (com pagamento/split)
+## Critério de V1 completa (dev online na AWS, com pagamento/split)
 
 A V1 está completa quando, além de tudo acima:
 
+- sistema está **no ar na AWS (EC2)**, em ambiente dev;
 - cliente pode entrar na área do cliente (código, senha ou Google) e editar o perfil, com sincronização guest ↔ conta;
 - pagamento é processado pelo gateway;
 - webhook confirma pedido;
@@ -574,5 +607,5 @@ A V1 está completa quando, além de tudo acima:
 - billing/assinatura está ativo (se definido na V1);
 - admin Loja Club consegue monitorar;
 - segurança e observabilidade mínimas estão no ar;
-- infraestrutura de produção está consolidada;
+- CI/CD faz deploy automatizado para o EC2;
 - beta validado com lojistas reais.

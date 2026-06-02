@@ -2,7 +2,9 @@
 
 Este diretório contém o **backlog de implementação** da Loja Club, organizado **por fase**, espelhando o [V1 Roadmap](../17_v1_roadmap.md) mas em nível de tarefa.
 
-O foco atual é **finalizar tudo até a Fase 4** (o MVP utilizável para teste, sem pagamento online). As Fases 5 e 6 ganharão backlog próprio quando chegarmos nelas, para não inchar os arquivos.
+O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100% local**. As Fases 5–6 sobem o sistema **no ar na AWS (EC2)** e cobrem conta do cliente, pagamentos, billing, admin, CI/CD e beta.
+
+> **Toda a V1 é ambiente de dev.** Fases 0–4 = **dev local**; Fases 5–6 = **dev online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**. Os arquivos usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO). Ver [doc 12](../12_aws_infrastructure_and_deployment.md).
 
 ## Arquivos
 
@@ -12,8 +14,11 @@ O foco atual é **finalizar tudo até a Fase 4** (o MVP utilizável para teste, 
 | 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base |
 | 2 | [phase-2-catalog-media-3d.md](./phase-2-catalog-media-3d.md) | 5–6 | Catálogo, mídia/S3, personalização 3D |
 | 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) | 7–8 | Storefront Next.js, editor 3D, layouts |
-| 4 | [phase-4-sell-without-payment.md](./phase-4-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes, notificações, deploy de teste |
-| 5–6 | *(a criar)* | 15–21 | Conta do cliente, pagamentos, billing, admin, segurança, infra, beta |
+| 4 | [phase-4-sell-without-payment.md](./phase-4-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes, notificações — **tudo rodando local** |
+| 5 | [phase-5-customer-account-and-payments.md](./phase-5-customer-account-and-payments.md) | 15–18 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
+| 6 | [phase-6-platform-ops-and-production.md](./phase-6-platform-ops-and-production.md) | 19–22 | Admin da plataforma, segurança/observabilidade, **CI/CD**, beta |
+
+> **Fim do MVP (dev local):** Fase 4. **V1 completa (dev online na AWS):** Fase 6.
 
 ## Regra de ouro (alinhamento código ↔ docs)
 
@@ -59,11 +64,12 @@ Estas decisões alinham o template aos docs e evitam divergência:
 6. **Toda query comercial filtra por `store_id`** (doc [06](../06_multitenancy_and_domains.md)/[14](../14_security_strategy.md)).
 7. **APIs do painel** sob `/api/v1/stores/{store_id}/...`; **APIs públicas do storefront** resolvem a loja pelo header `Host` (doc [06](../06_multitenancy_and_domains.md)/[08](../08_modules_and_permissions.md)).
 8. **Pagamento fica para a Fase 5.** Até lá, checkout cria pedido `pending_payment` e o pagamento é combinado fora da plataforma (doc [17](../17_v1_roadmap.md)).
+9. **Ambiente:** toda a V1 é **dev**. Fases 0–4 rodam **local** (Docker Compose); Fases 5–6 sobem **no ar na AWS (EC2)**. **Storage:** AWS S3 + CloudFront **reais desde o dev local** (sem MinIO), via boto3. Produção (ECS/Fargate) é **pós-V1**. Doc [12](../12_aws_infrastructure_and_deployment.md).
 
 ## Decisões pendentes que afetam o MVP
 
 > Não bloqueiam começar, mas precisam ser fechadas dentro da fase indicada. Registrar a escolha aqui e em [18_open_decisions.md](../18_open_decisions.md).
 
 - **Lib de fila/worker** (Fase 0/2): Celery vs RQ vs arq vs `BackgroundTasks`. Os docs pedem "fila leve com Redis" e "worker", sem fixar a lib.
-- **Storage local em dev** (Fase 2): MinIO (S3-compatible) como stand-in do S3 em dev. Docs assumem S3/CloudFront em produção — MinIO não contradiz, é compatível.
+- ~~Storage local~~ **(decidido)**: usar **AWS S3 + CloudFront reais** desde o dev local (sem MinIO). Requer bucket/distribuição/credenciais IAM de dev — tarefa na Fase 2.
 - **Domínio de teste** (Fase 1/4): usar `localhost.tiangolo.com` (e `*.localhost.tiangolo.com`) localmente para exercitar subdomínios via Traefik antes do `*.loja.club` real.

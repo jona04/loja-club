@@ -7,7 +7,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 ## Definition of Done da fase
 
 - CRUD de produtos (simple e customizable_3d) com imagens, categorias, variações e estoque, isolado por loja.
-- Upload de imagem validado, indo para S3 (MinIO em dev) e servido por CDN; thumbnails gerados por worker.
+- Upload de imagem validado, indo para **AWS S3** e servido por **CloudFront**; thumbnails gerados por worker. (S3/CloudFront reais, usados inclusive a partir do dev local.)
 - Biblioteca inicial de modelos 3D (caneca, squeeze, camisa) cadastrada; produto vinculável a um modelo.
 - Sessões de personalização: criar, atualizar estado, upload de arte, preview, aprovar; lojista vê sessões da própria loja.
 
@@ -42,10 +42,11 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Enviar **original** ao S3 (nunca salvar binário no banco; nunca servir imagem pelo backend).
 - [ ] Worker gera versões otimizadas (`thumbnail`, `card`, `product`, `zoom`) → S3.
 - [ ] Servir por CloudFront/CDN.
-- [ ] Config S3/CDN em `config.py` (`S3_BUCKET`, `S3_REGION`, `AWS_*`, `CDN_BASE_URL`); cliente em `app/core/storage.py`.
-- [ ] **Dev:** serviço `minio` no compose como S3-compatible (decisão do README do backlog).
+- [ ] Config S3/CDN em `config.py` (`S3_BUCKET`, `S3_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `CDN_BASE_URL`); cliente **boto3** em `app/core/storage.py`.
+- [ ] **Setup AWS de dev:** criar **bucket S3 de dev** + **distribuição CloudFront** + usuário/credenciais **IAM** com acesso mínimo. Usado **inclusive a partir do dev local**.
+- [ ] URLs assinadas para arquivos privados (artes de cliente). Doc [14](../14_security_strategy.md).
 
-**Reconciliação:** docs falam S3/CloudFront (produção); MinIO em dev é S3-compatible — sem divergência de lógica. Registrar a escolha do worker (Fase 0).
+**Reconciliação:** usar **AWS S3 + CloudFront reais** desde o dev local (sem MinIO/stand-ins), conforme decisão do projeto e doc [12](../12_aws_infrastructure_and_deployment.md). Implementação normal via boto3. Registrar a escolha do worker (Fase 0).
 
 ---
 

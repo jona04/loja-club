@@ -1,16 +1,16 @@
-# Fase 4 — Venda sem pagamento online + lançamento de teste
+# Fase 4 — Venda sem pagamento online (dev local)
 
-> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela preço e personalização, e o pagamento é combinado fora da plataforma. Ao fim, deploy mínimo no ar.
+> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela preço e personalização, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 5.
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [10](../10_storefront_and_layouts.md), [11](../11_checkout_payments_and_split.md), [13](../13_performance_cache_and_cdn.md), [15](../15_observability_and_operations.md), [22](../22_product_customization_3d.md), [23](../23_customer_identity_and_guest_checkout.md), [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
 
-## Definition of Done da fase (= Critério de lançamento para teste)
+## Definition of Done da fase (= Critério do MVP, dev local)
 
 - Cliente navega, personaliza, aprova, adiciona ao carrinho e finaliza checkout **sem login**.
 - Cliente é **identificado por e-mail/telefone normalizados** com deduplicação e primeiro-nome-vence.
 - Pedido criado como `pending_payment`; preço e personalização congelados.
-- Lojista vê pedido + arte aprovada no painel; cliente e lojista recebem e-mail.
-- Loja **no ar** em deploy mínimo remoto; isolamento multi-tenant testado.
+- Lojista vê pedido + arte aprovada no painel; cliente e lojista recebem e-mail (Mailcatcher).
+- **Tudo rodando 100% local** no Docker Compose; isolamento multi-tenant testado.
 
 ---
 
@@ -109,26 +109,21 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 14 — Notificações essenciais (`notifications`)
+## Etapa 14 — Notificações essenciais + finalização local
 
-> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`). Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
+> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`). No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 5. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
 
 - [ ] Template + envio: **pedido criado** (cliente).
 - [ ] Template + envio: **novo pedido** (lojista).
 - [ ] Disparo assíncrono via fila (lib da Fase 0). Doc [13](../13_performance_cache_and_cdn.md).
+- [ ] Health checks `/health`, `/health/db`, `/health/redis` no ambiente **local**. Doc [15](../15_observability_and_operations.md).
+- [ ] Validar o **fluxo completo de ponta a ponta** no Docker Compose local (E2E do marco).
 
 ---
 
-## Etapa 14 — Deploy mínimo de teste
+## Deploy → Fase 5
 
-> Doc [12](../12_aws_infrastructure_and_deployment.md)/[15](../15_observability_and_operations.md).
-
-- [ ] Compose de produção/dev-remoto: **EC2 + Docker Compose + Traefik + RDS + Redis + S3 + CloudFront**.
-- [ ] DNS **wildcard `*.loja.club`** + SSL (Traefik/Let's Encrypt no MVP; ACM depois).
-- [ ] Traefik roteia `api.`, `app.`, `*.` (storefront). `admin.` fica para a Fase 6.
-- [ ] Health checks `/health`, `/health/db`, `/health/redis`. Doc [15](../15_observability_and_operations.md).
-- [ ] Não expor Adminer/Mailcatcher/Traefik dashboard em produção. Doc [04](../04_fastapi_template_adaptation.md)/[14](../14_security_strategy.md).
-- [ ] SMTP/SES real para os e-mails de pedido. Doc [12](../12_aws_infrastructure_and_deployment.md).
+> **O deploy na AWS saiu desta fase.** Toda a Fase 4 roda **local**. Subir o sistema na AWS (EC2) é a **Etapa 15 (Fase 5)** — ver [phase-5-customer-account-and-payments.md](./phase-5-customer-account-and-payments.md).
 
 ---
 

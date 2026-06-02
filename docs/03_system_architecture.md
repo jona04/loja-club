@@ -67,9 +67,9 @@ Exemplos de lojas:
 - `presentescriativos.loja.club`
 - `empresaexemplo.loja.club`
 
-## Produção com AWS
+## Produção com AWS (pós-V1)
 
-Para produção V1, a sugestão é:
+A produção robusta vem **depois** da V1. A sugestão é:
 
 - ECS/Fargate para containers;
 - ALB para balanceamento;
@@ -83,9 +83,9 @@ Para produção V1, a sugestão é:
 - Sentry para erros;
 - SES para e-mails.
 
-## Dev remoto barato
+## Dev na AWS (V1 — Fases 5–6)
 
-Para dev remoto ou beta inicial, uma alternativa barata é:
+A V1 inteira é ambiente de **dev**. As Fases 0–4 rodam **local**; as Fases 5–6 sobem o sistema na AWS com **EC2**:
 
 - EC2;
 - Docker Compose;
@@ -94,6 +94,8 @@ Para dev remoto ou beta inicial, uma alternativa barata é:
 - S3;
 - CloudFront;
 - Redis em container ou ElastiCache.
+
+Mesmo no **dev local**, os arquivos usam **S3 + CloudFront reais** (ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md)).
 
 ## Por que monólito modular
 

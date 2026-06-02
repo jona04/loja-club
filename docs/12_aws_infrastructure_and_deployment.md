@@ -8,19 +8,35 @@ Não usar Kubernetes/EKS no começo.
 
 Usar Docker desde o início.
 
+## Dev vs Produção na V1
+
+> **Toda a V1 é um ambiente de desenvolvimento (dev).** Produção robusta vem **depois** da V1.
+
+| Etapa | Ambiente | Onde roda | Arquivos / CDN |
+|---|---|---|---|
+| Fases 0–4 (MVP) | **dev local** | máquina do desenvolvedor (Docker Compose + Traefik) | **AWS S3 + CloudFront reais** (bucket/distribuição de dev) |
+| Fases 5–6 | **dev online na AWS** | **EC2** + Docker Compose + Traefik | AWS S3 + CloudFront |
+| Pós-V1 | **produção** | ECS/Fargate + ALB (troca a orquestração por serviços gerenciados) | AWS S3 + CloudFront |
+
+Pontos importantes:
+
+- Mesmo no **dev local**, os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront de verdade**, com implementação normal via SDK (boto3). **Não usar MinIO** nem stand-ins locais de storage.
+- O sistema só vai **para o ar** nas Fases 5–6, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
+- A migração para **produção** (ECS/Fargate + ALB etc.) é um passo **posterior à V1** e troca apenas a camada de orquestração/entrada, mantendo o mesmo backend, banco e storage.
+
 ## Ambientes
 
-A Loja Club deve ter pelo menos:
+A Loja Club terá, ao longo do tempo:
 
 ```text
-local
-dev
-production
+dev local      (V1, Fases 0–4) — máquina do desenvolvedor
+dev online     (V1, Fases 5–6) — EC2 na AWS
+production     (pós-V1)         — ECS/Fargate na AWS
 ```
 
-`local` roda na máquina de desenvolvimento.
-`dev` é um ambiente remoto na nuvem, parecido com local, mas com domínios, variáveis e serviços configurados para teste compartilhado.
-`production` é o ambiente real dos lojistas e clientes.
+`dev local` roda na máquina de desenvolvimento, mas já usa S3/CloudFront reais para arquivos.
+`dev online` é o mesmo stack publicado em EC2, com domínios, TLS e serviços AWS, para teste compartilhado e beta.
+`production` é o ambiente robusto dos lojistas e clientes, montado **depois** da V1.
 
 ## Desenvolvimento local
 
@@ -41,23 +57,26 @@ adminer
 mailcatcher
 ```
 
-## Dev remoto barato
+## Dev online na AWS (V1 — Fases 5–6)
 
-Sugestão:
+O ambiente online da V1 usa **EC2** (não ECS):
 
 ```text
-EC2 + Docker Compose + Traefik + RDS + S3 + CloudFront
+EC2 + Docker Compose + Traefik + RDS + ElastiCache (ou Redis em container) + S3 + CloudFront + Route 53 + ACM/Let's Encrypt
 ```
 
 Motivo:
 
 - barato;
 - rápido;
-- próximo do template;
+- próximo do dev local (mesmo Docker Compose);
 - bom para beta/teste;
-- Traefik facilita subdomínios e HTTPS.
+- Traefik facilita subdomínios e HTTPS;
+- já permite receber webhooks de pagamento (URL pública).
 
-## Produção V1 recomendada
+## Produção robusta (pós-V1)
+
+> Fora do escopo da V1. Quando a V1 (dev) estiver validada, a produção troca a orquestração por serviços gerenciados.
 
 Sugestão:
 
@@ -179,8 +198,8 @@ maior instância
 
 Opções:
 
-1. Redis container no dev remoto barato.
-2. ElastiCache em produção.
+1. Redis container no dev (local e EC2).
+2. ElastiCache em produção (pós-V1).
 
 Redis será usado para:
 
@@ -285,4 +304,4 @@ Para V1 barata, a expectativa inicial pode ficar em faixa controlada se usar:
 
 ## Decisão canônica
 
-A Loja Club usará Docker desde o começo. Local e dev remoto podem usar Docker Compose + Traefik. Produção V1 recomendada: ECS/Fargate + ALB + RDS PostgreSQL + Redis/ElastiCache + S3 + CloudFront.
+A Loja Club usará Docker desde o começo. **Toda a V1 é dev**: Fases 0–4 em **dev local** (com S3/CloudFront reais) e Fases 5–6 em **dev online na AWS** com EC2 + Docker Compose + Traefik + RDS + Redis/ElastiCache + S3 + CloudFront. A **produção robusta com ECS/Fargate + ALB** é um passo **posterior à V1**.

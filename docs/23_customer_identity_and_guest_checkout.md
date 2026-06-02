@@ -243,18 +243,18 @@ Quando uma sessão expirar, ela deve ser marcada como `expired` (soft delete/sta
 | Customer | Opcional (código, senha ou Google) | sim, por loja | comprador final, pedidos, histórico, perfil |
 | User | Sim | sim, global | lojista, equipe e admin Loja Club |
 
-## O que é necessário para o lançamento de teste
+## O que é necessário para o MVP (dev local)
 
-Respeitando a prioridade de lançar para teste o quanto antes (ver `17_v1_roadmap.md`):
+Respeitando a prioridade de ter o MVP rodando local o quanto antes (ver `17_v1_roadmap.md`):
 
-Necessário no MVP de teste:
+Necessário no MVP (dev local):
 
 - guest checkout com identificação por **e-mail e telefone normalizados** + deduplicação;
 - regra de **primeiro-nome-vence**;
 - vários endereços por customer;
 - recuperação de carrinho no mesmo navegador.
 
-Pode vir logo depois (como pagamento, fica após o lançamento de teste):
+Pode vir logo depois (como o pagamento, fica após o MVP — Fase 5):
 
 - recuperação/login por **código** (e-mail/SMS/WhatsApp);
 - **área do cliente** (histórico, editar perfil, endereços);
