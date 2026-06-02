@@ -18,7 +18,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P0-CFG-01](./P0-CFG-01-branding.md) | Branding Loja Club | todo | — |
+| 1 | [P0-CFG-01](./P0-CFG-01-branding.md) | Branding Loja Club | done | — |
 | 2 | [P0-TEST-01](./P0-TEST-01-testing-foundation.md) | Fundação de testes (layout, isolamento, mocks, vitest) | todo | — |
 | 3 | [P0-CFG-02](./P0-CFG-02-env-config.md) | Variáveis de ambiente e domínio de dev | todo | — |
 | 4 | [P0-CFG-03](./P0-CFG-03-redis.md) | Redis (cache/locks/fila leve) | todo | P0-CFG-02 |
