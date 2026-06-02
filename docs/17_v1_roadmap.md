@@ -26,7 +26,7 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 - As etapas estão agrupadas em **fases**.
 - O **marco de lançamento para teste** acontece ao fim da Fase 4, **antes** de pagamentos.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Pagamento e billing** ficam **ao final**, conforme prioridade do projeto.
+- **Pagamento, conta do cliente e billing** ficam **ao final**, conforme prioridade do projeto.
 - Há dois critérios de conclusão no fim do documento: um de **lançamento para teste** (sem pagamento) e um de **V1 completa** (com pagamento/split).
 
 ---
@@ -272,8 +272,10 @@ Cliente final consegue montar carrinho.
 Entregas:
 
 - dados do cliente;
-- criação/atualização de customer sem login;
-- endereço;
+- **identificação e deduplicação do customer sem login**, por e-mail e telefone normalizados (E.164), match priorizando o e-mail (ver `23_customer_identity_and_guest_checkout.md`);
+- normalização de e-mail (trim + minúsculas) e telefone (país pelo seletor → E.164);
+- criação/atualização de customer com regra de **primeiro-nome-vence**;
+- endereço, permitindo **vários endereços por customer**;
 - frete simples;
 - entrega combinada;
 - revisão do pedido;
@@ -287,7 +289,7 @@ Entregas:
 Resultado:
 
 ```text
-Carrinho vira pedido pending_payment; o pagamento é combinado entre loja e cliente.
+Carrinho vira pedido pending_payment, com o cliente identificado por e-mail/telefone; o pagamento é combinado entre loja e cliente.
 ```
 
 ### Etapa 12 — Pedidos
@@ -320,15 +322,16 @@ Entregas:
 
 - lista de clientes;
 - detalhe do cliente;
-- histórico de pedidos;
-- endereços;
-- busca;
+- **cliente identificado por e-mail/telefone normalizados, sem cadastro** (um customer por loja);
+- histórico de pedidos do customer;
+- endereços (vários por customer);
+- busca por nome/e-mail/telefone;
 - permissões.
 
 Resultado:
 
 ```text
-Lojista visualiza clientes da própria loja.
+Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, mesmo sem cadastro.
 ```
 
 ### Etapa 14 — Notificações essenciais + deploy mínimo de teste
@@ -366,6 +369,7 @@ Este é o ponto que você pediu para alcançar o quanto antes. A plataforma pode
 - cliente navega, personaliza produto em 3D e aprova a arte;
 - cliente adiciona ao carrinho;
 - cliente finaliza checkout sem login;
+- **cliente é identificado por e-mail/telefone normalizados (sem cadastro), com deduplicação**;
 - pedido é criado como `pending_payment`;
 - pagamento é combinado fora da plataforma;
 - lojista vê o pedido e a arte aprovada no painel;
@@ -374,12 +378,34 @@ Este é o ponto que você pediu para alcançar o quanto antes. A plataforma pode
 
 ---
 
-## Fase 5 — Monetização e pagamentos (pós-teste)
+## Fase 5 — Pós-lançamento: conta do cliente, pagamentos e monetização
 
-> Conforme a prioridade do projeto, o pagamento entra **depois** do lançamento para teste.
-> Aqui o pagamento combinado é substituído (ou complementado) pelo gateway com split.
+> Conforme a prioridade do projeto, estas etapas entram **depois** do lançamento para teste.
+> A conta do cliente e o gateway de pagamento são adições à experiência já validada no MVP.
 
-### Etapa 15 — Pagamentos e split
+### Etapa 15 — Conta e login do cliente
+
+> Detalhes em `23_customer_identity_and_guest_checkout.md`. No MVP o cliente já é identificado por e-mail/telefone; aqui ele ganha login e área própria, sincronizando com o que comprou como convidado.
+
+Entregas:
+
+- recuperação de carrinho/pedido por **código de uso único** (e-mail/SMS/WhatsApp);
+- **login por código** (sem senha);
+- **login por e-mail + senha**;
+- **login com Google (OAuth)**;
+- tabelas `customer_auth_identities` e `customer_verification_codes`;
+- **sincronização guest ↔ conta** (mesmo customer por e-mail/telefone, sem duplicar);
+- **área do cliente**: histórico de pedidos, endereços, personalizações e edição de perfil (inclui o nome);
+- edição de perfil exige autenticação;
+- rate limit/anti brute force nos códigos.
+
+Resultado:
+
+```text
+Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
+```
+
+### Etapa 16 — Pagamentos e split
 
 Entregas:
 
@@ -401,7 +427,7 @@ Resultado:
 Cliente paga, gateway divide valores e pedido é atualizado por webhook.
 ```
 
-### Etapa 16 — Billing da Loja Club
+### Etapa 17 — Billing da Loja Club
 
 Entregas:
 
@@ -424,7 +450,7 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ## Fase 6 — Operação da plataforma e produção
 
-### Etapa 17 — Admin da plataforma
+### Etapa 18 — Admin da plataforma
 
 Entregas:
 
@@ -447,7 +473,7 @@ Resultado:
 Equipe Loja Club consegue operar a plataforma.
 ```
 
-### Etapa 18 — Segurança e observabilidade
+### Etapa 19 — Segurança e observabilidade
 
 Entregas:
 
@@ -470,7 +496,7 @@ Resultado:
 Sistema pronto para produção controlada.
 ```
 
-### Etapa 19 — Infra AWS de produção
+### Etapa 20 — Infra AWS de produção
 
 > O deploy mínimo de teste já foi feito na Etapa 14. Aqui consolidamos a infraestrutura de produção.
 
@@ -494,7 +520,7 @@ Resultado:
 Loja Club publicada com infraestrutura real.
 ```
 
-### Etapa 20 — Beta com lojas reais
+### Etapa 21 — Beta com lojas reais
 
 Entregas:
 
@@ -529,6 +555,7 @@ A plataforma está pronta para ir ao ar em teste quando:
 - cliente personaliza produto em 3D e aprova a arte;
 - cliente adiciona ao carrinho;
 - cliente finaliza checkout sem login;
+- cliente é identificado por e-mail/telefone normalizados, com deduplicação e primeiro-nome-vence;
 - pedido é criado como `pending_payment`;
 - pagamento é combinado fora da plataforma;
 - lojista vê pedido e arte aprovada no painel;
@@ -539,6 +566,7 @@ A plataforma está pronta para ir ao ar em teste quando:
 
 A V1 está completa quando, além de tudo acima:
 
+- cliente pode entrar na área do cliente (código, senha ou Google) e editar o perfil, com sincronização guest ↔ conta;
 - pagamento é processado pelo gateway;
 - webhook confirma pedido;
 - split é aplicado;
