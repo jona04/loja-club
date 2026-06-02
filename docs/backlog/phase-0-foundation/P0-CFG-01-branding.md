@@ -7,6 +7,7 @@ area: CFG
 status: todo
 depends_on: []
 blocks: []
+tests: none
 ---
 
 # P0-CFG-01 — Branding Loja Club
@@ -39,6 +40,12 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 2. Trocar título em `frontend/index.html` e o favicon em `frontend/public/`.
 3. Ajustar `README.md` e `copier.yml`.
 4. Subir local e conferir título + nome nos e-mails (Mailcatcher).
+
+## Testes
+> Fundações §10. Branding/config visual — sem teste automatizado.
+
+- **Níveis:** nenhum automatizado (verificação manual está no DoD).
+- **Quando:** —
 
 ## Definition of Done
 - [ ] Painel abre com título "Loja Club".

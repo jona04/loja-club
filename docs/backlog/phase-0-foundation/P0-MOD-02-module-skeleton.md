@@ -7,6 +7,7 @@ area: MOD
 status: todo
 depends_on: [P0-MOD-01]
 blocks: [P0-MOD-03, P0-MOD-04]
+tests: [integration]
 ---
 
 # P0-MOD-02 — Esqueleto de módulos
@@ -40,6 +41,14 @@ O backend será um monólito **modular**: cada domínio em `app/modules/<nome>/`
 2. Definir o padrão de `routes.py` por módulo (router com prefixo/escopo).
 3. Reescrever `app/api/main.py` para incluir os routers existentes via módulos.
 4. Garantir o registry de models para o Alembic/`init_db`.
+
+## Testes
+> Fundações §10. Estrutural — testes de fumaça.
+
+- **Níveis:** integração/smoke.
+- **Quando:** depois.
+- **Cobrir:**
+  - integração — app sobe; routers agregados aparecem no OpenAPI; Alembic autogenerate enxerga os models.
 
 ## Definition of Done
 - [ ] `app/modules/` criado com os subpacotes e a convenção documentada.

@@ -7,6 +7,7 @@ area: CFG
 status: todo
 depends_on: [P0-CFG-03]
 blocks: []
+tests: [integration]
 ---
 
 # P0-CFG-04 — Fila/worker (base)
@@ -43,6 +44,14 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
 3. `queue.py` com `enqueue()` e a função worker.
 4. Serviço `worker` no compose apontando para o Redis.
 5. Enfileirar uma task dummy e ver o worker processar.
+
+## Testes
+> Fundações §10.
+
+- **Níveis:** integração (+ unit se houver serialização pura).
+- **Quando:** depois (worker no compose).
+- **Cobrir:**
+  - integração — `enqueue()` de uma task dummy e o worker processá-la.
 
 ## Definition of Done
 - [ ] Decisão da lib registrada em `18_open_decisions.md`.

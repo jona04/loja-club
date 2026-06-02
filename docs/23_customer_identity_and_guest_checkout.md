@@ -85,28 +85,25 @@ A deduplicação só funciona se os valores forem normalizados de forma consiste
 
 ### Telefone
 
-O país **não é digitado**. Ele vem do **seletor de país** do checkout, que define o código de discagem automaticamente (Brasil = `+55`). O cliente digita só o número local com DDD.
+O país **não é digitado**: vem do **seletor de país** do checkout (ISO 3166-1), que define a região. O cliente digita só o número local.
 
-Algoritmo:
+A normalização usa uma **biblioteca de telefones** (libphonenumber, ex.: `phonenumbers`) — **não normalizar à mão**, para cobrir as regras de cada país (tronco, quantidade de dígitos, validação):
 
-1. obter o código do país a partir do seletor (Brasil → `55`);
-2. remover do número digitado tudo que não for dígito (espaços, parênteses, traços);
-3. remover um único `0` de tronco no início, se houver (ex.: `086…` → `86…`);
-4. se os dígitos já começarem com o código do país e o tamanho condizer, não acrescentar o código de novo (evita duplicar `+55`);
-5. montar em E.164: `+` + código do país + DDD + número;
-6. guardar `phone_e164` como chave de dedup.
+1. obter a **região** a partir do seletor de país (ex.: `BR`, `US`, `PT`);
+2. passar o número digitado + a região para a lib;
+3. a lib **valida** e devolve o número em **E.164** (`+<código do país><número nacional>`), tratando tronco e formatos locais;
+4. guardar o E.164 em `phone_e164` (chave de dedup);
+5. número inválido para a região → mensagem amigável, sem travar a experiência.
 
-Exemplo (Brasil):
+Exemplos (apenas ilustrativos — a regra vale para qualquer país):
 
 ```text
-Entrada:  (86) 99999-0000   + país Brasil
-Saída:    +5586999990000
+BR  (86) 99999-0000   → +5586999990000
+US  (415) 555-0132    → +14155550132
+PT  912 345 678       → +351912345678
 ```
 
-Observações:
-
-- celulares brasileiros usam o 9º dígito; o número é armazenado já normalizado em E.164 com o 9º dígito quando informado;
-- número claramente inválido (tamanho fora do esperado para o país) deve ser tratado com mensagem amigável, sem travar a experiência.
+Nenhuma regra de país é fixada no código; a lib cuida disso. O resultado é sempre E.164.
 
 ## Identificação no checkout (criar ou atualizar)
 

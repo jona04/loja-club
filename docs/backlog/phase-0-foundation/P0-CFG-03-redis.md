@@ -7,6 +7,7 @@ area: CFG
 status: todo
 depends_on: [P0-CFG-02]
 blocks: [P0-CFG-04]
+tests: [unit, integration]
 ---
 
 # P0-CFG-03 — Redis (cache/locks/fila leve)
@@ -45,6 +46,15 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
 3. Settings + `REDIS_URL` em `config.py`.
 4. `cache.py` com `get_redis()` e helpers `cache_get`/`cache_set(ttl, prefix)`.
 5. `/health` e `/health/redis` (este fazendo `PING` no Redis), top-level.
+
+## Testes
+> Fundações §10. Segue o layout de `P0-TEST-01`.
+
+- **Níveis:** unit + integração.
+- **Quando:** durante.
+- **Cobrir:**
+  - unit — construção de chave/prefixo e TTL do cache.
+  - integração — round-trip `cache_set`/`cache_get` no Redis real; `GET /health/redis` faz PING.
 
 ## Definition of Done
 - [ ] `redis` sobe no `docker compose` e o backend conecta.

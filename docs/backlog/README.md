@@ -89,4 +89,4 @@ Estas decisões alinham o template aos docs e evitam divergência:
 
 - **Lib de fila/worker** (Fase 0/2): Celery vs RQ vs arq vs `BackgroundTasks`. Os docs pedem "fila leve com Redis" e "worker", sem fixar a lib.
 - ~~Storage local~~ **(decidido)**: usar **AWS S3 + CloudFront reais** desde o dev local (sem MinIO). Requer bucket/distribuição/credenciais IAM de dev — tarefa na Fase 2.
-- **Domínio de teste** (Fase 1/4): usar `localhost.tiangolo.com` (e `*.localhost.tiangolo.com`) localmente para exercitar subdomínios via Traefik antes do `*.loja.club` real.
+- **Domínio de dev** (decidido): `loja.localhost` (e `*.loja.localhost`) localmente, espelhando o `*.loja.club` de produção. `*.localhost` resolve para 127.0.0.1 nos navegadores; usar `/etc/hosts` para ferramentas de CLI que precisarem.

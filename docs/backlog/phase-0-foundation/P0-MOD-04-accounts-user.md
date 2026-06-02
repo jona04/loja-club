@@ -7,6 +7,7 @@ area: MOD
 status: todo
 depends_on: [P0-MOD-01, P0-MOD-02]
 blocks: [P0-CI-01, P1-STORE-01]
+tests: [integration]
 ---
 
 # P0-MOD-04 — Mover `User` para o módulo `accounts` (`account_users`)
@@ -47,6 +48,14 @@ O template guarda `User` em `app/models.py` (tabela `user`) e a lógica em `app/
 4. Atualizar `deps.py` e `db.py`.
 5. Gerar e aplicar a migration de rename para `account_users`.
 6. Rodar o fluxo de login e recuperação de senha.
+
+## Testes
+> Fundações §10.
+
+- **Níveis:** integração (adaptar os testes do template) + unit se houver serviço puro.
+- **Quando:** durante (manter verde durante o refactor).
+- **Cobrir:**
+  - integração — `/login/access-token`, `users/me`, recuperação/reset de senha seguem funcionando; migration de rename para `account_users` aplica.
 
 ## Definition of Done
 - [ ] Tabela criada/renomeada como `account_users` (migration aplica limpa).

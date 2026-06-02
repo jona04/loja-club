@@ -45,7 +45,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ### Normalização e dedup (doc [23](../23_customer_identity_and_guest_checkout.md))
 - [ ] Util de **e-mail**: trim + minúsculas (não remover pontos nem `+tag`).
-- [ ] Util de **telefone → E.164**: país vem do seletor (Brasil = `+55`); remover não-dígitos; remover `0` de tronco inicial; não duplicar código do país; montar `+`+código+DDD+número. Ex.: `(86) 99999-0000` → `+5586999990000`.
+- [ ] Util de **telefone → E.164** via lib `phonenumbers` (libphonenumber): país vem do seletor (região ISO 3166); a lib valida e devolve E.164 para **qualquer país** (sem `+55`/DDD hard-coded). Ver doc [23](../23_customer_identity_and_guest_checkout.md). Ex. ilustrativos: `BR (86) 99999-0000 → +5586999990000`, `US (415) 555-0132 → +14155550132`.
 - [ ] `create_or_update_customer(store_id, name, email, phone, address)`: match por **e-mail** → senão **phone_e164** → senão cria. **Primeiro-nome-vence** (não sobrescreve `name`). Preencher e-mail/telefone faltante só se não pertencer a outro customer. **Conflito** (e-mail de um, telefone de outro): vence o e-mail, não rouba contato alheio. Doc [23](../23_customer_identity_and_guest_checkout.md).
 - [ ] Endereço novo → novo `customer_addresses` (não duplicar idêntico). Doc [23](../23_customer_identity_and_guest_checkout.md).
 

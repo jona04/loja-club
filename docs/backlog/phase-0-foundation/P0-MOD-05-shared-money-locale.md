@@ -7,6 +7,7 @@ area: MOD
 status: todo
 depends_on: [P0-MOD-01]
 blocks: []
+tests: [unit]
 ---
 
 # P0-MOD-05 — Tipos compartilhados globais (Money/Currency, locale, UTC)
@@ -47,6 +48,14 @@ A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/R
 3. Definir a convenção de colunas de dinheiro e expor em `app/db/base.py`.
 4. Disponibilizar a referência ISO 4217/3166 para selects/validação.
 5. Testes: soma de moedas diferentes falha; formatação correta para 2 casas (USD/BRL) e 0 casas (JPY); cálculo de comissão (%) arredonda como definido.
+
+## Testes
+> Fundações §10. Lógica pura — vitrine de unit test; segue o layout de `P0-TEST-01`.
+
+- **Níveis:** unit (exaustivo).
+- **Quando:** antes/durante (TDD — contrato claro).
+- **Cobrir:**
+  - unit — soma rejeita moedas diferentes; formatação correta com 0 e 2 casas (JPY/BRL/USD); arredondamento `ROUND_HALF_UP`; cálculo de comissão (%).
 
 ## Definition of Done
 - [ ] Tipo `Money` reutilizável carregando **moeda** sempre; nenhum valor monetário é número solto.

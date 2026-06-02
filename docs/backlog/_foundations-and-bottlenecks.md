@@ -17,7 +17,7 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 - **INV-G1 — Dinheiro é sempre `(valor + moeda)`.** Valor em **unidades menores** + **moeda ISO 4217**; expoente por moeda (não fixo em 2). Nunca número solto. → `P0-MOD-05`.
 - **INV-G2 — Soma/compara só entre a mesma moeda.** Operação entre moedas diferentes é erro. → `P0-MOD-05`.
 - **INV-G3 — `currency` e `locale` por loja e por cliente**, com fallback no default da plataforma. → loja (Fase 1), cliente (Fase 4), defaults (`P0-CFG-02`).
-- **INV-G4 — Telefone em E.164 para qualquer país**, via lib (libphonenumber/`phonenumbers`); país vem do seletor → código discagem. Sem `+55`/DDD hard-coded. → util (Fase 4). ⚠️ [doc 23](../23_customer_identity_and_guest_checkout.md) será generalizado.
+- **INV-G4 — Telefone em E.164 para qualquer país**, via lib (libphonenumber/`phonenumbers`); país vem do seletor → código de discagem. Sem `+55`/DDD hard-coded. → convenção no [doc 23](../23_customer_identity_and_guest_checkout.md); util na Fase 4.
 - **INV-G5 — Endereço país-aware** (ISO 3166-1; campos flexíveis; sem CEP/UF fixos). → modelo (Fase 4).
 - **INV-G6 — Timestamps em UTC** no banco; formatação por locale/timezone só no frontend. → template já faz; confirmado em `P0-MOD-05`.
 - **INV-G7 — Storefront e e-mails i18n-ready** (textos parametrizáveis por locale). → storefront (Fase 3), e-mails (Fase 4).
@@ -85,6 +85,36 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 - **INV-FE2 — Cliente OpenAPI gerado e compartilhado**; regenerar quando a API muda. → todas que mexem em API.
 - **INV-FE3 — URL da API por env** (sem hardcode). → todas.
 
+## 10. Testes
+
+**Princípio — INV-TEST-1:** testar **comportamento e intenção**, não implementação. Teste pelo **contrato público** (entradas → saídas/efeitos observáveis); assim resiste a refactor. O nome do teste expressa a intenção. **Mock só nas fronteiras reais** (rede, I/O, relógio, aleatoriedade, S3, gateway, e-mail).
+
+**Pirâmide:** muitos **unit**, alguns **integração**, poucos **E2E**. Duas regras de bolso:
+- *empurre o teste pro nível mais barato que ainda pega o bug;*
+- *não mocke o que você precisa testar de verdade* (mockar o DB pra "testar uma query" não prova nada → vira integração).
+
+**Quando cada nível (INV-TEST-2):**
+
+| Situação | Nível |
+|---|---|
+| Lógica pura/determinística com ramos (cálculo, validação, normalização, invariante) | **unit** (exaustivo) |
+| Correção depende de fronteira real (query filtra `store_id`, migration, permissão na rota, constraint único, idempotência) | **integração** (no seam) |
+| Lógica rica **E** fronteira crítica | **os dois** (unit cobre os ramos + 1 integração no caminho feliz) |
+| Jornada cross-sistema com valor de negócio | **E2E** (poucos) |
+
+Não duplicar cobertura de ramos no nível de cima.
+
+**Smoke test (esclarecimento):** é **automatizado**, raso e rápido — verifica que o sistema **sobe e os caminhos críticos não quebram** (app inicia, `/health` responde, OpenAPI carrega, home retorna 200). Roda cedo para pegar quebra grosseira; é um subconjunto raso de integração/E2E. **Não é teste manual.** Quando uma task não tem teste automatizado, dizemos *verificação manual* (humano conferindo) — que é outra coisa.
+
+**Isolamento multi-tenant** (item nº1 do doc [16](../16_testing_strategy.md)) é majoritariamente **integração** (duas lojas no DB real → assert de "A não vê B"), sempre no **resultado observável** (403/404/ausência de dado), nunca no SQL interno.
+
+**Ferramentas:**
+- Backend: `pytest` com `tests/unit` e `tests/integration`; **isolamento por teste** (transação + rollback); `coverage` + `mypy strict`.
+- Frontend: **`vitest` + Testing Library** (unit/componente, foco em comportamento) + **Playwright** (E2E).
+- Mocks: **S3 via `moto`/botocore stubber**, gateway/e-mail/relógio/random nas fronteiras.
+
+**Onde:** fundação de testes em `P0-TEST-01`; unit de lógica pura junto de onde a lógica nasce (Money em `P0-MOD-05`; dedup/telefone na Fase 4; split na Fase 5); **fixtures/factories multi-tenant + testes de isolamento na Fase 1** (precisam de `Store`).
+
 ---
 
 ## Decisões a travar
@@ -99,6 +129,11 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 | DEC-6 | Gateway(s) de pagamento | abstrair; escolher BR (Pagar.me/MercadoPago/Asaas) + plano p/ internacional | **pendente** (Fase 5, doc [18](../18_open_decisions.md)) |
 | DEC-7 | Provedor SMS/WhatsApp | a definir | **pendente** (Fase 5) |
 | DEC-8 | Storage local em dev | AWS S3 + CloudFront reais (sem MinIO) | **decidido** (Fase 2) |
+| DEC-9 | Runner de unit no frontend | `vitest` + Testing Library | **decidido** (`P0-TEST-01`) |
+| DEC-10 | Isolamento de DB em teste | transação por teste (rollback/savepoint) | recomendado (`P0-TEST-01`) |
+| DEC-11 | Mock de AWS S3 em teste | `moto` (ou botocore Stubber) | recomendado (`P0-TEST-01`) |
+| DEC-12 | Lib de teste backend | `pytest` (+ `coverage`, já no template) | **decidido** |
+| DEC-13 | Docstrings Python | **Google style, em inglês**, em toda classe/método; enforce Ruff `D` | **decidido** (`CLAUDE.md`, `P0-CI-01`) |
 
 ## Gargalos antecipados (resumo)
 
@@ -112,6 +147,7 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 8. **Divergência do client OpenAPI entre 3 frontends** → geração compartilhada.
 9. **Congelar personalização no pedido** → cópia própria, não depender da sessão.
 10. **Privacidade da arte do cliente** → URLs assinadas, escopo por `store_id`.
+11. **Suíte sem isolamento** (estado vaza entre testes, ordem importa) → rollback por teste (`P0-TEST-01`).
 
 ## Mapa item → fase/task
 
@@ -130,4 +166,6 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 | Congelar personalização no pedido | Fase 4 |
 | Idempotência de webhook + abstração de gateway | Fase 5 |
 | SMS/WhatsApp | Fase 5 |
+| Fundação de testes (layout, isolamento, mocks, vitest) | Fase 0 — `P0-TEST-01` |
+| Fixtures/factories multi-tenant + testes de isolamento | Fase 1 |
 | Auditoria, rate limit completo, segredos, backups | Fase 6 |

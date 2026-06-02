@@ -7,6 +7,7 @@ area: CI
 status: todo
 depends_on: [P0-MOD-03, P0-MOD-04]
 blocks: []
+tests: none
 ---
 
 # P0-CI-01 — CI, lint, testes e client OpenAPI
@@ -20,6 +21,7 @@ Depois do refactor modular (módulos, remoção de `items`, `account_users`), o 
 ## Escopo (o que ENTRA)
 - Ajustar GitHub Actions (`.github/workflows/`) e `.pre-commit-config.yaml` para os novos paths de `app/modules/*`.
 - Garantir `backend/scripts/lint.sh`, `format.sh`, `test.sh` rodando na estrutura nova.
+- Habilitar **Ruff pydocstyle** (`D` + `convention = "google"`) no `pyproject.toml` para exigir docstrings (ver `CLAUDE.md`/DEC-13); garantir que o código da Fase 0 passa.
 - Ajustar/limpar testes do template que referenciam `items`/`user` antigos.
 - Regenerar o client OpenAPI do frontend (`npm run generate-client`) após mudanças de rota.
 
@@ -30,6 +32,7 @@ Depois do refactor modular (módulos, remoção de `items`, `account_users`), o 
 ## Arquivos a criar/alterar
 - `.github/workflows/*` (alterar) — paths/jobs.
 - `.pre-commit-config.yaml` (alterar).
+- `backend/pyproject.toml` (alterar) — `[tool.ruff.lint]` adicionar `D` + `convention = "google"`.
 - `backend/tests/*` (alterar) — remover/ajustar testes de item/user antigos.
 - `frontend/src/client/*` (regenerar).
 
@@ -38,6 +41,12 @@ Depois do refactor modular (módulos, remoção de `items`, `account_users`), o 
 2. Atualizar workflows e pre-commit.
 3. Regenerar o client OpenAPI e ajustar imports no frontend.
 4. Conferir o CI no push.
+
+## Testes
+> Fundações §10. Task meta — não tem teste próprio; **garante** que os testes rodam.
+
+- **Níveis:** meta — assegura unit + integração (backend) e `vitest` (front) rodando no CI, com `coverage`/`mypy`.
+- **Quando:** —
 
 ## Definition of Done
 - [ ] `lint` + type check + testes do backend passam localmente.

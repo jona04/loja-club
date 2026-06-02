@@ -7,6 +7,7 @@ area: MOD
 status: todo
 depends_on: []
 blocks: [P0-MOD-02, P0-MOD-04]
+tests: [unit, integration]
 ---
 
 # P0-MOD-01 — Mixins base + `app/db`
@@ -38,6 +39,15 @@ Todo modelo de domínio vai compartilhar o mesmo padrão: PK UUID, timestamps, s
 1. Criar `app/db/base.py` com os 4 mixins e o helper de datetime.
 2. Garantir tipos corretos (`sa_type=DateTime(timezone=True)` como no template).
 3. Escrever um modelo de teste descartável usando os mixins para validar as colunas (remover depois ou manter em teste).
+
+## Testes
+> Fundações §10.
+
+- **Níveis:** unit + integração.
+- **Quando:** durante.
+- **Cobrir:**
+  - unit — `get_datetime_utc()` retorna datetime UTC tz-aware.
+  - integração — modelo de teste com os mixins gera as colunas esperadas (UUID PK, timestamps, soft delete, `store_id`).
 
 ## Definition of Done
 - [ ] Mixins importáveis de `app.db.base`.

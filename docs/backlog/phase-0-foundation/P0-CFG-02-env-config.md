@@ -7,6 +7,7 @@ area: CFG
 status: todo
 depends_on: []
 blocks: [P0-CFG-03]
+tests: [unit]
 ---
 
 # P0-CFG-02 — Variáveis de ambiente e domínio de dev
@@ -20,8 +21,9 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
 - [14 — Security Strategy](../../14_security_strategy.md)
 
 ## Escopo (o que ENTRA)
-- `.env`: `DOMAIN=localhost.tiangolo.com` no dev (resolve `*.localhost.tiangolo.com` em 127.0.0.1, permitindo subdomínios via Traefik).
-- `.env`: `BACKEND_CORS_ORIGINS` incluindo `http://app.localhost.tiangolo.com`, `http://admin.localhost.tiangolo.com` e o padrão de subdomínios de loja usado no dev.
+- `.env`: `DOMAIN=loja.localhost` no dev (`*.localhost` resolve para 127.0.0.1 nos navegadores; `/etc/hosts` para ferramentas de CLI), permitindo subdomínios via Traefik.
+- `.env`: `BACKEND_CORS_ORIGINS` incluindo `http://app.loja.localhost`, `http://admin.loja.localhost` e o padrão de subdomínios de loja usado no dev.
+- Remover os comentários/exemplos residuais do template que citam `localhost.tiangolo.com` (no `.env` e no `compose.override.yml`).
 - `.env`: `SECRET_KEY` forte; `FIRST_SUPERUSER`/`FIRST_SUPERUSER_PASSWORD` reais.
 - `config.py`: derivar hosts da plataforma a partir de `DOMAIN` (helpers `api_host`, `app_host`, `admin_host` e base para wildcard de storefront).
 - `.env` + `config.py`: `PLATFORM_DEFAULT_CURRENCY` (ISO 4217, ex.: `USD`/`BRL`) e `PLATFORM_DEFAULT_LOCALE` (ex.: `pt-BR`) como **fallback global** (ver `P0-MOD-05`). Loja e cliente terão a própria moeda/locale nas fases seguintes.
@@ -32,20 +34,30 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
 - Roteamento Traefik dos subdomínios em si → ajustado junto com painel/storefront (Fases 1/3); aqui só o `.env`/settings.
 
 ## Arquivos a criar/alterar
-- `.env` (alterar) — `DOMAIN`, `BACKEND_CORS_ORIGINS`, `SECRET_KEY`, `FIRST_SUPERUSER*`.
+- `.env` (alterar) — `DOMAIN`, `BACKEND_CORS_ORIGINS`, `SECRET_KEY`, `FIRST_SUPERUSER*`; remover o comentário `# DOMAIN=localhost.tiangolo.com`.
+- `compose.override.yml` (alterar) — remover o comentário que cita `localhost.tiangolo.com`.
 - `backend/app/core/config.py` (alterar) — propriedades derivadas de hosts.
 
 ## Passos
-1. Definir `DOMAIN=localhost.tiangolo.com` e ajustar `BACKEND_CORS_ORIGINS`.
+1. Definir `DOMAIN=loja.localhost` e ajustar `BACKEND_CORS_ORIGINS`.
 2. Gerar `SECRET_KEY` forte (`python -c "import secrets; print(secrets.token_urlsafe(32))"`).
 3. Adicionar em `config.py` `@computed_field` para `api_host`/`app_host`/`admin_host` baseados em `DOMAIN`.
 4. Validar que `all_cors_origins` cobre os hosts do dev.
 
+## Testes
+> Fundações §10.
+
+- **Níveis:** unit + verificação manual.
+- **Quando:** durante.
+- **Cobrir:**
+  - unit — derivação de `api_host`/`app_host`/`admin_host` a partir de `DOMAIN`; `parse_cors`/`all_cors_origins`.
+  - manual — subdomínio resolve via Traefik; sem warning de secret `changethis`.
+
 ## Definition of Done
-- [ ] `http://app.localhost.tiangolo.com` e um subdomínio de loja de teste resolvem localmente via Traefik.
+- [ ] `http://app.loja.localhost` e um subdomínio de loja de teste resolvem localmente via Traefik.
 - [ ] CORS aceita chamadas de `app.`/`*.` locais.
 - [ ] Subir local **não** emite warning de secret `changethis`.
 
 ## Notas / Reconciliações
 - `config.py` já tem `FRONTEND_HOST`, `all_cors_origins` e `parse_cors`; reaproveitar.
-- `localhost.tiangolo.com` é a opção de domínio de dev registrada nas decisões pendentes do backlog.
+- `loja.localhost` é o domínio de dev (índice do backlog).

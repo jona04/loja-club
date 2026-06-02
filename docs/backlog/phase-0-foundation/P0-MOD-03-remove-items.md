@@ -7,6 +7,7 @@ area: MOD
 status: todo
 depends_on: [P0-MOD-02]
 blocks: [P0-CI-01]
+tests: [integration]
 ---
 
 # P0-MOD-03 — Remover exemplo `items`
@@ -43,6 +44,15 @@ O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Rem
 3. Remover testes e utilitários de item.
 4. Remover páginas/componentes de item no frontend.
 5. Gerar migration que dropa a tabela `item` e aplicar.
+
+## Testes
+> Fundações §10.
+
+- **Níveis:** integração/smoke (+ remoção dos testes de item).
+- **Quando:** durante.
+- **Cobrir:**
+  - integração — app sobe sem `items`; migration dropa a tabela `item`; suíte passa sem testes de item.
+  - remover `test_items.py` e os utilitários de item.
 
 ## Definition of Done
 - [ ] App sobe sem nenhuma referência a `items` (backend e frontend).
