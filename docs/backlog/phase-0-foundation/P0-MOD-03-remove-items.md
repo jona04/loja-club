@@ -1,0 +1,53 @@
+---
+id: P0-MOD-03
+title: Remover exemplo items
+phase: 0
+etapa: "Etapa 2 — Refatoração modular"
+area: MOD
+status: todo
+depends_on: [P0-MOD-02]
+blocks: [P0-CI-01]
+---
+
+# P0-MOD-03 — Remover exemplo `items`
+
+## Contexto
+O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Removê-lo limpa o backend e o frontend antes de construir o catálogo real.
+
+## Docs de referência
+- [04 — FastAPI Template Adaptation](../../04_fastapi_template_adaptation.md)
+
+## Escopo (o que ENTRA)
+- Backend: remover `ItemBase/Item/ItemCreate/ItemUpdate/ItemPublic/ItemsPublic` de `app/models.py`; remover `create_item` de `app/crud.py`; remover `app/api/routes/items.py` e seu include em `app/api/main.py`.
+- Remover a relação `items` em `User` (em `app/models.py`).
+- Testes: remover `backend/tests/api/routes/test_items.py` e `backend/tests/utils/item.py` (e referências).
+- Frontend: remover `frontend/src/routes/_layout/items.tsx` e `frontend/src/components/Items/`.
+- Migration Alembic dropando a tabela `item` (dev: perda de dados aceitável).
+
+## Fora de escopo (o que NÃO entra)
+- Mexer no `User` além de remover a relação `items` → `P0-MOD-04`.
+- Regenerar o client OpenAPI / ajustar CI → `P0-CI-01`.
+
+## Arquivos a criar/alterar
+- `backend/app/models.py` (alterar) — remover modelos de Item + relação.
+- `backend/app/crud.py` (alterar) — remover `create_item`.
+- `backend/app/api/routes/items.py` (remover).
+- `backend/app/api/main.py` (alterar) — remover include de items.
+- `backend/tests/api/routes/test_items.py` (remover); `backend/tests/utils/item.py` (remover).
+- `frontend/src/routes/_layout/items.tsx` (remover); `frontend/src/components/Items/` (remover).
+- `backend/app/alembic/versions/xxxx_drop_item.py` (criar).
+
+## Passos
+1. Remover modelos/relacionamento e `create_item`.
+2. Remover rota e include.
+3. Remover testes e utilitários de item.
+4. Remover páginas/componentes de item no frontend.
+5. Gerar migration que dropa a tabela `item` e aplicar.
+
+## Definition of Done
+- [ ] App sobe sem nenhuma referência a `items` (backend e frontend).
+- [ ] Migration dropa a tabela `item` e roda limpa.
+- [ ] Suíte de testes não tem mais testes de item e passa.
+
+## Notas / Reconciliações
+- Remoção é física aqui (exemplo do template, não registro de negócio); o soft delete vale para entidades de negócio (doc 07/14).

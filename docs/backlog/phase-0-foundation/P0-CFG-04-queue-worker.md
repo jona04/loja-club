@@ -1,0 +1,53 @@
+---
+id: P0-CFG-04
+title: Fila/worker (base)
+phase: 0
+etapa: "Etapa 1 — Fundação do projeto"
+area: CFG
+status: todo
+depends_on: [P0-CFG-03]
+blocks: []
+---
+
+# P0-CFG-04 — Fila/worker (base)
+
+## Contexto
+Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem rodar fora da requisição. Esta task fecha a **decisão da lib de fila** e cria a **interface mínima**, sem implementar tasks reais ainda.
+
+## Docs de referência
+- [03 — System Architecture](../../03_system_architecture.md)
+- [13 — Performance, Cache and CDN](../../13_performance_cache_and_cdn.md)
+- [12 — AWS Infrastructure and Deployment](../../12_aws_infrastructure_and_deployment.md)
+
+## Escopo (o que ENTRA)
+- Decidir a lib de fila e registrar em [18_open_decisions.md](../../18_open_decisions.md). **Recomendado: `arq`** (async, baseado em Redis, leve, casa com FastAPI async).
+- `backend/pyproject.toml`: dependência da lib escolhida.
+- `backend/app/core/queue.py`: interface mínima `enqueue(task_name, *args, **kwargs)` que isola o resto do código da lib.
+- `compose.yml`: serviço `worker` (e `scheduler` se a lib exigir) consumindo a fila do Redis.
+- Uma task de exemplo (no-op/log) para validar o caminho ponta a ponta.
+
+## Fora de escopo (o que NÃO entra)
+- Geração de thumbnails → Fase 2 (`P2-MEDIA-*`).
+- E-mails de pedido → Fase 4 (`P4-NOTIF-*`).
+- Limpeza de sessões expiradas e processamento de webhook → fases respectivas.
+
+## Arquivos a criar/alterar
+- `docs/18_open_decisions.md` (alterar) — registrar a lib escolhida.
+- `backend/pyproject.toml` (alterar) — dep da fila.
+- `backend/app/core/queue.py` (criar) — `enqueue()` + bootstrap do worker.
+- `compose.yml` (alterar) — serviço `worker`.
+
+## Passos
+1. Escolher a lib (arq) e registrar a decisão.
+2. Adicionar a dependência.
+3. `queue.py` com `enqueue()` e a função worker.
+4. Serviço `worker` no compose apontando para o Redis.
+5. Enfileirar uma task dummy e ver o worker processar.
+
+## Definition of Done
+- [ ] Decisão da lib registrada em `18_open_decisions.md`.
+- [ ] `worker` sobe no compose e processa uma task dummy enfileirada via `enqueue()`.
+- [ ] O resto do código usa só `app.core.queue.enqueue` (sem acoplar à lib).
+
+## Notas / Reconciliações
+- Se a lib escolhida não exigir processo próprio para o MVP, registrar isso e adiar o serviço `worker` — atualizando este arquivo para refletir o código (regra de ouro do backlog).

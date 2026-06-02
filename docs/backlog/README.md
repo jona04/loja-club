@@ -10,7 +10,7 @@ O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100%
 
 | Fase | Arquivo | Etapas do roadmap | Objetivo |
 |---|---|---|---|
-| 0 | [phase-0-foundation.md](./phase-0-foundation.md) | 1–2 | Branding, config, Redis, esqueleto modular |
+| 0 | [phase-0-foundation/](./phase-0-foundation/README.md) | 1–2 | Branding, config, Redis, esqueleto modular — **detalhada em tasks** |
 | 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base |
 | 2 | [phase-2-catalog-media-3d.md](./phase-2-catalog-media-3d.md) | 5–6 | Catálogo, mídia/S3, personalização 3D |
 | 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) | 7–8 | Storefront Next.js, editor 3D, layouts |
@@ -19,6 +19,18 @@ O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100%
 | 6 | [phase-6-platform-ops-and-production.md](./phase-6-platform-ops-and-production.md) | 19–22 | Admin da plataforma, segurança/observabilidade, **CI/CD**, beta |
 
 > **Fim do MVP (dev local):** Fase 4. **V1 completa (dev online na AWS):** Fase 6.
+
+## Granularidade: fases, etapas e tasks
+
+```text
+Fase     → pasta (ex.: phase-0-foundation/) com um README de índice
+ Etapa   → entregável do roadmap (## Etapa N)
+  Task   → um arquivo por task, com ID estável P{fase}-{ÁREA}-{NN}
+```
+
+- Cada **task** é um arquivo com descrição, dependências (`depends_on`), docs de referência, **Escopo / Fora de escopo**, arquivos a alterar e **DoD**. Modelo em [`_task-template.md`](./_task-template.md).
+- O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
+- **Materialização just-in-time:** só a **Fase 0** já está quebrada em tasks (pasta `phase-0-foundation/`). As **Fases 1–6 seguem como arquivo único** (esboço) até começarmos cada uma — aí viram pasta com tasks.
 
 ## Regra de ouro (alinhamento código ↔ docs)
 
