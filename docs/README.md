@@ -31,6 +31,10 @@ A documentação está em português por enquanto. A estrutura de pastas e nomes
 23. [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md)
 24. [V2 Ideas](./24_v2_ideas.md)
 
+## Backlog de implementação
+
+O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/](./backlog/README.md). Foco atual: Fases 0–4 (o MVP utilizável para teste).
+
 ## Decisões canônicas até agora
 
 - A Loja Club será uma plataforma **SaaS multi-tenant de ecommerce**.
