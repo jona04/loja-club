@@ -4,6 +4,8 @@
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [03](../../03_system_architecture.md), [04](../../04_fastapi_template_adaptation.md), [07](../../07_database_strategy.md), [16](../../16_testing_strategy.md).
 
+> Visão geral / trilha de alto nível: [`../phase-0-foundation.md`](../phase-0-foundation.md). Este README é o **índice detalhado** das tasks.
+
 ## Definition of Done da fase
 
 - `docker compose watch` sobe backend, frontend, db, **redis**, traefik com branding Loja Club.
