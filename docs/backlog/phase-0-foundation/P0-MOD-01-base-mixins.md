@@ -4,7 +4,7 @@ title: Mixins base + app/db
 phase: 0
 etapa: "Etapa 2 — Refatoração modular"
 area: MOD
-status: todo
+status: done
 depends_on: []
 blocks: [P0-MOD-02, P0-MOD-04]
 tests: [unit, integration]
@@ -50,8 +50,9 @@ Todo modelo de domínio vai compartilhar o mesmo padrão: PK UUID, timestamps, s
   - integração — modelo de teste com os mixins gera as colunas esperadas (UUID PK, timestamps, soft delete, `store_id`).
 
 ## Definition of Done
-- [ ] Mixins importáveis de `app.db.base`.
-- [ ] Um modelo usando `UUIDMixin + TimestampMixin + SoftDeleteMixin + StoreScopedMixin` gera as colunas esperadas numa migration de teste.
+- [x] Mixins importáveis de `app.db.base`.
+- [x] Um modelo usando os 4 mixins gera as colunas esperadas. *(test_mixins_generate_expected_columns, via `__table__.columns`)*
 
 ## Notas / Reconciliações
 - PK é **UUID** (padrão do template). Os ids inteiros nos exemplos dos docs são ilustrativos (decisão global do backlog).
+- **Implementado:** `app/db/base.py` (4 mixins + `get_datetime_utc` centralizado, movido do `models.py`, que agora o importa). `updated_at` tem `onupdate`. Verificação das colunas via `__table__.columns` de um modelo-probe (equivalente ao objetivo da task). 69 testes passam; gate `app` verde.
