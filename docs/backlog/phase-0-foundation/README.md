@@ -22,7 +22,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 2 | [P0-TEST-01](./P0-TEST-01-testing-foundation.md) | Fundação de testes (layout, isolamento, mocks, vitest) | done | — |
 | 3 | [P0-CFG-02](./P0-CFG-02-env-config.md) | Variáveis de ambiente e domínio de dev | done | — |
 | 4 | [P0-CFG-03](./P0-CFG-03-redis.md) | Redis (cache/locks/fila leve) | done | P0-CFG-02 |
-| 5 | [P0-CFG-04](./P0-CFG-04-queue-worker.md) | Fila/worker (base) | todo | P0-CFG-03 |
+| 5 | [P0-CFG-04](./P0-CFG-04-queue-worker.md) | Fila/worker (base) | done | P0-CFG-03 |
 | 6 | [P0-MOD-01](./P0-MOD-01-base-mixins.md) | Mixins base + `app/db` | todo | — |
 | 7 | [P0-MOD-02](./P0-MOD-02-module-skeleton.md) | Esqueleto de módulos | todo | P0-MOD-01 |
 | 8 | [P0-MOD-05](./P0-MOD-05-shared-money-locale.md) | Tipos globais: Money/Currency, locale, UTC | todo | P0-MOD-01 |

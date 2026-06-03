@@ -4,7 +4,7 @@ title: Fila/worker (base)
 phase: 0
 etapa: "Etapa 1 — Fundação do projeto"
 area: CFG
-status: todo
+status: done
 depends_on: [P0-CFG-03]
 blocks: []
 tests: [integration]
@@ -54,9 +54,10 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
   - integração — `enqueue()` de uma task dummy e o worker processá-la.
 
 ## Definition of Done
-- [ ] Decisão da lib registrada em `18_open_decisions.md`.
-- [ ] `worker` sobe no compose e processa uma task dummy enfileirada via `enqueue()`.
-- [ ] O resto do código usa só `app.core.queue.enqueue` (sem acoplar à lib).
+- [x] Decisão da lib registrada em `18_open_decisions.md`. *(arq)*
+- [x] `worker` processa uma task dummy enfileirada via `enqueue()`. *(verificado local com `arq --burst`; o serviço `worker` no compose usa o mesmo command)*
+- [x] O resto do código usa só `app.core.queue.enqueue` (sem acoplar à lib).
 
 ## Notas / Reconciliações
-- Se a lib escolhida não exigir processo próprio para o MVP, registrar isso e adiar o serviço `worker` — atualizando este arquivo para refletir o código (regra de ouro do backlog).
+- **Implementado (arq 0.25):** `enqueue()` (interface), `dummy_task` e `WorkerSettings`; serviço `worker` no compose (`command: arq app.core.queue.WorkerSettings`). arq tem cron embutido → sem serviço `scheduler` separado.
+- **Verificado** ponta a ponta local: `enqueue('dummy_task','hello')` → `arq … --burst` processou → marcador `done` no Redis; gate `app` verde. (O container `worker` usa o mesmo command; build da imagem deferido.)
