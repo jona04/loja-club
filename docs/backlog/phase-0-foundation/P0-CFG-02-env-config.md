@@ -24,6 +24,7 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
 - `.env`: `DOMAIN=loja.localhost` no dev (`*.localhost` resolve para 127.0.0.1 nos navegadores; `/etc/hosts` para ferramentas de CLI), permitindo subdomínios via Traefik.
 - `.env`: `BACKEND_CORS_ORIGINS` incluindo `http://app.loja.localhost`, `http://admin.loja.localhost` e o padrão de subdomínios de loja usado no dev.
 - Remover os comentários/exemplos residuais do template que citam `localhost.tiangolo.com` (no `.env` e no `compose.override.yml`).
+- **Portas de dev próprias** no `compose.override.yml` (evitar defaults e portas já usadas na máquina): db `5442`, redis `6399`, backend `8800`, frontend `5180`, adminer `8810`, mailcatcher `1090`/`1035`, traefik `8088`/`8091`. Front aponta pro backend em `http://localhost:8800`. Para rodar pytest local, conectar no Postgres da Loja Club em `localhost:5442` (`POSTGRES_PORT=5442`).
 - `.env`: `SECRET_KEY` forte; `FIRST_SUPERUSER`/`FIRST_SUPERUSER_PASSWORD` reais.
 - `config.py`: derivar hosts da plataforma a partir de `DOMAIN` (helpers `api_host`, `app_host`, `admin_host` e base para wildcard de storefront).
 - `.env` + `config.py`: `PLATFORM_DEFAULT_CURRENCY` (ISO 4217, ex.: `USD`/`BRL`) e `PLATFORM_DEFAULT_LOCALE` (ex.: `pt-BR`) como **fallback global** (ver `P0-MOD-05`). Loja e cliente terão a própria moeda/locale nas fases seguintes.

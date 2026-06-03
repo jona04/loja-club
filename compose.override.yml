@@ -10,8 +10,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "80:80"
-      - "8090:8080"
+      - "8088:80"
+      - "8091:8080"
     # Duplicate the command from compose.yml to add --api.insecure=true
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
@@ -48,17 +48,17 @@ services:
   db:
     restart: "no"
     ports:
-      - "5432:5432"
+      - "5442:5432"
 
   adminer:
     restart: "no"
     ports:
-      - "8080:8080"
+      - "8810:8080"
 
   backend:
     restart: "no"
     ports:
-      - "8000:8000"
+      - "8800:8000"
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -90,18 +90,18 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
     ports:
-      - "1080:1080"
-      - "1025:1025"
+      - "1090:1080"
+      - "1035:1025"
 
   frontend:
     restart: "no"
     ports:
-      - "5173:80"
+      - "5180:80"
     build:
       context: .
       dockerfile: frontend/Dockerfile
       args:
-        - VITE_API_URL=http://localhost:8000
+        - VITE_API_URL=http://localhost:8800
         - NODE_ENV=development
 
   playwright:
