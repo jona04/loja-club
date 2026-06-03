@@ -182,15 +182,20 @@ Cliente final não precisa usar login na V1.
 - gerenciar biblioteca de modelos 3D;
 - ver auditoria.
 
-## TODO
+## Padrão da API (V1 — travado em `P1-API-01`)
 
-- [ ] Definir padrão de URL.
-- [ ] Definir padrão de response.
-- [ ] Definir padrão de erro.
-- [ ] Definir paginação.
-- [ ] Definir filtros.
-- [ ] Definir autenticação.
-- [ ] Definir headers de tenant/store.
-- [ ] Definir schemas por módulo.
-- [ ] Definir contratos públicos do storefront.
-- [ ] Definir contratos de webhook.
+- **URL/versão:** `/api/v1`. Painel sob `/api/v1/stores/{store_id}/...`; storefront público resolve a loja pelo header `Host`.
+- **Response:** recurso único = objeto direto; **lista = `{ "data": [...], "count": <total> }`**.
+- **Paginação:** offset por query — `skip` (≥ 0) e `limit` (1..100, default 100).
+- **Erro:** envelope estruturado `{ "error": { "code": "<slug>", "message": "<texto>", "details": <lista|null> } }`. `code` estável por status (`bad_request`, `unauthorized`, `forbidden`, `not_found`, `conflict`, `validation_error`, `rate_limited`) ou explícito via `AppError`.
+- **Autenticação:** Bearer JWT (`/api/v1/login/access-token`).
+- **Headers de tenant:** painel → `store_id` no path (não header); storefront → `Host`.
+- **Idempotency-Key:** reservado para operações sensíveis (criar pedido/pagamento) — implementação Fase 4/5.
+
+## TODO (restante)
+
+- [x] URL · response · erro · paginação · headers de tenant · autenticação — **definidos** (`P1-API-01`).
+- [ ] Filtros (por endpoint, conforme a feature).
+- [ ] Schemas por módulo (cada fase).
+- [ ] Contratos públicos do storefront (Fase 3).
+- [ ] Contratos de webhook (Fase 5).

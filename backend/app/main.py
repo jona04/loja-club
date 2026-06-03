@@ -7,6 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app import models_registry  # noqa: F401  registers all models on the metadata
 from app.api.main import api_router
+from app.core.api import register_exception_handlers
 from app.core.cache import get_redis
 from app.core.config import settings
 
@@ -32,6 +33,9 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
 )
+
+# Render every error with the structured envelope (P1-API-01).
+register_exception_handlers(app)
 
 # Set all CORS enabled origins
 if settings.all_cors_origins:

@@ -4,7 +4,7 @@ title: Padrão de API (response/erro/paginação/tenant)
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: API
-status: todo
+status: done
 depends_on: []
 blocks: [P1-STORE-02, P1-DOM-01]
 tests: [unit, integration]
@@ -55,9 +55,13 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
   - integração — `GET /api/v1/stores` (em `P1-STORE-02`) responde no padrão.
 
 ## Definition of Done
-- [ ] Convenções (URL, response, erro, paginação, tenant) **documentadas** no doc [20](../../20_api_contracts_todo.md).
-- [ ] Tipos/params de paginação reutilizáveis em `app/core/api.py`, com unit verde.
-- [ ] **DEC-5** marcada como decidida nas Fundações.
+- [x] Convenções (URL, response, erro, paginação, tenant) **documentadas** no doc [20](../../20_api_contracts_todo.md).
+- [x] Tipos/params de paginação reutilizáveis em `app/core/api.py`, com unit verde *(73 testes; cobertura 91%)*.
+- [x] **DEC-5** marcada como decidida nas Fundações.
 
 ## Notas / Reconciliações
-- Registrar aqui a escolha final (paginação/erro) e qualquer divergência com o que o template já fazia.
+- **Decisões travadas:** paginação **offset** (`skip`/`limit`) + envelope `{data, count}` (DEC-5); erro **estruturado** `{error: {code, message, details?}}`.
+- **Implementado:** `app/core/api.py` com `Page[T]`, `pagination_params`, `ErrorResponse`/`ErrorDetail`, `AppError` e `register_exception_handlers` (registrado no `main.py`). Handlers convertem `HTTPException` (status→`code`) e `RequestValidationError` (`validation_error` + `details`) para o envelope — **não foi preciso reescrever** as 27 `HTTPException(detail=...)` existentes.
+- **Migração do `{detail}`:** o template usava `{detail}`. Ajustados os testes da Fase 0 (`test_login`/`test_users`) e o `frontend/src/utils.ts` (`extractErrorMessage` lê `error.message`, com fallback para `detail`). `EditUser.tsx` só tinha "detail" como texto de UI.
+- **OpenAPI:** o schema de erro não foi declarado por rota (o front lê `err.body` de forma defensiva); declarar `responses=` por endpoint fica como melhoria futura se precisarmos do tipo no client gerado.
+- **`details` sempre presente** (`null` quando ausente) para schema consistente.
