@@ -1,9 +1,9 @@
-"""Shared pytest fixtures: per-test DB isolation and an HTTP test client.
+"""Integration-test fixtures: per-test DB isolation and an HTTP test client.
 
 Integration tests run against a real PostgreSQL (the Loja Club dev database).
 Each test runs inside a transaction that is rolled back on teardown, so tests are
 isolated and order-independent (see ``docs/backlog/_foundations-and-bottlenecks.md``,
-DEC-10).
+DEC-10). Unit tests live in ``tests/unit`` and must not depend on these fixtures.
 """
 
 from collections.abc import Generator
@@ -25,7 +25,7 @@ from tests.utils.utils import get_superuser_token_headers
 
 @pytest.fixture(scope="session", autouse=True)
 def _create_tables() -> Generator[None, None, None]:
-    """Create all tables once for the whole test session.
+    """Create all tables once for the whole integration-test session.
 
     The test database is disposable, so tables are created directly from the
     SQLModel metadata instead of running Alembic migrations.

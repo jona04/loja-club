@@ -55,6 +55,7 @@ O template é integração-pesado (Pytest contra Postgres real, limpeza por `del
 - [x] `coverage` e `mypy strict` seguem no gate. *(gate `lint.sh` cobre `app/`, intacto; Ruff `D` entra na P0-CI-01)*
 
 ## Notas / Reconciliações
+- **Refino (P0-MOD-05):** os fixtures de DB (`_create_tables`, `db`, `client`, tokens) foram movidos para `tests/integration/conftest.py`. Assim `tests/unit` roda **sem DB** (verdadeiramente unit, §10); `tests/integration` mantém o rollback por teste.
 - **Vem cedo** (logo após `P0-CFG-01`), **antes de qualquer task que escreve teste** (CFG-02/03/04, MOD-*), para que esses testes já nasçam no layout/isolamento novos. Usa a stack do template, que **já roda** — não depende do refactor. As tasks de refactor (`MOD-03`/`MOD-04`) ajustam seus próprios testes dentro do que é estabelecido aqui.
 - Lib de teste backend = **`pytest`** (DEC-12, já no template); front = **`vitest`** (DEC-9).
 - **Smoke** (app sobe / `/health` / OpenAPI) entra como teste de **integração raso** (§10), **não** é teste manual. O template já tem readiness no `backend_pre_start.py` (`select 1`) e o healthcheck do compose — reaproveitar.
