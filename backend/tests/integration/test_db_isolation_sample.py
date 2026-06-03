@@ -2,7 +2,7 @@
 
 from sqlmodel import Session, func, select
 
-from app.models import User
+from app.modules.accounts.models import User
 from tests.utils.user import create_random_user
 
 

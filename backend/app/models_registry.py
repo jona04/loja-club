@@ -8,5 +8,6 @@ imported here as they are created.
 from sqlmodel import SQLModel
 
 import app.models  # noqa: F401
+import app.modules.accounts.models  # noqa: F401
 
 __all__ = ["SQLModel"]

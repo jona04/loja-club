@@ -15,4 +15,4 @@ def test_registry_populates_metadata() -> None:
     """Importing the registry registers the known tables on the metadata."""
     import app.models_registry  # noqa: F401
 
-    assert "user" in SQLModel.metadata.tables
+    assert "account_users" in SQLModel.metadata.tables
