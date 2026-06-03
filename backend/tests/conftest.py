@@ -14,7 +14,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Transaction
 from sqlmodel import Session, SQLModel
 
-from app import models  # noqa: F401  ensure models are registered on the metadata
+from app import models_registry  # noqa: F401  registers all models on the metadata
 from app.api.deps import get_db
 from app.core.config import settings
 from app.core.db import engine, init_db

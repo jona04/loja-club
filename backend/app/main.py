@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 
+from app import models_registry  # noqa: F401  registers all models on the metadata
 from app.api.main import api_router
 from app.core.cache import get_redis
 from app.core.config import settings

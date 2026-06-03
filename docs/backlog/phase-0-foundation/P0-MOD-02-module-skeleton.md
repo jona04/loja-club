@@ -4,7 +4,7 @@ title: Esqueleto de módulos
 phase: 0
 etapa: "Etapa 2 — Refatoração modular"
 area: MOD
-status: todo
+status: done
 depends_on: [P0-MOD-01]
 blocks: [P0-MOD-03, P0-MOD-04]
 tests: [integration]
@@ -51,9 +51,11 @@ O backend será um monólito **modular**: cada domínio em `app/modules/<nome>/`
   - integração — app sobe; routers agregados aparecem no OpenAPI; Alembic autogenerate enxerga os models.
 
 ## Definition of Done
-- [ ] `app/modules/` criado com os subpacotes e a convenção documentada.
-- [ ] App sobe com `app/api/main.py` agregando routers (sem quebrar login/users por enquanto).
-- [ ] Models são descobertos pelo Alembic (autogenerate enxerga as tabelas).
+- [x] `app/modules/` criado com os 16 subpacotes; convenção documentada (este arquivo + doc 04).
+- [x] App sobe com os routers do template (login/users/utils/items/private) funcionando. *(71 testes verdes)*
+- [x] Models descobertos pelo Alembic via `app/models_registry.py` (importado em `env.py`); registry popula `SQLModel.metadata`. *(test_registry_populates_metadata)*
 
 ## Notas / Reconciliações
 - A convenção de 7 arquivos vem do doc 04; criar só os que o módulo realmente usa.
+- **Implementado:** 16 subpacotes em `app/modules/` (só `__init__.py`); `app/models_registry.py` (import central) ligado em `alembic/env.py`, `conftest.py` e `main.py`. mypy passa em 43 arquivos; 71 testes verdes.
+- **Reconciliação:** `app/api/main.py` ainda agrega os routers do template (não há `routes.py` de módulo ainda); a migração dos routers para os módulos ocorre quando eles surgem (accounts em P0-MOD-04).
