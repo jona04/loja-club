@@ -4,7 +4,7 @@ title: Redis (cache/locks/fila leve)
 phase: 0
 etapa: "Etapa 1 — Fundação do projeto"
 area: CFG
-status: todo
+status: done
 depends_on: [P0-CFG-02]
 blocks: [P0-CFG-04]
 tests: [unit, integration]
@@ -57,10 +57,11 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
   - integração — round-trip `cache_set`/`cache_get` no Redis real; `GET /health/redis` faz PING.
 
 ## Definition of Done
-- [ ] `redis` sobe no `docker compose` e o backend conecta.
-- [ ] `GET /health/redis` retorna OK.
-- [ ] `cache_set`/`cache_get` funcionam num teste manual.
+- [x] `redis` sobe no `docker compose` e o backend conecta. *(loja-club-redis-1 healthy, 6399)*
+- [x] `GET /health/redis` retorna OK. *(test_health_redis_ok)*
+- [x] `cache_set`/`cache_get` funcionam. *(teste automatizado, não só manual)*
 
 ## Notas / Reconciliações
 - Em dev local, Redis é container; em dev online (Fase 5) pode ser container no EC2 ou ElastiCache (doc [12](../../12_aws_infrastructure_and_deployment.md)).
-- **Reconciliação:** o template tem `/api/v1/utils/health-check/` (usado no `healthcheck` do `compose.yml`). Padronizar para `/health*` do doc [15](../../15_observability_and_operations.md) e **atualizar o `test:` do healthcheck do backend no `compose.yml`** para a nova URL.
+- **Reconciliação (feito):** padronizei para `/health*` (doc [15](../../15_observability_and_operations.md)); o `test:` do healthcheck do backend no `compose.yml` aponta para `/health`. O endpoint antigo `/api/v1/utils/health-check/` do template segue existindo (inofensivo) — remover depois se quiser.
+- **Implementado:** `redis:8` (host **6399**, interno 6379); `REDIS_HOST=redis` no container; pytest local usa `REDIS_PORT=6399` (o `.env` mantém `6379` interno). `cache.py` = redis-py **síncrono** (estilo do template); `Redis` não é genérico no redis-py 8 (sem `Redis[str]`). 67 testes passam; gate `app` verde.

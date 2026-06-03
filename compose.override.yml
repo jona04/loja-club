@@ -48,6 +48,11 @@ services:
     ports:
       - "5442:5432"
 
+  redis:
+    restart: "no"
+    ports:
+      - "6399:6379"
+
   adminer:
     restart: "no"
     ports:

@@ -4,6 +4,7 @@ from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
+from app.core.cache import get_redis
 from app.core.config import settings
 
 
@@ -31,3 +32,26 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+@app.get("/health", tags=["health"])
+def health() -> dict[str, str]:
+    """Liveness check confirming the app process is up.
+
+    Returns:
+        A small JSON payload ``{"status": "ok"}``.
+    """
+    return {"status": "ok"}
+
+
+@app.get("/health/redis", tags=["health"])
+def health_redis() -> dict[str, str]:
+    """Readiness check for Redis.
+
+    PINGs the Redis server; raises (HTTP 500) if it is unreachable.
+
+    Returns:
+        A small JSON payload ``{"status": "ok"}`` when Redis responds.
+    """
+    get_redis().ping()
+    return {"status": "ok"}
