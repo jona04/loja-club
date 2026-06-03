@@ -1,10 +1,8 @@
 services:
 
-  # Local services are available on their ports, but also available on:
-  # http://api.localhost.tiangolo.com: backend
-  # http://dashboard.localhost.tiangolo.com: frontend
-  # etc. To enable it, update .env, set:
-  # DOMAIN=localhost.tiangolo.com
+  # Dev services are exposed on the Loja Club host ports below. With
+  # DOMAIN=loja.localhost and Traefik they are also reachable at
+  # api./app./admin.<DOMAIN> (routing wired up in later phases).
   proxy:
     image: traefik:3.6
     volumes:

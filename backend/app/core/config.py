@@ -48,6 +48,30 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]
 
+    DOMAIN: str = "localhost"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def api_host(self) -> str:
+        """Return the platform API hostname derived from ``DOMAIN``."""
+        return f"api.{self.DOMAIN}"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def app_host(self) -> str:
+        """Return the merchant dashboard hostname derived from ``DOMAIN``."""
+        return f"app.{self.DOMAIN}"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def admin_host(self) -> str:
+        """Return the platform admin hostname derived from ``DOMAIN``."""
+        return f"admin.{self.DOMAIN}"
+
+    # Platform defaults; each store and customer carries its own.
+    PLATFORM_DEFAULT_CURRENCY: str = "USD"
+    PLATFORM_DEFAULT_LOCALE: str = "en-US"
+
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
     POSTGRES_SERVER: str

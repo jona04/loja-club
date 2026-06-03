@@ -4,7 +4,7 @@ title: Variáveis de ambiente e domínio de dev
 phase: 0
 etapa: "Etapa 1 — Fundação do projeto"
 area: CFG
-status: todo
+status: done
 depends_on: []
 blocks: [P0-CFG-03]
 tests: [unit]
@@ -55,10 +55,13 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
   - manual — subdomínio resolve via Traefik; sem warning de secret `changethis`.
 
 ## Definition of Done
-- [ ] `http://app.loja.localhost` e um subdomínio de loja de teste resolvem localmente via Traefik.
-- [ ] CORS aceita chamadas de `app.`/`*.` locais.
-- [ ] Subir local **não** emite warning de secret `changethis`.
+- [x] `config.py` deriva os hosts da plataforma de `DOMAIN` (`api_host`/`app_host`/`admin_host`). *(resolução real via Traefik fica na **Fase 1**)*
+- [x] CORS aceita os origins de dev (`localhost:5180`, `app.`/`admin.loja.localhost:8088`). *(CORS de subdomínio de loja `*.` via regex entra com o storefront — **Fase 3**)*
+- [x] Subir local **não** emite warning de secret `changethis` (SECRET_KEY/POSTGRES_PASSWORD/FIRST_SUPERUSER_PASSWORD fortes). *(pytest sem warnings)*
 
 ## Notas / Reconciliações
 - `config.py` já tem `FRONTEND_HOST`, `all_cors_origins` e `parse_cors`; reaproveitar.
 - `loja.localhost` é o domínio de dev (índice do backlog).
+- **Implementado:** secrets fortes (sem `changethis`); `DOMAIN=loja.localhost`; hosts derivados em `config.py`; `PLATFORM_DEFAULT_CURRENCY=USD`/`PLATFORM_DEFAULT_LOCALE=en-US`; portas próprias (feitas na P0-TEST-01); resíduo tiangolo removido (`.env` + `compose.override.yml`). db recriado com a senha nova.
+- **Reconciliação:** a resolução real de `app.`/`*.` via Traefik saiu para a **Fase 1** (roteamento) e **Fase 3** (regex CORS do storefront) — coerente com o "fora de escopo".
+- `POSTGRES_PORT` no `.env` segue `5432` (porta interna do container); pytest local usa `POSTGRES_PORT=5442` (host).
