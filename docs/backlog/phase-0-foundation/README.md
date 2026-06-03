@@ -26,7 +26,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 6 | [P0-MOD-01](./P0-MOD-01-base-mixins.md) | Mixins base + `app/db` | done | — |
 | 7 | [P0-MOD-02](./P0-MOD-02-module-skeleton.md) | Esqueleto de módulos | done | P0-MOD-01 |
 | 8 | [P0-MOD-05](./P0-MOD-05-shared-money-locale.md) | Tipos globais: Money/Currency, locale, UTC | done | P0-MOD-01 |
-| 9 | [P0-MOD-03](./P0-MOD-03-remove-items.md) | Remover exemplo `items` | todo | P0-MOD-02 |
+| 9 | [P0-MOD-03](./P0-MOD-03-remove-items.md) | Remover exemplo `items` | done | P0-MOD-02 |
 | 10 | [P0-MOD-04](./P0-MOD-04-accounts-user.md) | Mover `User` → `accounts` (`account_users`) | todo | P0-MOD-01, P0-MOD-02 |
 | 11 | [P0-CI-01](./P0-CI-01-ci-lint-tests.md) | CI, lint, testes e client OpenAPI | todo | P0-MOD-03, P0-MOD-04 |
 

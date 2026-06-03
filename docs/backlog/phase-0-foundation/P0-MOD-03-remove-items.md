@@ -4,7 +4,7 @@ title: Remover exemplo items
 phase: 0
 etapa: "Etapa 2 — Refatoração modular"
 area: MOD
-status: todo
+status: done
 depends_on: [P0-MOD-02]
 blocks: [P0-CI-01]
 tests: [integration]
@@ -55,9 +55,12 @@ O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Rem
   - remover `test_items.py` e os utilitários de item.
 
 ## Definition of Done
-- [ ] App sobe sem nenhuma referência a `items` (backend e frontend).
-- [ ] Migration dropa a tabela `item` e roda limpa.
-- [ ] Suíte de testes não tem mais testes de item e passa.
+- [x] App sobe sem referência a `items` (backend: models/crud/routes/main/users; frontend: rota/componentes/nav). *(68 testes; `vite build` ok)*
+- [x] Migration `f0a1b2c3d4e5` dropa `item` e roda limpa (`alembic upgrade head` em db do zero → só `user` + `alembic_version`).
+- [x] Sem testes de item; suíte passa (68).
 
 ## Notas / Reconciliações
 - Remoção é física aqui (exemplo do template, não registro de negócio); o soft delete vale para entidades de negócio (doc 07/14).
+- **Implementado:** Item saiu de `models.py` (+ import `Relationship`), `crud.py` (`create_item` + `import uuid`), `routes/items.py` (rm), `api/main.py`, e **`users.py`** (import `Item` + cleanup no `delete_user` — referência que faltava). Migration `f0a1b2c3d4e5` (drop item). Frontend: `items.tsx`, `components/Items/`, entrada do `AppSidebar` (+ ícone `Briefcase`); route tree regenerado por `vite build`.
+- **Pendente p/ P0-CI-01:** o client OpenAPI (`src/client`) ainda exporta `ItemsService`/`ItemPublic` (gerado) — sai ao regenerar o client.
+- O db de dev agora está **migration-managed** (após `alembic upgrade head`); os testes seguem com `create_all` por cima (idempotente).
