@@ -4,7 +4,7 @@ title: Tipos compartilhados globais (Money/Currency, locale, UTC)
 phase: 0
 etapa: "Etapa 2 — Refatoração modular"
 area: MOD
-status: todo
+status: done
 depends_on: [P0-MOD-01]
 blocks: []
 tests: [unit]
@@ -58,11 +58,14 @@ A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/R
   - unit — soma rejeita moedas diferentes; formatação correta com 0 e 2 casas (JPY/BRL/USD); arredondamento `ROUND_HALF_UP`; cálculo de comissão (%).
 
 ## Definition of Done
-- [ ] Tipo `Money` reutilizável carregando **moeda** sempre; nenhum valor monetário é número solto.
-- [ ] Soma entre moedas diferentes falha com erro claro.
-- [ ] Formata corretamente moedas com 0 e 2 casas (sem assumir 2/BRL).
-- [ ] Convenção de colunas de dinheiro pronta para o catálogo (Fase 2) usar.
+- [x] Tipo `Money` (valor + moeda ISO 4217); nenhum valor monetário é número solto.
+- [x] Soma entre moedas diferentes falha (`CurrencyMismatchError`).
+- [x] Formata 0/2/3 casas via babel (testado USD/JPY/BHD; sem assumir 2/BRL).
+- [x] Convenção de colunas (`*_amount_minor: int` + `*_currency: str(3)`) documentada em `money.py` para o catálogo (Fase 2).
 
 ## Notas / Reconciliações
 - **DEC-1 (Fundações) — decidido:** inteiro em unidades menores + moeda ISO 4217 (estilo Stripe). `Money` é um value object próprio; `babel` fornece expoente e formatação. **Não usar `py-moneyed`** (baseado em `Decimal`, conflita com unidades menores). Alternativa histórica considerada: `Decimal` + moeda.
 - **DEC-2 (Fundações):** arredondamento recomendado `ROUND_HALF_UP`; rateio de split por maior-resto. Confirmar antes do split (Fase 5).
+- **Implementado:** `app/core/money.py` (`Money`: `+`, `-`, `*int`, `apply_rate(Decimal)` half-up, `decimal_amount`, `format(locale)`) + `CurrencyMismatchError`; `babel` para expoente/format. 14 testes unit verdes; gate `app` verde.
+- **Reconciliação:** não editei `base.py` — dinheiro não cabe como mixin (um modelo pode ter vários valores monetários: preço, total…). A convenção de colunas vive no docstring de `money.py`; sem type composto no MVP.
+- **Refino do harness (P0-TEST-01):** movi os fixtures de DB para `tests/integration/conftest.py`, então `tests/unit` roda **sem DB** (14 testes em 0,55s). Os testes do Money provaram isso.

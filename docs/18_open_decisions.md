@@ -2,6 +2,14 @@
 
 Este documento lista decisões que ainda precisam ser fechadas.
 
+## Lib de fila/worker
+
+```text
+Decisão fechada: usar arq (async, baseado em Redis).
+```
+
+Motivos: async (casa com o backend), Redis já presente, leve e com cron embutido. Ver também `docs/backlog/_foundations-and-bottlenecks.md` (DEC-3).
+
 ## Gateway principal
 
 Opções:

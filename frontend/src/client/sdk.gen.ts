@@ -3,115 +3,40 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
-export class ItemsService {
+export class HealthService {
     /**
-     * Read Items
-     * Retrieve items.
-     * @param data The data for the request.
-     * @param data.skip
-     * @param data.limit
-     * @returns ItemsPublic Successful Response
+     * Health
+     * Liveness check confirming the app process is up.
+     *
+     * Returns:
+     * A small JSON payload ``{"status": "ok"}``.
+     * @returns string Successful Response
      * @throws ApiError
      */
-    public static readItems(data: ItemsReadItemsData = {}): CancelablePromise<ItemsReadItemsResponse> {
+    public static health(): CancelablePromise<HealthHealthResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/items/',
-            query: {
-                skip: data.skip,
-                limit: data.limit
-            },
-            errors: {
-                422: 'Validation Error'
-            }
+            url: '/health'
         });
     }
     
     /**
-     * Create Item
-     * Create new item.
-     * @param data The data for the request.
-     * @param data.requestBody
-     * @returns ItemPublic Successful Response
+     * Health Redis
+     * Readiness check for Redis.
+     *
+     * PINGs the Redis server; raises (HTTP 500) if it is unreachable.
+     *
+     * Returns:
+     * A small JSON payload ``{"status": "ok"}`` when Redis responds.
+     * @returns string Successful Response
      * @throws ApiError
      */
-    public static createItem(data: ItemsCreateItemData): CancelablePromise<ItemsCreateItemResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/items/',
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Read Item
-     * Get item by ID.
-     * @param data The data for the request.
-     * @param data.id
-     * @returns ItemPublic Successful Response
-     * @throws ApiError
-     */
-    public static readItem(data: ItemsReadItemData): CancelablePromise<ItemsReadItemResponse> {
+    public static healthRedis(): CancelablePromise<HealthHealthRedisResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/items/{id}',
-            path: {
-                id: data.id
-            },
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Update Item
-     * Update an item.
-     * @param data The data for the request.
-     * @param data.id
-     * @param data.requestBody
-     * @returns ItemPublic Successful Response
-     * @throws ApiError
-     */
-    public static updateItem(data: ItemsUpdateItemData): CancelablePromise<ItemsUpdateItemResponse> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v1/items/{id}',
-            path: {
-                id: data.id
-            },
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
-     * Delete Item
-     * Delete an item.
-     * @param data The data for the request.
-     * @param data.id
-     * @returns Message Successful Response
-     * @throws ApiError
-     */
-    public static deleteItem(data: ItemsDeleteItemData): CancelablePromise<ItemsDeleteItemResponse> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v1/items/{id}',
-            path: {
-                id: data.id
-            },
-            errors: {
-                422: 'Validation Error'
-            }
+            url: '/health/redis'
         });
     }
 }
@@ -119,7 +44,7 @@ export class ItemsService {
 export class LoginService {
     /**
      * Login Access Token
-     * OAuth2 compatible token login, get an access token for future requests
+     * Log in via OAuth2 and return an access token for future requests.
      * @param data The data for the request.
      * @param data.formData
      * @returns Token Successful Response
@@ -139,7 +64,7 @@ export class LoginService {
     
     /**
      * Test Token
-     * Test access token
+     * Validate the current access token and return the authenticated user.
      * @returns UserPublic Successful Response
      * @throws ApiError
      */
@@ -152,7 +77,7 @@ export class LoginService {
     
     /**
      * Recover Password
-     * Password Recovery
+     * Start password recovery: email a reset link if the account exists.
      * @param data The data for the request.
      * @param data.email
      * @returns Message Successful Response
@@ -173,7 +98,7 @@ export class LoginService {
     
     /**
      * Reset Password
-     * Reset password
+     * Reset a password using a valid reset token.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns Message Successful Response
@@ -193,7 +118,7 @@ export class LoginService {
     
     /**
      * Recover Password Html Content
-     * HTML Content for Password Recovery
+     * Return the password-recovery email HTML for preview (superuser only).
      * @param data The data for the request.
      * @param data.email
      * @returns string Successful Response
@@ -216,7 +141,7 @@ export class LoginService {
 export class PrivateService {
     /**
      * Create User
-     * Create a new user.
+     * Create a new user directly, without authentication (local only).
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
@@ -238,7 +163,7 @@ export class PrivateService {
 export class UsersService {
     /**
      * Read Users
-     * Retrieve users.
+     * Retrieve a paginated list of users (superuser only).
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
@@ -261,7 +186,7 @@ export class UsersService {
     
     /**
      * Create User
-     * Create new user.
+     * Create a new user (superuser only).
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
@@ -281,7 +206,7 @@ export class UsersService {
     
     /**
      * Read User Me
-     * Get current user.
+     * Return the authenticated user's own profile.
      * @returns UserPublic Successful Response
      * @throws ApiError
      */
@@ -294,7 +219,7 @@ export class UsersService {
     
     /**
      * Delete User Me
-     * Delete own user.
+     * Delete the authenticated user's own account.
      * @returns Message Successful Response
      * @throws ApiError
      */
@@ -307,7 +232,7 @@ export class UsersService {
     
     /**
      * Update User Me
-     * Update own user.
+     * Update the authenticated user's own profile.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
@@ -327,7 +252,7 @@ export class UsersService {
     
     /**
      * Update Password Me
-     * Update own password.
+     * Update the authenticated user's own password.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns Message Successful Response
@@ -347,7 +272,7 @@ export class UsersService {
     
     /**
      * Register User
-     * Create new user without the need to be logged in.
+     * Register a new user without authentication (public signup).
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
@@ -367,7 +292,7 @@ export class UsersService {
     
     /**
      * Read User By Id
-     * Get a specific user by id.
+     * Return a user by id (own profile, or any user for superusers).
      * @param data The data for the request.
      * @param data.userId
      * @returns UserPublic Successful Response
@@ -388,7 +313,7 @@ export class UsersService {
     
     /**
      * Update User
-     * Update a user.
+     * Update a user by id (superuser only).
      * @param data The data for the request.
      * @param data.userId
      * @param data.requestBody
@@ -412,7 +337,7 @@ export class UsersService {
     
     /**
      * Delete User
-     * Delete a user.
+     * Delete a user by id (superuser only).
      * @param data The data for the request.
      * @param data.userId
      * @returns Message Successful Response
@@ -435,7 +360,7 @@ export class UsersService {
 export class UtilsService {
     /**
      * Test Email
-     * Test emails.
+     * Send a test email to the given address (superuser only).
      * @param data The data for the request.
      * @param data.emailTo
      * @returns Message Successful Response
@@ -456,6 +381,7 @@ export class UtilsService {
     
     /**
      * Health Check
+     * Return ``True`` to confirm the API is reachable.
      * @returns boolean Successful Response
      * @throws ApiError
      */

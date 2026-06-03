@@ -4,7 +4,7 @@ title: Branding Loja Club
 phase: 0
 etapa: "Etapa 1 — Fundação do projeto"
 area: CFG
-status: todo
+status: done
 depends_on: []
 blocks: []
 tests: none
@@ -48,9 +48,11 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 - **Quando:** —
 
 ## Definition of Done
-- [ ] Painel abre com título "Loja Club".
-- [ ] E-mails de teste usam o nome "Loja Club" como remetente.
-- [ ] Containers locais usam o prefixo `loja-club-*` (via `STACK_NAME`/`DOCKER_IMAGE_*`).
+- [x] Painel abre com título "Loja Club". *(título em `index.html`; confirmação visual ao subir o front)*
+- [x] E-mails de teste usam o nome "Loja Club" como remetente. *(via `PROJECT_NAME` → `EMAILS_FROM_NAME` no `config.py`)*
+- [x] Containers locais usam o prefixo `loja-club-*` (via `STACK_NAME`/`DOCKER_IMAGE_*`).
 
 ## Notas / Reconciliações
 - Sem divergência com docs: é só configuração/branding do template.
+- **Pendente (design, não gerável aqui):** favicon/logo da Loja Club. Mantidos os ícones do template em `frontend/index.html` (`vite.svg`/`favicon.png`) até existir o asset real.
+- README raiz reescrito (era o do template); `copier.yml` e `.env` com nome/stack Loja Club.

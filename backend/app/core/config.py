@@ -1,3 +1,5 @@
+"""Application settings loaded from environment variables and the ``.env`` file."""
+
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
@@ -16,6 +18,19 @@ from typing_extensions import Self
 
 
 def parse_cors(v: Any) -> list[str] | str:
+    """Parse the CORS origins setting from a string or list.
+
+    Args:
+        v: Raw value, either a comma-separated string or an already-parsed
+            list/JSON string.
+
+    Returns:
+        A list of origin strings, or the original value when it is already a
+        list or a JSON-encoded string.
+
+    Raises:
+        ValueError: If the value cannot be interpreted as origins.
+    """
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",") if i.strip()]
     elif isinstance(v, list | str):
@@ -24,6 +39,8 @@ def parse_cors(v: Any) -> list[str] | str:
 
 
 class Settings(BaseSettings):
+    """Typed application configuration sourced from the environment."""
+
     model_config = SettingsConfigDict(
         # Use top level .env file (one level above ./backend/)
         env_file="../.env",
@@ -44,9 +61,34 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def all_cors_origins(self) -> list[str]:
+        """Return all allowed CORS origins, including the frontend host."""
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]
+
+    DOMAIN: str = "localhost"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def api_host(self) -> str:
+        """Return the platform API hostname derived from ``DOMAIN``."""
+        return f"api.{self.DOMAIN}"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def app_host(self) -> str:
+        """Return the merchant dashboard hostname derived from ``DOMAIN``."""
+        return f"app.{self.DOMAIN}"
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def admin_host(self) -> str:
+        """Return the platform admin hostname derived from ``DOMAIN``."""
+        return f"admin.{self.DOMAIN}"
+
+    # Platform defaults; each store and customer carries its own.
+    PLATFORM_DEFAULT_CURRENCY: str = "USD"
+    PLATFORM_DEFAULT_LOCALE: str = "en-US"
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
@@ -59,6 +101,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
+        """Build the Postgres connection DSN from the POSTGRES_* settings."""
         return PostgresDsn.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,
@@ -67,6 +110,18 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str | None = None
+    REDIS_DB: int = 0
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def REDIS_URL(self) -> str:
+        """Build the Redis connection URL from the REDIS_* settings."""
+        auth = f":{self.REDIS_PASSWORD}@" if self.REDIS_PASSWORD else ""
+        return f"redis://{auth}{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
@@ -88,6 +143,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:
+        """Return whether outbound email is configured (SMTP host + sender)."""
         return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
 
     EMAIL_TEST_USER: EmailStr = "test@example.com"

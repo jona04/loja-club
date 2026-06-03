@@ -5,6 +5,9 @@ SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/01..24`; **ba
 ## Regra de ouro
 O código imita a lógica dos docs — **não inventar lógica de negócio nova**. Se uma limitação técnica impedir seguir o doc, atualizar o `.md` para refletir o código; **nunca** deixar doc e código divergentes.
 
+## Git (importante)
+**Nunca** executar operações de git que alterem estado: sem `commit`, `push`, `branch`, `checkout`/`switch`, `merge`, `reset`, `rebase`, `stash`. **O usuário gerencia o git.** Implementar **sempre na branch atual** (a que estiver checada) — não criar nem trocar de branch. Rodar git (mesmo só-leitura, como `git status`/`git diff`) **apenas se o usuário pedir**.
+
 ## Convenções de código
 
 ### Python — docstrings (obrigatório)

@@ -13,38 +13,24 @@ export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
 
-export type ItemCreate = {
-    title: string;
-    description?: (string | null);
-};
-
-export type ItemPublic = {
-    title: string;
-    description?: (string | null);
-    id: string;
-    owner_id: string;
-    created_at?: (string | null);
-};
-
-export type ItemsPublic = {
-    data: Array<ItemPublic>;
-    count: number;
-};
-
-export type ItemUpdate = {
-    title?: (string | null);
-    description?: (string | null);
-};
-
+/**
+ * Generic message response.
+ */
 export type Message = {
     message: string;
 };
 
+/**
+ * Password-reset payload (token + new password).
+ */
 export type NewPassword = {
     token: string;
     new_password: string;
 };
 
+/**
+ * Request body for creating a user through the private endpoint.
+ */
 export type PrivateUserCreate = {
     email: string;
     password: string;
@@ -52,16 +38,25 @@ export type PrivateUserCreate = {
     is_verified?: boolean;
 };
 
+/**
+ * JSON payload containing an access token.
+ */
 export type Token = {
     access_token: string;
     token_type?: string;
 };
 
+/**
+ * Self password-change payload.
+ */
 export type UpdatePassword = {
     current_password: string;
     new_password: string;
 };
 
+/**
+ * Payload to create an account user.
+ */
 export type UserCreate = {
     email: string;
     is_active?: boolean;
@@ -70,6 +65,9 @@ export type UserCreate = {
     password: string;
 };
 
+/**
+ * Account user as returned via the API.
+ */
 export type UserPublic = {
     email: string;
     is_active?: boolean;
@@ -79,17 +77,26 @@ export type UserPublic = {
     created_at?: (string | null);
 };
 
+/**
+ * Self-registration payload.
+ */
 export type UserRegister = {
     email: string;
     password: string;
     full_name?: (string | null);
 };
 
+/**
+ * Paginated list of account users.
+ */
 export type UsersPublic = {
     data: Array<UserPublic>;
     count: number;
 };
 
+/**
+ * Admin update payload (all fields optional).
+ */
 export type UserUpdate = {
     email?: (string | null);
     is_active?: boolean;
@@ -98,6 +105,9 @@ export type UserUpdate = {
     password?: (string | null);
 };
 
+/**
+ * Self profile-update payload.
+ */
 export type UserUpdateMe = {
     full_name?: (string | null);
     email?: (string | null);
@@ -113,37 +123,13 @@ export type ValidationError = {
     };
 };
 
-export type ItemsReadItemsData = {
-    limit?: number;
-    skip?: number;
-};
+export type HealthHealthResponse = ({
+    [key: string]: (string);
+});
 
-export type ItemsReadItemsResponse = (ItemsPublic);
-
-export type ItemsCreateItemData = {
-    requestBody: ItemCreate;
-};
-
-export type ItemsCreateItemResponse = (ItemPublic);
-
-export type ItemsReadItemData = {
-    id: string;
-};
-
-export type ItemsReadItemResponse = (ItemPublic);
-
-export type ItemsUpdateItemData = {
-    id: string;
-    requestBody: ItemUpdate;
-};
-
-export type ItemsUpdateItemResponse = (ItemPublic);
-
-export type ItemsDeleteItemData = {
-    id: string;
-};
-
-export type ItemsDeleteItemResponse = (Message);
+export type HealthHealthRedisResponse = ({
+    [key: string]: (string);
+});
 
 export type LoginLoginAccessTokenData = {
     formData: Body_login_login_access_token;

@@ -46,7 +46,6 @@ Por que esta task existe, em 1–3 linhas. Liga ao objetivo da etapa/fase.
 ## Definition of Done
 - [ ] critério testável 1
 - [ ] critério testável 2
-- [ ] código novo segue as convenções do `CLAUDE.md` (docstrings Google completas, type hints)
 
 ## Notas / Reconciliações
 - divergências código ↔ doc resolvidas aqui (citar o doc afetado)

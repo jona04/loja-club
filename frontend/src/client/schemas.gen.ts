@@ -71,131 +71,6 @@ export const HTTPValidationErrorSchema = {
     title: 'HTTPValidationError'
 } as const;
 
-export const ItemCreateSchema = {
-    properties: {
-        title: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Title'
-        },
-        description: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Description'
-        }
-    },
-    type: 'object',
-    required: ['title'],
-    title: 'ItemCreate'
-} as const;
-
-export const ItemPublicSchema = {
-    properties: {
-        title: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Title'
-        },
-        description: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Description'
-        },
-        id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Id'
-        },
-        owner_id: {
-            type: 'string',
-            format: 'uuid',
-            title: 'Owner Id'
-        },
-        created_at: {
-            anyOf: [
-                {
-                    type: 'string',
-                    format: 'date-time'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Created At'
-        }
-    },
-    type: 'object',
-    required: ['title', 'id', 'owner_id'],
-    title: 'ItemPublic'
-} as const;
-
-export const ItemUpdateSchema = {
-    properties: {
-        title: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255,
-                    minLength: 1
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Title'
-        },
-        description: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Description'
-        }
-    },
-    type: 'object',
-    title: 'ItemUpdate'
-} as const;
-
-export const ItemsPublicSchema = {
-    properties: {
-        data: {
-            items: {
-                '$ref': '#/components/schemas/ItemPublic'
-            },
-            type: 'array',
-            title: 'Data'
-        },
-        count: {
-            type: 'integer',
-            title: 'Count'
-        }
-    },
-    type: 'object',
-    required: ['data', 'count'],
-    title: 'ItemsPublic'
-} as const;
-
 export const MessageSchema = {
     properties: {
         message: {
@@ -205,7 +80,8 @@ export const MessageSchema = {
     },
     type: 'object',
     required: ['message'],
-    title: 'Message'
+    title: 'Message',
+    description: 'Generic message response.'
 } as const;
 
 export const NewPasswordSchema = {
@@ -223,7 +99,8 @@ export const NewPasswordSchema = {
     },
     type: 'object',
     required: ['token', 'new_password'],
-    title: 'NewPassword'
+    title: 'NewPassword',
+    description: 'Password-reset payload (token + new password).'
 } as const;
 
 export const PrivateUserCreateSchema = {
@@ -248,7 +125,8 @@ export const PrivateUserCreateSchema = {
     },
     type: 'object',
     required: ['email', 'password', 'full_name'],
-    title: 'PrivateUserCreate'
+    title: 'PrivateUserCreate',
+    description: 'Request body for creating a user through the private endpoint.'
 } as const;
 
 export const TokenSchema = {
@@ -265,7 +143,8 @@ export const TokenSchema = {
     },
     type: 'object',
     required: ['access_token'],
-    title: 'Token'
+    title: 'Token',
+    description: 'JSON payload containing an access token.'
 } as const;
 
 export const UpdatePasswordSchema = {
@@ -285,7 +164,8 @@ export const UpdatePasswordSchema = {
     },
     type: 'object',
     required: ['current_password', 'new_password'],
-    title: 'UpdatePassword'
+    title: 'UpdatePassword',
+    description: 'Self password-change payload.'
 } as const;
 
 export const UserCreateSchema = {
@@ -327,7 +207,8 @@ export const UserCreateSchema = {
     },
     type: 'object',
     required: ['email', 'password'],
-    title: 'UserCreate'
+    title: 'UserCreate',
+    description: 'Payload to create an account user.'
 } as const;
 
 export const UserPublicSchema = {
@@ -380,7 +261,8 @@ export const UserPublicSchema = {
     },
     type: 'object',
     required: ['email', 'id'],
-    title: 'UserPublic'
+    title: 'UserPublic',
+    description: 'Account user as returned via the API.'
 } as const;
 
 export const UserRegisterSchema = {
@@ -412,7 +294,8 @@ export const UserRegisterSchema = {
     },
     type: 'object',
     required: ['email', 'password'],
-    title: 'UserRegister'
+    title: 'UserRegister',
+    description: 'Self-registration payload.'
 } as const;
 
 export const UserUpdateSchema = {
@@ -467,7 +350,8 @@ export const UserUpdateSchema = {
         }
     },
     type: 'object',
-    title: 'UserUpdate'
+    title: 'UserUpdate',
+    description: 'Admin update payload (all fields optional).'
 } as const;
 
 export const UserUpdateMeSchema = {
@@ -499,7 +383,8 @@ export const UserUpdateMeSchema = {
         }
     },
     type: 'object',
-    title: 'UserUpdateMe'
+    title: 'UserUpdateMe',
+    description: 'Self profile-update payload.'
 } as const;
 
 export const UsersPublicSchema = {
@@ -518,7 +403,8 @@ export const UsersPublicSchema = {
     },
     type: 'object',
     required: ['data', 'count'],
-    title: 'UsersPublic'
+    title: 'UsersPublic',
+    description: 'Paginated list of account users.'
 } as const;
 
 export const ValidationErrorSchema = {
