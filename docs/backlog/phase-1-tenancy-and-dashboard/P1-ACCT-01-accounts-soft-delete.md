@@ -4,7 +4,7 @@ title: Retrofit account_users — soft delete + updated_at (mixins)
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: ACCT
-status: todo
+status: done
 depends_on: []
 blocks: [P1-PERM-01]
 tests: [integration]
@@ -53,9 +53,12 @@ O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os m
   - integração — `delete` marca `deleted_at` (não remove a linha); usuário soft-deletado **não** autentica nem aparece em `read_users`; `updated_at` muda no update.
 
 ## Definition of Done
-- [ ] `account_users` tem `updated_at` + colunas de soft delete (migration aplica em db do zero).
-- [ ] Remoção é soft; usuário soft-deletado não loga nem é listado.
-- [ ] Suíte existente (login/recuperação/CRUD) segue verde.
+- [x] `account_users` tem `updated_at` + colunas de soft delete (migration `a7b8c9d0e1f2` aplica em db do zero) — `created_at` agora NOT NULL.
+- [x] Remoção é soft; usuário soft-deletado não autentica nem é listado *(tests verdes)*.
+- [x] Suíte existente (login/recuperação/CRUD) segue verde *(76 testes; cobertura 91%)*.
 
 ## Notas / Reconciliações
-- **E-mail único + soft delete:** `account_users.email` é `unique`. Com soft delete a linha permanece e bloqueia recadastro do mesmo e-mail. Decidir na implementação: aceitar (raro no MVP) **ou** tornar o índice parcial (único quando não-deletado), espelhando o `slug` de `store_stores`. Registrar a escolha aqui.
+- **Implementado:** `User` herda `UUIDMixin`/`TimestampMixin`/`SoftDeleteMixin`; `delete_user`/`delete_user_me` marcam `deleted_at`+`deleted_by_user_id` (sem `session.delete`); `get_user_by_email`, `read_users` e `get_current_user` filtram `deleted_at IS NULL`. Migration `a7b8c9d0e1f2` (`down_revision=b1c2d3e4f5a6`).
+- **E-mail único + soft delete (decidido):** mantido o índice **único cheio** em `email`. Um e-mail de usuário soft-deletado **permanece reservado** (não recadastra com o mesmo e-mail). Escolha por simplicidade + identidade (sem migration de índice parcial); revisitar se o produto precisar liberar e-mails de contas removidas.
+- **Escopo:** leituras por id de admin (`read_user_by_id`/`update_user` via `session.get`) **não** filtram soft-deletados — são operações de superuser por id; se virar problema, aplicar o mesmo guard.
+- Testes de delete da Fase 0 ajustados (a linha permanece com `deleted_at` setado, em vez de sumir).

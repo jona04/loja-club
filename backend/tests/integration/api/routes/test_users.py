@@ -440,12 +440,10 @@ def test_delete_user_me(client: TestClient, db: Session) -> None:
     assert r.status_code == 200
     deleted_user = r.json()
     assert deleted_user["message"] == "User deleted successfully"
+    # Soft delete: the row remains but is marked deleted.
     result = db.exec(select(User).where(User.id == user_id)).first()
-    assert result is None
-
-    user_query = select(User).where(User.id == user_id)
-    user_db = db.execute(user_query).first()
-    assert user_db is None
+    assert result is not None
+    assert result.deleted_at is not None
 
 
 def test_delete_user_me_as_superuser(
@@ -475,8 +473,10 @@ def test_delete_user_super_user(
     assert r.status_code == 200
     deleted_user = r.json()
     assert deleted_user["message"] == "User deleted successfully"
+    # Soft delete: the row remains but is marked deleted.
     result = db.exec(select(User).where(User.id == user_id)).first()
-    assert result is None
+    assert result is not None
+    assert result.deleted_at is not None
 
 
 def test_delete_user_not_found(

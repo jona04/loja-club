@@ -1,6 +1,6 @@
 """Data access for account users."""
 
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from app.core.security import get_password_hash
 from app.modules.accounts.models import User, UserCreate, UserUpdate
@@ -58,4 +58,6 @@ def get_user_by_email(*, session: Session, email: str) -> User | None:
     Returns:
         The matching User, or None.
     """
-    return session.exec(select(User).where(User.email == email)).first()
+    return session.exec(
+        select(User).where(User.email == email, col(User.deleted_at).is_(None))
+    ).first()

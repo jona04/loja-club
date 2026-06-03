@@ -28,7 +28,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
 | 1 | [P1-API-01](./P1-API-01-api-conventions.md) | Padrão de API (response/erro/paginação/tenant) | done | — |
-| 2 | [P1-ACCT-01](./P1-ACCT-01-accounts-soft-delete.md) | Retrofit `account_users` (soft delete + `updated_at`) | todo | — |
+| 2 | [P1-ACCT-01](./P1-ACCT-01-accounts-soft-delete.md) | Retrofit `account_users` (soft delete + `updated_at`) | done | — |
 | 3 | [P1-STORE-01](./P1-STORE-01-store-models.md) | Módulo `stores`: `store_stores` + `store_settings` | todo | — |
 | 4 | [P1-PERM-01](./P1-PERM-01-members-roles.md) | `store_members` + `store_roles` (tabela + seed) | todo | P1-ACCT-01, P1-STORE-01 |
 | 5 | [P1-PERM-02](./P1-PERM-02-permission-catalog.md) | `store_permissions` + mapa papel→permissões (tabelas + seed) | todo | P1-PERM-01 |

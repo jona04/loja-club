@@ -8,10 +8,9 @@ import uuid
 from datetime import datetime
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
 from sqlmodel import Field, SQLModel
 
-from app.db.base import get_datetime_utc
+from app.db.base import SoftDeleteMixin, TimestampMixin, UUIDMixin
 
 
 class UserBase(SQLModel):
@@ -58,17 +57,12 @@ class UpdatePassword(SQLModel):
     new_password: str = Field(min_length=8, max_length=128)
 
 
-class User(UserBase, table=True):
+class User(UUIDMixin, TimestampMixin, SoftDeleteMixin, UserBase, table=True):
     """Account-user table (admin, merchant owner and staff)."""
 
     __tablename__ = "account_users"
 
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
-    created_at: datetime | None = Field(
-        default_factory=get_datetime_utc,
-        sa_type=DateTime(timezone=True),  # type: ignore
-    )
 
 
 class UserPublic(UserBase):
