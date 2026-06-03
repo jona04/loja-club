@@ -1,3 +1,5 @@
+"""Application settings loaded from environment variables and the ``.env`` file."""
+
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
@@ -16,6 +18,19 @@ from typing_extensions import Self
 
 
 def parse_cors(v: Any) -> list[str] | str:
+    """Parse the CORS origins setting from a string or list.
+
+    Args:
+        v: Raw value, either a comma-separated string or an already-parsed
+            list/JSON string.
+
+    Returns:
+        A list of origin strings, or the original value when it is already a
+        list or a JSON-encoded string.
+
+    Raises:
+        ValueError: If the value cannot be interpreted as origins.
+    """
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",") if i.strip()]
     elif isinstance(v, list | str):
@@ -24,6 +39,8 @@ def parse_cors(v: Any) -> list[str] | str:
 
 
 class Settings(BaseSettings):
+    """Typed application configuration sourced from the environment."""
+
     model_config = SettingsConfigDict(
         # Use top level .env file (one level above ./backend/)
         env_file="../.env",
@@ -44,6 +61,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def all_cors_origins(self) -> list[str]:
+        """Return all allowed CORS origins, including the frontend host."""
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]
@@ -83,6 +101,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
+        """Build the Postgres connection DSN from the POSTGRES_* settings."""
         return PostgresDsn.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,
@@ -124,6 +143,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:
+        """Return whether outbound email is configured (SMTP host + sender)."""
         return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
 
     EMAIL_TEST_USER: EmailStr = "test@example.com"

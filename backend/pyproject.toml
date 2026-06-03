@@ -59,6 +59,7 @@ select = [
     "UP",  # pyupgrade
     "ARG001", # unused arguments in functions
     "T201",   # print statements are not allowed
+    "D",      # pydocstyle (docstrings required, Google convention)
 ]
 ignore = [
     "E501",  # line too long, handled by black
@@ -66,6 +67,13 @@ ignore = [
     "W191",  # indentation contains tabs
     "B904",  # Allow raising exceptions without from e, for HTTPException
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests document intent through their names/assertions, not docstrings.
+"tests/**" = ["D"]
 
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.

@@ -4,7 +4,7 @@ title: CI, lint, testes e client OpenAPI
 phase: 0
 etapa: "Etapa 2 — Refatoração modular"
 area: CI
-status: todo
+status: done
 depends_on: [P0-MOD-03, P0-MOD-04]
 blocks: []
 tests: none
@@ -49,9 +49,14 @@ Depois do refactor modular (módulos, remoção de `items`, `account_users`), o 
 - **Quando:** —
 
 ## Definition of Done
-- [ ] `lint` + type check + testes do backend passam localmente.
-- [ ] Client OpenAPI regenerado, sem referências a endpoints removidos.
-- [ ] CI verde no GitHub Actions.
+- [x] `lint` + type check + testes do backend passam localmente *(mypy/ty/ruff/format verdes; 69 testes; cobertura 90%, gate `--fail-under=90`)*.
+- [x] Client OpenAPI regenerado, sem referências a endpoints removidos *(sem `Item*`; `items.spec.ts`/`PendingItems.tsx` removidos)*.
+- [~] CI verde no GitHub Actions — workflows ajustados para a estrutura/portas novas; **não executado ao vivo** (o usuário gerencia o git; sem push nesta sessão).
 
 ## Notas / Reconciliações
 - Esta é a parte de **CI** (Etapa 1 do roadmap). O **CD** (deploy automatizado) é a Etapa 21, na Fase 6.
+- **Docstrings (DEC-13):** habilitado Ruff `D` + `convention = "google"` no `backend/pyproject.toml`; `tests/**` isento via `per-file-ignores` (testes documentam intenção pelos nomes/asserts). Docstrings Google adicionadas em todos os módulos/pacotes/funções/métodos do template em `app/` (deps, config, security, db, utils, routes/auth dos accounts, entry scripts). Gate `ruff check app` verde.
+- **Client OpenAPI:** regenerado com `@hey-api/openapi-ts` (via `npm run generate-client`; `generate-client.sh` usa `bun`, ausente local — saída idêntica, mesmo gerador). `frontend/openapi.json` é gitignored (artefato). Removidos o componente órfão `PendingItems.tsx` e o E2E morto `tests/items.spec.ts` + helpers `randomItem*`.
+- **Cobertura:** o teste de integração da fila exigido pela `P0-CFG-04` (enqueue de `dummy_task` + worker `--burst` processa) estava faltando → criado `tests/integration/test_queue_sample.py`, o que cobre `queue.py` e leva o total a 90% (gate do CI).
+- **Portas no CI (consequência da `P0-CFG-02`):** o `compose.override.yml` publica em portas não-padrão (db 5442, redis 6399, backend 8800, frontend 5180) e o `docker compose` mescla o override no CI. Ajustes: `test-backend.yml` sobe `db redis mailcatcher` e roda os passos de host com `POSTGRES_PORT=5442`/`REDIS_PORT=6399` (env de job; só backend/worker usam `${POSTGRES_PORT}` e não são iniciados aqui); `test-docker-compose.yml` faz `curl` em `8800`/`5180`. Os containers seguem usando portas internas padrão (5432/6379).
+- **Branch dos workflows:** gatilho de **push** em `development` (branch de integração) nos workflows de CI/teste (`test-backend`, `test-docker-compose`, `playwright`); os `pull_request` seguem disparando em qualquer PR. `main` (produção) fica **sem gatilho** por ora. Os de deploy (CD) ficam para a Fase 6. O `smokeshow` roda via `workflow_run` após o `test-backend` (sem filtro de branch).

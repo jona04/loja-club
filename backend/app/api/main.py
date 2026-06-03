@@ -1,3 +1,5 @@
+"""Top-level API router aggregating all module and shared routers."""
+
 from fastapi import APIRouter
 
 from app.api.routes import private, utils

@@ -1,3 +1,5 @@
+"""Utility endpoints: test email delivery and health check."""
+
 from fastapi import APIRouter, Depends
 from pydantic.networks import EmailStr
 
@@ -14,9 +16,7 @@ router = APIRouter(prefix="/utils", tags=["utils"])
     status_code=201,
 )
 def test_email(email_to: EmailStr) -> Message:
-    """
-    Test emails.
-    """
+    """Send a test email to the given address (superuser only)."""
     email_data = generate_test_email(email_to=email_to)
     send_email(
         email_to=email_to,
@@ -28,4 +28,5 @@ def test_email(email_to: EmailStr) -> Message:
 
 @router.get("/health-check/")
 async def health_check() -> bool:
+    """Return ``True`` to confirm the API is reachable."""
     return True

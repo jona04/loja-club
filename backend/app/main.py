@@ -1,3 +1,5 @@
+"""FastAPI application entrypoint: builds the ASGI app and wires routers."""
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
@@ -10,6 +12,15 @@ from app.core.config import settings
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
+    """Build a stable OpenAPI operation id from a route's tag and name.
+
+    Args:
+        route: The API route whose unique id is being generated.
+
+    Returns:
+        An id in the form ``"{first_tag}-{route_name}"``, used by the
+        frontend client generator to name SDK methods.
+    """
     return f"{route.tags[0]}-{route.name}"
 
 

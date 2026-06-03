@@ -61,3 +61,4 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
 ## Notas / Reconciliações
 - **Implementado (arq 0.25):** `enqueue()` (interface), `dummy_task` e `WorkerSettings`; serviço `worker` no compose (`command: arq app.core.queue.WorkerSettings`). arq tem cron embutido → sem serviço `scheduler` separado.
 - **Verificado** ponta a ponta local: `enqueue('dummy_task','hello')` → `arq … --burst` processou → marcador `done` no Redis; gate `app` verde. (O container `worker` usa o mesmo command; build da imagem deferido.)
+- **Teste automatizado** (criado em `P0-CI-01`): `tests/integration/test_queue_sample.py` enfileira `dummy_task` e roda um `Worker(..., burst=True)` que processa e grava o marcador no Redis.
