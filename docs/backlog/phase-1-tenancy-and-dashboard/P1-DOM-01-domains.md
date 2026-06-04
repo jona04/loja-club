@@ -4,7 +4,7 @@ title: Módulo domains — domain_hosts + subdomínio automático + cache
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: DOM
-status: todo
+status: done
 depends_on: [P1-STORE-01]
 blocks: [P1-TEN-01, P1-STORE-02]
 tests: [integration]
@@ -55,9 +55,15 @@ Toda loja recebe um **subdomínio automático** (`{slug}.loja.club`) e é resolv
   - integração — `create_platform_subdomain` gera `{slug}.{DOMAIN}` ativo; `host` é único; `check_availability` retorna falso p/ slug em uso; invalidação remove `domain:{host}` do Redis.
 
 ## Definition of Done
-- [ ] `domain_hosts` criada via migration (db do zero); `host` único.
-- [ ] `create_platform_subdomain` insere subdomínio ativo (teste).
-- [ ] Cache `domain:{host}` populado e invalidado ao alterar (teste).
+- [x] `domain_hosts` criada via migration `c505b47136b7` (db do zero); `host` **único quando ativo** (índice parcial).
+- [x] `create_platform_subdomain` insere subdomínio ativo (`{slug}.{DOMAIN}`, `status=active`, `ssl_status=issued`) — teste.
+- [x] Cache `domain:{host}` invalidado ao criar/alterar (teste) *(100 testes; cobertura 92%)*.
 
 ## Notas / Reconciliações
-- Doc [06](../../06_multitenancy_and_domains.md): V1 **sem domínio principal** — qualquer host ativo da loja renderiza a mesma loja. Registrar se o código precisar divergir.
+- **Rotas deferidas (ver Follow-ups):** as rotas do painel (`GET /stores/{store_id}/domains`, `POST /check`) precisam de `get_active_store` (`P1-TEN-01`) + `require_permission("domains.view")` (`P1-PERM-03`), ainda não implementados. O DoD (model + serviço + cache) não as inclui. Entregue agora: `enums.py` (`DomainType`/`DomainStatus`/`SslStatus`), `models.py` (`DomainHost`), `services.py` (`create_platform_subdomain`/`is_subdomain_available`/`invalidate_domain_cache`).
+- **`host` único quando ativo (parcial):** mudei de "único cheio" (doc 07/escopo) para parcial `WHERE deleted_at IS NULL`, espelhando o `slug` de `store_stores` (loja arquivada libera o subdomínio). Doc 07 atualizado.
+- **Cache:** DOM-01 entrega a **invalidação** (`cache_delete` em `app/core/cache.py`); a **população** (cache-aside na resolução por `Host`) é da `P1-TEN-01`.
+- **`ssl_status=issued`** para `platform_subdomain` (coberto pelo wildcard `*.{DOMAIN}`); `verified_at` fica nulo. Doc [06](../../06_multitenancy_and_domains.md): V1 **sem domínio principal** — qualquer host ativo renderiza a mesma loja.
+
+## Follow-ups
+- [ ] **Rotas do painel de domínios** (`GET /stores/{store_id}/domains` listar; `POST /check` disponibilidade) — dependem de `P1-TEN-01` (`get_active_store`) + `P1-PERM-03` (`require_permission`). *Quando:* depois dessas duas. → README da fase.

@@ -302,7 +302,7 @@ A performance depende muito dos índices compostos com `store_id`.
 | `store_stores` | `slug` único quando ativo |
 | `store_members` | `store_id + user_id` único quando ativo |
 | `store_role_permissions` | `role + permission` único |
-| `domain_hosts` | `host` único |
+| `domain_hosts` | `host` único quando ativo |
 | `domain_hosts` | `store_id + status` |
 | `catalog_products` | `store_id + slug` único quando ativo |
 | `catalog_products` | `store_id + status` |

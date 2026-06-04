@@ -32,7 +32,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 3 | [P1-STORE-01](./P1-STORE-01-store-models.md) | Módulo `stores`: `store_stores` + `store_settings` | done | — |
 | 4 | [P1-PERM-01](./P1-PERM-01-members-roles.md) | `store_members` + `store_roles` (tabela + seed) | done | P1-ACCT-01, P1-STORE-01 |
 | 5 | [P1-PERM-02](./P1-PERM-02-permission-catalog.md) | `store_permissions` + mapa papel→permissões (tabelas + seed) | done | P1-PERM-01 |
-| 6 | [P1-DOM-01](./P1-DOM-01-domains.md) | Módulo `domains`: `domain_hosts` + subdomínio + cache | todo | P1-STORE-01 |
+| 6 | [P1-DOM-01](./P1-DOM-01-domains.md) | Módulo `domains`: `domain_hosts` + subdomínio + cache | done | P1-STORE-01 |
 | 7 | [P1-TEN-01](./P1-TEN-01-tenancy-guard.md) | Módulo `tenancy`: guard central + resolução por `Host` | todo | P1-STORE-01, P1-PERM-01, P1-DOM-01 |
 | 8 | [P1-PERM-03](./P1-PERM-03-require-permission.md) | Autorização: `require_permission` (deps) | todo | P1-PERM-02, P1-TEN-01 |
 | 9 | [P1-STORE-02](./P1-STORE-02-store-service-routes.md) | `stores`: serviço/rotas (criar→owner+subdomínio, settings, publish) | todo | P1-API-01, P1-STORE-01, P1-PERM-01, P1-DOM-01, P1-PERM-03 |
@@ -62,5 +62,6 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 > Itens **adiados** ("fica para depois") ficam aqui como checkboxes — não só em prosa nas notas das tasks. **Convenção:** toda nota de task que diga "fica para depois" também entra nesta lista (ou vira uma task, se for grande); marcar `[x]` quando resolvido, citando a origem.
 
 - [ ] **OpenAPI — tipar o schema de erro por endpoint** (`responses=` com `ErrorResponse`) para o client gerado carregar o tipo do erro. Origem: `P1-API-01`. *Quando:* se/quando o frontend precisar do tipo (hoje lê `err.body` de forma defensiva).
+- [ ] **Rotas do painel de domínios** (`GET /stores/{store_id}/domains`, `POST /check`) — dependem de `P1-TEN-01` + `P1-PERM-03`. Origem: `P1-DOM-01`. *Quando:* após essas duas.
 - [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). Origem: `P1-ACCT-01`. *Quando:* se virar problema, ou junto do admin de plataforma (Fase 6).
 - [x] **Limpeza do ruído de `alembic autogenerate`** — `_MixinProbe` isolado em `MetaData()` próprio + índice `ix_user_email`→`ix_account_users_email` (migration `c2d3e4f5a6b7`); autogenerate volta a vir vazio. Origem: `P1-STORE-01`. *(feito)*
