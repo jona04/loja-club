@@ -49,3 +49,8 @@ Por que esta task existe, em 1–3 linhas. Liga ao objetivo da etapa/fase.
 
 ## Notas / Reconciliações
 - divergências código ↔ doc resolvidas aqui (citar o doc afetado)
+
+## Follow-ups
+> Pendências/débitos **adiados** por esta task que **NÃO** estão cobertos por outra task ou fase futura. (Se já está rastreado em outra task/fase, não repetir aqui.) Cada item entra **também** na seção **"Follow-ups / débitos técnicos"** do README da fase, com referência a este ID. Marcar `[x]` quando resolvido. Se não houver, deixar "— nenhum".
+
+- [ ] item adiado — *Quando:* gatilho/condição. → README da fase.

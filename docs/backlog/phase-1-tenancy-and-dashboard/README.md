@@ -29,7 +29,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 |---|---|---|---|---|
 | 1 | [P1-API-01](./P1-API-01-api-conventions.md) | Padrão de API (response/erro/paginação/tenant) | done | — |
 | 2 | [P1-ACCT-01](./P1-ACCT-01-accounts-soft-delete.md) | Retrofit `account_users` (soft delete + `updated_at`) | done | — |
-| 3 | [P1-STORE-01](./P1-STORE-01-store-models.md) | Módulo `stores`: `store_stores` + `store_settings` | todo | — |
+| 3 | [P1-STORE-01](./P1-STORE-01-store-models.md) | Módulo `stores`: `store_stores` + `store_settings` | done | — |
 | 4 | [P1-PERM-01](./P1-PERM-01-members-roles.md) | `store_members` + `store_roles` (tabela + seed) | todo | P1-ACCT-01, P1-STORE-01 |
 | 5 | [P1-PERM-02](./P1-PERM-02-permission-catalog.md) | `store_permissions` + mapa papel→permissões (tabelas + seed) | todo | P1-PERM-01 |
 | 6 | [P1-DOM-01](./P1-DOM-01-domains.md) | Módulo `domains`: `domain_hosts` + subdomínio + cache | todo | P1-STORE-01 |
@@ -56,3 +56,11 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 - **Gating por plano** (doc [08](../../08_modules_and_permissions.md) "plano + permissão") entra na Fase 5; aqui deixamos só o **gancho** em `require_permission`.
 - **Papéis/permissões em banco (decidido):** `store_roles`, `store_permissions` e o join `store_role_permissions` são **tabelas seedadas** (segue doc [07](../../07_database_strategy.md)), com o catálogo/mapa do doc [08](../../08_modules_and_permissions.md) como fonte de seed em código. São **globais** (não por-loja); aplicam-se no contexto da loja via `store_members`. O join foi **adicionado ao doc [07](../../07_database_strategy.md)**.
 - **Retrofit `account_users` (`P1-ACCT-01`):** o template fazia hard delete e não tinha `updated_at`/soft delete — corrigido para honrar INV-D2/doc [07](../../07_database_strategy.md).
+
+## Follow-ups / débitos técnicos
+
+> Itens **adiados** ("fica para depois") ficam aqui como checkboxes — não só em prosa nas notas das tasks. **Convenção:** toda nota de task que diga "fica para depois" também entra nesta lista (ou vira uma task, se for grande); marcar `[x]` quando resolvido, citando a origem.
+
+- [ ] **OpenAPI — tipar o schema de erro por endpoint** (`responses=` com `ErrorResponse`) para o client gerado carregar o tipo do erro. Origem: `P1-API-01`. *Quando:* se/quando o frontend precisar do tipo (hoje lê `err.body` de forma defensiva).
+- [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). Origem: `P1-ACCT-01`. *Quando:* se virar problema, ou junto do admin de plataforma (Fase 6).
+- [x] **Limpeza do ruído de `alembic autogenerate`** — `_MixinProbe` isolado em `MetaData()` próprio + índice `ix_user_email`→`ix_account_users_email` (migration `c2d3e4f5a6b7`); autogenerate volta a vir vazio. Origem: `P1-STORE-01`. *(feito)*

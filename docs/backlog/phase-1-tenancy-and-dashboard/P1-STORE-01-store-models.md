@@ -4,7 +4,7 @@ title: Módulo stores — modelos store_stores + store_settings
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: STORE
-status: todo
+status: done
 depends_on: []
 blocks: [P1-PERM-01, P1-DOM-01, P1-TEN-01, P1-STORE-02, P1-TEST-01]
 tests: [integration]
@@ -53,9 +53,15 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
   - integração — migration aplica limpa; `slug` único quando ativo; `store_settings.store_id` 1:1; soft delete preenche `deleted_at`.
 
 ## Definition of Done
-- [ ] `store_stores` e `store_settings` criadas via migration (aplica em db do zero).
-- [ ] `Store` carrega `currency`/`locale` próprios; `status` com os 6 estados do doc [09](../../09_merchant_dashboard.md).
-- [ ] Índices/constraints (slug único ativo; store_id 1:1) verificados por teste de integração.
+- [x] `store_stores` e `store_settings` criadas via migration `516224031edd` (aplica em db do zero).
+- [x] `Store` carrega `currency`/`locale` próprios; `status` (enum `storestatus`) com os 6 estados do doc [09](../../09_merchant_dashboard.md).
+- [x] Índices/constraints (slug único quando não-deletado; `store_settings.store_id` 1:1) verificados por integração *(80 testes; cobertura 91%)*.
 
 ## Notas / Reconciliações
 - IDs ilustrativos inteiros nos docs (`id: 123`) são ilustrativos — usamos UUID (INV-D1).
+- **Implementado:** `Store`/`StoreSettings` herdam `UUIDMixin`/`TimestampMixin`/`SoftDeleteMixin`; `status` = enum nativo Postgres (`storestatus`); `currency`/`locale` **obrigatórios** (preenchidos a partir do default da plataforma em `P1-STORE-02`); `social_links` = coluna JSON. Schemas `StorePublic`/`StoreSettingsPublic` prontos.
+- **Slug "quando ativo" = `deleted_at IS NULL`** (índice único parcial). Loja `archived` tem `deleted_at` setado → slug liberado para reuso. O índice fica em `__table_args__` (para o `create_all` dos testes enforçar) **e** na migration.
+- **Migration via autogenerate**, limpa de dois ruídos não-relacionados que **foram resolvidos na sequência** (mini-limpeza, mesma PR): o probe `_MixinProbe` (`tests/integration/test_base_mixins.py`) passou a usar um `MetaData()` próprio (não registra mais no `SQLModel.metadata`), e o índice foi renomeado `ix_user_email`→`ix_account_users_email` pela migration `c2d3e4f5a6b7`. **Verificado:** autogenerate agora vem **vazio** (sem ruído recorrente).
+
+## Follow-ups
+- [x] **Limpeza do ruído de `alembic autogenerate`** (`_MixinProbe` isolado em `MetaData()` próprio + rename `ix_user_email`→`ix_account_users_email`, migration `c2d3e4f5a6b7`) — *resolvido nesta task.* → README da fase.

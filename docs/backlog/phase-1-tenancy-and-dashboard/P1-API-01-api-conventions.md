@@ -65,3 +65,6 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
 - **Migração do `{detail}`:** o template usava `{detail}`. Ajustados os testes da Fase 0 (`test_login`/`test_users`) e o `frontend/src/utils.ts` (`extractErrorMessage` lê `error.message`, com fallback para `detail`). `EditUser.tsx` só tinha "detail" como texto de UI.
 - **OpenAPI:** o schema de erro não foi declarado por rota (o front lê `err.body` de forma defensiva); declarar `responses=` por endpoint fica como melhoria futura se precisarmos do tipo no client gerado.
 - **`details` sempre presente** (`null` quando ausente) para schema consistente.
+
+## Follow-ups
+- [ ] **Tipar o schema de erro no OpenAPI** (`responses=` com `ErrorResponse` por endpoint) para o client gerado carregar o tipo do erro. *Quando:* se/quando o frontend precisar do tipo (hoje lê `err.body` defensivamente). → README da fase.
