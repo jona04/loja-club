@@ -12,3 +12,11 @@ class StoreStatus(str, Enum):
     suspended = "suspended"
     blocked = "blocked"
     archived = "archived"
+
+
+class MembershipStatus(str, Enum):
+    """Lifecycle status of a store membership."""
+
+    invited = "invited"
+    active = "active"
+    removed = "removed"

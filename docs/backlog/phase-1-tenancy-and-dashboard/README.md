@@ -30,7 +30,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 1 | [P1-API-01](./P1-API-01-api-conventions.md) | Padrão de API (response/erro/paginação/tenant) | done | — |
 | 2 | [P1-ACCT-01](./P1-ACCT-01-accounts-soft-delete.md) | Retrofit `account_users` (soft delete + `updated_at`) | done | — |
 | 3 | [P1-STORE-01](./P1-STORE-01-store-models.md) | Módulo `stores`: `store_stores` + `store_settings` | done | — |
-| 4 | [P1-PERM-01](./P1-PERM-01-members-roles.md) | `store_members` + `store_roles` (tabela + seed) | todo | P1-ACCT-01, P1-STORE-01 |
+| 4 | [P1-PERM-01](./P1-PERM-01-members-roles.md) | `store_members` + `store_roles` (tabela + seed) | done | P1-ACCT-01, P1-STORE-01 |
 | 5 | [P1-PERM-02](./P1-PERM-02-permission-catalog.md) | `store_permissions` + mapa papel→permissões (tabelas + seed) | todo | P1-PERM-01 |
 | 6 | [P1-DOM-01](./P1-DOM-01-domains.md) | Módulo `domains`: `domain_hosts` + subdomínio + cache | todo | P1-STORE-01 |
 | 7 | [P1-TEN-01](./P1-TEN-01-tenancy-guard.md) | Módulo `tenancy`: guard central + resolução por `Host` | todo | P1-STORE-01, P1-PERM-01, P1-DOM-01 |

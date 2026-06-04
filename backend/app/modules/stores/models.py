@@ -7,12 +7,13 @@ store is the central tenant; every commercial entity is scoped to it by
 """
 
 import uuid
+from datetime import datetime
 
-from sqlalchemy import JSON, Column, Index, text
+from sqlalchemy import JSON, Column, DateTime, Index, text
 from sqlmodel import Field, SQLModel
 
 from app.db.base import SoftDeleteMixin, TimestampMixin, UUIDMixin
-from app.modules.stores.enums import StoreStatus
+from app.modules.stores.enums import MembershipStatus, StoreStatus
 
 
 class StoreBase(SQLModel):
@@ -65,3 +66,45 @@ class StoreSettings(
 
     store_id: uuid.UUID = Field(foreign_key="store_stores.id", unique=True, index=True)
     social_links: dict[str, str] | None = Field(default=None, sa_column=Column(JSON))
+
+
+class StoreRole(UUIDMixin, table=True):
+    """Store role (seeded lookup; global, applied per store via membership)."""
+
+    __tablename__ = "store_roles"
+
+    key: str = Field(unique=True, index=True, max_length=50)
+    name: str = Field(max_length=100)
+
+
+class StoreMember(UUIDMixin, TimestampMixin, SoftDeleteMixin, table=True):
+    """Membership linking an account user to a store with a role.
+
+    Unique among non-deleted rows on ``(store_id, user_id)``, so removing a
+    member (soft delete) frees a new invite for the same user.
+    """
+
+    __tablename__ = "store_members"
+    __table_args__ = (
+        Index(
+            "ix_store_members_store_user_active",
+            "store_id",
+            "user_id",
+            unique=True,
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+        Index("ix_store_members_store_status", "store_id", "status"),
+    )
+
+    store_id: uuid.UUID = Field(foreign_key="store_stores.id", index=True)
+    user_id: uuid.UUID = Field(foreign_key="account_users.id", index=True)
+    role_id: uuid.UUID = Field(foreign_key="store_roles.id", index=True)
+    status: MembershipStatus = Field(default=MembershipStatus.active)
+    invited_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    removed_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
