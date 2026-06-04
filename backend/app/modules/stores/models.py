@@ -108,3 +108,30 @@ class StoreMember(UUIDMixin, TimestampMixin, SoftDeleteMixin, table=True):
         default=None,
         sa_type=DateTime(timezone=True),  # type: ignore
     )
+
+
+class StorePermission(UUIDMixin, table=True):
+    """Store permission catalog (seeded; ``key`` + ``module``)."""
+
+    __tablename__ = "store_permissions"
+
+    key: str = Field(unique=True, index=True, max_length=100)
+    module: str = Field(max_length=50, index=True)
+    description: str | None = Field(default=None, max_length=255)
+
+
+class StoreRolePermission(UUIDMixin, table=True):
+    """Positive role -> permission grant (seeded join)."""
+
+    __tablename__ = "store_role_permissions"
+    __table_args__ = (
+        Index(
+            "ix_store_role_permissions_role_perm",
+            "role_id",
+            "permission_id",
+            unique=True,
+        ),
+    )
+
+    role_id: uuid.UUID = Field(foreign_key="store_roles.id", index=True)
+    permission_id: uuid.UUID = Field(foreign_key="store_permissions.id", index=True)

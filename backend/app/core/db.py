@@ -6,7 +6,7 @@ from app.core.config import settings
 from app.modules.accounts import repositories
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserCreate
-from app.modules.stores.repositories import seed_store_roles
+from app.modules.stores.repositories import seed_store_permissions, seed_store_roles
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -17,12 +17,12 @@ engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
 
 def init_db(session: Session) -> None:
-    """Seed bootstrap data: the first superuser and the fixed store roles.
+    """Seed bootstrap data: first superuser, store roles and permissions.
 
     Tables themselves are managed by Alembic migrations; this ensures the
-    bootstrap superuser (from settings) and the store roles exist. Both are
-    idempotent. Runs on prestart and is also used by the test fixtures (whose
-    schema comes from ``create_all``, not migrations).
+    bootstrap superuser (from settings), the store roles and the permission
+    catalog/map exist. All idempotent. Runs on prestart and is also used by the
+    test fixtures (whose schema comes from ``create_all``, not migrations).
 
     Args:
         session: Active database session used to query and seed.
@@ -47,3 +47,4 @@ def init_db(session: Session) -> None:
         user = repositories.create_user(session=session, user_create=user_in)
 
     seed_store_roles(session=session)
+    seed_store_permissions(session=session)
