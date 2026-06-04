@@ -16,9 +16,9 @@ from app.core.security import get_password_hash, verify_password
 from app.db.base import get_datetime_utc
 from app.models import Message
 from app.modules.accounts import repositories
-from app.modules.accounts.models import (
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import (
     UpdatePassword,
-    User,
     UserCreate,
     UserPublic,
     UserRegister,

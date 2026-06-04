@@ -7,7 +7,8 @@ from sqlmodel import Session, select
 from app.core.config import settings
 from app.core.security import verify_password
 from app.modules.accounts import repositories
-from app.modules.accounts.models import User, UserCreate
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import UserCreate
 from tests.utils.user import create_random_user
 from tests.utils.utils import random_email, random_lower_string
 
@@ -312,7 +313,8 @@ def test_update_password_me_same_password_error(
     assert r.status_code == 400
     updated_user = r.json()
     assert (
-        updated_user["error"]["message"] == "New password cannot be the same as the current one"
+        updated_user["error"]["message"]
+        == "New password cannot be the same as the current one"
     )
 
 
@@ -352,7 +354,10 @@ def test_register_user_already_exists_error(client: TestClient) -> None:
         json=data,
     )
     assert r.status_code == 400
-    assert r.json()["error"]["message"] == "The user with this email already exists in the system"
+    assert (
+        r.json()["error"]["message"]
+        == "The user with this email already exists in the system"
+    )
 
 
 def test_update_user(
@@ -391,7 +396,10 @@ def test_update_user_not_exists(
         json=data,
     )
     assert r.status_code == 404
-    assert r.json()["error"]["message"] == "The user with this id does not exist in the system"
+    assert (
+        r.json()["error"]["message"]
+        == "The user with this id does not exist in the system"
+    )
 
 
 def test_update_user_email_exists(
@@ -455,7 +463,10 @@ def test_delete_user_me_as_superuser(
     )
     assert r.status_code == 403
     response = r.json()
-    assert response["error"]["message"] == "Super users are not allowed to delete themselves"
+    assert (
+        response["error"]["message"]
+        == "Super users are not allowed to delete themselves"
+    )
 
 
 def test_delete_user_super_user(
@@ -493,7 +504,9 @@ def test_delete_user_not_found(
 def test_delete_user_current_super_user_error(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    super_user = repositories.get_user_by_email(session=db, email=settings.FIRST_SUPERUSER)
+    super_user = repositories.get_user_by_email(
+        session=db, email=settings.FIRST_SUPERUSER
+    )
     assert super_user
     user_id = super_user.id
 
@@ -502,7 +515,10 @@ def test_delete_user_current_super_user_error(
         headers=superuser_token_headers,
     )
     assert r.status_code == 403
-    assert r.json()["error"]["message"] == "Super users are not allowed to delete themselves"
+    assert (
+        r.json()["error"]["message"]
+        == "Super users are not allowed to delete themselves"
+    )
 
 
 def test_delete_user_without_privileges(

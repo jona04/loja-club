@@ -5,7 +5,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from app.db.base import get_datetime_utc
-from app.modules.stores.models import Store, StoreSettings, StoreStatus
+from app.modules.stores.enums import StoreStatus
+from app.modules.stores.models import Store, StoreSettings
 
 
 def _make_store(db: Session, slug: str = "loja-a", name: str = "Loja A") -> Store:

@@ -3,7 +3,8 @@
 from sqlmodel import Session, col, select
 
 from app.core.security import get_password_hash
-from app.modules.accounts.models import User, UserCreate, UserUpdate
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import UserCreate, UserUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:

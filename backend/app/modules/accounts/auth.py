@@ -12,7 +12,7 @@ from app.core import security
 from app.core.config import settings
 from app.models import Message, NewPassword, Token
 from app.modules.accounts import repositories, services
-from app.modules.accounts.models import UserPublic, UserUpdate
+from app.modules.accounts.schemas import UserPublic, UserUpdate
 from app.utils import (
     generate_password_reset_token,
     generate_reset_password_email,

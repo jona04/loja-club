@@ -4,7 +4,8 @@ from sqlmodel import Session
 
 from app.db.base import get_datetime_utc
 from app.modules.accounts import repositories, services
-from app.modules.accounts.models import User, UserCreate, UserUpdate
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import UserCreate, UserUpdate
 from tests.utils.utils import random_email, random_lower_string
 
 

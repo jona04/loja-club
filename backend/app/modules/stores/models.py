@@ -1,28 +1,18 @@
-"""Store (tenant) models: ``store_stores`` and ``store_settings``.
+"""Store (tenant) tables: ``store_stores`` and ``store_settings``.
 
-The store is the central tenant; every commercial entity is scoped to it by
+API request/response schemas live in ``schemas.py``; enums in ``enums.py``. The
+store is the central tenant; every commercial entity is scoped to it by
 ``store_id`` (doc 06). Each store carries its own ``currency``/``locale``
 (INV-G3), seeded from the platform defaults at creation.
 """
 
 import uuid
-from enum import Enum
 
 from sqlalchemy import JSON, Column, Index, text
 from sqlmodel import Field, SQLModel
 
 from app.db.base import SoftDeleteMixin, TimestampMixin, UUIDMixin
-
-
-class StoreStatus(str, Enum):
-    """Lifecycle status of a store (doc 09)."""
-
-    draft = "draft"
-    active = "active"
-    paused = "paused"
-    suspended = "suspended"
-    blocked = "blocked"
-    archived = "archived"
+from app.modules.stores.enums import StoreStatus
 
 
 class StoreBase(SQLModel):
@@ -53,12 +43,6 @@ class Store(UUIDMixin, TimestampMixin, SoftDeleteMixin, StoreBase, table=True):
     )
 
 
-class StorePublic(StoreBase):
-    """Store as returned via the API."""
-
-    id: uuid.UUID
-
-
 class StoreSettingsBase(SQLModel):
     """Shared store-settings fields (doc 09)."""
 
@@ -81,11 +65,3 @@ class StoreSettings(
 
     store_id: uuid.UUID = Field(foreign_key="store_stores.id", unique=True, index=True)
     social_links: dict[str, str] | None = Field(default=None, sa_column=Column(JSON))
-
-
-class StoreSettingsPublic(StoreSettingsBase):
-    """Store settings as returned via the API."""
-
-    id: uuid.UUID
-    store_id: uuid.UUID
-    social_links: dict[str, str] | None = None

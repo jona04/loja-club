@@ -113,14 +113,19 @@ backend/
 Cada módulo pode ter:
 
 ```text
-models.py
-schemas.py
+models.py        # só tabelas table=True + seus *Base (persistência)
+enums.py         # enums do módulo (ex.: status)
+schemas.py       # DTOs de API (Create/Update/Public/...)
 routes.py
 services.py
 repositories.py
 permissions.py
 exceptions.py
 ```
+
+`models.py` contém **apenas** as tabelas (`table=True`) e seus `*Base`; os **DTOs de API** vão em `schemas.py` e os **enums** em `enums.py` (`schemas.py` importa o `*Base` de `models.py`). `models.py` não acumula schema nem enum.
+
+**`enums.py` e `schemas.py` são criados em todos os módulos desde o início** (placeholder com docstring), populados quando necessário — deixa explícito onde cada coisa entra. É uma exceção consciente à regra de "não criar arquivos vazios", que **continua valendo** para os demais (`routes.py`/`services.py`/`repositories.py`/`permissions.py`/`exceptions.py` entram conforme a necessidade).
 
 ## SQLModel
 
