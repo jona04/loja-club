@@ -53,9 +53,12 @@ O isolamento entre lojas é o invariante mais crítico (INV-T1..T4; GARGALO §2)
   - integração — membro da Loja A acessa A; **não-membro → 403**; loja inexistente → 404; `resolve_store_by_host` retorna a loja certa, host desconhecido/inativo → "não encontrada"; cache `domain:{host}` é usado na 2ª chamada.
 
 ## Definition of Done
-- [ ] `get_active_store` valida loja + membership; nega não-membro sem vazar dado.
-- [ ] `resolve_store_by_host` resolve por `Host` com cache; host desconhecido → "loja não encontrada".
-- [ ] Helper de scoping documentado e usado pelos repositórios das próximas features.
+- [x] `get_active_store` valida loja + membership ativo; loja inexistente/arquivada → 404, não-membro → 403 (sem vazar dado) — teste.
+- [x] `resolve_store_by_host` resolve por `Host` com cache `domain:{host}` (TTL 5min); host desconhecido/inativo → `None` ("loja não encontrada") — teste (inclui prova de uso do cache).
+- [x] Helper de scoping `get_store_scoped` documentado e testado (isolamento `store_id + id`); pronto para os repositórios das próximas features *(107 testes; cobertura 92%)*.
 
 ## Notas / Reconciliações
-- Registrar o desenho final do guard (dependency vs base de repositório) e como as próximas fases devem consumi-lo.
+- **Desenho do guard:** `get_active_store` é uma **dependency FastAPI** (`app/modules/tenancy/deps.py`) + alias `ActiveStore`; as rotas do painel sob `/stores/{store_id}/...` dependem dela para obter a loja ativa e validar acesso (porta única, INV-T2/T3). Erros via `AppError` (envelope `{error:{code,message}}`).
+- **404 vs 403:** loja inexistente/arquivada → **404** `store_not_found`; autenticado mas não-membro → **403** `forbidden` (mensagem genérica, sem dados). (O "sem vazar dado" do storefront aplica-se em `resolve_store_by_host`, que retorna só `None`.)
+- **`resolve_store_by_host`** é a **interface** (storefront a consome na Fase 3); cache-aside com TTL + invalidação eager via `domains.invalidate_domain_cache` (`P1-DOM-01`). Resolução tolera cache stale (re-resolve se o id cacheado não existir mais).
+- **`get_store_scoped`**: helper genérico (`model` + `store_id` + `id`); acesso às colunas via `cast(Any, model)` para satisfazer mypy **e** `ty` (o `ty` não honra `# type: ignore`). Filtro de status da loja (publicada) na resolução pública fica para a Fase 3.
