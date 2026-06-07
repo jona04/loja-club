@@ -85,6 +85,27 @@ def create_store(*, session: Session, owner: User, payload: StoreCreate) -> Stor
     return store
 
 
+def get_settings(*, session: Session, store_id: uuid.UUID) -> StoreSettings:
+    """Return a store's settings.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose settings to fetch.
+
+    Returns:
+        The store's settings.
+
+    Raises:
+        AppError: 404 if the settings row is missing.
+    """
+    settings_row = session.exec(
+        select(StoreSettings).where(StoreSettings.store_id == store_id)
+    ).first()
+    if settings_row is None:  # pragma: no cover - created with the store
+        raise AppError("settings_missing", "Store settings not found", 404)
+    return settings_row
+
+
 def update_settings(
     *, session: Session, store_id: uuid.UUID, payload: StoreSettingsUpdate
 ) -> StoreSettings:

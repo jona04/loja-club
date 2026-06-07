@@ -73,6 +73,16 @@ def get_my_membership(
     return MyMembership(role=role.key, permissions=permissions)
 
 
+@router.get(
+    "/{store_id}/settings",
+    response_model=StoreSettingsPublic,
+    dependencies=[Depends(require_permission("settings.view"))],
+)
+def get_store_settings(store_id: uuid.UUID, session: SessionDep) -> StoreSettings:
+    """Get the store's settings (requires ``settings.view``)."""
+    return services.get_settings(session=session, store_id=store_id)
+
+
 @router.patch(
     "/{store_id}/settings",
     response_model=StoreSettingsPublic,

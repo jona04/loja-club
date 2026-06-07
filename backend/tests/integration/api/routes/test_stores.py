@@ -110,6 +110,19 @@ def test_owner_updates_settings(client: TestClient, db: Session) -> None:
     assert body["whatsapp_number"] == "+15551234567"
 
 
+def test_get_settings_round_trip(client: TestClient, db: Session) -> None:
+    headers = _headers(client, db, random_email())
+    store_id = _create_store(client, headers, "Settable")["id"]
+    client.patch(
+        f"{API}/stores/{store_id}/settings",
+        headers=headers,
+        json={"public_name": "Loaded Shop"},
+    )
+    r = client.get(f"{API}/stores/{store_id}/settings", headers=headers)
+    assert r.status_code == 200
+    assert r.json()["public_name"] == "Loaded Shop"
+
+
 def test_support_denied_settings(client: TestClient, db: Session) -> None:
     owner = _headers(client, db, random_email())
     store_id = _create_store(client, owner, "Gated")["id"]

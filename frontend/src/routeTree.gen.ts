@@ -15,6 +15,8 @@ import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
+import { Route as LayoutStoreSettingsRouteImport } from './routes/_layout/store-settings'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 
 const SignupRoute = SignupRouteImport.update({
@@ -46,6 +48,16 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutTeamRoute = LayoutTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutStoreSettingsRoute = LayoutStoreSettingsRouteImport.update({
+  id: '/store-settings',
+  path: '/store-settings',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -59,6 +71,8 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-settings': typeof LayoutStoreSettingsRoute
+  '/team': typeof LayoutTeamRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -66,6 +80,8 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-settings': typeof LayoutStoreSettingsRoute
+  '/team': typeof LayoutTeamRoute
   '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
@@ -76,6 +92,8 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/store-settings': typeof LayoutStoreSettingsRoute
+  '/_layout/team': typeof LayoutTeamRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -87,6 +105,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/settings'
+    | '/store-settings'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -94,6 +114,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/settings'
+    | '/store-settings'
+    | '/team'
     | '/'
   id:
     | '__root__'
@@ -103,6 +125,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/settings'
+    | '/_layout/store-settings'
+    | '/_layout/team'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -158,6 +182,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/team': {
+      id: '/_layout/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof LayoutTeamRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/store-settings': {
+      id: '/_layout/store-settings'
+      path: '/store-settings'
+      fullPath: '/store-settings'
+      preLoaderRoute: typeof LayoutStoreSettingsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -170,11 +208,15 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutStoreSettingsRoute: typeof LayoutStoreSettingsRoute
+  LayoutTeamRoute: typeof LayoutTeamRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutStoreSettingsRoute: LayoutStoreSettingsRoute,
+  LayoutTeamRoute: LayoutTeamRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 

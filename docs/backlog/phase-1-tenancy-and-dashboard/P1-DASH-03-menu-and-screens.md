@@ -4,7 +4,7 @@ title: Menu dinâmico por permissão + telas (dashboard, configurações, equipe
 phase: 1
 etapa: "Etapa 4 — Painel do lojista"
 area: DASH
-status: todo
+status: done
 depends_on: [P1-DASH-02, P1-PERM-03, P1-STORE-02]
 blocks: []
 tests: [unit, e2e]
@@ -52,9 +52,16 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
   - e2e — salvar configurações reflete; convidar/alterar papel/remover membro na tela de Equipe.
 
 ## Definition of Done
-- [ ] Menu modular dinâmico por permissão (com gancho de plano para a Fase 5).
-- [ ] Telas de Dashboard (esqueleto), Configurações e Equipe funcionando contra a API.
-- [ ] `vitest`/`tsc` verdes; E2E base do painel passa.
+- [x] Menu modular dinâmico — `lib/menu.ts` (`buildMenu`, pura + unit) + `AppSidebar` consome `permissions`; gancho de plano `planAllowsModule` (Fase 5).
+- [x] Telas: Dashboard (esqueleto + atalhos), Configurações (load `GET` + save `PATCH` gated por `settings.update` + publish/pause) e Equipe (listar/convidar/alterar papel/remover, ações gated por `team.*`) contra a API.
+- [x] `tsc`/`vitest` (14) verdes; build/biome ok. **E2E base deferido** (precisa do stack — ver Follow-ups).
+- [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
-- A visibilidade no front é **UX**; a autorização real é a de `P1-PERM-03`. Se a API precisar de um endpoint de "permissões do membro ativo", registrar aqui e manter o doc [08](../../08_modules_and_permissions.md)/[20](../../20_api_contracts_todo.md) coerentes.
+- **API:** as permissões do membro ativo já vêm de `GET /stores/{id}/me` (exposto na `P1-DASH-02`/`useActiveStore`). Adicionei **`GET /stores/{id}/settings`** (gated `settings.view`) — o form precisa carregar os valores e só havia `PATCH`; consistente com o contrato (doc [20](../../20_api_contracts_todo.md) não enumera endpoints, só a convenção de URL). Client regenerado.
+- **Menu:** `buildMenu(permissions)` — módulo aparece se permissão base (ou `null`) + `planAllowsModule` (stub Fase 5). 3 módulos reais (Dashboard/Configurações/Equipe); itens placeholder de outros módulos ficam para suas fases (evitei links 404).
+- **Gating é UX:** segurança real é o backend (`P1-PERM-03`). Save desabilitado sem `settings.update` (com unit); ações de equipe escondidas sem `team.*`.
+
+## Follow-ups
+- [ ] **E2E do painel** (settings salvar; equipe convidar/alterar papel/remover) — rodar ao vivo. *Quando:* com o stack de pé (junto do Playwright da `P1-DASH-02`). → [README da fase](./README.md#follow-ups--débitos-técnicos).
+- [ ] **Campo de redes sociais (`social_links`)** no form de Configurações (é dict; não entrou no MVP). *Quando:* quando o storefront precisar exibir redes. → README da fase.

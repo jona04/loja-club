@@ -302,6 +302,12 @@ export type StoresGetMyMembershipData = {
 
 export type StoresGetMyMembershipResponse = (MyMembership);
 
+export type StoresGetStoreSettingsData = {
+    storeId: string;
+};
+
+export type StoresGetStoreSettingsResponse = (StoreSettingsPublic);
+
 export type StoresUpdateStoreSettingsData = {
     requestBody: StoreSettingsUpdate;
     storeId: string;

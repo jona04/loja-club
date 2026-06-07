@@ -1,0 +1,49 @@
+import { LayoutDashboard, type LucideIcon, Settings, Users } from "lucide-react"
+
+export interface MenuModule {
+  title: string
+  path: string
+  icon: LucideIcon
+  /** Base permission to see the module; null means always visible to members. */
+  permission: string | null
+}
+
+/** The dashboard's modular menu. Add modules here as their screens land. */
+export const MENU_MODULES: MenuModule[] = [
+  { title: "Dashboard", path: "/", icon: LayoutDashboard, permission: null },
+  {
+    title: "Configurações",
+    path: "/store-settings",
+    icon: Settings,
+    permission: "settings.view",
+  },
+  { title: "Equipe", path: "/team", icon: Users, permission: "team.view" },
+]
+
+/**
+ * Plan-gating hook (Phase 5). MVP: every plan allows every module.
+ *
+ * @param _module - The module being checked (used by the Phase 5 gate).
+ * @returns Always true in the MVP.
+ */
+function planAllowsModule(_module: MenuModule): boolean {
+  return true
+}
+
+/**
+ * Build the visible menu modules from the active member's permissions.
+ *
+ * A module shows when it requires no base permission (always) or the member
+ * holds it, and the plan allows it (Phase 5 hook). Visibility is UX only — the
+ * real authorization lives in the backend (`require_permission`).
+ *
+ * @param permissions - The member's permission keys in the active store.
+ * @returns The modules to render in the sidebar, in declaration order.
+ */
+export function buildMenu(permissions: string[]): MenuModule[] {
+  return MENU_MODULES.filter(
+    (module) =>
+      (module.permission === null || permissions.includes(module.permission)) &&
+      planAllowsModule(module),
+  )
+}
