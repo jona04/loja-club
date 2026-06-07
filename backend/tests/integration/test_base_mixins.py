@@ -1,5 +1,7 @@
 """Integration test: the base mixins produce the expected table columns."""
 
+from typing import Any, cast
+
 from sqlalchemy import MetaData
 from sqlmodel import Field
 
@@ -32,7 +34,7 @@ class _MixinProbe(
 
 def test_mixins_generate_expected_columns() -> None:
     """A model using all base mixins exposes the expected columns."""
-    columns = set(_MixinProbe.__table__.columns.keys())
+    columns = set(cast(Any, _MixinProbe).__table__.columns.keys())
     assert {
         "id",
         "created_at",

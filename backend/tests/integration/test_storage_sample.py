@@ -2,7 +2,7 @@
 
 from collections.abc import Generator
 
-import boto3
+import boto3  # type: ignore[import-untyped]  # boto3 ships no type stubs
 import pytest
 from moto import mock_aws
 

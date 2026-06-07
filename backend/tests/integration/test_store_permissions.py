@@ -1,6 +1,6 @@
 """Integration tests for the seeded permission catalog and role map."""
 
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from app.modules.stores.models import (
     StorePermission,
@@ -17,7 +17,7 @@ def _role_permission_keys(db: Session, role_key: str) -> set[str]:
         select(StorePermission.key)
         .join(
             StoreRolePermission,
-            StoreRolePermission.permission_id == StorePermission.id,
+            col(StoreRolePermission.permission_id) == col(StorePermission.id),
         )
         .where(StoreRolePermission.role_id == role.id)
     ).all()

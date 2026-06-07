@@ -19,6 +19,13 @@ from app.api.deps import get_db
 from app.core.config import settings
 from app.core.db import engine, init_db
 from app.main import app
+from tests.utils.store import (
+    TenantContext,
+    create_member,
+    create_store,
+    create_user,
+    member_headers,
+)
 from tests.utils.user import authentication_token_from_email
 from tests.utils.utils import get_superuser_token_headers
 
@@ -119,4 +126,32 @@ def normal_user_token_headers(client: TestClient, db: Session) -> dict[str, str]
     """
     return authentication_token_from_email(
         client=client, email=settings.EMAIL_TEST_USER, db=db
+    )
+
+
+@pytest.fixture
+def two_stores(client: TestClient, db: Session) -> TenantContext:
+    """Provision Store A and Store B with distinct active owners.
+
+    The canonical multi-tenant setup for cross-tenant isolation tests.
+
+    Args:
+        client: The test HTTP client.
+        db: The per-test transactional session.
+
+    Returns:
+        A :class:`~tests.utils.store.TenantContext` with both stores and their
+        owners' auth headers.
+    """
+    owner_a = create_user(db)
+    owner_b = create_user(db)
+    store_a = create_store(db, slug="tenant-a")
+    store_b = create_store(db, slug="tenant-b")
+    create_member(db, store=store_a, user=owner_a, role_key="owner")
+    create_member(db, store=store_b, user=owner_b, role_key="owner")
+    return TenantContext(
+        store_a=store_a,
+        store_b=store_b,
+        owner_a_headers=member_headers(client, db, owner_a),
+        owner_b_headers=member_headers(client, db, owner_b),
     )

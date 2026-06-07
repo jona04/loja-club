@@ -1,6 +1,7 @@
 """Integration tests for the store and team endpoints (panel)."""
 
 import uuid
+from typing import Any
 
 from fastapi.testclient import TestClient
 from sqlmodel import Session, select
@@ -10,7 +11,7 @@ from app.modules.accounts import repositories as accounts_repo
 from app.modules.domains.enums import DomainStatus
 from app.modules.domains.models import DomainHost
 from app.modules.stores.enums import MembershipStatus
-from app.modules.stores.models import Store, StoreMember, StoreRole
+from app.modules.stores.models import StoreMember, StoreRole
 from tests.utils.user import authentication_token_from_email
 from tests.utils.utils import random_email
 
@@ -21,10 +22,13 @@ def _headers(client: TestClient, db: Session, email: str) -> dict[str, str]:
     return authentication_token_from_email(client=client, email=email, db=db)
 
 
-def _create_store(client: TestClient, headers: dict[str, str], name: str) -> dict:
+def _create_store(
+    client: TestClient, headers: dict[str, str], name: str
+) -> dict[str, Any]:
     r = client.post(f"{API}/stores/", headers=headers, json={"name": name})
     assert r.status_code == 201, r.text
-    return r.json()
+    data: dict[str, Any] = r.json()
+    return data
 
 
 def _add_active_member(
