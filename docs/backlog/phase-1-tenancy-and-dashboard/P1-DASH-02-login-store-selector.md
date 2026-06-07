@@ -4,7 +4,7 @@ title: Login + seletor de loja ativa + contexto
 phase: 1
 etapa: "Etapa 4 — Painel do lojista"
 area: DASH
-status: todo
+status: done
 depends_on: [P1-STORE-02, P1-DASH-01]
 blocks: [P1-DASH-03]
 tests: [unit, e2e]
@@ -51,9 +51,17 @@ Um usuário pode ser membro de várias lojas; o painel precisa, após o login, *
   - e2e — login → (seletor) → painel carregado no contexto da loja.
 
 ## Definition of Done
-- [ ] Pós-login resolve loja ativa (1 direto / várias com seletor).
-- [ ] Contexto injeta `store_id` nas chamadas do painel; switcher funciona.
-- [ ] Client OpenAPI regenerado; `vitest`/`tsc` verdes.
+- [x] Pós-login resolve a loja ativa — `lib/activeStore.ts` (`resolveActiveStore`, pura + unit) + `ActiveStoreProvider`: 1 entra direto, várias → `StoreSelector`, 0 → `NoStores`.
+- [x] Contexto fornece `activeStore.id` + `role`/`permissions` (via `GET /stores/{id}/me`) e o `StoreSwitcher` no header troca/persiste a loja.
+- [x] Client OpenAPI regenerado (endpoints `stores`); `vitest` (8) / `tsc` / `vite build` / `biome` verdes.
+- [x] Itens adiados varridos → Follow-ups + README (E2E ao vivo; onboarding completo).
 
 ## Notas / Reconciliações
-- Registrar como a loja ativa é persistida (estado/URL) e o comportamento ao não haver nenhuma loja (CTA de criar loja).
+- **Persistência:** `localStorage["active_store_id"]`. Resolução pura em `lib/activeStore.ts` (testada): 0 → `NoStores` (CTA "Criar loja", dialog mínimo nome → `POST /stores` → ativa a nova); várias sem escolha válida → `StoreSelector`; 1 ou escolha persistida válida → entra. Estado, não URL (URL com `store_id` pode vir depois se preciso).
+- **store_id é path param:** o contexto expõe `activeStore.id` + `permissions`/`role` (de `/me`) que a `P1-DASH-03` consome no menu por permissão — é a "injeção" do `store_id` nas chamadas do painel.
+- **Client:** regenerado via dump `uv run … app.openapi()` + `openapi-ts`/`biome` pelo `node_modules` da raiz (bun ausente; `frontend/openapi.json` é artefato gitignored).
+- **E2E (impacto):** a suíte Playwright assertava "Welcome back" (removido) e o pós-login virou **gated por loja** (superuser tem 0 lojas → `NoStores`). Troquei os 4 asserts por `user-menu` (estável no novo fluxo). **Não rodei a suíte ao vivo** (precisa do stack) — ver Follow-ups. Removi `tests/admin.spec.ts` (órfão da página admin removida na `P1-DASH-01`).
+
+## Follow-ups
+- [ ] **Rodar/validar a suíte Playwright ao vivo** no fluxo store-aware **+ escrever o E2E da jornada** DASH-02 (login → sem-loja → criar → painel; várias → seletor). *Quando:* com o stack de pé. → [README da fase](./README.md#follow-ups--débitos-técnicos).
+- [ ] **Onboarding de loja completo** (checklist) — hoje só o CTA mínimo de criar. *Quando:* `P1-DASH-03` ou fase posterior. → README da fase.

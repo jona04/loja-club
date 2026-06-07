@@ -46,6 +46,7 @@ Por que esta task existe, em 1–3 linhas. Liga ao objetivo da etapa/fase.
 ## Definition of Done
 - [ ] critério testável 1
 - [ ] critério testável 2
+- [ ] **Itens adiados varridos** (Notas, Fora-de-escopo, "opcional/fica para depois") → promovidos a **Follow-ups** + README da fase, ou confirmado "nenhum".
 
 ## Notas / Reconciliações
 - divergências código ↔ doc resolvidas aqui (citar o doc afetado)

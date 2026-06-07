@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 
+import { useActiveStore } from "@/hooks/useActiveStore"
 import useAuth from "@/hooks/useAuth"
 
 export const Route = createFileRoute("/_layout/")({
@@ -7,7 +8,7 @@ export const Route = createFileRoute("/_layout/")({
   head: () => ({
     meta: [
       {
-        title: "Dashboard - FastAPI Template",
+        title: "Dashboard - Loja Club",
       },
     ],
   }),
@@ -15,17 +16,21 @@ export const Route = createFileRoute("/_layout/")({
 
 function Dashboard() {
   const { user: currentUser } = useAuth()
+  const { activeStore } = useActiveStore()
 
   return (
-    <div>
-      <div>
-        <h1 className="text-2xl truncate max-w-sm">
-          Hi, {currentUser?.full_name || currentUser?.email} 👋
-        </h1>
+    <div className="space-y-2">
+      <h1 className="text-2xl truncate max-w-sm">
+        Hi, {currentUser?.full_name || currentUser?.email} 👋
+      </h1>
+      {activeStore && (
         <p className="text-muted-foreground">
-          Welcome back, nice to see you again!!!
+          Loja atual:{" "}
+          <span className="font-medium text-foreground">
+            {activeStore.name}
+          </span>
         </p>
-      </div>
+      )}
     </div>
   )
 }

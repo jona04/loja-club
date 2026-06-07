@@ -38,7 +38,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 9 | [P1-STORE-02](./P1-STORE-02-store-service-routes.md) | `stores`: serviço/rotas (criar→owner+subdomínio, settings, publish) | done | P1-API-01, P1-STORE-01, P1-PERM-01, P1-DOM-01, P1-PERM-03 |
 | 10 | [P1-TEST-01](./P1-TEST-01-tenant-fixtures-isolation.md) | Fixtures/factories multi-tenant + testes de isolamento | done | P1-STORE-01, P1-PERM-01 |
 | 11 | [P1-DASH-01](./P1-DASH-01-dashboard-infra.md) | Infra do painel (`frontend-dashboard`, Traefik `app.`) | done | — |
-| 12 | [P1-DASH-02](./P1-DASH-02-login-store-selector.md) | Login + seletor de loja ativa + contexto | todo | P1-STORE-02, P1-DASH-01 |
+| 12 | [P1-DASH-02](./P1-DASH-02-login-store-selector.md) | Login + seletor de loja ativa + contexto | done | P1-STORE-02, P1-DASH-01 |
 | 13 | [P1-DASH-03](./P1-DASH-03-menu-and-screens.md) | Menu dinâmico por permissão + telas (dashboard, settings, equipe) | todo | P1-DASH-02, P1-PERM-03, P1-STORE-02 |
 
 ## Ordem sugerida de execução
@@ -67,4 +67,7 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 - [ ] **Fluxo de aceite de convite** (`invited`→`active`); hoje membro `invited` não opera. Origem: `P1-STORE-02`. *Quando:* junto do onboarding de equipe.
 - [ ] **Proteção do owner** (não alterar papel/remover o último `owner`). Origem: `P1-STORE-02`. *Quando:* antes de produção.
 - [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). Origem: `P1-ACCT-01`. *Quando:* se virar problema, ou junto do admin de plataforma (Fase 6).
+- [ ] **Rename físico `frontend/` → `frontend-dashboard/`** + criar `frontend-admin` (Fase 6) e `frontend-storefront` (Fase 3) como projetos separados (doc [05](../../05_frontend_architecture.md)). Mexe em workspace bun/`bun.lock`/Dockerfiles. Origem: `P1-DASH-01`. *Quando:* ao iniciar a Fase 3 ou 6 (o que vier primeiro).
+- [ ] **Rodar/validar a suíte Playwright ao vivo** no fluxo store-aware + escrever o E2E da jornada DASH-02 (login → sem-loja → criar → painel; várias → seletor). Os asserts de "Welcome back" viraram `user-menu`, mas a suíte não foi rodada ao vivo. Origem: `P1-DASH-02`. *Quando:* com o stack de pé.
+- [ ] **Onboarding de loja completo** (checklist) — hoje só o CTA mínimo de criar loja. Origem: `P1-DASH-02`. *Quando:* `P1-DASH-03` ou fase posterior.
 - [x] **Limpeza do ruído de `alembic autogenerate`** — `_MixinProbe` isolado em `MetaData()` próprio + índice `ix_user_email`→`ix_account_users_email` (migration `c2d3e4f5a6b7`); autogenerate volta a vir vazio. Origem: `P1-STORE-01`. *(feito)*

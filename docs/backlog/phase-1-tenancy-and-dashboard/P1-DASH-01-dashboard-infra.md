@@ -59,3 +59,6 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 - **Limpeza:** removido o cluster inteiro `routes/_layout/admin.tsx` + `components/Admin/*` (AddUser/columns/EditUser/DeleteUser/UserActionsMenu) — era **auto-contido** (nada fora dele importava) e é gestão de `account_users` = **admin de plataforma** (Fase 6, `frontend-admin`). O item "Admin" do `AppSidebar` (só superuser) saiu.
 - **`routeTree.gen.ts`** é gerado pelo plugin do TanStack Router; regenerado via `vite build` (não há `tsr` standalone local; `bun` ausente — usei o `node_modules` da raiz do workspace).
 - **Smoke ao vivo (manual):** `docker compose up -d proxy frontend` e então `curl -H "Host: app.loja.localhost" http://localhost:8088/` (ou abrir `http://app.loja.localhost:8088`). Não executado aqui (build da imagem do frontend é pesado); a mudança é só o label Traefik + o CORS já contempla o host.
+
+## Follow-ups
+- [ ] **Rename físico `frontend/` → `frontend-dashboard/`** + criar `frontend-admin` (Fase 6) e `frontend-storefront` (Fase 3) como projetos separados. *Quando:* ao iniciar a Fase 3 ou 6. → [README da fase](./README.md#follow-ups--débitos-técnicos).

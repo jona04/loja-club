@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class HealthService {
     /**
@@ -153,6 +153,259 @@ export class PrivateService {
             url: '/api/v1/private/users/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class StoresService {
+    /**
+     * Create Store
+     * Create a store; the caller becomes its owner (+ subdomain).
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns StorePublic Successful Response
+     * @throws ApiError
+     */
+    public static createStore(data: StoresCreateStoreData): CancelablePromise<StoresCreateStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List My Stores
+     * List the stores the current user is an active member of.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_StorePublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listMyStores(data: StoresListMyStoresData = {}): CancelablePromise<StoresListMyStoresResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Store
+     * Get a store the current user can access.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StorePublic Successful Response
+     * @throws ApiError
+     */
+    public static getStore(data: StoresGetStoreData): CancelablePromise<StoresGetStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get My Membership
+     * Return the current user's role and permissions in the active store.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns MyMembership Successful Response
+     * @throws ApiError
+     */
+    public static getMyMembership(data: StoresGetMyMembershipData): CancelablePromise<StoresGetMyMembershipResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/me',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Store Settings
+     * Update the store's settings (requires ``settings.update``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns StoreSettingsPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateStoreSettings(data: StoresUpdateStoreSettingsData): CancelablePromise<StoresUpdateStoreSettingsResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/settings',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Publish Store
+     * Publish the store (status active; requires ``settings.update``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StorePublic Successful Response
+     * @throws ApiError
+     */
+    public static publishStore(data: StoresPublishStoreData): CancelablePromise<StoresPublishStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/publish',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Pause Store
+     * Pause the store (status paused; requires ``settings.update``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StorePublic Successful Response
+     * @throws ApiError
+     */
+    public static pauseStore(data: StoresPauseStoreData): CancelablePromise<StoresPauseStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/pause',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Store Members
+     * List the store's members (requires ``team.view``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_StoreMemberPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listStoreMembers(data: StoresListStoreMembersData): CancelablePromise<StoresListStoreMembersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/members',
+            path: {
+                store_id: data.storeId
+            },
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Invite Store Member
+     * Invite an existing account user to the store (requires ``team.invite``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns StoreMemberPublic Successful Response
+     * @throws ApiError
+     */
+    public static inviteStoreMember(data: StoresInviteStoreMemberData): CancelablePromise<StoresInviteStoreMemberResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/members',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Store Member Role
+     * Change a member's role (requires ``team.update_role``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.userId
+     * @param data.requestBody
+     * @returns StoreMemberPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateStoreMemberRole(data: StoresUpdateStoreMemberRoleData): CancelablePromise<StoresUpdateStoreMemberRoleResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/members/{user_id}',
+            path: {
+                store_id: data.storeId,
+                user_id: data.userId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Remove Store Member
+     * Remove (soft-delete) a member (requires ``team.remove``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.userId
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static removeStoreMember(data: StoresRemoveStoreMemberData): CancelablePromise<StoresRemoveStoreMemberResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/members/{user_id}',
+            path: {
+                store_id: data.storeId,
+                user_id: data.userId
+            },
             errors: {
                 422: 'Validation Error'
             }
