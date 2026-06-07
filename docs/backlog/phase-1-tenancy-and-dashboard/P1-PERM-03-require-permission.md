@@ -4,7 +4,7 @@ title: Autorização — require_permission (deps)
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: PERM
-status: todo
+status: done
 depends_on: [P1-PERM-02, P1-TEN-01]
 blocks: [P1-STORE-02, P1-DASH-03]
 tests: [integration]
@@ -53,9 +53,13 @@ A **segurança real está no backend** (esconder botão no front é só UX — I
   - integração — `owner` acessa rota protegida; `support` é **negado** em `layout.update`; não-membro → 403; permissão ausente → 403; recurso de outra loja → 404/403 (ownership).
 
 ## Definition of Done
-- [ ] `require_permission` aplica as 4 checagens; nega no backend mesmo se o front liberar.
-- [ ] Testes por papel (owner permitido / support negado / não-membro) verdes.
-- [ ] Gancho de plano presente (no-op) para a Fase 5 plugar.
+- [x] `require_permission` aplica as checagens (autenticado → membro ativo → papel concede → plano) e nega no backend; teste *(111 testes; cobertura 92%)*.
+- [x] Testes por papel (owner permitido / support negado / support permitido p/ permissão concedida) + não-membro (403) verdes.
+- [x] Gancho de plano presente (`_plan_allows()`, no-op) para a Fase 5 plugar.
 
 ## Notas / Reconciliações
-- "Plano + permissão" (doc [08](../../08_modules_and_permissions.md)): no MVP só a camada de permissão é ativa; o plano entra na Fase 5. Anotado.
+- **Implementado em `app/modules/tenancy/deps.py`:** extraí `get_active_membership` (valida loja+membership, reusado pelo `get_active_store` e pelo `require_permission`); `require_permission(perm)` compõe membership + checa a permissão **no banco** (`store_role_permissions` ⋈ `store_permissions`, consistente com a decisão de tabelas) + `_plan_allows()`.
+- **Ownership (INV-T2):** a checagem `recurso.store_id == store_id` é o helper `get_store_scoped` (`P1-TEN-01`); as rotas comerciais o usam. Testado em `test_tenancy.py`.
+- **Testes:** decisão por papel testada diretamente (chamando a dependency); não-membro/404 via `get_active_membership`. O **gating ponta-a-ponta por HTTP** numa rota real é exercitado na `P1-STORE-02` (endpoints com `Depends(require_permission(...))`).
+- "Plano + permissão" (doc [08](../../08_modules_and_permissions.md)): no MVP só a permissão é ativa; o plano entra na Fase 5.
+- **Typing:** `col()` no `onclause` do `join` (o SQLModel infere `bool` sem ele). **Lint deve rodar via `uv run bash scripts/lint.sh`** (o `lint.sh` chama `mypy`/`ty` diretos, que precisam do venv ativo).
