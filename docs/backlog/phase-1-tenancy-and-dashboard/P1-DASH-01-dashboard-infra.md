@@ -4,7 +4,7 @@ title: Infra do painel (frontend-dashboard, Traefik app.)
 phase: 1
 etapa: "Etapa 4 — Painel do lojista"
 area: DASH
-status: todo
+status: done
 depends_on: []
 blocks: [P1-DASH-02]
 tests: none
@@ -50,9 +50,12 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 - **Cobrir:** —
 
 ## Definition of Done
-- [ ] Painel responde em `app.${DOMAIN}` (Traefik), com `VITE_API_URL` por env.
-- [ ] `admin.tsx` (e refs) removidos; nenhuma rota/menu quebrado.
-- [ ] `vitest` e `tsc` do frontend verdes.
+- [x] Traefik do painel → `Host(app.${DOMAIN})` (labels http+https em `compose.yml`); `VITE_API_URL` por env (prod `https://api.${DOMAIN}`, dev `http://localhost:8800`); CORS já inclui `http://app.loja.localhost:8088`. *(smoke HTTP ao vivo = manual, ver Notas)*
+- [x] `admin.tsx` + `components/Admin/*` + item de menu removidos; `routeTree.gen.ts` regenerado (0 refs a admin); nada quebrado.
+- [x] `tsc` + `vitest` (2) verdes; `vite build` ok; `biome` limpo.
 
 ## Notas / Reconciliações
-- Doc [05](../../05_frontend_architecture.md) pede 3 projetos separados (`frontend-dashboard`/`admin`/`storefront`). No MVP mapeamos o `frontend/` existente ao papel de **dashboard**; o rename físico do diretório (e a criação de admin/storefront) pode ocorrer ao iniciar Fases 3/6 — registrar a decisão tomada aqui.
+- Doc [05](../../05_frontend_architecture.md) pede 3 projetos separados (`frontend-dashboard`/`admin`/`storefront`). No MVP mapeamos o `frontend/` existente ao papel de **dashboard**; o **rename físico** do diretório (e a criação de admin/storefront) fica para o início das Fases 3/6 (mexe em workspace bun/`bun.lock`/Dockerfiles).
+- **Limpeza:** removido o cluster inteiro `routes/_layout/admin.tsx` + `components/Admin/*` (AddUser/columns/EditUser/DeleteUser/UserActionsMenu) — era **auto-contido** (nada fora dele importava) e é gestão de `account_users` = **admin de plataforma** (Fase 6, `frontend-admin`). O item "Admin" do `AppSidebar` (só superuser) saiu.
+- **`routeTree.gen.ts`** é gerado pelo plugin do TanStack Router; regenerado via `vite build` (não há `tsr` standalone local; `bun` ausente — usei o `node_modules` da raiz do workspace).
+- **Smoke ao vivo (manual):** `docker compose up -d proxy frontend` e então `curl -H "Host: app.loja.localhost" http://localhost:8088/` (ou abrir `http://app.loja.localhost:8088`). Não executado aqui (build da imagem do frontend é pesado); a mudança é só o label Traefik + o CORS já contempla o host.

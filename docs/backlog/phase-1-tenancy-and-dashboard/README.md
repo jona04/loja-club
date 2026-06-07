@@ -37,7 +37,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 8 | [P1-PERM-03](./P1-PERM-03-require-permission.md) | Autorização: `require_permission` (deps) | done | P1-PERM-02, P1-TEN-01 |
 | 9 | [P1-STORE-02](./P1-STORE-02-store-service-routes.md) | `stores`: serviço/rotas (criar→owner+subdomínio, settings, publish) | done | P1-API-01, P1-STORE-01, P1-PERM-01, P1-DOM-01, P1-PERM-03 |
 | 10 | [P1-TEST-01](./P1-TEST-01-tenant-fixtures-isolation.md) | Fixtures/factories multi-tenant + testes de isolamento | done | P1-STORE-01, P1-PERM-01 |
-| 11 | [P1-DASH-01](./P1-DASH-01-dashboard-infra.md) | Infra do painel (`frontend-dashboard`, Traefik `app.`) | todo | — |
+| 11 | [P1-DASH-01](./P1-DASH-01-dashboard-infra.md) | Infra do painel (`frontend-dashboard`, Traefik `app.`) | done | — |
 | 12 | [P1-DASH-02](./P1-DASH-02-login-store-selector.md) | Login + seletor de loja ativa + contexto | todo | P1-STORE-02, P1-DASH-01 |
 | 13 | [P1-DASH-03](./P1-DASH-03-menu-and-screens.md) | Menu dinâmico por permissão + telas (dashboard, settings, equipe) | todo | P1-DASH-02, P1-PERM-03, P1-STORE-02 |
 
