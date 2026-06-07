@@ -4,7 +4,7 @@ title: stores — serviço/rotas (criar→owner+subdomínio, settings, publish) 
 phase: 1
 etapa: "Etapa 3 — Multi-tenancy (backend)"
 area: STORE
-status: todo
+status: done
 depends_on: [P1-API-01, P1-STORE-01, P1-PERM-01, P1-DOM-01, P1-PERM-03]
 blocks: [P1-DASH-02, P1-DASH-03]
 tests: [integration]
@@ -57,9 +57,18 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
   - integração — `POST /stores` cria `store_stores` + `store_members(owner)` + `domain_hosts` subdomínio ativo (atômico); `GET /stores` lista só as do usuário; slug duplicado é rejeitado; `support` não publica/edita settings (403); convite cria membro `invited`.
 
 ## Definition of Done
-- [ ] Criar loja gera **owner + subdomínio** atomicamente (teste).
-- [ ] CRUD/publish/pause e endpoints de equipe respondem no padrão `P1-API-01`, com gating por permissão.
-- [ ] `GET /stores` retorna só as lojas do usuário; isolamento garantido pelo guard (`P1-TEN-01`).
+- [x] `POST /stores` cria `store_stores` + `store_settings` + `store_members(owner)` + `domain_hosts` (subdomínio ativo) **atomicamente** (teste).
+- [x] CRUD/publish/pause + equipe + `GET /{id}/me` no padrão `P1-API-01`, com gating por `require_permission` (teste: owner ok, support 403).
+- [x] `GET /stores` lista só as lojas do usuário; não-membro em `GET /{id}` → 403 *(121 testes; cobertura 91%)*.
 
 ## Notas / Reconciliações
-- Se o fluxo atômico exigir reordenar criação de subdomínio vs membership, registrar aqui e manter o doc [06](../../06_multitenancy_and_domains.md) coerente.
+- **Endpoints:** `POST /` (criar), `GET /` (minhas lojas, `Page`), `GET /{id}` (`ActiveStore`), `PATCH /{id}/settings`, `POST /{id}/publish|pause`, `GET /{id}/me` (papel+permissões p/ o menu da `P1-DASH-03`), e equipe `GET|POST /{id}/members`, `PATCH|DELETE /{id}/members/{user_id}`. Gating via `dependencies=[Depends(require_permission(...))]` no decorator (evita arg não-usado).
+- **Slug** derivado do nome (`slugify`, DNS-safe) com override opcional; disponibilidade via `domains.is_subdomain_available`; `currency`/`locale` default do `PLATFORM_DEFAULT_*`.
+- **`is_published`** mantido consistente com `status` no publish/pause (active↔paused). Storefront público (Fase 3) decide o que usar.
+- **Convite (MVP):** só convida **usuário já existente** (e-mail → `account_user`); cria membro `invited`. Convite por e-mail novo (cria conta shell + e-mail de onboarding) e o **fluxo de aceite** (`invited`→`active`) ficam para depois — ver Follow-ups.
+- **Client OpenAPI:** regeneração deixada para a `P1-DASH-02` (quem consome).
+
+## Follow-ups
+- [ ] **Convite por e-mail novo** (cria `account_user` shell + envia e-mail de onboarding via `app/utils.py`). *Quando:* quando o onboarding de equipe for necessário. → README da fase.
+- [ ] **Fluxo de aceite de convite** (`invited`→`active`); hoje membro `invited` não opera. *Quando:* junto do onboarding de equipe. → README da fase.
+- [ ] **Proteção do owner** (não permitir alterar papel/remover o último `owner`, evitando órfão). *Quando:* antes de produção. → README da fase.

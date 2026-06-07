@@ -35,6 +35,10 @@ def _app_with_routes() -> FastAPI:
     def _needs_q(n: int) -> dict[str, int]:
         return {"n": n}
 
+    @app.get("/boom-unhandled")
+    def _boom_unhandled() -> None:
+        raise ValueError("secret internal detail")
+
     return app
 
 
@@ -64,3 +68,13 @@ def test_validation_error_envelope() -> None:
     assert body["error"]["code"] == "validation_error"
     assert isinstance(body["error"]["details"], list)
     assert len(body["error"]["details"]) > 0
+
+
+def test_unhandled_exception_returns_envelope_without_leak() -> None:
+    client = TestClient(_app_with_routes(), raise_server_exceptions=False)
+    r = client.get("/boom-unhandled")
+    assert r.status_code == 500
+    body = r.json()
+    assert body["error"]["code"] == "internal_error"
+    assert body["error"]["message"] == "Internal server error"
+    assert "secret internal detail" not in r.text

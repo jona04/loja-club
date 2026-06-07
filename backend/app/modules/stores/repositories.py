@@ -1,13 +1,21 @@
 """Data access and seeding for the stores module."""
 
-from sqlmodel import Session, select
+import uuid
+from collections.abc import Sequence
 
+from sqlmodel import Session, col, func, select
+
+from app.modules.accounts.models import User
+from app.modules.stores.enums import MembershipStatus
 from app.modules.stores.models import (
+    Store,
+    StoreMember,
     StorePermission,
     StoreRole,
     StoreRolePermission,
 )
 from app.modules.stores.permissions import PERMISSIONS, ROLE_PERMISSIONS
+from app.modules.stores.schemas import StoreMemberPublic
 
 # Canonical fixed set of store roles (doc 08) — single source for seeding.
 STORE_ROLES: list[tuple[str, str]] = [
@@ -75,3 +83,83 @@ def seed_store_permissions(session: Session) -> None:
     if new_grants:
         session.add_all(new_grants)
         session.commit()
+
+
+def get_role_by_key(*, session: Session, key: str) -> StoreRole | None:
+    """Return the seeded role with ``key``, or None."""
+    return session.exec(select(StoreRole).where(StoreRole.key == key)).first()
+
+
+def list_my_stores(
+    *, session: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100
+) -> tuple[Sequence[Store], int]:
+    """Return the active, non-deleted stores the user is an active member of."""
+    base = (
+        select(Store)
+        .join(StoreMember, col(StoreMember.store_id) == col(Store.id))
+        .where(
+            StoreMember.user_id == user_id,
+            StoreMember.status == MembershipStatus.active,
+            col(StoreMember.deleted_at).is_(None),
+            col(Store.deleted_at).is_(None),
+        )
+    )
+    count = session.exec(select(func.count()).select_from(base.subquery())).one()
+    stores = session.exec(
+        base.order_by(col(Store.created_at).desc()).offset(skip).limit(limit)
+    ).all()
+    return stores, count
+
+
+def get_membership(
+    *, session: Session, store_id: uuid.UUID, user_id: uuid.UUID
+) -> StoreMember | None:
+    """Return the user's non-deleted membership in the store, or None."""
+    return session.exec(
+        select(StoreMember).where(
+            StoreMember.store_id == store_id,
+            StoreMember.user_id == user_id,
+            col(StoreMember.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_members(
+    *, session: Session, store_id: uuid.UUID, skip: int = 0, limit: int = 100
+) -> tuple[list[StoreMemberPublic], int]:
+    """Return the store's non-deleted members (with email + role key)."""
+    base = (
+        select(StoreMember, User.email, StoreRole.key)
+        .join(User, col(User.id) == col(StoreMember.user_id))
+        .join(StoreRole, col(StoreRole.id) == col(StoreMember.role_id))
+        .where(
+            StoreMember.store_id == store_id,
+            col(StoreMember.deleted_at).is_(None),
+        )
+    )
+    count = session.exec(select(func.count()).select_from(base.subquery())).one()
+    rows = session.exec(base.offset(skip).limit(limit)).all()
+    members = [
+        StoreMemberPublic(
+            id=member.id,
+            user_id=member.user_id,
+            email=email,
+            role=role_key,
+            status=member.status,
+        )
+        for member, email, role_key in rows
+    ]
+    return members, count
+
+
+def role_permission_keys(*, session: Session, role_id: uuid.UUID) -> list[str]:
+    """Return the permission keys granted to ``role_id``."""
+    keys = session.exec(
+        select(StorePermission.key)
+        .join(
+            StoreRolePermission,
+            col(StoreRolePermission.permission_id) == col(StorePermission.id),
+        )
+        .where(StoreRolePermission.role_id == role_id)
+    ).all()
+    return list(keys)

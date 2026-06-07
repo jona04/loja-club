@@ -5,6 +5,7 @@ use **offset pagination** and return ``{"data": [...], "count": <total>}``;
 all errors use the structured envelope ``{"error": {"code", "message"}}``.
 """
 
+import logging
 from typing import Annotated, Any, Generic, TypeVar
 
 from fastapi import FastAPI, Query, Request, status
@@ -13,6 +14,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
+logger = logging.getLogger("app.api")
 
 T = TypeVar("T")
 
@@ -139,14 +142,23 @@ def register_exception_handlers(app: FastAPI) -> None:
     """
 
     @app.exception_handler(AppError)
-    async def _app_error_handler(request: Request, exc: AppError) -> JSONResponse:  # noqa: ARG001
+    async def _app_error_handler(request: Request, exc: AppError) -> JSONResponse:
+        if exc.status_code >= 500:
+            logger.error("%s on %s %s", exc.code, request.method, request.url.path)
         return _error_json(exc.status_code, exc.code, exc.message)
 
     @app.exception_handler(StarletteHTTPException)
     async def _http_exception_handler(
-        request: Request,  # noqa: ARG001
+        request: Request,
         exc: StarletteHTTPException,
     ) -> JSONResponse:
+        if exc.status_code >= 500:
+            logger.error(
+                "http_error %s on %s %s",
+                exc.status_code,
+                request.method,
+                request.url.path,
+            )
         code = _STATUS_CODE_SLUGS.get(exc.status_code, "error")
         return _error_json(exc.status_code, code, str(exc.detail))
 
@@ -160,4 +172,20 @@ def register_exception_handlers(app: FastAPI) -> None:
             "validation_error",
             "Validation failed",
             jsonable_encoder(exc.errors()),
+        )
+
+    @app.exception_handler(Exception)
+    async def _unhandled_handler(request: Request, exc: Exception) -> JSONResponse:
+        # Unexpected error: log the traceback (server-side) and return the
+        # envelope WITHOUT leaking internals to the client.
+        logger.error(
+            "Unhandled error on %s %s",
+            request.method,
+            request.url.path,
+            exc_info=exc,
+        )
+        return _error_json(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "internal_error",
+            "Internal server error",
         )
