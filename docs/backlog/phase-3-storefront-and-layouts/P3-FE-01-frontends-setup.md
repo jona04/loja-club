@@ -13,7 +13,7 @@ tests: none
 # P3-FE-01 — Renomear painel + scaffold do storefront
 
 ## Contexto
-A V1 passa a ter **dois** frontends. O painel Vite atual (`frontend/`) vira `frontend-dashboard/` (nome que os docs [05](../../05_frontend_architecture.md)/[12](../../12_aws_infrastructure_and_deployment.md) já usam) e nasce o `frontend-storefront/` (Next.js) — a vitrine pública. Esta task é **só setup**; as telas da vitrine são a `P3-SF-02`.
+A V1 tem **dois** frontends: o painel (`frontend-dashboard`, Vite) e a vitrine pública (`frontend-storefront`, Next.js). Esta task **renomeia** o painel (`frontend/` → `frontend-dashboard/`, nome que os docs [05](../../05_frontend_architecture.md)/[12](../../12_aws_infrastructure_and_deployment.md) usam) e **cria** o `frontend-storefront/`. É **só setup**; as telas da vitrine são a `P3-SF-02`.
 
 ## Docs de referência
 - [05 — Frontend Architecture](../../05_frontend_architecture.md)

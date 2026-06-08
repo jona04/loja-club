@@ -21,7 +21,7 @@ No `frontend-dashboard`, o lojista vê os 2 templates, faz preview com dados rea
 
 ## Escopo (o que ENTRA)
 - Tela "Layout da Loja": listar templates, **preview**, **aplicar**; editar banner, headline e coleção em destaque.
-- Gating por permissão (UX); consome as rotas da `P3-CONTENT-02`.
+- Gating por **`layout.*`** (menu = `layout.view`; aplicar/editar = `layout.update`); consome as rotas da `P3-CONTENT-02`.
 
 ## Fora de escopo (o que NÃO entra)
 - `logo_url`/descrição (ficam em **Configurações**, Fase 1).

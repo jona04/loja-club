@@ -39,7 +39,7 @@ From `./frontend`. Two equivalent ways — via Bun, or via the hoisted binaries
 | E2E (Playwright) | `bun run test` | `../node_modules/.bin/playwright test` |
 | Regenerate API client | `bun run generate-client` | `../node_modules/.bin/openapi-ts` |
 
-The Vite dev server runs on http://localhost:5173 by default. Point it at a
+The Vite dev server runs on http://localhost:5180 (set in `vite.config.ts`). Point it at a
 running API with `VITE_API_URL` (e.g. `http://localhost:8800`, or
 `http://api.loja.localhost:8088`) in `frontend/.env`. When you run the full
 Docker stack instead, the dashboard is served at http://localhost:5180 /

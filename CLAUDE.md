@@ -16,6 +16,7 @@ Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, 
 - **Testes (backend):** `POSTGRES_PORT=5442 REDIS_PORT=6399 uv run coverage run -m pytest tests/` + `… coverage report --fail-under=90`.
 - **Migrations:** `… uv run alembic upgrade head`; ao mudar modelos, `alembic revision --autogenerate` → **revisar** (ordem de FK, nomear FKs) e `alembic check` deve voltar **vazio**.
 - **Frontend:** bun **não** está instalado localmente → usar os binários da raiz `../node_modules/.bin/{vite,vitest,biome,tsc}` (workspace bun: `node_modules`/lockfile únicos na raiz).
+- **E2E (Playwright):** `docker compose run --rm playwright bunx playwright test` — sobe o Vite **dev** na porta **`5180`** (= painel, casando com `FRONTEND_HOST` + `BACKEND_CORS_ORIGINS`) contra o `backend`. **Rodar local antes de dar por pronto:** o que falha no CI tem que falhar aqui primeiro — `tsc`/`vitest` verdes **não** cobrem o e2e.
 
 ## Roadmap
 8 fases sequenciais; **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.

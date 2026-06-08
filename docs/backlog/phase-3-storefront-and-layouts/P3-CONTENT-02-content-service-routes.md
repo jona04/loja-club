@@ -21,7 +21,7 @@ Endpoints do **painel** para o lojista escolher o template e editar a aparência
 - [20 — API Contracts](../../20_api_contracts_todo.md)
 
 ## Escopo (o que ENTRA)
-- Sob `/api/v1/stores/{store_id}/...`, gated por permissão de layout (`settings.*` ou específica): listar templates; obter template ativo; **preview**; **aplicar template** (salva `active_template_id`); editar `banner`/`headline`/`featured_collection`.
+- Sob `/api/v1/stores/{store_id}/...`, gated por **`layout.*`** (ver=`layout.view`, preview=`layout.preview`, aplicar/editar=`layout.update`, assets=`layout.assets.update`): listar templates; obter template ativo; **preview**; **aplicar template** (salva `active_template_id`); editar `banner`/`headline`/`featured_collection`.
 - **Invalidação:** ao aplicar/editar, invalidar `store:{id}:theme|home|settings` (chaves de leitura da `P3-SF-01`).
 
 ## Fora de escopo (o que NÃO entra)

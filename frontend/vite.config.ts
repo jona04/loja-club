@@ -11,6 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Dev/e2e server on the painel port (matches FRONTEND_HOST + BACKEND_CORS_ORIGINS).
+  server: {
+    port: 5180,
+  },
   plugins: [
     tanstackRouter({
       target: "react",
