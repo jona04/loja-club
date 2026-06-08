@@ -58,7 +58,7 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - **Preço** em 2 casas (`×100`/`/100`) — assume expoente 2 (USD/BRL, default); INV-G1 quer o expoente da moeda → follow-up.
 - **Imagens:** `listImages` foi **enriquecido** com `url`/`variants`/`status` do media (via `session.get` no serviço — sem `GET /media` separado), então a tela mostra as imagens salvas e **pola** `processing→ready`. `attach_image` retorna o mesmo DTO enriquecido.
 - **UX (pós-teste):** o dialog de edição **fecha ao salvar**; **criar** já abre o **editar** no produto novo (imagem/estoque precisam do `product_id`, então ficam lá); **seletor de itens por página** (10/20/50/100). Slug não é exibido (o usuário não precisa); o backend mantém o slug correto (auto-sufixo + acompanha em rascunho).
-- **Estoque unificado no Salvar (bug corrigido):** o campo **pré-preenche** com o estoque atual (novo `GET .../inventory`, `P2-CAT-02`) e é salvo **junto com o "Salvar"** (não havia botão separado funcionando; o "Definir" foi removido). Teste `EditProductDialog stock` (vitest) cobre o pré-preenchimento **e** o save no Salvar pra não regredir.
+- **Estoque no Salvar:** o campo **pré-preenche** com o estoque atual (`GET .../inventory`, `P2-CAT-02`) e é salvo **junto com o "Salvar"**. Teste `EditProductDialog stock` (vitest) cobre o pré-preenchimento **e** o save pra não regredir.
 
 ## Follow-ups
 - [x] **`listImages`/`attachImage` enriquecidos** com `url`/`variants`/`status` (sem `GET /media` separado) → tela mostra imagens salvas e **pola** `processing→ready`. *(feito)*

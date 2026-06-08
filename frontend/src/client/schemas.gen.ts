@@ -1061,11 +1061,6 @@ export const StoreSettingsPublicSchema = {
             ],
             title: 'Address'
         },
-        is_published: {
-            type: 'boolean',
-            title: 'Is Published',
-            default: false
-        },
         id: {
             type: 'string',
             format: 'uuid',
@@ -1203,9 +1198,17 @@ export const StoreSettingsUpdateSchema = {
 
 export const StoreStatusSchema = {
     type: 'string',
-    enum: ['draft', 'active', 'paused', 'suspended', 'blocked', 'archived'],
+    enum: ['draft', 'active', 'paused', 'suspended', 'blocked'],
     title: 'StoreStatus',
-    description: 'Lifecycle status of a store (doc 09).'
+    description: `Lifecycle status of a store (doc 09).
+
+- \`\`draft\`\`: created, not yet published (not served on the storefront).
+- \`\`active\`\`: published/live — the only status the storefront serves.
+- \`\`paused\`\`: taken offline by the merchant (reversible via publish).
+- \`\`suspended\`\`/\`\`blocked\`\`: turned off by the platform (Fase 7); the
+  dashboard guard blocks access.
+
+Removing a store is a **soft delete** (\`\`deleted_at\`\`), never a status.`
 } as const;
 
 export const TokenSchema = {

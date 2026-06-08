@@ -19,7 +19,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 ## Construído sobre as Fases 0–2 (não recriar)
 
-- **Tenancy:** `resolve_store_by_host` (`P1-TEN-01`, cache-aside `domain:{host}`); `get_active_store`/`require_permission`. `store_settings` (Fase 1) é a fonte de **contato/negócio** (`public_name`, `description`, `logo_url`, `is_published`).
+- **Tenancy:** `resolve_store_by_host` (`P1-TEN-01`, cache-aside `domain:{host}`); `get_active_store`/`require_permission`. `store_settings` (Fase 1) é a fonte de **contato/negócio** (`public_name`, `description`, `logo_url`); publicação da loja = `status == active`.
 - **Catálogo:** produtos/categorias/imagens públicos vêm do módulo `catalog` (Fase 2) — `ImagePublic` já traz `url`/`variants`.
 - **API/infra:** `Page[T]`, `AppError`/envelope (`P1-API-01`); cache Redis (doc 13); `Money`.
 - **Frontend:** o painel Vite existente (a renomear para `frontend-dashboard`).

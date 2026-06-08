@@ -29,8 +29,8 @@ class StoreBase(SQLModel):
 class Store(UUIDMixin, TimestampMixin, SoftDeleteMixin, StoreBase, table=True):
     """Store (tenant) table.
 
-    ``slug`` is unique among non-deleted stores (partial unique index), so an
-    archived store's slug can be reused.
+    ``slug`` is unique among non-deleted stores (partial unique index), so a
+    deleted store's slug can be reused.
     """
 
     __tablename__ = "store_stores"
@@ -54,7 +54,6 @@ class StoreSettingsBase(SQLModel):
     contact_phone: str | None = Field(default=None, max_length=32)
     whatsapp_number: str | None = Field(default=None, max_length=32)
     address: str | None = Field(default=None)
-    is_published: bool = Field(default=False)
 
 
 class StoreSettings(

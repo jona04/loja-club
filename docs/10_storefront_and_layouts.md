@@ -90,6 +90,8 @@ frontend-storefront/
         CheckoutPage
 ```
 
+> **`ProductCustomizer` (editor 3D) é da Fase 5.** Na Fase 3 os templates trazem Home/Product/Category (produtos de **imagem**); Cart/Checkout completam na Fase 4.
+
 ## Configuração no banco
 
 Tabelas:
@@ -123,14 +125,14 @@ Campos sugeridos:
 |---|---|
 | `store_id` | Loja |
 | `active_template_id` | Template ativo |
-| `logo_url` | Logo |
 | `banner_image_url` | Banner principal |
 | `headline` | Texto principal |
-| `description` | Descrição da home |
 | `featured_collection_id` | Coleção em destaque |
 | `primary_color` | Preparado para futuro |
 | `background_color` | Preparado para futuro |
 | `font_family` | Preparado para futuro |
+
+> **`logo_url` e a descrição da loja vêm de `store_settings` (Fase 1)** — o theme cuida só de aparência/layout, sem duplicar contato/negócio.
 
 ## Fluxo de alteração de layout
 
@@ -171,9 +173,9 @@ Dados de tema podem ser cacheados.
 Chaves possíveis:
 
 ```text
-storefront:store:{store_id}:settings
-storefront:store:{store_id}:theme
-storefront:store:{store_id}:home
+store:{store_id}:settings
+store:{store_id}:theme
+store:{store_id}:home
 ```
 
 Quando mudar layout:

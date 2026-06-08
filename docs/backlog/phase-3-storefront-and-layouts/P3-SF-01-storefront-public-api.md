@@ -22,8 +22,8 @@ Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura
 - [20 — API Contracts](../../20_api_contracts_todo.md)
 
 ## Escopo (o que ENTRA)
-- **Resolução + publicação:** reusar `resolve_store_by_host` (`P1-TEN-01`); **filtrar por loja publicada/`active`** — `draft`/`paused`/`suspended`/`blocked` → "loja não encontrada" (sem vazar).
-- **Endpoints públicos:** `GET` home (config + destaques + tema ativo), categorias, produtos públicos (**paginado**), produto por `slug`, página pública.
+- **Resolução + publicação:** reusar `resolve_store_by_host` (`P1-TEN-01`); servir **apenas loja com `status == active`** (qualquer outro status → "loja não encontrada", sem vazar).
+- **Endpoints públicos:** `GET` home (config + destaques + tema ativo), categorias, produtos públicos (**paginado**), produto por `slug`, página pública. **Só produtos `published`** (draft/archived/deletados ficam fora — novo ciclo de vida do produto).
 - **Cache de leitura** (doc 13): `store:{id}:settings|theme|home|categories|product:{slug}|menu`.
 - Consultas públicas separadas das administrativas; evitar joins pesados na vitrine.
 
@@ -50,7 +50,7 @@ Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura
 ## Definition of Done
 - [ ] Loja não publicada/host inexistente → "loja não encontrada" (sem vazar dado interno).
 - [ ] Home/categorias/produtos(paginado)/produto-por-slug retornam para loja `active`, cacheados.
-- [ ] **Modos de falha mapeados** (cache stale após edição, slug inexistente, loja despublicada com cache quente) → tratados ou Follow-up.
+- [ ] **Modos de falha mapeados** (cache stale após edição, slug inexistente, loja pausada com cache quente) → tratados ou Follow-up.
 - [ ] Itens adiados varridos → Follow-ups + README, ou "nenhum".
 
 ## Notas / Reconciliações

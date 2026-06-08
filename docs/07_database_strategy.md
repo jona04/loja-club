@@ -279,16 +279,16 @@ deleted_by_user_id
 delete_reason
 ```
 
-Quando uma ação parecer exclusão, o sistema deve arquivar ou marcar status.
+Quando uma ação for **exclusão**, é **soft delete** (`deleted_at`) — nunca hard delete, **nunca via status**. Status (`archived`/`paused`/`inactive`/`expired`) são **operacionais** (recurso fora do ar, reversível, expirado), **não** exclusão.
 
 Exemplos:
 
 - produto **deletado** = soft-delete (`deleted_at`); `archived` é um **status offline reversível**, não delete;
-- loja removida vira `archived`;
-- cupom removido vira `archived`;
+- loja **deletada** = soft delete (`deleted_at`); offline reversível = `paused`;
+- cupom **deletado** = soft delete (`deleted_at`);
 - membro removido recebe `removed_at`;
 - sessão expirada vira `expired`;
-- domínio removido vira `inactive` ou `archived`.
+- domínio **deletado** = soft delete (`deleted_at`); `inactive` = desativado (não é exclusão).
 
 Arquivos binários temporários sem valor de auditoria podem ser removidos do storage conforme política de retenção, mantendo o registro de histórico no banco.
 

@@ -64,7 +64,7 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
 ## Notas / Reconciliações
 - **Endpoints:** `POST /` (criar), `GET /` (minhas lojas, `Page`), `GET /{id}` (`ActiveStore`), `PATCH /{id}/settings`, `POST /{id}/publish|pause`, `GET /{id}/me` (papel+permissões p/ o menu da `P1-DASH-03`), e equipe `GET|POST /{id}/members`, `PATCH|DELETE /{id}/members/{user_id}`. Gating via `dependencies=[Depends(require_permission(...))]` no decorator (evita arg não-usado).
 - **Slug** derivado do nome (`slugify`, DNS-safe) com override opcional; disponibilidade via `domains.is_subdomain_available`; `currency`/`locale` default do `PLATFORM_DEFAULT_*`.
-- **`is_published`** mantido consistente com `status` no publish/pause (active↔paused). Storefront público (Fase 3) decide o que usar.
+- **Publicar/pausar** alterna o `status` da loja (`active`↔`paused`); "no ar" = `status == active`.
 - **Convite (MVP):** só convida **usuário já existente** (e-mail → `account_user`); cria membro `invited`. Convite por e-mail novo (cria conta shell + e-mail de onboarding) e o **fluxo de aceite** (`invited`→`active`) ficam para depois — ver Follow-ups.
 - **Client OpenAPI:** regeneração deixada para a `P1-DASH-02` (quem consome).
 

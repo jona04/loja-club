@@ -300,7 +300,6 @@ export type StoreSettingsPublic = {
     contact_phone?: (string | null);
     whatsapp_number?: (string | null);
     address?: (string | null);
-    is_published?: boolean;
     id: string;
     store_id: string;
     social_links?: ({
@@ -326,8 +325,16 @@ export type StoreSettingsUpdate = {
 
 /**
  * Lifecycle status of a store (doc 09).
+ *
+ * - ``draft``: created, not yet published (not served on the storefront).
+ * - ``active``: published/live — the only status the storefront serves.
+ * - ``paused``: taken offline by the merchant (reversible via publish).
+ * - ``suspended``/``blocked``: turned off by the platform (Fase 7); the
+ * dashboard guard blocks access.
+ *
+ * Removing a store is a **soft delete** (``deleted_at``), never a status.
  */
-export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked' | 'archived';
+export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked';
 
 /**
  * JSON payload containing an access token.

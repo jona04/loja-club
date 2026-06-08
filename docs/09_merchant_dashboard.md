@@ -307,14 +307,15 @@ Exemplo:
 
 A loja pode ter estados:
 
-| Status | Significado |
-|---|---|
-| `draft` | Loja ainda não publicada |
-| `active` | Loja ativa |
-| `paused` | Loja pausada pelo lojista |
-| `suspended` | Loja suspensa pela plataforma |
-| `blocked` | Loja bloqueada por regra crítica |
-| `archived` | Loja arquivada por soft delete |
+| Status | Significado | Serventia (quem lê) |
+|---|---|---|
+| `draft` | Criada, **ainda não publicada** (estado inicial do `create_store`) | vitrine **não** serve |
+| `active` | **Publicada / no ar** (`publish`) | **único status servido na vitrine** |
+| `paused` | Tirada do ar pelo lojista (`pause`); reversível via publicar | vitrine **não** serve |
+| `suspended` | Suspensa pela plataforma (Fase 7) | guard do painel **bloqueia** (403) |
+| `blocked` | Bloqueada por regra crítica (Fase 7) | guard do painel **bloqueia** (403) |
+
+> **Excluir loja = soft delete (`deleted_at`)** — fica no banco, não é status. O offline reversível é `paused`.
 
 ## Onboarding do lojista
 

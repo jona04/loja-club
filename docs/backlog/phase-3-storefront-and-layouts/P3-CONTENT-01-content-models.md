@@ -53,7 +53,7 @@ A aparência da loja (template ativo, banner, headline, destaque) e conteúdo ed
 - [ ] Itens adiados varridos → Follow-ups + README, ou "nenhum".
 
 ## Notas / Reconciliações
-- **`store_settings` (Fase 1) × `content_store_theme_settings`:** o primeiro é contato/negócio (`public_name`, `description`, `logo_url`, `contact_*`, `is_published`); o theme é **só aparência**. `logo_url`/`description` ficam em `store_settings` — fora do theme.
+- **`store_settings` (Fase 1) × `content_store_theme_settings`:** o primeiro é contato/negócio (`public_name`, `description`, `logo_url`, `contact_*`); o theme é **só aparência**. `logo_url`/`description` ficam em `store_settings` — fora do theme.
 
 ## Follow-ups
 - (preencher ao executar)
