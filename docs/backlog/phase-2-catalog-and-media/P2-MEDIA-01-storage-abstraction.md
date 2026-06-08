@@ -68,4 +68,6 @@ Criar e deixar **funcionando** (melhores práticas):
 - **Padrão "mock + smoke real env-gated"** registrado nas Fundações §10 (vale p/ o gateway na Fase 6).
 
 ## Follow-ups
-- — nenhum. (O GET público via CloudFront é coberto pela `P2-MEDIA-02`; rotação de `POSTGRES_PASSWORD`/`FIRST_SUPERUSER_PASSWORD` é tarefa do usuário fora do backlog.)
+- [x] **`_s3_client()` cacheado** (reuso process-wide, INV-F6) + `reset_client()` chamado nos fixtures `s3`/smokes. *(feito)*
+- [ ] **`_s3_client()` lazy-init sem lock:** na 1ª chamada concorrente (threadpool de rotas sync) duas threads podem criar dois clients boto3 — um é descartado. **Benigno** (boto3 é thread-safe; sem erro de correção). Eliminável com lock / `functools.cache` / criar no startup. Origem: refactor INV-F6.
+- O GET público via CloudFront é coberto pela `P2-MEDIA-02`; rotação de senhas locais (`POSTGRES_PASSWORD`/`FIRST_SUPERUSER_PASSWORD`) é tarefa do usuário.

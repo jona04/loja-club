@@ -9,7 +9,7 @@ decoupled from the queue library. Tasks are registered in
 from typing import Any
 
 from arq import create_pool
-from arq.connections import RedisSettings
+from arq.connections import ArqRedis, RedisSettings
 
 from app.core.config import settings
 from app.modules.media.tasks import generate_image_variants
@@ -24,21 +24,48 @@ def _redis_settings() -> RedisSettings:
     return RedisSettings.from_dsn(str(settings.REDIS_URL))
 
 
+_pool: ArqRedis | None = None
+
+
+async def _get_pool() -> ArqRedis:
+    """Return the shared arq Redis pool, creating it on first use (INV-F6).
+
+    Returns:
+        The process-wide :class:`~arq.connections.ArqRedis` pool.
+    """
+    global _pool
+    if _pool is None:
+        _pool = await create_pool(_redis_settings())
+    return _pool
+
+
 async def enqueue(task_name: str, *args: Any, **kwargs: Any) -> None:
     """Enqueue a background job by task name.
 
-    The rest of the app uses only this function, staying decoupled from arq.
+    The rest of the app uses only this function, staying decoupled from arq, and
+    reuses a single long-lived pool (INV-F6).
 
     Args:
         task_name: Name of a function registered in ``WorkerSettings.functions``.
         *args: Positional arguments forwarded to the task.
         **kwargs: Keyword arguments forwarded to the task.
     """
-    pool = await create_pool(_redis_settings())
-    try:
-        await pool.enqueue_job(task_name, *args, **kwargs)
-    finally:
-        await pool.aclose()
+    pool = await _get_pool()
+    await pool.enqueue_job(task_name, *args, **kwargs)
+
+
+async def close_pool() -> None:
+    """Close the shared arq pool (call on application shutdown).
+
+    Resets the cache so a later call rebuilds the pool on the active loop.
+    """
+    global _pool
+    pool, _pool = _pool, None
+    if pool is not None:
+        try:
+            await pool.aclose()
+        except RuntimeError:  # pragma: no cover - cross-loop close in tests
+            pass
 
 
 async def dummy_task(ctx: dict[str, Any], marker: str) -> str:

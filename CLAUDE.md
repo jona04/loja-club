@@ -63,6 +63,7 @@ def charge(order_id: str, amount: Money) -> Payment:
 - **Dados:** PK UUID · soft delete (nunca hard delete) · prefixo de tabela por domínio (`store_`, `catalog_`, `media_`, …) · dinheiro = `(valor em unidades menores + moeda ISO 4217)` · `store_id` (FK via `StoreScopedMixin`) em toda tabela/consulta comercial.
 - **Módulo:** `app/modules/<nome>/` — `models.py` (só tabelas + `*Base`) · `schemas.py` (DTOs) · `enums.py` · `services.py`/`repositories.py`/`routes.py`/`permissions.py` (doc 04).
 - **Infra/abstrações:** fila/worker (`arq`) via `app.core.queue.enqueue`; **todo e-mail é enfileirado no worker** (nunca inline — INV-F5); storage **S3 + CloudFront reais** desde o dev local (`app.core.storage`, região `us-east-2`).
+- **Clients externos: abrir 1×, reusar, fechar num lugar só** (DB, Redis, S3, pool do arq, HTTP `httpx`) — **nunca por chamada**. Cada um no seu módulo de `app/core/*`; o **lifespan (`app/main.py`) é o único ponto de shutdown**. Por requisição, só uma unidade de trabalho (`Session`/comando/request); o domínio usa os accessors, não cria client próprio. **INV-F6** + mapa no `backend/README.md`.
 - **Segurança:** **nunca commitar `.env` nem chaves AWS** (repo público) — `.env` é gitignored, `.env.example` versionado; em deploy, segredos via GitHub Secrets/SSM + IAM role.
 - **Testes:** unit/integração/E2E pela regra do §10; serviço externo = mock (`moto`) no CI **+** smoke real env-gated.
 

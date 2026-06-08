@@ -16,6 +16,7 @@ from app.core.config import settings
 @pytest.fixture
 def s3(monkeypatch: pytest.MonkeyPatch) -> Generator[Any, None, None]:
     with mock_aws():
+        storage.reset_client()
         monkeypatch.setattr(settings, "S3_BUCKET", "loja-club-test")
         monkeypatch.setattr(settings, "CDN_BASE_URL", "https://cdn.test")
         client = boto3.client("s3", region_name=settings.S3_REGION)
@@ -60,6 +61,7 @@ def test_public_url_uses_cdn(monkeypatch: pytest.MonkeyPatch) -> None:
 )
 def test_real_s3_roundtrip() -> None:
     """Env-gated smoke against the real dev bucket (skipped without creds)."""
+    storage.reset_client()
     key = f"test/smoke-{uuid.uuid4()}.txt"
     storage.upload_fileobj(key, io.BytesIO(b"smoke"), "text/plain")
     client = boto3.client(

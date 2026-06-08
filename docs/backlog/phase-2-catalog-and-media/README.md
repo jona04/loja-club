@@ -45,7 +45,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 1 | [P2-MEDIA-01](./P2-MEDIA-01-storage-abstraction.md) | Abstração de storage (S3/boto3) + config + setup AWS dev | **done** | — |
 | 2 | [P2-CAT-01](./P2-CAT-01-catalog-models.md) | Modelos do `catalog` (produtos/variações/imagens/categorias/estoque/coleções) | **done** | — |
 | 3 | [P2-MEDIA-02](./P2-MEDIA-02-media-pipeline.md) | `media_files` + pipeline de upload + worker de thumbnails | **done** | P2-MEDIA-01 |
-| 4 | [P2-CAT-02](./P2-CAT-02-catalog-service-routes.md) | `catalog`: serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens) | todo | P2-CAT-01, P2-MEDIA-02 |
+| 4 | [P2-CAT-02](./P2-CAT-02-catalog-service-routes.md) | `catalog`: serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens) | **done** | P2-CAT-01, P2-MEDIA-02 |
 | 5 | [P2-FE-01](./P2-FE-01-products-screen.md) | Painel: tela de Produtos + componente de upload de imagem | todo | P2-CAT-02, P2-MEDIA-02 |
 
 ## Ordem sugerida de execução
@@ -68,3 +68,7 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 →
 - [ ] **`enqueue` falho após original no S3** → `media_files` preso em `processing` (sem reconciliação de órfãos). Origem: `P2-MEDIA-02`.
 - [ ] **Worker falho** (`generate_variants`) não marca `status=failed` + sem retry. Origem: `P2-MEDIA-02`.
 - [ ] **Tamanho do upload validado após `file.read()`** (risco de memória) — checar antes via `Content-Length`/streaming. Origem: `P2-MEDIA-02`.
+- [ ] **Race no slug** → `IntegrityError` vira 500 em vez de 409 (tratar no service). Origem: `P2-CAT-02`.
+- [ ] **Estoque sem índice único** `(store_id, product_id, variant_id)` → upsert pode duplicar linha. Origem: `P2-CAT-02`.
+- [ ] **Archive de produto não cascateia** para variações/imagens/estoque (órfãos ativos). Origem: `P2-CAT-02`.
+- [ ] **Lazy-init de client sem lock** (`storage._s3_client`, `queue._get_pool`, INV-F6): 1ª chamada concorrente pode criar 2 clients/pools (um descartado) — **benigno**; `close_pool` engole `RuntimeError` cross-loop **só em teste**. Origem: refactor INV-F6 (`P2-MEDIA-01`/`P0-CFG-04`).

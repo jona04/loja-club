@@ -64,6 +64,11 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 - **INV-F3 — Cache no Redis com chaves padronizadas** e **invalidação centralizada** (doc [13](../13_performance_cache_and_cdn.md)). → `P0-CFG-03` + Fases 1/3.
 - **INV-F4 — Notificações por canal abstrato** (e-mail agora; SMS/WhatsApp na Fase 6) atrás de uma interface. → Fase 4 (e-mail), Fase 6 (SMS/WhatsApp).
 - **INV-F5 — Todo e-mail é enfileirado no worker** (task `send_email` via `enqueue()`), **nunca enviado inline** na requisição: o request valida/prepara e enfileira; o worker renderiza (MJML) e envia (SMTP/SES), com retry. Vale para **todos** os e-mails — transacionais (recuperação de senha, convite de membro), de pedido e de billing. → task em `P0-CFG-04`; cada e-mail enfileira de onde nasce.
+- **INV-F6 — Clients de serviço externo: abrir uma vez, reusar, fechar num lugar só.** Cada client mora no seu módulo de `app/core/*` (coesão; e o `worker` também os usa, sem app FastAPI — por isso não vivem em `app.state`). O **lifespan (`app/main.py`) é o único ponto de shutdown** e libera todos.
+  - **Sync** (pool conecta lazy; singleton de módulo): DB `engine` (`db`), Redis (`cache`), boto3/S3 (`storage`, client cacheado).
+  - **Async** (criados no event loop; lazy via accessor): pool do arq (`queue`) e **HTTP** (um `httpx.AsyncClient` compartilhado — gateway de pagamento, API de geração 3D etc. usam **esse**, não criam o próprio).
+  - **Por requisição** pega-se só uma *unidade de trabalho* — uma `Session`, um comando no pool, uma request — **nunca** um client novo. O domínio usa os accessors de `app/core/*`.
+  - Cada módulo expõe `close*`/`dispose`; o lifespan chama todos (o worker libera os seus no próprio shutdown). Mapa dos clients em [`backend/README.md`](../backend/README.md). Em teste, `storage.reset_client()` recria o S3 dentro do `mock_aws`.
 - **GARGALO:** acoplar direto a um SDK (fila/storage/gateway) trava troca de provedor. Mitigação: interfaces finas desde já.
 
 ## 7. Pagamentos & split

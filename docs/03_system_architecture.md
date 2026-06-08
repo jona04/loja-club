@@ -159,6 +159,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 17. Registros de negócio usam soft delete/status arquivado.
 18. Tarefas pesadas devem ir para fila.
 19. Relatórios pesados não devem impactar a navegação pública.
+20. Clients de serviço externo (banco, Redis, storage, fila, HTTP) são abertos uma vez, reusados, e liberados num único ponto (lifespan). Ver INV-F6 nas Fundações.
 
 ## Estratégia de crescimento
 

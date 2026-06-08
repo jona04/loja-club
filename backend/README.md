@@ -136,6 +136,25 @@ arq has **no official web dashboard** (unlike Celery's Flower). The
 the built-in options; job/result payloads are pickled, so only the health-check
 key is plain text.
 
+## Shared external clients (INV-F6)
+
+External clients are created **once and reused** — never per call. Each lives in
+its `app/core/*` module (so the `worker`, which has no FastAPI app, can use them
+too). The **app lifespan** ([`app/main.py`](app/main.py)) is the **single
+shutdown point** that releases them all (the worker releases its own on its
+shutdown).
+
+| Client | Module | Accessor | Lifecycle |
+|---|---|---|---|
+| DB engine | `core/db.py` | `engine` → a `Session` per request (`get_db`) | created at import · `dispose_engine()` on shutdown |
+| Redis | `core/cache.py` | `get_redis()` | created at import · `close()` on shutdown |
+| S3 (boto3) | `core/storage.py` | the `storage` functions | lazily cached · `close_client()` on shutdown · `reset_client()` in tests |
+| arq pool | `core/queue.py` | `enqueue()` | lazily created · `close_pool()` on shutdown |
+| HTTP (httpx) | `core/` (added when first needed) | a shared `httpx.AsyncClient` | lazily created · closed on shutdown |
+
+Per request you take **one unit of work** (a `Session`, a Redis command, an HTTP
+request) — never a new client. Domain code never instantiates its own client.
+
 ## Email
 
 All email is **enqueued to the worker** (task `send_email`), never sent inline

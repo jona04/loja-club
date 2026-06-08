@@ -30,6 +30,7 @@ def _png_bytes(color: str = "red", size: tuple[int, int] = (1200, 900)) -> bytes
 @pytest.fixture
 def s3(monkeypatch: pytest.MonkeyPatch) -> Generator[Any, None, None]:
     with mock_aws():
+        storage.reset_client()
         monkeypatch.setattr(settings, "S3_BUCKET", "loja-club-test")
         monkeypatch.setattr(settings, "CDN_BASE_URL", "https://cdn.test")
         client = boto3.client("s3", region_name=settings.S3_REGION)
@@ -163,6 +164,7 @@ def test_upload_route_creates_media(
 )
 def test_real_media_pipeline_smoke(db: Session) -> None:
     """Env-gated smoke: real S3 upload + variants + a CloudFront GET."""
+    storage.reset_client()
     store = create_store(db)
     media = services.store_original(
         db,

@@ -87,6 +87,7 @@ Estas decisões alinham o template aos docs e evitam divergência:
 8. **Pagamento fica para a Fase 6.** Até lá, checkout cria pedido `pending_payment` e o pagamento é combinado fora da plataforma (doc [17](../17_v1_roadmap.md)).
 9. **Ambiente:** toda a V1 é **dev**. Fases 0–4 rodam **local** (Docker Compose); Fases 6–7 sobem **no ar na AWS (EC2)**. **Storage:** AWS S3 + CloudFront **reais desde o dev local** (sem MinIO), via boto3. Produção (ECS/Fargate) é **pós-V1**. Doc [12](../12_aws_infrastructure_and_deployment.md).
 10. **Global desde a base — nada assume Brasil.** Dinheiro é sempre `(valor + moeda ISO 4217)` (expoente não fixo em 2); telefone **E.164 para qualquer país** (lib, sem `+55` hard-coded); endereço **país-aware** (ISO 3166-1); `currency`/`locale` por loja e por cliente; timestamps em **UTC**. Base em `P0-MOD-05`; convenções completas no doc de Fundações.
+11. **Clients de serviço externo abrem uma vez e são reusados** (DB, Redis, S3, pool do arq, HTTP `httpx`): **sync** = singleton de módulo em `app/core/*`; **async** (arq, httpx) = criados lazy por accessor e **fechados no lifespan** (`app/main.py`). Nunca abrir/fechar por chamada; por requisição usa-se só uma *unidade de trabalho*. Detalhe: **INV-F6** nas Fundações.
 
 ## Decisões pendentes que afetam o MVP
 

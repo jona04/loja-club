@@ -12,19 +12,45 @@ import boto3  # type: ignore[import-untyped]  # boto3 ships no type stubs
 
 from app.core.config import settings
 
+_client: Any = None
+
 
 def _s3_client() -> Any:
-    """Build an S3 client from settings (region ``S3_REGION``, default us-east-2).
+    """Return the shared S3 client, creating it on first use (INV-F6).
+
+    The boto3 client (and its connection pool) is reused process-wide. Tests
+    call :func:`reset_client` to rebuild it inside an active ``moto`` context.
 
     Returns:
-        A boto3 S3 client. A fresh client per call keeps tests (moto) correct.
+        A cached boto3 S3 client.
     """
-    return boto3.client(
-        "s3",
-        region_name=settings.S3_REGION,
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID or None,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY or None,
-    )
+    global _client
+    if _client is None:
+        _client = boto3.client(
+            "s3",
+            region_name=settings.S3_REGION,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID or None,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY or None,
+        )
+    return _client
+
+
+def reset_client() -> None:
+    """Drop the cached S3 client so the next call rebuilds it.
+
+    Used by tests to recreate the client inside an active ``moto`` mock context
+    (or with the current credentials).
+    """
+    global _client
+    _client = None
+
+
+def close_client() -> None:
+    """Close and drop the cached S3 client (on app shutdown, INV-F6)."""
+    global _client
+    if _client is not None:
+        _client.close()
+        _client = None
 
 
 def upload_fileobj(key: str, fileobj: BinaryIO, content_type: str) -> None:

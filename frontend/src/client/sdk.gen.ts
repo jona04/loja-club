@@ -3,7 +3,486 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogUnpublishProductData, CatalogUnpublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogArchiveCategoryData, CatalogArchiveCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogArchiveVariantData, CatalogArchiveVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class CatalogService {
+    /**
+     * List Products
+     * List the store's products (paginated).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_ProductPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listProducts(data: CatalogListProductsData): CancelablePromise<CatalogListProductsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/products',
+            path: {
+                store_id: data.storeId
+            },
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Product
+     * Create a draft product.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static createProduct(data: CatalogCreateProductData): CancelablePromise<CatalogCreateProductResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Product
+     * Get a product by id.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static getProduct(data: CatalogGetProductData): CancelablePromise<CatalogGetProductResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/products/{product_id}',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Product
+     * Apply a partial update to a product.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.requestBody
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateProduct(data: CatalogUpdateProductData): CancelablePromise<CatalogUpdateProductResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/products/{product_id}',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Publish Product
+     * Publish a product.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static publishProduct(data: CatalogPublishProductData): CancelablePromise<CatalogPublishProductResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/publish',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Unpublish Product
+     * Unpublish a product (back to draft).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static unpublishProduct(data: CatalogUnpublishProductData): CancelablePromise<CatalogUnpublishProductResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/unpublish',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Archive Product
+     * Archive a product (soft delete).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns ProductPublic Successful Response
+     * @throws ApiError
+     */
+    public static archiveProduct(data: CatalogArchiveProductData): CancelablePromise<CatalogArchiveProductResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/archive',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Categories
+     * List the store's categories (paginated).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_CategoryPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listCategories(data: CatalogListCategoriesData): CancelablePromise<CatalogListCategoriesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/categories',
+            path: {
+                store_id: data.storeId
+            },
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Category
+     * Create a category.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns CategoryPublic Successful Response
+     * @throws ApiError
+     */
+    public static createCategory(data: CatalogCreateCategoryData): CancelablePromise<CatalogCreateCategoryResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/categories',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Category
+     * Apply a partial update to a category.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.categoryId
+     * @param data.requestBody
+     * @returns CategoryPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateCategory(data: CatalogUpdateCategoryData): CancelablePromise<CatalogUpdateCategoryResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/categories/{category_id}',
+            path: {
+                store_id: data.storeId,
+                category_id: data.categoryId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Archive Category
+     * Archive (soft-delete) a category.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.categoryId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static archiveCategory(data: CatalogArchiveCategoryData): CancelablePromise<CatalogArchiveCategoryResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/categories/{category_id}/archive',
+            path: {
+                store_id: data.storeId,
+                category_id: data.categoryId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Variants
+     * List a product's variants (paginated).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_VariantPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listVariants(data: CatalogListVariantsData): CancelablePromise<CatalogListVariantsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/variants',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Variant
+     * Create a variant under a product.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.requestBody
+     * @returns VariantPublic Successful Response
+     * @throws ApiError
+     */
+    public static createVariant(data: CatalogCreateVariantData): CancelablePromise<CatalogCreateVariantResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/variants',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Variant
+     * Apply a partial update to a variant.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.variantId
+     * @param data.requestBody
+     * @returns VariantPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateVariant(data: CatalogUpdateVariantData): CancelablePromise<CatalogUpdateVariantResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/variants/{variant_id}',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId,
+                variant_id: data.variantId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Archive Variant
+     * Archive (soft-delete) a variant.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.variantId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static archiveVariant(data: CatalogArchiveVariantData): CancelablePromise<CatalogArchiveVariantResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/variants/{variant_id}/archive',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId,
+                variant_id: data.variantId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Images
+     * List a product's images (ordered by position).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns ImagePublic Successful Response
+     * @throws ApiError
+     */
+    public static listImages(data: CatalogListImagesData): CancelablePromise<CatalogListImagesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/images',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Attach Image
+     * Link a media file to a product.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.requestBody
+     * @returns ImagePublic Successful Response
+     * @throws ApiError
+     */
+    public static attachImage(data: CatalogAttachImageData): CancelablePromise<CatalogAttachImageResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/images',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Remove Image
+     * Remove (soft-delete) a product image link.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.imageId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static removeImage(data: CatalogRemoveImageData): CancelablePromise<CatalogRemoveImageResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/images/{image_id}',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId,
+                image_id: data.imageId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Set Inventory
+     * Set the stock quantity for a product (optionally a variant).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @param data.requestBody
+     * @returns InventoryPublic Successful Response
+     * @throws ApiError
+     */
+    public static setInventory(data: CatalogSetInventoryData): CancelablePromise<CatalogSetInventoryResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/inventory',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class HealthService {
     /**
@@ -131,6 +610,42 @@ export class LoginService {
             path: {
                 email: data.email
             },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class MediaService {
+    /**
+     * Upload Media
+     * Upload an image: store the original on S3 and enqueue variant generation.
+     *
+     * Args:
+     * store_id: The active store id from the path.
+     * session: Active database session.
+     * file: The uploaded image.
+     * _perm: Authorization (requires ``catalog.product.update``).
+     * owner_type: What the media belongs to (default ``product``).
+     *
+     * Returns:
+     * The created media file (status ``processing``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.formData
+     * @returns MediaPublic Successful Response
+     * @throws ApiError
+     */
+    public static uploadMedia(data: MediaUploadMediaData): CancelablePromise<MediaUploadMediaResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/media',
+            path: {
+                store_id: data.storeId
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
             errors: {
                 422: 'Validation Error'
             }
