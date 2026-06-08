@@ -29,11 +29,19 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 - **Pillow** (dep) para gerar thumbnails no worker → `P2-MEDIA-02` *(decisão registrada)*.
 - Config `S3_BUCKET`/`S3_REGION`/`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`/`CDN_BASE_URL` em `config.py`/`.env` → `P2-MEDIA-01`.
 
-**Externo / manual (você provisiona — bloqueia o teste ponta-a-ponta de mídia):**
-- ⚠️ **AWS:** bucket **S3 de dev** + distribuição **CloudFront** + usuário/credenciais **IAM** com acesso mínimo (DEC-8, doc [12](../../12_aws_infrastructure_and_deployment.md)). Usado **inclusive do dev local** (sem MinIO). Sem isso, só os testes com `moto` rodam.
+**AWS dev — provisionada de forma guiada (não é "você se vira"):**
+- ⚠️ Bucket **S3 dev** (privado) + **CloudFront/OAC** + **IAM least-privilege** (DEC-8, doc [12](../../12_aws_infrastructure_and_deployment.md)). A **`P2-MEDIA-01` provisiona isso COM você** (eu forneço passos/policy; você executa na sua conta e me passa os valores) e deixa **verificado por smoke real**. Detalhes na seção abaixo. **Prod = Fase 6.**
 
 **Conteúdo (responsabilidade Loja Club):**
 - ⚠️ **GLBs 3D** (caneca, squeeze, camisa) com áreas imprimíveis (doc [22](../../22_product_customization_3d.md)). Até existirem, `P2-CUST-01` faz **seed mínimo** (registros + placeholders) para destravar o resto.
+
+## AWS dev — guiado + garantia de funcionamento
+
+- **Região (1ª etapa):** **Ohio (`us-east-2`)** — S3 + CloudFront + IAM na mesma região.
+- **Quem faz o quê:** eu forneço o passo a passo (console/CLI), a **policy IAM least-privilege** e a config de **OAC/CORS/lifecycle**; **você executa** na sua conta e me devolve `S3_REGION`/`S3_BUCKET`/`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`/`CDN_BASE_URL`. (Não acesso sua conta; quando for criar algo, te guio até concluir.)
+- **Best practices (dev):** bucket **privado** (Block Public Access) → público via **CloudFront/OAC**; arte do cliente **privada** via **presigned**; IAM **mínimo**; lifecycle p/ temporários.
+- **Garantia de que funciona (local/dev):** toda task que usa AWS tem **2 níveis de teste** — `moto` (CI, sem credencial) **e** **smoke real** env-gated (sobe/baixa de verdade no bucket dev + GET via CloudFront; pulado no CI sem secrets). É o que prova o provisionamento + credenciais.
+- **Prod (2ª etapa, Fase 6):** bucket/distribuição de prod + **IAM role** (sem chave longa) + segredos via SSM.
 
 ## Tasks
 

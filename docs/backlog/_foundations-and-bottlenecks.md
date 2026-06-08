@@ -112,6 +112,7 @@ Não duplicar cobertura de ramos no nível de cima.
 - Backend: `pytest` com `tests/unit` e `tests/integration`; **isolamento por teste** (transação + rollback); `coverage` + `mypy strict`.
 - Frontend: **`vitest` + Testing Library** (unit/componente, foco em comportamento) + **Playwright** (E2E).
 - Mocks: **S3 via `moto`/botocore stubber**, gateway/e-mail/relógio/random nas fronteiras.
+- **Serviço externo real (S3/CloudFront/gateway):** além do **mock no CI**, um **smoke real env-gated** (roda com credenciais em local/dev; **pulado** sem secrets) prova que **provisionamento + credenciais funcionam de fato**. A task que depende do serviço **provisiona + verifica** (não assume que "alguém configurou"). → AWS na **Fase 2** (`P2-MEDIA-01`); gateway na **Fase 5**.
 
 **Onde:** fundação de testes em `P0-TEST-01`; unit de lógica pura junto de onde a lógica nasce (Money em `P0-MOD-05`; dedup/telefone na Fase 4; split na Fase 5); **fixtures/factories multi-tenant + testes de isolamento na Fase 1** (precisam de `Store`).
 

@@ -23,6 +23,7 @@ Pontos importantes:
 - Mesmo no **dev local**, os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront de verdade**, com implementação normal via SDK (boto3). **Não usar MinIO** nem stand-ins locais de storage.
 - O sistema só vai **para o ar** nas Fases 5–6, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
 - A migração para **produção** (ECS/Fargate + ALB etc.) é um passo **posterior à V1** e troca apenas a camada de orquestração/entrada, mantendo o mesmo backend, banco e storage.
+- **Região AWS (1ª etapa):** **Ohio (`us-east-2`)** — todos os recursos de dev (S3, CloudFront, IAM e, depois, compute) na mesma região. A região de produção é revisada na migração pós-V1.
 
 ## Ambientes
 

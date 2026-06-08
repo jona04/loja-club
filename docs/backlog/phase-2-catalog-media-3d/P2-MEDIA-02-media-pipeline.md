@@ -40,14 +40,15 @@ Pipeline de imagem do doc [13](../../13_performance_cache_and_cdn.md): valida �
 3. Worker de variantes (Pillow) + atualização do registro.
 
 ## Testes
-> Fundações §10. S3 e worker são fronteiras reais → integração (`moto` + worker burst).
+> Fundações §10. S3 e worker são fronteiras reais. **Dois níveis** (mock + real), como em `P2-MEDIA-01`.
 
-- **Cobrir:** validação rejeita tipo/tamanho inválido; upload grava original (moto) + cria `media_files`; worker gera as 4 variantes e persiste `variants`; isolamento por `store_id`.
+- **Mock (CI/offline):** `moto` + worker burst — validação rejeita tipo/tamanho inválido; upload grava original + cria `media_files`; worker gera as 4 variantes e persiste `variants`; isolamento por `store_id`.
+- **Real (env-gated):** com credenciais dev, sobe uma imagem real → original no S3 → worker gera variantes no S3 → **GET de uma variante via CloudFront** retorna a imagem. Pulado no CI sem secrets; roda local/dev.
 
 ## Definition of Done
 - [ ] Upload validado → S3 (original) + `media_files`; worker gera `thumbnail/card/product/zoom` → S3; servidas por CDN.
 - [ ] Pillow adicionado; decisão de lib registrada nas Fundações.
-- [ ] Testes (moto + worker) verdes.
+- [ ] Testes `moto` verdes (CI) **+ smoke real (S3+CloudFront) verde** (local/dev).
 - [ ] Itens adiados varridos → Follow-ups + README (ou "nenhum").
 
 ## Notas / Reconciliações

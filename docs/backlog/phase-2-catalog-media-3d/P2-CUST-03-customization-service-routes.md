@@ -39,13 +39,15 @@ A API das sessões de personalização (doc [22](../../22_product_customization_
 3. Visão do lojista (listar/baixar/status) + worker de expiração.
 
 ## Testes
-> Fundações §10. Permissão/arquivo privado/isolamento são fronteiras reais → integração.
+> Fundações §10. Permissão/arquivo privado/isolamento são fronteiras reais. **Dois níveis** (mock + real).
 
-- **Cobrir:** ciclo da sessão (criar→autosave→upload→aprovar); aprovar congela o snapshot; lojista só vê sessões da própria loja (isolamento); arte é privada (URL assinada, não pública); expiração → `expired`+`deleted_at`.
+- **Mock (CI/offline):** `moto` — ciclo da sessão (criar→autosave→upload→aprovar); aprovar congela o snapshot; lojista só vê sessões da própria loja (isolamento); arte privada (URL assinada); expiração → `expired`+`deleted_at`.
+- **Real (env-gated):** com credenciais dev, a arte vai para o prefixo **privado** do S3 real; **presigned GET funciona** e o objeto **não** é acessível por URL pública. Pulado no CI sem secrets; roda local/dev.
 
 ## Definition of Done
 - [ ] Sessões (criar/autosave/upload/preview/aprovar) + visão do lojista + expiração por worker.
 - [ ] Arte privada por URL assinada; isolamento por `store_id`.
+- [ ] Testes `moto` verdes (CI) **+ smoke real verde** (arte no prefixo privado, presigned ok, sem acesso público).
 - [ ] Client regenerado; lint/tests/cobertura verdes.
 - [ ] Itens adiados varridos → Follow-ups + README (ou "nenhum").
 
