@@ -59,5 +59,5 @@ O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/
 - O painel do lojista será dividido por módulos, permitindo bloqueio por permissão e por plano.
 - Um usuário poderá gerenciar várias lojas, e uma loja poderá ter vários usuários.
 - A V1 deve ser completa e funcional, mas sem microserviços e sem Kubernetes no primeiro momento.
-- Toda a V1 é ambiente de **dev**: Fases 0–4 rodam **local** (com S3/CloudFront reais) e Fases 5–6 sobem na AWS com **EC2** + Docker Compose + Traefik.
+- Toda a V1 é ambiente de **dev**: Fases 0–4 rodam **local** (com S3/CloudFront reais) e Fases 6–7 sobem na AWS com **EC2** + Docker Compose + Traefik.
 - A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**.

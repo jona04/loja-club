@@ -2,11 +2,11 @@
 id: P2-FE-01
 title: Painel — tela de Produtos + componente de upload de imagem
 phase: 2
-etapa: "Etapa 5/6 — Frontend (painel)"
+etapa: "Etapa 5 — Frontend (painel)"
 area: FE
 status: todo
 depends_on: [P2-CAT-02, P2-MEDIA-02]
-blocks: [P2-FE-02]
+blocks: []
 tests: [unit, e2e]
 ---
 
@@ -27,7 +27,7 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - Gating de UI: salvar/publicar exigem a permissão (ex.: sem `catalog.product.update` vê mas não salva). Regenerar client se preciso.
 
 ## Fora de escopo (o que NÃO entra)
-- Personalização 3D no produto → `P2-FE-02`. Storefront → Fase 3.
+- Personalização 3D no produto → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)**. Storefront → Fase 3.
 
 ## Arquivos a criar/alterar
 - `frontend/src/` — rota/tela de Produtos, componente de upload, hooks; `lib/menu.ts` (módulo Produtos).

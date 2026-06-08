@@ -60,8 +60,6 @@ Exemplos:
 | `billing_plans` | Planos da Loja Club |
 | `platform_settings` | Configurações globais |
 | `content_theme_templates` | Templates globais disponíveis |
-| `customization_3d_models` | Modelos 3D globais criados pela Loja Club |
-| `customization_3d_model_versions` | Versões dos modelos 3D |
 | `feature_flags` | Flags de recursos |
 | `platform_admin_roles` | Papéis globais internos |
 
@@ -135,10 +133,12 @@ Exemplos:
 
 ### Personalização 3D
 
+> **Fase 5 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 5](backlog/phase-5-3d-products.md).
+
 | Tabela | Função |
 |---|---|
-| `customization_3d_models` | Biblioteca global de modelos 3D da Loja Club |
-| `customization_3d_model_versions` | Versões dos arquivos e parâmetros do modelo |
+| `customization_3d_models` | Modelos 3D do lojista (por loja; gerados via API) |
+| `customization_3d_model_versions` | Versões dos arquivos (GLB) e parâmetros do modelo |
 | `customization_product_settings` | Configuração de personalização por produto/loja |
 | `customization_sessions` | Sessões salvas de personalização do cliente |
 | `customization_uploads` | Arquivos enviados pelo cliente |

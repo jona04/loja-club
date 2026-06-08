@@ -109,7 +109,7 @@ Responsabilidades:
 - gerenciar planos;
 - ver webhooks com erro;
 - gerenciar templates/layouts;
-- gerenciar biblioteca global de modelos 3D;
+- configurar a integração da API de geração 3D (Fase 5);
 - consultar logs de auditoria;
 - suporte ao lojista.
 
@@ -273,7 +273,7 @@ Fluxo:
 
 1. cliente acessa produto personalizável;
 2. clica em `Personalizar`;
-3. storefront carrega modelo 3D publicado pela Loja Club;
+3. storefront carrega o modelo 3D do lojista (gerado via API);
 4. cliente envia imagem;
 5. cliente ajusta cor, posição, escala e rotação conforme o modelo permitir;
 6. sessão é salva automaticamente;

@@ -85,21 +85,20 @@ Funcionalidades:
 - definir preço;
 - definir slug;
 - marcar produto como personalizável;
-- vincular modelo 3D disponível;
+- *(Fase 5)* vincular um modelo 3D gerado pelo lojista (via API);
 - marcar produto como destaque.
 
-### Produtos personalizáveis
+### Produtos personalizáveis (Fase 5)
 
-O lojista deve conseguir ativar personalização 3D em produtos compatíveis.
+> **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 5 (Produtos 3D)**; na **Fase 6** fica restrita a planos pagos. Ver [Fase 5](./backlog/phase-5-3d-products.md).
 
-Na V1, os modelos 3D são criados e publicados pela Loja Club.
-O lojista escolhe um modelo disponível para o produto, como caneca, squeeze ou camisa.
+Na Fase 5, o lojista **gera o próprio modelo 3D via API de terceiros** (Meshy/Tripo3D/Hyper3D) a partir de uma imagem/descrição do produto — **não há catálogo da plataforma**. O modelo é **por loja**.
 
-Funcionalidades:
+Funcionalidades (Fase 5):
 
 - habilitar/desabilitar personalização;
-- escolher modelo 3D publicado pela Loja Club;
-- definir se cor do produto pode ser alterada;
+- **gerar o modelo 3D via API** (a partir de imagem/descrição);
+- definir se a cor do produto pode ser alterada;
 - definir observações de produção;
 - ver preview básico do modelo;
 - manter imagens tradicionais para listagem e fallback.
@@ -318,7 +317,7 @@ A loja pode ter estados:
 
 ## Onboarding do lojista
 
-A V1 deve ter checklist inicial — **construído incrementalmente** conforme os módulos chegam (passo 1 na Fase 1; produto/3D na Fase 2; layout na Fase 3; pagamento na Fase 5). O MVP da Fase 1 entrega apenas o **passo 1 (criar loja)** via CTA; o checklist completo é incremento posterior:
+A V1 deve ter checklist inicial — **construído incrementalmente** conforme os módulos chegam (passo 1 na Fase 1; produto/3D na Fase 2; layout na Fase 3; pagamento na Fase 6). O MVP da Fase 1 entrega apenas o **passo 1 (criar loja)** via CTA; o checklist completo é incremento posterior:
 
 ```text
 1. Criar loja

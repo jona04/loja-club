@@ -198,4 +198,4 @@ Cliente final não precisa usar login na V1.
 - [ ] Filtros (por endpoint, conforme a feature).
 - [ ] Schemas por módulo (cada fase).
 - [ ] Contratos públicos do storefront (Fase 3).
-- [ ] Contratos de webhook (Fase 5).
+- [ ] Contratos de webhook (Fase 6).

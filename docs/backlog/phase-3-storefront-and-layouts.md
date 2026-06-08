@@ -4,6 +4,8 @@
 
 Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront_and_layouts.md), [22](../22_product_customization_3d.md), [13](../13_performance_cache_and_cdn.md), [21](../21_design_system_todo.md), [16](../16_testing_strategy.md).
 
+> **Nota:** o storefront base (home/categoria/produto, templates) é desta fase; o **editor 3D + personalização** é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)** (modelos gerados pelo lojista via API).
+
 ## Definition of Done da fase
 
 - `frontend-storefront` (Next.js) resolve a loja pelo `Host` e renderiza home/categoria/produto.
@@ -43,7 +45,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 > Experiência interativa da página de produto, não um app à parte. Doc [22](../22_product_customization_3d.md)/[10](../10_storefront_and_layouts.md).
 
-- [ ] Carregar GLB do modelo+versão publicado pela Loja Club (CDN).
+- [ ] Carregar o GLB do modelo+versão **do lojista** (gerado via API, servido por CDN).
 - [ ] Upload de arte/imagem pelo cliente; aplicar como textura.
 - [ ] Texto (nome/frase) com fonte, cor, tamanho dentro da área imprimível.
 - [ ] Cor do produto quando o modelo permitir.

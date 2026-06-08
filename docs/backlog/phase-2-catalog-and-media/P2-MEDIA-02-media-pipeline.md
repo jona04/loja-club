@@ -6,7 +6,7 @@ etapa: "Etapa 5 — Mídia e storage"
 area: MEDIA
 status: todo
 depends_on: [P2-MEDIA-01]
-blocks: [P2-CAT-02, P2-CUST-03, P2-FE-01]
+blocks: [P2-CAT-02, P2-FE-01]
 tests: [integration]
 ---
 
@@ -28,7 +28,7 @@ Pipeline de imagem do doc [13](../../13_performance_cache_and_cdn.md): valida �
 - **Dep:** adicionar **Pillow** (decisão de lib de imagem → registrar nas Fundações).
 
 ## Fora de escopo (o que NÃO entra)
-- Vincular imagem a produto → `P2-CAT-02`. Arte privada do cliente → `P2-CUST-03` (reusa o `storage`, com presigned).
+- Vincular imagem a produto → `P2-CAT-02`. Arte privada do cliente → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)** (reusa o `storage`, com presigned).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/media/models.py`/`enums.py`/`schemas.py`/`services.py`/`routes.py` (preencher).

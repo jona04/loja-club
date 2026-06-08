@@ -1,4 +1,4 @@
-# Fase 5 — Dev online na AWS: conta do cliente, pagamentos e monetização
+# Fase 6 — Dev online na AWS: conta do cliente, pagamentos e monetização
 
 > Roadmap: Etapas 15–18. O sistema **vai para o ar** (ambiente **dev**) em **EC2** e ganha conta do cliente, gateway com split e billing.
 
@@ -30,12 +30,12 @@ Docs de referência: [12](../12_aws_infrastructure_and_deployment.md), [23](../2
 - [ ] **RDS PostgreSQL** (single-AZ, backups automáticos). Doc [12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **Redis**: container no EC2 ou **ElastiCache**.
 - [ ] **S3 + CloudFront** do ambiente online (implementação já existe desde o dev local; apontar para bucket/distribuição do ambiente). Doc [12](../12_aws_infrastructure_and_deployment.md)/[13](../13_performance_cache_and_cdn.md).
-- [ ] **Route 53**: `*.loja.club`, `api.`, `app.` (e `admin.` quando a Fase 6 entrar). Doc [06](../06_multitenancy_and_domains.md)/[12](../12_aws_infrastructure_and_deployment.md).
+- [ ] **Route 53**: `*.loja.club`, `api.`, `app.` (e `admin.` quando a Fase 7 entrar). Doc [06](../06_multitenancy_and_domains.md)/[12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **SSL** via Traefik/Let's Encrypt (ACM fica para produção). Doc [12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **SES/SMTP real** para os e-mails (substitui o Mailcatcher do dev local). Doc [12](../12_aws_infrastructure_and_deployment.md)/[21](../21_design_system_todo.md).
 - [ ] **Não expor** Adminer/Mailcatcher/Traefik dashboard. Doc [04](../04_fastapi_template_adaptation.md)/[14](../14_security_strategy.md).
 - [ ] **Segredos** fora do código (env seguro/SSM). Doc [14](../14_security_strategy.md).
-- [ ] Compose dedicado do ambiente online (ex.: `compose.aws.yml`) + script de deploy manual (o pipeline automatizado vem na Fase 6/Etapa 21).
+- [ ] Compose dedicado do ambiente online (ex.: `compose.aws.yml`) + script de deploy manual (o pipeline automatizado vem na Fase 7/Etapa 21).
 - [ ] Health checks acessíveis (`/health`, `/health/db`, `/health/redis`). Doc [15](../15_observability_and_operations.md).
 
 ### DoD da etapa
@@ -120,7 +120,7 @@ Doc [02](../02_business_model_and_rules.md), [07](../07_database_strategy.md), [
 
 ### Frontend (painel — Plano)
 - [ ] Plano atual, comissão, mensalidade, status, faturas, trocar plano, alerta de inadimplência. Doc [09](../09_merchant_dashboard.md).
-- [ ] (Gestão de planos pela Loja Club é no `frontend-admin` — Fase 6.)
+- [ ] (Gestão de planos pela Loja Club é no `frontend-admin` — Fase 7.)
 
 ### Testes (doc [16](../16_testing_strategy.md))
 - [ ] gating por plano; comissão aplicada no split; inadimplência bloqueia recursos/loja.

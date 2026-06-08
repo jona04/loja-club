@@ -1,8 +1,10 @@
 # Fase 4 — Venda sem pagamento online (dev local)
 
-> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela preço e personalização, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 5.
+> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela preço e personalização, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 6.
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [10](../10_storefront_and_layouts.md), [11](../11_checkout_payments_and_split.md), [13](../13_performance_cache_and_cdn.md), [15](../15_observability_and_operations.md), [22](../22_product_customization_3d.md), [23](../23_customer_identity_and_guest_checkout.md), [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
+
+> **Nota:** vender sem pagamento + identidade do cliente é desta fase; a **personalização** (`image_3d_customizable`, congelar arte no pedido) é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)**; **pagamentos = Fase 6**.
 
 ## Definition of Done da fase (= Critério do MVP, dev local)
 
@@ -37,7 +39,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ## Etapa 11/13 — Módulo `customers` (identidade + dedup, escopo MVP)
 
-> Apenas guest + dedup nesta fase. Login por código/senha/Google e área do cliente são **Fase 5**. Doc [23](../23_customer_identity_and_guest_checkout.md).
+> Apenas guest + dedup nesta fase. Login por código/senha/Google e área do cliente são **Fase 6**. Doc [23](../23_customer_identity_and_guest_checkout.md).
 
 ### Modelos (com `store_id`)
 - [ ] `customer_profiles`: `store_id`, `name`, `email` (normalizado), `phone_e164`, timestamps, soft delete. Índices únicos `store_id+email` e `store_id+phone_e164` quando existirem. Doc [23](../23_customer_identity_and_guest_checkout.md)/[07](../07_database_strategy.md).
@@ -51,7 +53,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ### Guest sessions
 - [ ] Cookie HTTP-only `guest_session_id`; criar/recuperar/renovar; vincular ao customer no checkout; validade 30 dias. Doc [23](../23_customer_identity_and_guest_checkout.md).
-- [ ] Recuperação no **mesmo navegador** (cookie). (Recuperação por código fica na Fase 5.)
+- [ ] Recuperação no **mesmo navegador** (cookie). (Recuperação por código fica na Fase 6.)
 
 ### Frontend (painel) — Etapa 13
 - [ ] **Clientes**: listar, detalhe, histórico de pedidos, endereços, busca por nome/e-mail/telefone. Doc [09](../09_merchant_dashboard.md).
@@ -86,7 +88,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Revisão; validar estoque, valores e personalizações aprovadas.
 - [ ] Criar **pedido `pending_payment`**; **congelar preços**; **congelar personalização** em `customization_order_items` (modelo, versão, JSON, arte original, preview, snapshot, data). Doc [11](../11_checkout_payments_and_split.md)/[22](../22_product_customization_3d.md).
 - [ ] **Pagamento combinado fora da plataforma**: mensagem pós-compra explicando como será combinado (Pix/transferência/WhatsApp/entrega combinada).
-- [ ] **Preparar o ponto de integração do gateway** (interface no `payments`, sem implementar) para a Fase 5. Doc [17](../17_v1_roadmap.md).
+- [ ] **Preparar o ponto de integração do gateway** (interface no `payments`, sem implementar) para a Fase 6. Doc [17](../17_v1_roadmap.md).
 - [ ] Não exigir senha/cadastro. Doc [11](../11_checkout_payments_and_split.md).
 
 ### Frontend (storefront)
@@ -104,14 +106,14 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 ### Rotas/serviço + Frontend (painel) — doc [09](../09_merchant_dashboard.md)/[22](../22_product_customization_3d.md)
 - [ ] Lista (filtro por status/data), detalhe, cliente, itens, **personalização aprovada por item**, arquivos enviados (download via URL assinada), **status de arte/produção**, notas internas, alterar status operacional.
 - [ ] **Marcar pagamento recebido manualmente** (enquanto não há gateway). Doc [17](../17_v1_roadmap.md).
-- [ ] Cancelar quando permitido. (Reembolso real fica para a Fase 5.)
+- [ ] Cancelar quando permitido. (Reembolso real fica para a Fase 6.)
 - [ ] Lojista não altera arte aprovada sem nova aprovação; pedido preserva o que o cliente confirmou. Doc [09](../09_merchant_dashboard.md)/[22](../22_product_customization_3d.md).
 
 ---
 
 ## Etapa 14 — Notificações essenciais + finalização local
 
-> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`). No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 5. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
+> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`). No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 6. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
 
 - [ ] Template + envio: **pedido criado** (cliente).
 - [ ] Template + envio: **novo pedido** (lojista).
@@ -121,9 +123,9 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Deploy → Fase 5
+## Deploy → Fase 6
 
-> **O deploy na AWS saiu desta fase.** Toda a Fase 4 roda **local**. Subir o sistema na AWS (EC2) é a **Etapa 15 (Fase 5)** — ver [phase-5-customer-account-and-payments.md](./phase-5-customer-account-and-payments.md).
+> **O deploy na AWS não é desta fase.** Toda a Fase 4 roda **local**. Subir o sistema na AWS (EC2) é a **Fase 6** — ver [phase-6-customer-account-and-payments.md](./phase-6-customer-account-and-payments.md).
 
 ---
 

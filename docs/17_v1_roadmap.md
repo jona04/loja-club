@@ -6,9 +6,9 @@ Construir uma primeira versão da Loja Club capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–4 rodam **local** (na máquina do desenvolvedor) e as Fases 5–6 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–4 rodam **local** (na máquina do desenvolvedor) e as Fases 6–7 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
 
-A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 4), deixando a **integração de pagamento/split para o final** (Fase 5).
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 4), deixando a **integração de pagamento/split para o final** (Fase 6).
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
 
@@ -26,11 +26,11 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
-- **Toda a V1 é dev:** Fases 0–4 **local**; Fases 5–6 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
+- **Toda a V1 é dev:** Fases 0–4 **local**; Fases 6–7 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
 - Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
 - O **marco do MVP (dev local)** acontece ao fim da Fase 4, **antes** de subir para a AWS e de pagamentos.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 5–6.
+- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 6–7.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
 
 ---
@@ -123,7 +123,7 @@ Lojista consegue acessar e gerenciar sua loja básica.
 
 ---
 
-## Fase 2 — Catálogo, mídia e 3D (dev local)
+## Fase 2 — Catálogo e mídia (dev local)
 
 ### Etapa 5 — Catálogo e mídia
 
@@ -137,7 +137,7 @@ Entregas:
 - estoque;
 - status publicado/rascunho;
 - upload de imagens;
-- produto `simple` e `customizable_3d`;
+- produto com imagem; 3D / 3D-personalizável → Fase 5;
 - S3 (AWS real, ambiente dev);
 - worker para thumbnails;
 - CloudFront para imagens;
@@ -149,26 +149,7 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFront).
 ```
 
-### Etapa 6 — Personalização 3D de produtos
-
-Entregas:
-
-- módulo `product_customization`;
-- biblioteca inicial de modelos 3D;
-- modelos de caneca, squeeze e camisa;
-- configuração de produto personalizável;
-- sessão de personalização salva;
-- upload de arte pelo cliente;
-- preview/snapshot aprovado;
-- vínculo da personalização com carrinho;
-- cópia congelada da personalização no pedido;
-- visualização da personalização no painel do lojista.
-
-Resultado:
-
-```text
-Cliente personaliza produto em 3D, aprova a arte e o lojista recebe exatamente o que foi aprovado.
-```
+> A personalização 3D é a **Fase 5 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
 
 ---
 
@@ -224,7 +205,7 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 > Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem o gateway**.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
-> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 5.
+> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 6.
 
 ### Etapa 9 — Frete e cupons (base)
 
@@ -290,7 +271,7 @@ Entregas:
 - congelamento da personalização aprovada;
 - sessão de checkout;
 - **pagamento combinado fora da plataforma** (Pix manual/transferência/WhatsApp), com mensagem pós-compra explicando como o pagamento será combinado;
-- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 5).
+- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 6).
 
 Resultado:
 
@@ -342,7 +323,7 @@ Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, me
 
 ### Etapa 14 — Notificações essenciais + finalização local
 
-> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 5.
+> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 6.
 
 Entregas:
 
@@ -382,7 +363,35 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 ---
 
-## Fase 5 — Dev online na AWS (EC2)
+## Fase 5 — Produtos 3D (dev local)
+
+> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-5-3d-products.md`](./backlog/phase-5-3d-products.md).
+
+### Etapa 6 — Produtos 3D e personalização
+
+Entregas:
+
+- módulo `product_customization`;
+- **geração de modelo 3D via API** (lojista, a partir de imagem/descrição) → GLB por loja no S3;
+- campo `type` do produto (`image`/`image_3d`/`image_3d_customizable`);
+- configuração de produto personalizável;
+- sessão de personalização salva;
+- upload de arte pelo cliente;
+- preview/snapshot aprovado;
+- editor 3D no storefront (Three.js);
+- vínculo da personalização com carrinho;
+- cópia congelada da personalização no pedido;
+- visualização da personalização no painel do lojista.
+
+Resultado:
+
+```text
+Cliente personaliza, em 3D, um produto cujo modelo o próprio lojista gerou via API, aprova a arte, e o lojista recebe exatamente o que foi aprovado.
+```
+
+---
+
+## Fase 6 — Dev online na AWS (EC2)
 
 > Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
 
@@ -471,7 +480,7 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ---
 
-## Fase 6 — Operação da plataforma, CI/CD e beta
+## Fase 7 — Operação da plataforma, CI/CD e beta
 
 ### Etapa 19 — Admin da plataforma
 
@@ -485,7 +494,7 @@ Entregas:
 - ver usuários;
 - ver pedidos por loja;
 - ver webhooks com erro;
-- gerenciar modelos 3D globais;
+- configurar a integração da API de geração 3D (Fase 5);
 - gerenciar planos;
 - ver comissões;
 - auditoria.

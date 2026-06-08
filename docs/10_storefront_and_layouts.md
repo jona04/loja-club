@@ -220,9 +220,9 @@ O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
 
 O editor deve permitir personalização do produto usando modelo 3D.
 
-Recursos da V1:
+Recursos (Fase 5 — editor 3D do storefront):
 
-- carregar modelo 3D publicado pela Loja Club;
+- carregar o modelo 3D do lojista (gerado via API);
 - upload de imagem/arte pelo cliente;
 - escrever nomes e frases dentro da area personalizável;
 - quando houver escrita permitir editar fonte, cores, tamanho e etc;

@@ -251,7 +251,7 @@ Necessário no MVP (dev local):
 - vários endereços por customer;
 - recuperação de carrinho no mesmo navegador.
 
-Pode vir logo depois (como o pagamento, fica após o MVP — Fase 5):
+Pode vir logo depois (como o pagamento, fica após o MVP — Fase 6):
 
 - recuperação/login por **código** (e-mail/SMS/WhatsApp);
 - **área do cliente** (histórico, editar perfil, endereços);

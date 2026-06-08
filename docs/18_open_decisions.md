@@ -10,6 +10,18 @@ Decisão fechada: usar arq (async, baseado em Redis).
 
 Motivos: async (casa com o backend), Redis já presente, leve e com cron embutido. Ver também `docs/backlog/_foundations-and-bottlenecks.md` (DEC-3).
 
+## API de geração de modelos 3D (Fase 5)
+
+O 3D é a **Fase 5** e os modelos são **gerados pelo lojista via API de terceiros** (image/text → GLB), não pela plataforma.
+
+Candidatos a avaliar:
+
+- [Meshy](https://www.meshy.ai/api)
+- [Tripo3D](https://www.tripo3d.ai/api)
+- [Hyper3D](https://hyper3d.ai/api-dashboard)
+
+Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 5. Ver [Fase 5](backlog/phase-5-3d-products.md).
+
 ## Gateway principal
 
 Opções:
@@ -59,13 +71,13 @@ Opções:
 
 Recomendação (decidido):
 
-- **toda a V1 é dev**: Fases 0–4 local; Fases 5–6 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
+- **toda a V1 é dev**: Fases 0–4 local; Fases 6–7 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
 - **produção robusta (pós-V1)**: ECS/Fargate + ALB + RDS.
 
 Decisão:
 
 ```text
-V1 = dev em EC2 (Fases 5–6). ECS/Fargate fica para a produção pós-V1.
+V1 = dev em EC2 (Fases 6–7). ECS/Fargate fica para a produção pós-V1.
 ```
 
 ## Domínio próprio na V1
