@@ -211,6 +211,13 @@ export type ProductPublic = {
 
 /**
  * Lifecycle status of a catalog product (doc 09).
+ *
+ * - ``draft``: never published; editable; the slug follows the name.
+ * - ``published``: live on the storefront; the slug is fixed.
+ * - ``archived``: taken offline but kept — reversible via publish; the slug
+ * stays reserved.
+ *
+ * Deleting a product is a **soft delete** (``deleted_at``), not a status.
  */
 export type ProductStatus = 'draft' | 'published' | 'archived';
 
@@ -480,19 +487,19 @@ export type CatalogUpdateProductData = {
 
 export type CatalogUpdateProductResponse = (ProductPublic);
 
+export type CatalogDeleteProductData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogDeleteProductResponse = (void);
+
 export type CatalogPublishProductData = {
     productId: string;
     storeId: string;
 };
 
 export type CatalogPublishProductResponse = (ProductPublic);
-
-export type CatalogUnpublishProductData = {
-    productId: string;
-    storeId: string;
-};
-
-export type CatalogUnpublishProductResponse = (ProductPublic);
 
 export type CatalogArchiveProductData = {
     productId: string;
@@ -524,12 +531,12 @@ export type CatalogUpdateCategoryData = {
 
 export type CatalogUpdateCategoryResponse = (CategoryPublic);
 
-export type CatalogArchiveCategoryData = {
+export type CatalogDeleteCategoryData = {
     categoryId: string;
     storeId: string;
 };
 
-export type CatalogArchiveCategoryResponse = (void);
+export type CatalogDeleteCategoryResponse = (void);
 
 export type CatalogListVariantsData = {
     limit?: number;
@@ -557,13 +564,13 @@ export type CatalogUpdateVariantData = {
 
 export type CatalogUpdateVariantResponse = (VariantPublic);
 
-export type CatalogArchiveVariantData = {
+export type CatalogDeleteVariantData = {
     productId: string;
     storeId: string;
     variantId: string;
 };
 
-export type CatalogArchiveVariantResponse = (void);
+export type CatalogDeleteVariantResponse = (void);
 
 export type CatalogListImagesData = {
     productId: string;

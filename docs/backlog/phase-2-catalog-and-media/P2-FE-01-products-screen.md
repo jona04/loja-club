@@ -22,7 +22,7 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 
 ## Escopo (o que ENTRA)
 - Item de menu **Produtos** (via `buildMenu`/permissão `catalog.product.view`).
-- Listar (paginado), criar, editar, **arquivar**, **publicar/despublicar**; campos: nome, slug, descrição, preço, variações, estoque, categoria, destaque.
+- Listar (paginado), criar, editar, **publicar**, **arquivar** (offline reversível), **deletar** (soft-delete); campos: nome, slug, descrição, preço, variações, estoque, categoria, destaque.
 - **Componente de upload de imagem:** envia para o `media`, mostra **estado de processamento** (worker gerando variantes) e a versão pronta; vincula ao produto.
 - Gating de UI: salvar/publicar exigem a permissão (ex.: sem `catalog.product.update` vê mas não salva). Regenerar client se preciso.
 
@@ -44,13 +44,13 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - **Cobrir:** unit — menu/ação escondidos/desabilitados sem permissão; e2e — criar/publicar produto reflete na lista.
 
 ## Definition of Done
-- [x] Tela de Produtos (lista/criar/editar/publicar/despublicar/arquivar) + componente de upload de imagem (estado de processamento), no contexto da loja ativa.
+- [x] Tela de Produtos (lista/criar/editar/publicar/arquivar/deletar) + componente de upload de imagem (estado de processamento), no contexto da loja ativa.
 - [x] Gating por permissão (UX); `tsc`/`biome`/`vitest` verdes (17 passed) + `vite build` ok. E2E ao vivo = follow-up.
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Progresso
 - ✅ **Menu** "Produtos" (`lib/menu.ts`, permissão `catalog.product.view`) + teste.
-- ✅ **Tela** `routes/_layout/products.tsx` (`ProductsScreen` exportado p/ teste): lista **paginada** (`skip`/`limit`, `PAGE_SIZE=20`, prev/próxima), criar/editar (dialogs: nome/preço/descrição/destaque + estoque), publicar/despublicar, arquivar — gating por `catalog.product.*`.
+- ✅ **Tela** `routes/_layout/products.tsx` (`ProductsScreen` exportado p/ teste): lista **paginada** (`skip`/`limit`, `PAGE_SIZE=20`, prev/próxima), criar/editar (dialogs: nome/preço/descrição/destaque + estoque), publicar/arquivar (offline reversível)/deletar (soft-delete) — gating por `catalog.product.*` (deletar = `catalog.product.delete`).
 - ✅ **Upload** `components/Catalog/ProductImageUpload.tsx`: `uploadMedia` → `attachImage`; lista as **imagens salvas** (`listImages` traz `url`/`variants`/`status`), badge **processando** e **polling** (2s) até `ready`.
 - ✅ Client OpenAPI já regenerado na `P2-CAT-02`. Verde: biome/tsc/vitest/vite build.
 

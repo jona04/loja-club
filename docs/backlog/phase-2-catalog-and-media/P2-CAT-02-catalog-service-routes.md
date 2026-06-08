@@ -22,7 +22,7 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 - [07 — Database Strategy](../../07_database_strategy.md) (regras de query)
 
 ## Escopo (o que ENTRA)
-- **Produtos:** listar (paginado), criar, atualizar, **arquivar** (soft delete → `archived`), **publicar/despublicar**. Geração de `slug` a partir do nome + único por loja quando ativo. `currency` default herdada da loja.
+- **Produtos:** listar (paginado), criar, atualizar, **publicar**, **arquivar** (tirar do ar, reversível), **deletar** (soft delete). Geração de `slug` a partir do nome + único por loja quando ativo. `currency` default herdada da loja.
 - **Categorias:** CRUD; **variações**; **estoque** (atualizar quantidade); **imagens** (vincular `media_file_id`, reordenar `position`).
 - Gating: `catalog.product.*`, `catalog.category.*`, `catalog.inventory.*`, `catalog.product.update` p/ publicar — conforme doc [08](../../08_modules_and_permissions.md).
 - Acesso a recurso por `store_id + id` (`get_store_scoped`). Incluir router no `api/router.py`. Regenerar client OpenAPI.
@@ -35,14 +35,14 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 - `backend/app/api/router.py` (incluir). Regenerar client.
 
 ## Passos
-1. Schemas (create/update/public) + repositories scoped + serviço (slug, publish/archive).
+1. Schemas (create/update/public) + repositories scoped + serviço (slug, publish/archive/delete).
 2. Rotas com `require_permission` + paginação.
 3. Tests de fluxo, isolamento e gating.
 
 ## Testes
 > Fundações §10. Fronteira real (constraint/permissão/query) → integração.
 
-- **Cobrir:** criar/publicar/despublicar/arquivar produto; estoque; `slug` único por loja; mesmo slug em lojas diferentes; `support` sem `catalog.*` → 403; loja A não vê produto de B.
+- **Cobrir:** criar/publicar/arquivar/deletar produto; estoque; `slug` único por loja; mesmo slug em lojas diferentes; `support` sem `catalog.*` → 403; loja A não vê produto de B.
 
 ## Definition of Done
 - [x] CRUD/publish + categorias/variações/estoque/imagens no padrão `P1-API-01`, com gating (19 rotas).
@@ -51,12 +51,12 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Progresso
-- ✅ **Schemas/Repos/Service/Routes** (`catalog/*`): products (list/get/create/update/publish/unpublish/archive), categories (CRUD), variants (CRUD), images (attach/list/remove), inventory (set). Gating `catalog.*`; tudo scoped por `get_store_scoped` (INV-T2); listas com `Page`. Slug derivado + único-quando-ativo (**auto-sufixo** `-2/-3…` em nome repetido; slug explícito tomado → 409); `currency` herdada da loja.
+- ✅ **Schemas/Repos/Service/Routes** (`catalog/*`): products (list/get/create/update/**publish/archive/delete**), categories (CRUD + delete), variants (CRUD + delete), images (attach/list/remove), inventory (get/set). Gating `catalog.*`; tudo scoped por `get_store_scoped` (INV-T2); listas com `Page`. Slug derivado + único-quando-ativo (**auto-sufixo** `-2/-3…` em nome repetido; slug explícito tomado → 409); `currency` herdada da loja.
 - ✅ **Wire** no `api/router.py`; **client OpenAPI** regenerado (`scripts/generate-client.sh` → openapi-ts), `tsc -p tsconfig.build.json` verde.
-- ✅ **Testes** `tests/integration/api/routes/test_catalog.py`: CRUD/publish/archive, slug por loja, cross-store, isolamento, **gating (support→403)**, inventory upsert, categorias, variantes, imagens (+ isolamento de mídia).
+- ✅ **Testes** `tests/integration/api/routes/test_catalog.py`: CRUD/publish/archive/delete, slug por loja, cross-store, isolamento, **gating (support→403)**, inventory get/upsert, categorias, variantes, imagens (+ isolamento de mídia).
 
 ## Notas / Reconciliações
-- **Arquivar = soft delete** (status `archived` + `deleted_at`): some das listas/get ativos; slug volta a ficar livre.
+- **Ciclo de vida do produto:** `draft` (nunca publicado, slug acompanha o nome) → **publicar** → `published` → **arquivar** (`archived`, **offline reversível**, **sem** soft-delete; slug fica reservado; dá pra publicar de novo). **Deletar = soft delete** (`deleted_at`): some das listas/get, slug liberado, fica no banco. Despublicar **não existe** (vira arquivar). Permissão destrutiva = `catalog.product.delete`; publicar/arquivar usam `catalog.product.update`. (Categorias/variantes: o "archive" virou **delete** = soft-delete.)
 - **Slug:** derivado do nome **auto-desambigua** (`camiseta`, `camiseta-2`…); enquanto `draft`, renomear faz o slug **acompanhar**; ao **publicar**, trava (URL pública estável). Slug explícito tomado → 409. (Race concorrente segue como follow-up.)
 - **Imagem só de mídia da própria loja:** `attach_image` valida a `media_file` via `get_store_scoped` (404 se for de outra loja).
 - **`currency` do produto** herdada da loja na criação (override opcional no payload).
@@ -66,4 +66,4 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 ## Follow-ups
 - [ ] **Race no slug:** o pré-check (`active_slug_exists`) tem janela de corrida → dois creates simultâneos com o mesmo slug → o 2º estoura `IntegrityError` (índice parcial) como **500**, não 409. Tratar `IntegrityError` no service → 409. Origem: P2-CAT-02.
 - [ ] **Estoque sem unique:** índice `(store_id, product_id, variant_id)` é **não-único** (doc 07) → upsert de `set_inventory` tem corrida que pode criar **linhas duplicadas** de estoque. Avaliar índice parcial único + tratamento. Origem: P2-CAT-02.
-- [ ] **Archive não cascateia:** arquivar produto **não** arquiva variações/imagens/estoque (ficam órfãos ativos). Decidir cascata (soft-delete filhos) ou ignorar conscientemente. Origem: P2-CAT-02.
+- [ ] **Delete não cascateia:** deletar produto **não** soft-deleta variações/imagens/estoque (ficam órfãos). Decidir cascata (soft-delete filhos) ou ignorar conscientemente. Origem: P2-CAT-02.

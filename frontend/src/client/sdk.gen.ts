@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogUnpublishProductData, CatalogUnpublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogArchiveCategoryData, CatalogArchiveCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogArchiveVariantData, CatalogArchiveVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CatalogService {
     /**
@@ -107,8 +107,31 @@ export class CatalogService {
     }
     
     /**
+     * Delete Product
+     * Delete a product (soft delete: kept in the DB).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.productId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static deleteProduct(data: CatalogDeleteProductData): CancelablePromise<CatalogDeleteProductResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/products/{product_id}',
+            path: {
+                store_id: data.storeId,
+                product_id: data.productId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
      * Publish Product
-     * Publish a product.
+     * Publish a product (``draft``/``archived`` -> ``published``).
      * @param data The data for the request.
      * @param data.storeId
      * @param data.productId
@@ -130,31 +153,8 @@ export class CatalogService {
     }
     
     /**
-     * Unpublish Product
-     * Unpublish a product (back to draft).
-     * @param data The data for the request.
-     * @param data.storeId
-     * @param data.productId
-     * @returns ProductPublic Successful Response
-     * @throws ApiError
-     */
-    public static unpublishProduct(data: CatalogUnpublishProductData): CancelablePromise<CatalogUnpublishProductResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/stores/{store_id}/products/{product_id}/unpublish',
-            path: {
-                store_id: data.storeId,
-                product_id: data.productId
-            },
-            errors: {
-                422: 'Validation Error'
-            }
-        });
-    }
-    
-    /**
      * Archive Product
-     * Archive a product (soft delete).
+     * Take a product offline (``-> archived``); reversible via publish.
      * @param data The data for the request.
      * @param data.storeId
      * @param data.productId
@@ -253,18 +253,18 @@ export class CatalogService {
     }
     
     /**
-     * Archive Category
-     * Archive (soft-delete) a category.
+     * Delete Category
+     * Delete a category (soft delete).
      * @param data The data for the request.
      * @param data.storeId
      * @param data.categoryId
      * @returns void Successful Response
      * @throws ApiError
      */
-    public static archiveCategory(data: CatalogArchiveCategoryData): CancelablePromise<CatalogArchiveCategoryResponse> {
+    public static deleteCategory(data: CatalogDeleteCategoryData): CancelablePromise<CatalogDeleteCategoryResponse> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/stores/{store_id}/categories/{category_id}/archive',
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/categories/{category_id}',
             path: {
                 store_id: data.storeId,
                 category_id: data.categoryId
@@ -359,8 +359,8 @@ export class CatalogService {
     }
     
     /**
-     * Archive Variant
-     * Archive (soft-delete) a variant.
+     * Delete Variant
+     * Delete a variant (soft delete).
      * @param data The data for the request.
      * @param data.storeId
      * @param data.productId
@@ -368,10 +368,10 @@ export class CatalogService {
      * @returns void Successful Response
      * @throws ApiError
      */
-    public static archiveVariant(data: CatalogArchiveVariantData): CancelablePromise<CatalogArchiveVariantResponse> {
+    public static deleteVariant(data: CatalogDeleteVariantData): CancelablePromise<CatalogDeleteVariantResponse> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/stores/{store_id}/products/{product_id}/variants/{variant_id}/archive',
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/products/{product_id}/variants/{variant_id}',
             path: {
                 store_id: data.storeId,
                 product_id: data.productId,

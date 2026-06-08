@@ -88,7 +88,7 @@ export function ProductsScreen() {
   const canView = permissions.includes("catalog.product.view")
   const canCreate = permissions.includes("catalog.product.create")
   const canUpdate = permissions.includes("catalog.product.update")
-  const canArchive = permissions.includes("catalog.product.archive")
+  const canDelete = permissions.includes("catalog.product.delete")
 
   const productsQuery = useQuery({
     queryKey: ["products", storeId, page, pageSize],
@@ -128,11 +128,12 @@ export function ProductsScreen() {
   })
 
   const publishMutation = useMutation({
-    mutationFn: (vars: { id: string; publish: boolean }) =>
-      vars.publish
-        ? CatalogService.publishProduct({ storeId, productId: vars.id })
-        : CatalogService.unpublishProduct({ storeId, productId: vars.id }),
-    onSuccess: invalidate,
+    mutationFn: (id: string) =>
+      CatalogService.publishProduct({ storeId, productId: id }),
+    onSuccess: () => {
+      showSuccessToast("Produto publicado")
+      invalidate()
+    },
     onError: handleError.bind(showErrorToast),
   })
 
@@ -141,6 +142,16 @@ export function ProductsScreen() {
       CatalogService.archiveProduct({ storeId, productId: id }),
     onSuccess: () => {
       showSuccessToast("Produto arquivado")
+      invalidate()
+    },
+    onError: handleError.bind(showErrorToast),
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      CatalogService.deleteProduct({ storeId, productId: id }),
+    onSuccess: () => {
+      showSuccessToast("Produto deletado")
       invalidate()
     },
     onError: handleError.bind(showErrorToast),
@@ -241,7 +252,11 @@ export function ProductsScreen() {
               <TableCell>
                 <Badge
                   variant={
-                    product.status === "published" ? "default" : "outline"
+                    product.status === "published"
+                      ? "default"
+                      : product.status === "archived"
+                        ? "secondary"
+                        : "outline"
                   }
                 >
                   {product.status}
@@ -260,29 +275,31 @@ export function ProductsScreen() {
                     Editar
                   </Button>
                 )}
-                {canUpdate && (
+                {canUpdate && product.status !== "published" && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() =>
-                      publishMutation.mutate({
-                        id: product.id,
-                        publish: product.status !== "published",
-                      })
-                    }
+                    onClick={() => publishMutation.mutate(product.id)}
                   >
-                    {product.status === "published"
-                      ? "Despublicar"
-                      : "Publicar"}
+                    Publicar
                   </Button>
                 )}
-                {canArchive && (
+                {canUpdate && product.status !== "archived" && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => archiveMutation.mutate(product.id)}
                   >
                     Arquivar
+                  </Button>
+                )}
+                {canDelete && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => deleteMutation.mutate(product.id)}
+                  >
+                    Deletar
                   </Button>
                 )}
               </TableCell>

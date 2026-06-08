@@ -12,7 +12,7 @@ from sqlmodel import Session
 from app.core.api import AppError
 from app.db.base import get_datetime_utc
 from app.modules.catalog import repositories as repo
-from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
+from app.modules.catalog.enums import ProductStatus
 from app.modules.catalog.models import (
     Category,
     InventoryItem,
@@ -223,25 +223,24 @@ def update_product(
     return product
 
 
-def set_product_published(
-    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID, published: bool
+def publish_product(
+    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
 ) -> Product:
-    """Publish or unpublish (back to draft) a product.
+    """Publish a product (``draft``/``archived`` -> ``published``).
 
     Args:
         session: Active database session.
         store_id: The active store id.
         product_id: The product id.
-        published: True to publish, False to revert to draft.
 
     Returns:
-        The updated product.
+        The published product.
 
     Raises:
         AppError: 404 if not found.
     """
     product = get_product(session=session, store_id=store_id, product_id=product_id)
-    product.status = ProductStatus.published if published else ProductStatus.draft
+    product.status = ProductStatus.published
     session.add(product)
     session.commit()
     session.refresh(product)
@@ -249,19 +248,18 @@ def set_product_published(
 
 
 def archive_product(
-    *,
-    session: Session,
-    store_id: uuid.UUID,
-    product_id: uuid.UUID,
-    archived_by: uuid.UUID,
+    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
 ) -> Product:
-    """Archive a product (status ``archived`` + soft delete).
+    """Take a product offline (``-> archived``), keeping it (reversible).
+
+    Archiving only changes the status; it does **not** soft-delete — the slug
+    stays reserved and the product can be published again. To remove a product
+    from the merchant's view, use :func:`delete_product`.
 
     Args:
         session: Active database session.
         store_id: The active store id.
         product_id: The product id.
-        archived_by: The acting user's id.
 
     Returns:
         The archived product.
@@ -271,12 +269,38 @@ def archive_product(
     """
     product = get_product(session=session, store_id=store_id, product_id=product_id)
     product.status = ProductStatus.archived
-    product.deleted_at = get_datetime_utc()
-    product.deleted_by_user_id = archived_by
     session.add(product)
     session.commit()
     session.refresh(product)
     return product
+
+
+def delete_product(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    product_id: uuid.UUID,
+    deleted_by: uuid.UUID,
+) -> None:
+    """Delete a product (soft delete: gone from the merchant, kept in the DB).
+
+    Sets ``deleted_at``/``deleted_by_user_id`` (never a hard delete). The product
+    leaves every active list and its slug is freed for reuse.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product id.
+        deleted_by: The acting user's id.
+
+    Raises:
+        AppError: 404 if not found.
+    """
+    product = get_product(session=session, store_id=store_id, product_id=product_id)
+    product.deleted_at = get_datetime_utc()
+    product.deleted_by_user_id = deleted_by
+    session.add(product)
+    session.commit()
 
 
 # --- Categories ---
@@ -383,20 +407,20 @@ def update_category(
     return category
 
 
-def archive_category(
+def delete_category(
     *,
     session: Session,
     store_id: uuid.UUID,
     category_id: uuid.UUID,
-    archived_by: uuid.UUID,
+    deleted_by: uuid.UUID,
 ) -> None:
-    """Soft-delete a category.
+    """Delete a category (soft delete: kept in the DB).
 
     Args:
         session: Active database session.
         store_id: The active store id.
         category_id: The category id.
-        archived_by: The acting user's id.
+        deleted_by: The acting user's id.
 
     Raises:
         AppError: 404 if not found.
@@ -405,7 +429,7 @@ def archive_category(
         session=session, store_id=store_id, category_id=category_id
     )
     category.deleted_at = get_datetime_utc()
-    category.deleted_by_user_id = archived_by
+    category.deleted_by_user_id = deleted_by
     session.add(category)
     session.commit()
 
@@ -536,22 +560,22 @@ def update_variant(
     return variant
 
 
-def archive_variant(
+def delete_variant(
     *,
     session: Session,
     store_id: uuid.UUID,
     product_id: uuid.UUID,
     variant_id: uuid.UUID,
-    archived_by: uuid.UUID,
+    deleted_by: uuid.UUID,
 ) -> None:
-    """Archive a variant (status ``archived`` + soft delete).
+    """Delete a variant (soft delete: kept in the DB).
 
     Args:
         session: Active database session.
         store_id: The active store id.
         product_id: The owning product id.
         variant_id: The variant id.
-        archived_by: The acting user's id.
+        deleted_by: The acting user's id.
 
     Raises:
         AppError: 404 if not found.
@@ -559,9 +583,8 @@ def archive_variant(
     variant = _get_variant(
         session=session, store_id=store_id, product_id=product_id, variant_id=variant_id
     )
-    variant.status = ProductVariantStatus.archived
     variant.deleted_at = get_datetime_utc()
-    variant.deleted_by_user_id = archived_by
+    variant.deleted_by_user_id = deleted_by
     session.add(variant)
     session.commit()
 

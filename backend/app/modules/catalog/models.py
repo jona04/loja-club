@@ -38,8 +38,10 @@ class Product(
     """A sellable product, scoped to a store.
 
     ``slug`` is unique among non-deleted products of the same store (partial
-    unique index), so a store can reuse an archived product's slug, and two
-    different stores may hold the same slug independently.
+    unique index on ``deleted_at IS NULL``): an **archived** product keeps its
+    slug reserved (it can be published again), while a **deleted** (soft-deleted)
+    product frees its slug for reuse. Two stores may hold the same slug
+    independently.
     """
 
     __tablename__ = "catalog_products"

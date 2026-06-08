@@ -57,8 +57,9 @@ Cliente final não precisa usar login na V1.
 - listar produtos;
 - criar produto;
 - atualizar produto;
-- arquivar produto;
-- publicar/despublicar;
+- publicar produto;
+- arquivar produto (offline reversível);
+- deletar produto (soft-delete);
 - categorias;
 - variações;
 - estoque;

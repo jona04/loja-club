@@ -728,7 +728,14 @@ export const ProductStatusSchema = {
     type: 'string',
     enum: ['draft', 'published', 'archived'],
     title: 'ProductStatus',
-    description: 'Lifecycle status of a catalog product (doc 09).'
+    description: `Lifecycle status of a catalog product (doc 09).
+
+- \`\`draft\`\`: never published; editable; the slug follows the name.
+- \`\`published\`\`: live on the storefront; the slug is fixed.
+- \`\`archived\`\`: taken offline but kept — reversible via publish; the slug
+  stays reserved.
+
+Deleting a product is a **soft delete** (\`\`deleted_at\`\`), not a status.`
 } as const;
 
 export const ProductUpdateSchema = {

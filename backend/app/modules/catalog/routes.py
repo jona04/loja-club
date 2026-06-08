@@ -110,44 +110,41 @@ def update_product(
 def publish_product(
     store_id: uuid.UUID, product_id: uuid.UUID, session: SessionDep
 ) -> Product:
-    """Publish a product."""
-    return services.set_product_published(
-        session=session, store_id=store_id, product_id=product_id, published=True
-    )
-
-
-@router.post(
-    "/products/{product_id}/unpublish",
-    response_model=ProductPublic,
-    dependencies=[Depends(require_permission("catalog.product.update"))],
-)
-def unpublish_product(
-    store_id: uuid.UUID, product_id: uuid.UUID, session: SessionDep
-) -> Product:
-    """Unpublish a product (back to draft)."""
-    return services.set_product_published(
-        session=session, store_id=store_id, product_id=product_id, published=False
+    """Publish a product (``draft``/``archived`` -> ``published``)."""
+    return services.publish_product(
+        session=session, store_id=store_id, product_id=product_id
     )
 
 
 @router.post(
     "/products/{product_id}/archive",
     response_model=ProductPublic,
+    dependencies=[Depends(require_permission("catalog.product.update"))],
 )
 def archive_product(
+    store_id: uuid.UUID, product_id: uuid.UUID, session: SessionDep
+) -> Product:
+    """Take a product offline (``-> archived``); reversible via publish."""
+    return services.archive_product(
+        session=session, store_id=store_id, product_id=product_id
+    )
+
+
+@router.delete("/products/{product_id}", status_code=204)
+def delete_product(
     store_id: uuid.UUID,
     product_id: uuid.UUID,
     session: SessionDep,
     member: Annotated[
-        StoreMember, Depends(require_permission("catalog.product.archive"))
+        StoreMember, Depends(require_permission("catalog.product.delete"))
     ],
-) -> Product:
-    """Archive a product (soft delete)."""
-    return services.archive_product(
+) -> None:
+    """Delete a product (soft delete: kept in the DB)."""
+    services.delete_product(
         session=session,
         store_id=store_id,
         product_id=product_id,
-        archived_by=member.user_id,
+        deleted_by=member.user_id,
     )
 
 
@@ -201,8 +198,8 @@ def update_category(
     )
 
 
-@router.post("/categories/{category_id}/archive", status_code=204)
-def archive_category(
+@router.delete("/categories/{category_id}", status_code=204)
+def delete_category(
     store_id: uuid.UUID,
     category_id: uuid.UUID,
     session: SessionDep,
@@ -210,12 +207,12 @@ def archive_category(
         StoreMember, Depends(require_permission("catalog.category.manage"))
     ],
 ) -> None:
-    """Archive (soft-delete) a category."""
-    services.archive_category(
+    """Delete a category (soft delete)."""
+    services.delete_category(
         session=session,
         store_id=store_id,
         category_id=category_id,
-        archived_by=member.user_id,
+        deleted_by=member.user_id,
     )
 
 
@@ -284,8 +281,8 @@ def update_variant(
     )
 
 
-@router.post("/products/{product_id}/variants/{variant_id}/archive", status_code=204)
-def archive_variant(
+@router.delete("/products/{product_id}/variants/{variant_id}", status_code=204)
+def delete_variant(
     store_id: uuid.UUID,
     product_id: uuid.UUID,
     variant_id: uuid.UUID,
@@ -294,13 +291,13 @@ def archive_variant(
         StoreMember, Depends(require_permission("catalog.product.update"))
     ],
 ) -> None:
-    """Archive (soft-delete) a variant."""
-    services.archive_variant(
+    """Delete a variant (soft delete)."""
+    services.delete_variant(
         session=session,
         store_id=store_id,
         product_id=product_id,
         variant_id=variant_id,
-        archived_by=member.user_id,
+        deleted_by=member.user_id,
     )
 
 

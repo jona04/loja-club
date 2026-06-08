@@ -58,29 +58,22 @@ def test_update_product(client: TestClient, two_stores: TenantContext) -> None:
     assert body["price_amount_minor"] == 2000
 
 
-def test_publish_unpublish_archive(
-    client: TestClient, two_stores: TenantContext
-) -> None:
+def test_publish_archive_delete(client: TestClient, two_stores: TenantContext) -> None:
     a = two_stores.store_a
     h = two_stores.owner_a_headers
     pid = _create_product(client, a.id, h)["id"]
+    base = f"{BASE}/{a.id}/products/{pid}"
 
-    assert (
-        client.post(f"{BASE}/{a.id}/products/{pid}/publish", headers=h).json()["status"]
-        == "published"
-    )
-    assert (
-        client.post(f"{BASE}/{a.id}/products/{pid}/unpublish", headers=h).json()[
-            "status"
-        ]
-        == "draft"
-    )
-    assert (
-        client.post(f"{BASE}/{a.id}/products/{pid}/archive", headers=h).status_code
-        == 200
-    )
-    # archived = soft-deleted → no longer reachable
-    assert client.get(f"{BASE}/{a.id}/products/{pid}", headers=h).status_code == 404
+    # publish → archive (offline, reversible) → publish again
+    assert client.post(f"{base}/publish", headers=h).json()["status"] == "published"
+    assert client.post(f"{base}/archive", headers=h).json()["status"] == "archived"
+    # archived stays reachable (not deleted) and can be re-published
+    assert client.get(base, headers=h).status_code == 200
+    assert client.post(f"{base}/publish", headers=h).json()["status"] == "published"
+
+    # delete = soft delete → gone from the API, kept in the DB
+    assert client.delete(base, headers=h).status_code == 204
+    assert client.get(base, headers=h).status_code == 404
 
 
 def test_slug_auto_disambiguates_and_follows_draft_name(
@@ -179,8 +172,7 @@ def test_category_crud(client: TestClient, two_stores: TenantContext) -> None:
     assert upd.status_code == 200 and upd.json()["name"] == "Cups"
     assert client.get(f"{BASE}/{a.id}/categories", headers=h).json()["count"] == 1
     assert (
-        client.post(f"{BASE}/{a.id}/categories/{cid}/archive", headers=h).status_code
-        == 204
+        client.delete(f"{BASE}/{a.id}/categories/{cid}", headers=h).status_code == 204
     )
     assert client.get(f"{BASE}/{a.id}/categories", headers=h).json()["count"] == 0
 
@@ -206,8 +198,8 @@ def test_variant_crud(client: TestClient, two_stores: TenantContext) -> None:
         == 1
     )
     assert (
-        client.post(
-            f"{BASE}/{a.id}/products/{pid}/variants/{vid}/archive", headers=h
+        client.delete(
+            f"{BASE}/{a.id}/products/{pid}/variants/{vid}", headers=h
         ).status_code
         == 204
     )

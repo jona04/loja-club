@@ -283,7 +283,7 @@ Quando uma ação parecer exclusão, o sistema deve arquivar ou marcar status.
 
 Exemplos:
 
-- produto removido vira `archived`;
+- produto **deletado** = soft-delete (`deleted_at`); `archived` é um **status offline reversível**, não delete;
 - loja removida vira `archived`;
 - cupom removido vira `archived`;
 - membro removido recebe `removed_at`;

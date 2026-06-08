@@ -76,8 +76,9 @@ Funcionalidades:
 - listar produtos;
 - criar produto;
 - editar produto;
-- arquivar/desativar produto;
-- publicar/despublicar;
+- publicar produto;
+- arquivar produto (tirar do ar, reversível);
+- deletar produto (soft-delete);
 - gerenciar imagem;
 - gerenciar variações;
 - gerenciar estoque;
