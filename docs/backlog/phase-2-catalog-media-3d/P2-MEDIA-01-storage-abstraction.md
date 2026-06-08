@@ -4,7 +4,7 @@ title: Abstração de storage (S3/boto3) + provisionamento AWS dev (guiado) + ve
 phase: 2
 etapa: "Etapa 5 — Mídia e storage"
 area: MEDIA
-status: todo
+status: done
 depends_on: []
 blocks: [P2-MEDIA-02, P2-CUST-03]
 tests: [integration]
@@ -51,15 +51,21 @@ Criar e deixar **funcionando** (melhores práticas):
 - **Real (env-gated) — confiança:** marcador `aws` + `skipif` sem credenciais; sobe/baixa/assina/apaga no **bucket dev real** e faz GET via **CloudFront**. Roda local/dev com as chaves; **pulado** no CI sem secrets.
 
 ## Definition of Done
-- [ ] `storage.py` (upload/presigned/delete/public_url) sem boto3 vazando; vars no `config.py`/`.env(.example)`.
-- [ ] **AWS dev provisionada com você** (bucket privado + CloudFront/OAC + IAM least-privilege) e **smoke real verde** (local/dev).
-- [ ] Testes `moto` verdes (CI) + smoke real verde (com credenciais).
-- [ ] Itens adiados varridos → Follow-ups + README (ou "nenhum").
+- [x] `storage.py` (upload/presigned/delete/public_url) sem boto3 vazando; vars no `config.py`/`.env` (`S3_REGION=us-east-2`).
+- [x] **AWS dev provisionada** (bucket privado `loja-club-dev-media` + CloudFront/OAC `dsqh10bjdo174.cloudfront.net` + IAM least-privilege) e **smoke real verde** (S3 roundtrip em us-east-2).
+- [x] Testes `moto` (CI) **+ smoke real** verdes *(suíte 140 passed, cobertura 91%)*.
+- [x] Itens adiados varridos → Follow-ups + README.
+
+## Progresso
+- ✅ **Código:** `app/core/storage.py` (4 funções, boto3 isolado), vars em `config.py` + `.env`, testes `moto` + smoke real (`tests/integration/test_storage.py`). Smoke real env-gated por `settings.storage_enabled`.
+- ✅ **AWS dev (us-east-2):** bucket `loja-club-dev-media` (privado, Block Public Access) + CloudFront `dsqh10bjdo174.cloudfront.net` (OAC + bucket policy) + usuário IAM least-privilege. **Smoke real verde** (upload/head/presigned/delete no bucket de verdade).
 
 ## Notas / Reconciliações
-- **Públicas via CDN (OAC) / privadas via presigned** — bucket sempre privado. Registrar a decisão de design.
-- **Prod (Fase 6):** bucket/distribuição de prod + **IAM role** (sem chave longa) + segredos via SSM. *(2ª etapa.)*
-- **Padrão de teste com serviço real (mock + smoke env-gated)** vale para qualquer dependência externa — candidato a virar convenção nas Fundações §10.
+- **Públicas via CDN (OAC) / privadas via presigned** — bucket sempre privado (Block Public Access).
+- **Assinatura de `upload_fileobj`:** **sem** o param `public` da descrição original — com bucket privado + OAC não há ACL; público vs privado é decisão de **entrega** (`public_url`/CDN vs `generate_presigned_url`), e o chamador escolhe o prefixo (`public/...` vs `private/...`).
+- **Smoke real cobre o S3** (roundtrip); o **GET público via CloudFront** é exercitado na `P2-MEDIA-02` (quando há imagem pública servida).
+- **Secrets:** `.env` virou **gitignored** + `.env.example` committed; CI faz `cp .env.example .env`. `SECRET_KEY` rotacionado (repo público). Prod (Fase 6): GitHub Secrets/SSM + IAM role.
+- **Padrão "mock + smoke real env-gated"** registrado nas Fundações §10 (vale p/ o gateway na Fase 5).
 
 ## Follow-ups
-- (preencher)
+- — nenhum. (O GET público via CloudFront é coberto pela `P2-MEDIA-02`; rotação de `POSTGRES_PASSWORD`/`FIRST_SUPERUSER_PASSWORD` é tarefa do usuário fora do backlog.)

@@ -197,6 +197,8 @@ Não commitar:
 - SMTP credentials;
 - Sentry DSN privado, se sensível.
 
+**Como aplicamos (decidido):** o `.env` é **gitignored**; um `.env.example` (só placeholders, sem segredos) fica versionado como template. O CI roda `cp .env.example .env` (valores de dev/throwaway). No **deploy (Fase 6)** os segredos vêm de **GitHub Actions Secrets** → env vars e/ou **SSM/Secrets Manager**; em produção a credencial AWS é **IAM role** (sem chave longa). Realização do INV-S3.
+
 ## LGPD
 
 A Loja Club lidará com dados pessoais.

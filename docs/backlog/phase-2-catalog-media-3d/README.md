@@ -47,7 +47,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P2-MEDIA-01](./P2-MEDIA-01-storage-abstraction.md) | Abstração de storage (S3/boto3) + config + setup AWS dev | todo | — |
+| 1 | [P2-MEDIA-01](./P2-MEDIA-01-storage-abstraction.md) | Abstração de storage (S3/boto3) + config + setup AWS dev | **done** | — |
 | 2 | [P2-CAT-01](./P2-CAT-01-catalog-models.md) | Modelos do `catalog` (produtos/variações/imagens/categorias/estoque/coleções) | todo | — |
 | 3 | [P2-MEDIA-02](./P2-MEDIA-02-media-pipeline.md) | `media_files` + pipeline de upload + worker de thumbnails | todo | P2-MEDIA-01 |
 | 4 | [P2-CAT-02](./P2-CAT-02-catalog-service-routes.md) | `catalog`: serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens) | todo | P2-CAT-01, P2-MEDIA-02 |
