@@ -1,31 +1,67 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 
+import { StoreGate } from "@/components/Store/StoreGate"
+import { Card, CardContent } from "@/components/ui/card"
+import { useActiveStore } from "@/hooks/useActiveStore"
 import useAuth from "@/hooks/useAuth"
+import { buildMenu } from "@/lib/menu"
 
 export const Route = createFileRoute("/_layout/")({
-  component: Dashboard,
+  component: DashboardRoute,
   head: () => ({
     meta: [
       {
-        title: "Dashboard - FastAPI Template",
+        title: "Dashboard - Loja Club",
       },
     ],
   }),
 })
 
+function DashboardRoute() {
+  return (
+    <StoreGate>
+      <Dashboard />
+    </StoreGate>
+  )
+}
+
 function Dashboard() {
   const { user: currentUser } = useAuth()
+  const { activeStore, permissions } = useActiveStore()
+  const shortcuts = buildMenu(permissions).filter(
+    (module) => module.path !== "/",
+  )
 
   return (
-    <div>
-      <div>
-        <h1 className="text-2xl truncate max-w-sm">
-          Hi, {currentUser?.full_name || currentUser?.email} 👋
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h1 className="max-w-sm truncate text-2xl font-bold tracking-tight">
+          Olá, {currentUser?.full_name || currentUser?.email} 👋
         </h1>
-        <p className="text-muted-foreground">
-          Welcome back, nice to see you again!!!
-        </p>
+        {activeStore && (
+          <p className="text-muted-foreground">
+            Loja atual:{" "}
+            <span className="font-medium text-foreground">
+              {activeStore.name}
+            </span>
+          </p>
+        )}
       </div>
+
+      {shortcuts.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {shortcuts.map((module) => (
+            <Link key={module.path} to={module.path}>
+              <Card className="transition-colors hover:bg-accent">
+                <CardContent className="flex items-center gap-3 p-6">
+                  <module.icon className="size-5 text-muted-foreground" />
+                  <span className="font-medium">{module.title}</span>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

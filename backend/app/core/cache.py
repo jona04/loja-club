@@ -57,3 +57,13 @@ def cache_get(key: str, *, prefix: str = "") -> str | None:
         The stored value, or ``None``.
     """
     return cast("str | None", get_redis().get(_build_key(key, prefix)))
+
+
+def cache_delete(key: str, *, prefix: str = "") -> None:
+    """Delete a cache key (no-op if it does not exist).
+
+    Args:
+        key: Cache key.
+        prefix: Optional key prefix (joined with ``:``).
+    """
+    get_redis().delete(_build_key(key, prefix))

@@ -14,10 +14,23 @@ export type HTTPValidationError = {
 };
 
 /**
+ * Lifecycle status of a store membership.
+ */
+export type MembershipStatus = 'invited' | 'active' | 'removed';
+
+/**
  * Generic message response.
  */
 export type Message = {
     message: string;
+};
+
+/**
+ * The current user's role and permissions in the active store.
+ */
+export type MyMembership = {
+    role: string;
+    permissions: Array<(string)>;
 };
 
 /**
@@ -26,6 +39,16 @@ export type Message = {
 export type NewPassword = {
     token: string;
     new_password: string;
+};
+
+export type Page_StoreMemberPublic_ = {
+    data: Array<StoreMemberPublic>;
+    count: number;
+};
+
+export type Page_StorePublic_ = {
+    data: Array<StorePublic>;
+    count: number;
 };
 
 /**
@@ -37,6 +60,97 @@ export type PrivateUserCreate = {
     full_name: string;
     is_verified?: boolean;
 };
+
+/**
+ * Payload to create a store (slug/currency/locale default from platform).
+ */
+export type StoreCreate = {
+    name: string;
+    slug?: (string | null);
+    currency?: (string | null);
+    locale?: (string | null);
+};
+
+/**
+ * Payload to invite a member by email with a role.
+ */
+export type StoreMemberInvite = {
+    email: string;
+    role: string;
+};
+
+/**
+ * A store member as returned via the API.
+ */
+export type StoreMemberPublic = {
+    id: string;
+    user_id: string;
+    email: string;
+    role: string;
+    status: MembershipStatus;
+};
+
+/**
+ * Payload to change a member's role.
+ */
+export type StoreMemberRoleUpdate = {
+    role: string;
+};
+
+/**
+ * Store as returned via the API.
+ */
+export type StorePublic = {
+    name: string;
+    slug: string;
+    status?: StoreStatus;
+    /**
+     * ISO 4217 currency code
+     */
+    currency: string;
+    locale: string;
+    id: string;
+};
+
+/**
+ * Store settings as returned via the API.
+ */
+export type StoreSettingsPublic = {
+    public_name?: (string | null);
+    description?: (string | null);
+    logo_url?: (string | null);
+    contact_email?: (string | null);
+    contact_phone?: (string | null);
+    whatsapp_number?: (string | null);
+    address?: (string | null);
+    is_published?: boolean;
+    id: string;
+    store_id: string;
+    social_links?: ({
+    [key: string]: (string);
+} | null);
+};
+
+/**
+ * Editable store settings (all optional).
+ */
+export type StoreSettingsUpdate = {
+    public_name?: (string | null);
+    description?: (string | null);
+    logo_url?: (string | null);
+    contact_email?: (string | null);
+    contact_phone?: (string | null);
+    whatsapp_number?: (string | null);
+    address?: (string | null);
+    social_links?: ({
+    [key: string]: (string);
+} | null);
+};
+
+/**
+ * Lifecycle status of a store (doc 09).
+ */
+export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked' | 'archived';
 
 /**
  * JSON payload containing an access token.
@@ -162,6 +276,86 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type StoresCreateStoreData = {
+    requestBody: StoreCreate;
+};
+
+export type StoresCreateStoreResponse = (StorePublic);
+
+export type StoresListMyStoresData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type StoresListMyStoresResponse = (Page_StorePublic_);
+
+export type StoresGetStoreData = {
+    storeId: string;
+};
+
+export type StoresGetStoreResponse = (StorePublic);
+
+export type StoresGetMyMembershipData = {
+    storeId: string;
+};
+
+export type StoresGetMyMembershipResponse = (MyMembership);
+
+export type StoresGetStoreSettingsData = {
+    storeId: string;
+};
+
+export type StoresGetStoreSettingsResponse = (StoreSettingsPublic);
+
+export type StoresUpdateStoreSettingsData = {
+    requestBody: StoreSettingsUpdate;
+    storeId: string;
+};
+
+export type StoresUpdateStoreSettingsResponse = (StoreSettingsPublic);
+
+export type StoresPublishStoreData = {
+    storeId: string;
+};
+
+export type StoresPublishStoreResponse = (StorePublic);
+
+export type StoresPauseStoreData = {
+    storeId: string;
+};
+
+export type StoresPauseStoreResponse = (StorePublic);
+
+export type StoresListStoreMembersData = {
+    limit?: number;
+    skip?: number;
+    storeId: string;
+};
+
+export type StoresListStoreMembersResponse = (Page_StoreMemberPublic_);
+
+export type StoresInviteStoreMemberData = {
+    requestBody: StoreMemberInvite;
+    storeId: string;
+};
+
+export type StoresInviteStoreMemberResponse = (StoreMemberPublic);
+
+export type StoresUpdateStoreMemberRoleData = {
+    requestBody: StoreMemberRoleUpdate;
+    storeId: string;
+    userId: string;
+};
+
+export type StoresUpdateStoreMemberRoleResponse = (StoreMemberPublic);
+
+export type StoresRemoveStoreMemberData = {
+    storeId: string;
+    userId: string;
+};
+
+export type StoresRemoveStoreMemberResponse = (Message);
 
 export type UsersReadUsersData = {
     limit?: number;

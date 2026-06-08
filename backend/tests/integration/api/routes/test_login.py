@@ -6,8 +6,9 @@ from sqlmodel import Session
 
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
-from app.modules.accounts.models import User, UserCreate
+from app.modules.accounts.models import User
 from app.modules.accounts.repositories import create_user
+from app.modules.accounts.schemas import UserCreate
 from app.utils import generate_password_reset_token
 from tests.utils.user import user_authentication_headers
 from tests.utils.utils import random_email, random_lower_string
@@ -121,9 +122,9 @@ def test_reset_password_invalid_token(
     )
     response = r.json()
 
-    assert "detail" in response
+    assert "error" in response
     assert r.status_code == 400
-    assert response["detail"] == "Invalid token"
+    assert response["error"]["message"] == "Invalid token"
 
 
 def test_login_with_bcrypt_password_upgrades_to_argon2(

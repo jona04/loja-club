@@ -11,7 +11,7 @@ O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100%
 | Fase | Arquivo | Etapas do roadmap | Objetivo |
 |---|---|---|---|
 | 0 | [phase-0-foundation.md](./phase-0-foundation.md) · [tasks](./phase-0-foundation/README.md) | 1–2 | Branding, config, Redis, esqueleto modular — **decomposta em tasks** |
-| 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base |
+| 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
 | 2 | [phase-2-catalog-media-3d.md](./phase-2-catalog-media-3d.md) | 5–6 | Catálogo, mídia/S3, personalização 3D |
 | 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) | 7–8 | Storefront Next.js, editor 3D, layouts |
 | 4 | [phase-4-sell-without-payment.md](./phase-4-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes, notificações — **tudo rodando local** |
@@ -31,7 +31,8 @@ Fase     → arquivo .md genérico (visão geral / trilha) — sempre presente
 
 - Cada **task** é um arquivo com descrição, dependências (`depends_on`), docs de referência, **Escopo / Fora de escopo**, arquivos a alterar e **DoD**. Modelo em [`_task-template.md`](./_task-template.md).
 - O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
-- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora só a **Fase 0** foi decomposta (`phase-0-foundation.md` + pasta `phase-0-foundation/`); as **Fases 1–6 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
+- **Follow-ups / débitos técnicos:** cada README de fase tem uma seção **"Follow-ups / débitos técnicos"** (checkboxes). Toda nota de task que diga "fica para depois" **também** entra lá (ou vira task) — não fica só em prosa.
+- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0 e 1** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 2–6 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
 
 ## Fundações & Gargalos (leitura obrigatória)
 
@@ -76,7 +77,7 @@ Estas decisões alinham o template aos docs e evitam divergência:
 1. **PK = UUID** (padrão do template). Os exemplos com id inteiro nos docs (`id: 123`) são ilustrativos, não normativos.
 2. **Nomes de tabela com prefixo de domínio** (doc [07](../07_database_strategy.md)): definir `__tablename__` explicitamente (ex.: `account_users`, `store_stores`, `catalog_products`). O template usa `user`/`item` por padrão — será sobrescrito.
 3. **Mixins base** em `app/db/` (ou `app/core/`): `UUIDMixin`, `TimestampMixin` (`created_at`/`updated_at`), `SoftDeleteMixin` (`deleted_at`/`deleted_by_user_id`/`delete_reason`), `StoreScopedMixin` (`store_id`). Doc [07](../07_database_strategy.md), [14](../14_security_strategy.md).
-4. **Convenção de módulo** (doc [04](../04_fastapi_template_adaptation.md)): cada módulo em `app/modules/<nome>/` com `models.py`, `schemas.py`, `routes.py`, `services.py`, `repositories.py`, `permissions.py`, `exceptions.py` (criar conforme a necessidade, não vazios).
+4. **Convenção de módulo** (doc [04](../04_fastapi_template_adaptation.md)): cada módulo em `app/modules/<nome>/`, criando conforme a necessidade (não vazios). Responsabilidades: **`models.py` = só tabelas `table=True` + seus `*Base`**; **`schemas.py` = DTOs de API** (`*Create`/`*Update`/`*Public`/…); **`enums.py` = enums** (ex.: status); além de `routes.py`, `services.py`, `repositories.py`, `permissions.py`, `exceptions.py`. **DTOs e enums não ficam em `models.py`** (`schemas.py` importa o `*Base` de `models.py`). **`enums.py` e `schemas.py` são scaffolded em todos os módulos** (placeholder com docstring), populados quando necessário — exceção explícita ao "não criar vazios", que segue valendo para `routes.py`/`services.py`/`repositories.py`/`permissions.py`/`exceptions.py`.
 5. **Soft delete** para todo registro de negócio; nunca hard delete (doc [07](../07_database_strategy.md)/[14](../14_security_strategy.md)).
 6. **Toda query comercial filtra por `store_id`** (doc [06](../06_multitenancy_and_domains.md)/[14](../14_security_strategy.md)).
 7. **APIs do painel** sob `/api/v1/stores/{store_id}/...`; **APIs públicas do storefront** resolvem a loja pelo header `Host` (doc [06](../06_multitenancy_and_domains.md)/[08](../08_modules_and_permissions.md)).

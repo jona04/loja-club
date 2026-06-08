@@ -43,3 +43,9 @@ P0-CFG-01 → P0-TEST-01 → P0-CFG-02 → P0-CFG-03 → P0-CFG-04 → P0-MOD-01
 - `account_users.is_superuser` (template) ↔ admin de plataforma: no MVP o superuser cobre o acesso interno; o modelo `platform_admin_roles`/`platform.*` entra na Fase 6 (`P6-ADMIN-*`). Registrado em P0-MOD-04.
 - **Global desde a base** (`P0-MOD-05`): dinheiro é sempre `(valor + moeda ISO 4217)`; telefone/endereço/locale globais. Telefone normalizado por lib (`phonenumbers`) para qualquer país — convenção já no [doc 23](../../23_customer_identity_and_guest_checkout.md); endereço país-aware (ISO 3166) vem na Fase 4.
 - **Testes** (`P0-TEST-01` + Fundações §10): unit p/ lógica pura, integração no seam, E2E p/ jornadas; isolamento por teste (rollback), S3 mockado (`moto`), `vitest`+RTL no front. Fixtures/factories multi-tenant ficam para a Fase 1.
+
+## Follow-ups / débitos técnicos
+
+> Pendências/débitos **adiados** não cobertos por outra task ou fase. Marcar `[x]` quando resolvido (citando a task de origem).
+
+- **— nenhum item aberto.** Varrido em 2026-06: os deferrals da fase (build da imagem do `worker` em `P0-CFG-04`; deploy e execução do CI ao vivo em `P0-CI-01`) já são **escopo das Fases 5–6**, então não entram aqui.

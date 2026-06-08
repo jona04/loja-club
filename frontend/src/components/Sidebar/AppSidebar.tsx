@@ -1,5 +1,3 @@
-import { Home, Users } from "lucide-react"
-
 import { SidebarAppearance } from "@/components/Common/Appearance"
 import { Logo } from "@/components/Common/Logo"
 import {
@@ -8,18 +6,16 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar"
+import { useActiveStore } from "@/hooks/useActiveStore"
 import useAuth from "@/hooks/useAuth"
-import { type Item, Main } from "./Main"
+import { buildMenu } from "@/lib/menu"
+import { Main } from "./Main"
 import { User } from "./User"
-
-const baseItems: Item[] = [{ icon: Home, title: "Dashboard", path: "/" }]
 
 export function AppSidebar() {
   const { user: currentUser } = useAuth()
-
-  const items = currentUser?.is_superuser
-    ? [...baseItems, { icon: Users, title: "Admin", path: "/admin" }]
-    : baseItems
+  const { permissions } = useActiveStore()
+  const items = buildMenu(permissions)
 
   return (
     <Sidebar collapsible="icon">
