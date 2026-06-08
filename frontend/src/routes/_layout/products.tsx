@@ -19,6 +19,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -45,8 +52,8 @@ function ProductsRoute() {
   )
 }
 
-/** Products listed per page. */
-const PAGE_SIZE = 20
+/** Page-size options for the products list. */
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100]
 
 /** Convert a major-unit amount string (e.g. "15.50") to minor units (cents). */
 const toMinor = (major: string): number =>
@@ -69,6 +76,7 @@ export function ProductsScreen() {
   const [createOpen, setCreateOpen] = useState(false)
   const [editing, setEditing] = useState<ProductPublic | null>(null)
   const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(20)
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -83,12 +91,12 @@ export function ProductsScreen() {
   const canArchive = permissions.includes("catalog.product.archive")
 
   const productsQuery = useQuery({
-    queryKey: ["products", storeId, page],
+    queryKey: ["products", storeId, page, pageSize],
     queryFn: () =>
       CatalogService.listProducts({
         storeId,
-        skip: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
+        skip: page * pageSize,
+        limit: pageSize,
       }),
     enabled: storeId !== "" && canView,
   })
@@ -107,11 +115,14 @@ export function ProductsScreen() {
           is_featured: form.featured,
         },
       }),
-    onSuccess: () => {
+    onSuccess: (created) => {
       showSuccessToast("Produto criado")
       invalidate()
       setCreateOpen(false)
       setForm({ name: "", price: "", description: "", featured: false })
+      // Continue straight into the product's details (image, stock) — these
+      // need the product to exist first (FK), so they live in the edit dialog.
+      setEditing(created)
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -141,7 +152,7 @@ export function ProductsScreen() {
 
   const products = productsQuery.data?.data ?? []
   const count = productsQuery.data?.count ?? 0
-  const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(count / pageSize))
 
   return (
     <div className="flex flex-col gap-6">
@@ -288,10 +299,33 @@ export function ProductsScreen() {
       </Table>
 
       <div className="flex items-center justify-between">
-        <span className="text-muted-foreground text-sm">
-          Página {page + 1} de {totalPages}
-        </span>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">
+            Itens por página
+          </span>
+          <Select
+            value={String(pageSize)}
+            onValueChange={(v) => {
+              setPageSize(Number(v))
+              setPage(0)
+            }}
+          >
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {PAGE_SIZE_OPTIONS.map((size) => (
+                <SelectItem key={size} value={String(size)}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">
+            Página {page + 1} de {totalPages}
+          </span>
           <Button
             variant="outline"
             size="sm"
@@ -303,7 +337,7 @@ export function ProductsScreen() {
           <Button
             variant="outline"
             size="sm"
-            disabled={(page + 1) * PAGE_SIZE >= count}
+            disabled={(page + 1) * pageSize >= count}
             onClick={() => setPage((p) => p + 1)}
           >
             Próxima
@@ -333,7 +367,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-function EditProductDialog({
+export function EditProductDialog({
   storeId,
   product,
   canUpdate,
@@ -351,11 +385,21 @@ function EditProductDialog({
   const [price, setPrice] = useState(fromMinor(product.price_amount_minor))
   const [description, setDescription] = useState(product.description ?? "")
   const [featured, setFeatured] = useState(product.is_featured ?? false)
-  const [stock, setStock] = useState("")
+  const [stock, setStock] = useState<string | null>(null)
 
+  const inventoryQuery = useQuery({
+    queryKey: ["inventory", storeId, product.id],
+    queryFn: () =>
+      CatalogService.getInventory({ storeId, productId: product.id }),
+  })
+  const loadedStock = inventoryQuery.data?.quantity ?? null
+  // Show the user's input, falling back to the persisted quantity.
+  const stockValue = stock ?? (loadedStock !== null ? String(loadedStock) : "")
+
+  // One save: the product fields, plus the stock when the user changed it.
   const saveMutation = useMutation({
-    mutationFn: () =>
-      CatalogService.updateProduct({
+    mutationFn: async () => {
+      await CatalogService.updateProduct({
         storeId,
         productId: product.id,
         requestBody: {
@@ -364,22 +408,21 @@ function EditProductDialog({
           price_amount_minor: toMinor(price),
           is_featured: featured,
         },
-      }),
+      })
+      const quantity = Number.parseInt(stockValue || "0", 10)
+      if (stock !== null && stockValue !== "" && quantity !== loadedStock) {
+        await CatalogService.setInventory({
+          storeId,
+          productId: product.id,
+          requestBody: { quantity },
+        })
+      }
+    },
     onSuccess: () => {
       showSuccessToast("Produto atualizado")
       onSaved()
+      onClose()
     },
-    onError: handleError.bind(showErrorToast),
-  })
-
-  const stockMutation = useMutation({
-    mutationFn: () =>
-      CatalogService.setInventory({
-        storeId,
-        productId: product.id,
-        requestBody: { quantity: Number.parseInt(stock || "0", 10) },
-      }),
-    onSuccess: () => showSuccessToast("Estoque atualizado"),
     onError: handleError.bind(showErrorToast),
   })
 
@@ -423,26 +466,16 @@ function EditProductDialog({
             />
             <Label htmlFor="edit-featured">Destaque</Label>
           </div>
-          <div className="flex items-end gap-2">
-            <Field label="Estoque">
-              <Input
-                type="number"
-                min="0"
-                value={stock}
-                placeholder="quantidade"
-                onChange={(e) => setStock(e.target.value)}
-                disabled={!canUpdate}
-              />
-            </Field>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!canUpdate || stock === "" || stockMutation.isPending}
-              onClick={() => stockMutation.mutate()}
-            >
-              Definir
-            </Button>
-          </div>
+          <Field label="Estoque">
+            <Input
+              type="number"
+              min="0"
+              value={stockValue}
+              placeholder="quantidade"
+              onChange={(e) => setStock(e.target.value)}
+              disabled={!canUpdate}
+            />
+          </Field>
           <ProductImageUpload
             storeId={storeId}
             productId={product.id}

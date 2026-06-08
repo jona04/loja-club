@@ -51,15 +51,17 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Progresso
-- ✅ **Schemas/Repos/Service/Routes** (`catalog/*`): products (list/get/create/update/publish/unpublish/archive), categories (CRUD), variants (CRUD), images (attach/list/remove), inventory (set). Gating `catalog.*`; tudo scoped por `get_store_scoped` (INV-T2); listas com `Page`. Slug derivado + único-quando-ativo (pré-check → 409); `currency` herdada da loja.
+- ✅ **Schemas/Repos/Service/Routes** (`catalog/*`): products (list/get/create/update/publish/unpublish/archive), categories (CRUD), variants (CRUD), images (attach/list/remove), inventory (set). Gating `catalog.*`; tudo scoped por `get_store_scoped` (INV-T2); listas com `Page`. Slug derivado + único-quando-ativo (**auto-sufixo** `-2/-3…` em nome repetido; slug explícito tomado → 409); `currency` herdada da loja.
 - ✅ **Wire** no `api/router.py`; **client OpenAPI** regenerado (`scripts/generate-client.sh` → openapi-ts), `tsc -p tsconfig.build.json` verde.
 - ✅ **Testes** `tests/integration/api/routes/test_catalog.py`: CRUD/publish/archive, slug por loja, cross-store, isolamento, **gating (support→403)**, inventory upsert, categorias, variantes, imagens (+ isolamento de mídia).
 
 ## Notas / Reconciliações
 - **Arquivar = soft delete** (status `archived` + `deleted_at`): some das listas/get ativos; slug volta a ficar livre.
+- **Slug:** derivado do nome **auto-desambigua** (`camiseta`, `camiseta-2`…); enquanto `draft`, renomear faz o slug **acompanhar**; ao **publicar**, trava (URL pública estável). Slug explícito tomado → 409. (Race concorrente segue como follow-up.)
 - **Imagem só de mídia da própria loja:** `attach_image` valida a `media_file` via `get_store_scoped` (404 se for de outra loja).
 - **`currency` do produto** herdada da loja na criação (override opcional no payload).
 - **Permissões de categoria:** view via `catalog.view`; escrita via `catalog.category.manage` (doc 08).
+- **`GET .../products/{id}/inventory`** (gated `catalog.product.view`) — devolve o estoque do produto (ou `null` se não houver), pra o painel **pré-preencher** o campo de quantidade no editar.
 
 ## Follow-ups
 - [ ] **Race no slug:** o pré-check (`active_slug_exists`) tem janela de corrida → dois creates simultâneos com o mesmo slug → o 2º estoura `IntegrityError` (índice parcial) como **500**, não 409. Tratar `IntegrityError` no service → 409. Origem: P2-CAT-02.

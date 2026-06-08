@@ -362,6 +362,22 @@ def remove_image(
 # --- Inventory ---
 
 
+@router.get(
+    "/products/{product_id}/inventory",
+    response_model=InventoryPublic | None,
+    dependencies=[Depends(require_permission("catalog.product.view"))],
+)
+def get_inventory(
+    store_id: uuid.UUID,
+    product_id: uuid.UUID,
+    session: SessionDep,
+) -> InventoryItem | None:
+    """Return the product's stock entry (None if not set yet)."""
+    return services.get_inventory(
+        session=session, store_id=store_id, product_id=product_id
+    )
+
+
 @router.put(
     "/products/{product_id}/inventory",
     response_model=InventoryPublic,

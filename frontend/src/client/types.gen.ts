@@ -588,6 +588,13 @@ export type CatalogRemoveImageData = {
 
 export type CatalogRemoveImageResponse = (void);
 
+export type CatalogGetInventoryData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogGetInventoryResponse = ((InventoryPublic | null));
+
 export type CatalogSetInventoryData = {
     productId: string;
     requestBody: InventorySet;

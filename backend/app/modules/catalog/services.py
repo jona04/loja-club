@@ -46,7 +46,11 @@ def _resolve_slug(
     slug: str | None,
     exclude_id: uuid.UUID | None = None,
 ) -> str:
-    """Derive/validate a unique active slug for ``model`` in the store.
+    """Derive or validate a unique active slug for ``model`` in the store.
+
+    An **explicit** ``slug`` must be free (else 409). When ``slug`` is ``None``,
+    it is derived from ``name`` and **auto-disambiguated** with a numeric suffix
+    (``base``, ``base-2``, ``base-3``…) so duplicate names never collide.
 
     Args:
         session: Active database session.
@@ -57,18 +61,31 @@ def _resolve_slug(
         exclude_id: Row id to ignore (for updates).
 
     Returns:
-        The validated slug.
+        The validated/derived unique slug.
 
     Raises:
-        AppError: 422 if no slug can be derived; 409 if it is already in use.
+        AppError: 422 if no slug can be derived; 409 if an explicit slug is taken.
     """
-    candidate = slug or slugify(name)
-    if not candidate:
+    if slug is not None:
+        if not slug:
+            raise AppError("invalid_slug", "Could not derive a slug; provide one", 422)
+        if repo.active_slug_exists(
+            session, model, store_id, slug, exclude_id=exclude_id
+        ):
+            raise AppError(
+                "slug_taken", "This slug is already in use in the store", 409
+            )
+        return slug
+    base = slugify(name)
+    if not base:
         raise AppError("invalid_slug", "Could not derive a slug; provide one", 422)
-    if repo.active_slug_exists(
+    candidate = base
+    suffix = 2
+    while repo.active_slug_exists(
         session, model, store_id, candidate, exclude_id=exclude_id
     ):
-        raise AppError("slug_taken", "This slug is already in use in the store", 409)
+        candidate = f"{base}-{suffix}"
+        suffix += 1
     return candidate
 
 
@@ -160,7 +177,10 @@ def update_product(
     product_id: uuid.UUID,
     payload: ProductUpdate,
 ) -> Product:
-    """Apply a partial update to a product.
+    """Apply a partial update to a product (a draft's slug follows the name).
+
+    While the product is a ``draft``, renaming it re-derives the slug from the
+    new name; once published, the slug stays fixed (stable public URL).
 
     Args:
         session: Active database session.
@@ -172,7 +192,7 @@ def update_product(
         The updated product.
 
     Raises:
-        AppError: 404 not found; 409 if the new slug is taken.
+        AppError: 404 not found; 409 if an explicit new slug is taken.
     """
     product = get_product(session=session, store_id=store_id, product_id=product_id)
     data = payload.model_dump(exclude_unset=True)
@@ -183,6 +203,17 @@ def update_product(
             store_id,
             name=product.name,
             slug=data["slug"],
+            exclude_id=product.id,
+        )
+    elif product.status == ProductStatus.draft and data.get("name"):
+        # Draft + renamed (no explicit slug): the slug follows the name
+        # (auto-disambiguated). Published products keep their slug fixed.
+        data["slug"] = _resolve_slug(
+            session,
+            Product,
+            store_id,
+            name=data["name"],
+            slug=None,
             exclude_id=product.id,
         )
     product.sqlmodel_update(data)
@@ -660,6 +691,28 @@ def remove_image(
 
 
 # --- Inventory ---
+
+
+def get_inventory(
+    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
+) -> InventoryItem | None:
+    """Return the product-level stock entry, or ``None`` if not set yet.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product id.
+
+    Returns:
+        The product-level (no variant) inventory row, or ``None``.
+
+    Raises:
+        AppError: 404 if the product is not found.
+    """
+    get_product(session=session, store_id=store_id, product_id=product_id)
+    return repo.get_inventory_item(
+        session, store_id=store_id, product_id=product_id, variant_id=None
+    )
 
 
 def set_inventory(

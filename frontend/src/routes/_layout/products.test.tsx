@@ -1,12 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { describe, expect, it, vi } from "vitest"
 
 vi.mock("@/client", () => ({
   CatalogService: {
     listProducts: vi.fn().mockResolvedValue({ data: [], count: 0 }),
+    getInventory: vi.fn().mockResolvedValue({ quantity: 200 }),
+    listImages: vi.fn().mockResolvedValue([]),
+    updateProduct: vi.fn().mockResolvedValue({}),
+    setInventory: vi.fn().mockResolvedValue({ quantity: 50 }),
   },
+  MediaService: { uploadMedia: vi.fn() },
 }))
 
 const activeStore = vi.fn()
@@ -14,7 +19,8 @@ vi.mock("@/hooks/useActiveStore", () => ({
   useActiveStore: () => activeStore(),
 }))
 
-import { ProductsScreen } from "./products"
+import { CatalogService, type ProductPublic } from "@/client"
+import { EditProductDialog, ProductsScreen } from "./products"
 
 function wrapper({ children }: { children: ReactNode }) {
   const client = new QueryClient({
@@ -44,5 +50,43 @@ describe("ProductsScreen permission gating", () => {
     expect(
       screen.getByRole("button", { name: "Novo produto" }),
     ).not.toBeDisabled()
+  })
+})
+
+describe("EditProductDialog stock", () => {
+  it("pre-fills the stock and saves it together with Salvar", async () => {
+    const product: ProductPublic = {
+      id: "p1",
+      store_id: "s1",
+      name: "Mug",
+      slug: "mug",
+      description: null,
+      status: "draft",
+      price_amount_minor: 1000,
+      price_currency: "USD",
+      is_featured: false,
+    }
+    render(
+      <EditProductDialog
+        storeId="s1"
+        product={product}
+        canUpdate
+        onClose={vi.fn()}
+        onSaved={vi.fn()}
+      />,
+      { wrapper },
+    )
+    // Pre-filled from getInventory (the bug was that it came empty).
+    const stockInput = await screen.findByDisplayValue("200")
+    fireEvent.change(stockInput, { target: { value: "50" } })
+    // A single "Salvar" must persist the stock too (no separate button).
+    fireEvent.click(screen.getByRole("button", { name: "Salvar" }))
+    await waitFor(() => {
+      expect(CatalogService.setInventory).toHaveBeenCalledWith({
+        storeId: "s1",
+        productId: "p1",
+        requestBody: { quantity: 50 },
+      })
+    })
   })
 })

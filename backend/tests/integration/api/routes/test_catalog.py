@@ -83,6 +83,33 @@ def test_publish_unpublish_archive(
     assert client.get(f"{BASE}/{a.id}/products/{pid}", headers=h).status_code == 404
 
 
+def test_slug_auto_disambiguates_and_follows_draft_name(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    url = f"{BASE}/{a.id}/products"
+
+    # same name, no explicit slug → auto-suffix (camiseta, camiseta-2, …)
+    p1 = client.post(
+        url, headers=h, json={"name": "Camiseta", "price_amount_minor": 1000}
+    ).json()
+    p2 = client.post(
+        url, headers=h, json={"name": "Camiseta", "price_amount_minor": 1000}
+    ).json()
+    assert p1["slug"] == "camiseta"
+    assert p2["slug"] == "camiseta-2"
+
+    # draft: renaming makes the slug follow the name
+    upd = client.patch(f"{url}/{p1['id']}", headers=h, json={"name": "Camiseta Azul"})
+    assert upd.json()["slug"] == "camiseta-azul"
+
+    # published: the slug freezes (stable public URL)
+    client.post(f"{url}/{p1['id']}/publish", headers=h)
+    upd2 = client.patch(f"{url}/{p1['id']}", headers=h, json={"name": "Camiseta Verde"})
+    assert upd2.json()["slug"] == "camiseta-azul"
+
+
 def test_slug_unique_per_store_but_free_across_stores(
     client: TestClient, two_stores: TenantContext
 ) -> None:
@@ -127,14 +154,15 @@ def test_inventory_set_upserts(client: TestClient, two_stores: TenantContext) ->
     a = two_stores.store_a
     h = two_stores.owner_a_headers
     pid = _create_product(client, a.id, h)["id"]
-    r1 = client.put(
-        f"{BASE}/{a.id}/products/{pid}/inventory", headers=h, json={"quantity": 10}
-    )
+    inv_url = f"{BASE}/{a.id}/products/{pid}/inventory"
+    # no stock set yet → GET returns null
+    assert client.get(inv_url, headers=h).json() is None
+    r1 = client.put(inv_url, headers=h, json={"quantity": 10})
     assert r1.status_code == 200 and r1.json()["quantity"] == 10
-    r2 = client.put(
-        f"{BASE}/{a.id}/products/{pid}/inventory", headers=h, json={"quantity": 4}
-    )
+    r2 = client.put(inv_url, headers=h, json={"quantity": 4})
     assert r2.json()["quantity"] == 4  # same row updated
+    # GET now reflects the stored quantity (so the edit form can pre-fill it)
+    assert client.get(inv_url, headers=h).json()["quantity"] == 4
 
 
 def test_category_crud(client: TestClient, two_stores: TenantContext) -> None:
