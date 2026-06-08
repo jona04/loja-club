@@ -1,5 +1,8 @@
 """FastAPI application entrypoint: builds the ASGI app and wires routers."""
 
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
@@ -7,9 +10,13 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app import models_registry  # noqa: F401  registers all models on the metadata
 from app.api.router import api_router
+from app.core import storage
 from app.core.api import register_exception_handlers
+from app.core.cache import close as close_redis
 from app.core.cache import get_redis
 from app.core.config import settings
+from app.core.db import dispose_engine
+from app.core.queue import close_pool
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -28,10 +35,32 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
     sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
+    """Application lifespan: the single place that releases shared clients.
+
+    External clients are created once and reused (INV-F6); on shutdown every one
+    is released here (arq pool, S3 client, Redis, DB engine).
+
+    Args:
+        _app: The FastAPI application (unused).
+
+    Yields:
+        Control to the running app; shared clients are released on shutdown.
+    """
+    yield
+    await close_pool()
+    storage.close_client()
+    close_redis()
+    dispose_engine()
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
+    lifespan=lifespan,
 )
 
 # Render every error with the structured envelope (P1-API-01).

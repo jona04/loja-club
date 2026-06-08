@@ -65,7 +65,7 @@ A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/R
 
 ## Notas / Reconciliações
 - **DEC-1 (Fundações) — decidido:** inteiro em unidades menores + moeda ISO 4217 (estilo Stripe). `Money` é um value object próprio; `babel` fornece expoente e formatação. **Não usar `py-moneyed`** (baseado em `Decimal`, conflita com unidades menores). Alternativa histórica considerada: `Decimal` + moeda.
-- **DEC-2 (Fundações):** arredondamento recomendado `ROUND_HALF_UP`; rateio de split por maior-resto. Confirmar antes do split (Fase 5).
+- **DEC-2 (Fundações):** arredondamento recomendado `ROUND_HALF_UP`; rateio de split por maior-resto. Confirmar antes do split (Fase 6).
 - **Implementado:** `app/core/money.py` (`Money`: `+`, `-`, `*int`, `apply_rate(Decimal)` half-up, `decimal_amount`, `format(locale)`) + `CurrencyMismatchError`; `babel` para expoente/format. 14 testes unit verdes; gate `app` verde.
 - **Reconciliação:** não editei `base.py` — dinheiro não cabe como mixin (um modelo pode ter vários valores monetários: preço, total…). A convenção de colunas vive no docstring de `money.py`; sem type composto no MVP.
 - **Refino do harness (P0-TEST-01):** movi os fixtures de DB para `tests/integration/conftest.py`, então `tests/unit` roda **sem DB** (14 testes em 0,55s). Os testes do Money provaram isso.

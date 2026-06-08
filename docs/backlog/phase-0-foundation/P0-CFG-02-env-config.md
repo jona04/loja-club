@@ -30,7 +30,7 @@ Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar
 - `.env` + `config.py`: `PLATFORM_DEFAULT_CURRENCY` (ISO 4217, ex.: `USD`/`BRL`) e `PLATFORM_DEFAULT_LOCALE` (ex.: `pt-BR`) como **fallback global** (ver `P0-MOD-05`). Loja e cliente terão a própria moeda/locale nas fases seguintes.
 
 ## Fora de escopo (o que NÃO entra)
-- DNS/SSL real, `*.loja.club` → Fase 5 (`P5-INFRA-*`).
+- DNS/SSL real, `*.loja.club` → Fase 6 (`P5-INFRA-*`).
 - Resolução de loja pelo `Host` e tabela `domain_hosts` → Fase 1 (`P1-DOMAINS-*`/`P1-TENANCY-*`).
 - Roteamento Traefik dos subdomínios em si → ajustado junto com painel/storefront (Fases 1/3); aqui só o `.env`/settings.
 

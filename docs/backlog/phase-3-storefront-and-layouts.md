@@ -1,13 +1,14 @@
 # Fase 3 — Storefront público e layouts
 
-> Roadmap: Etapas 7–8. Objetivo: loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos e categorias renderizam; produto personalizável abre o editor 3D que salva a sessão; lojista troca o template e a loja pública muda.
+> Roadmap: Etapas 7–8. Objetivo: loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (de imagem) e categorias renderizam; lojista troca o template e a loja pública muda. O **editor 3D + personalização** é a **[Fase 5](./phase-5-3d-products.md)**.
 
 Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront_and_layouts.md), [22](../22_product_customization_3d.md), [13](../13_performance_cache_and_cdn.md), [21](../21_design_system_todo.md), [16](../16_testing_strategy.md).
 
+> **Nota:** o storefront base (home/categoria/produto, templates) é desta fase; o **editor 3D + personalização** é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)** (modelos gerados pelo lojista via API).
+
 ## Definition of Done da fase
 
-- `frontend-storefront` (Next.js) resolve a loja pelo `Host` e renderiza home/categoria/produto.
-- Produto `customizable_3d` abre editor Three.js: upload de arte, cor, texto, posição/escala/rotação, preview, autosave e aprovação antes do carrinho.
+- `frontend-storefront` (Next.js) resolve a loja pelo `Host` e renderiza home/categoria/produto (só **imagem** nesta fase).
 - 2 templates (`classic`, `modern`); lojista aplica no painel e a loja pública reflete (com invalidação de cache).
 - Host inexistente → página "loja não encontrada".
 
@@ -17,6 +18,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 > Decisão fechada (doc [05](../05_frontend_architecture.md)/[10](../10_storefront_and_layouts.md)/[18](../18_open_decisions.md)): Next.js no storefront, Three.js no editor. É um projeto **separado** do `frontend-dashboard`.
 
+- [ ] **Renomear o `frontend/` atual para `frontend-dashboard/`** (o painel Vite): os docs ([05](../05_frontend_architecture.md)/[12](../12_aws_infrastructure_and_deployment.md)) já usam esse nome, mas o diretório ficou como `frontend/` nas Fases 0–2 para evitar churn antes de existir um segundo frontend. Ao introduzir o storefront, renomear o diretório + ajustar `compose*.yml`, Traefik, workspace `bun` (lockfile na raiz) e CI.
 - [ ] Criar `frontend-storefront/` (Next.js, TypeScript, Tailwind). Pode reutilizar componentes/cliente OpenAPI e padrões visuais do dashboard, mas com build/deploy próprios. Doc [05](../05_frontend_architecture.md).
 - [ ] Resolução por `Host`: middleware/SSR lê o host → chama API pública → obtém `store_id` e dados públicos. Doc [06](../06_multitenancy_and_domains.md)/[10](../10_storefront_and_layouts.md).
 - [ ] Página **"loja não encontrada"** amigável (sem vazar dado interno). Doc [06](../06_multitenancy_and_domains.md).
@@ -39,23 +41,6 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 ---
 
-## Etapa 7 — Editor de personalização 3D (storefront)
-
-> Experiência interativa da página de produto, não um app à parte. Doc [22](../22_product_customization_3d.md)/[10](../10_storefront_and_layouts.md).
-
-- [ ] Carregar GLB do modelo+versão publicado pela Loja Club (CDN).
-- [ ] Upload de arte/imagem pelo cliente; aplicar como textura.
-- [ ] Texto (nome/frase) com fonte, cor, tamanho dentro da área imprimível.
-- [ ] Cor do produto quando o modelo permitir.
-- [ ] Mover/escala/rotação dentro da área imprimível; preview em tempo real.
-- [ ] **Autosave** da sessão (chama `product_customization` API).
-- [ ] **Aprovação visual** obrigatória antes de adicionar ao carrinho (gera snapshot aprovado).
-- [ ] Restaurar sessão pelo cookie `guest_session_id` ao voltar. Doc [22](../22_product_customization_3d.md)/[23](../23_customer_identity_and_guest_checkout.md).
-- [ ] Aviso de baixa resolução quando possível. Doc [22](../22_product_customization_3d.md).
-- [ ] Estados do editor conforme doc [21](../21_design_system_todo.md).
-
----
-
 ## Etapa 8 — Módulo de conteúdo/layout
 
 ### Modelos (com `store_id`, exceto templates globais)
@@ -68,7 +53,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 - [ ] Índice `content_store_theme_settings.store_id` único; `content_menus.store_id+location`. Doc [07](../07_database_strategy.md).
 
 ### Templates no storefront
-- [ ] Implementar `classic` e `modern` com HomePage, ProductPage, ProductCustomizer, CategoryPage, CartPage, CheckoutPage (carrinho/checkout completados na Fase 4). Doc [10](../10_storefront_and_layouts.md).
+- [ ] Implementar `classic` e `modern` com HomePage, ProductPage, CategoryPage, CartPage, CheckoutPage (carrinho/checkout completados na Fase 4; o **ProductCustomizer/editor 3D** é a Fase 5). Doc [10](../10_storefront_and_layouts.md).
 
 ---
 
@@ -79,12 +64,11 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 ## Etapa 7/8 — Testes (doc [16](../16_testing_strategy.md))
 - [ ] Domínio resolve a loja; host inexistente → "loja não encontrada".
-- [ ] Home, produto e categoria carregam; editor 3D carrega só em produto personalizável.
-- [ ] Sessão de personalização é retomada pelo cookie.
+- [ ] Home, produto e categoria carregam (produtos de imagem).
 - [ ] Loja inicia com template padrão; aplicar `classic`/`modern` invalida cache e o storefront retorna o template ativo correto.
 
 ---
 
 ## Reconciliações (registrar aqui)
 - **`resolve_store_by_host` já implementado na `P1-TEN-01`** (cache-aside `domain:{host}`, tolera stale). A Fase 3 só adiciona o **filtro de publicação** (resolver apenas loja `active`/publicada; demais → "loja não encontrada") e as chaves de cache de leitura (`store:{id}:settings|theme|home|...`).
-- **Sobreposição `store_settings` (Fase 1) × `content_store_theme_settings` (Fase 3):** `store_settings` é a fonte de **contato/negócio** (`public_name`, `description`, `logo_url`, `contact_*`, `whatsapp_number`, `address`, `is_published`); o theme é **só aparência/layout** (template, banner, headline, cores, fonte, coleção em destaque). **`logo_url` e `description` ficam em `store_settings`** — removidos do theme para não duplicar dado.
+- **Sobreposição `store_settings` (Fase 1) × `content_store_theme_settings` (Fase 3):** `store_settings` é a fonte de **contato/negócio** (`public_name`, `description`, `logo_url`, `contact_*`, `whatsapp_number`, `address`); o theme é **só aparência/layout** (template, banner, headline, cores, fonte, coleção em destaque). **`logo_url` e `description` ficam em `store_settings`** — removidos do theme para não duplicar dado.

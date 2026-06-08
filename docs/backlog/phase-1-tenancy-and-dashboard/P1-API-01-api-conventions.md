@@ -31,7 +31,7 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
 
 ## Fora de escopo (o que NÃO entra)
 - Contratos detalhados por módulo (cada fase define os seus).
-- Contratos públicos do storefront e webhooks → Fase 3 / Fase 5.
+- Contratos públicos do storefront e webhooks → Fase 3 / Fase 6.
 - Rate limit → baseline Fase 4 (INV-S5).
 
 ## Arquivos a criar/alterar
@@ -65,7 +65,7 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
 - **Migração do `{detail}`:** o template usava `{detail}`. Ajustados os testes da Fase 0 (`test_login`/`test_users`) e o `frontend/src/utils.ts` (`extractErrorMessage` lê `error.message`, com fallback para `detail`). `EditUser.tsx` só tinha "detail" como texto de UI.
 - **OpenAPI:** o schema de erro não foi declarado por rota (o front lê `err.body` de forma defensiva); declarar `responses=` por endpoint fica como melhoria futura se precisarmos do tipo no client gerado.
 - **`details` sempre presente** (`null` quando ausente) para schema consistente.
-- **Erros inesperados (500):** handler de `Exception` genérica responde no **mesmo envelope** (`{error:{code:"internal_error", ...}}`, **sem vazar traceback**) e **loga** o traceback server-side (`logger`, `exc_info`); 5xx de `AppError`/`HTTPException` também logados (4xx não, pra não poluir). Fecha o padrão de erro. **Observabilidade completa** (structured logging, request-id, log de auditoria, ativar Sentry, rate limit) é **Fase 6** (Fundações: observabilidade → Fase 6).
+- **Erros inesperados (500):** handler de `Exception` genérica responde no **mesmo envelope** (`{error:{code:"internal_error", ...}}`, **sem vazar traceback**) e **loga** o traceback server-side (`logger`, `exc_info`); 5xx de `AppError`/`HTTPException` também logados (4xx não, pra não poluir). Fecha o padrão de erro. **Observabilidade completa** (structured logging, request-id, log de auditoria, ativar Sentry, rate limit) é **Fase 7** (Fundações: observabilidade → Fase 7).
 
 ## Follow-ups
 - [ ] **Tipar o schema de erro no OpenAPI** (`responses=` com `ErrorResponse` por endpoint) para o client gerado carregar o tipo do erro. *Quando:* se/quando o frontend precisar do tipo (hoje lê `err.body` defensivamente). → README da fase.

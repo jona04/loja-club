@@ -4,6 +4,7 @@ import pytest
 from sqlmodel import Session, select
 
 from app.core.api import AppError
+from app.db.base import get_datetime_utc
 from app.modules.accounts import repositories
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserCreate
@@ -61,9 +62,9 @@ def test_get_active_membership_suspended_store_unavailable(db: Session) -> None:
     assert exc.value.code == "store_unavailable"
 
 
-def test_get_active_membership_archived_store_not_found(db: Session) -> None:
-    store = _store(db, "perm-arch")
-    store.status = StoreStatus.archived
+def test_get_active_membership_deleted_store_not_found(db: Session) -> None:
+    store = _store(db, "perm-del")
+    store.deleted_at = get_datetime_utc()
     db.add(store)
     db.flush()
     user = _user(db)

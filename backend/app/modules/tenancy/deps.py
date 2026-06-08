@@ -39,11 +39,7 @@ def get_active_membership(
             platform (no internal data leaked).
     """
     store = session.get(Store, store_id)
-    if (
-        store is None
-        or store.deleted_at is not None
-        or store.status == StoreStatus.archived
-    ):
+    if store is None or store.deleted_at is not None:
         raise AppError("store_not_found", "Store not found", status_code=404)
     membership = session.exec(
         select(StoreMember).where(

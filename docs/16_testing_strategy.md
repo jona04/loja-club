@@ -58,7 +58,8 @@ Testar:
 
 - criar produto;
 - publicar produto;
-- despublicar produto;
+- arquivar produto (offline reversível);
+- deletar produto (soft-delete);
 - alterar estoque;
 - slug único por loja;
 - mesmo slug pode existir em lojas diferentes, se permitido;

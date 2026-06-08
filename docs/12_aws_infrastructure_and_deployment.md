@@ -15,14 +15,15 @@ Usar Docker desde o início.
 | Etapa | Ambiente | Onde roda | Arquivos / CDN |
 |---|---|---|---|
 | Fases 0–4 (MVP) | **dev local** | máquina do desenvolvedor (Docker Compose + Traefik) | **AWS S3 + CloudFront reais** (bucket/distribuição de dev) |
-| Fases 5–6 | **dev online na AWS** | **EC2** + Docker Compose + Traefik | AWS S3 + CloudFront |
+| Fases 6–7 | **dev online na AWS** | **EC2** + Docker Compose + Traefik | AWS S3 + CloudFront |
 | Pós-V1 | **produção** | ECS/Fargate + ALB (troca a orquestração por serviços gerenciados) | AWS S3 + CloudFront |
 
 Pontos importantes:
 
 - Mesmo no **dev local**, os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront de verdade**, com implementação normal via SDK (boto3). **Não usar MinIO** nem stand-ins locais de storage.
-- O sistema só vai **para o ar** nas Fases 5–6, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
+- O sistema só vai **para o ar** nas Fases 6–7, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
 - A migração para **produção** (ECS/Fargate + ALB etc.) é um passo **posterior à V1** e troca apenas a camada de orquestração/entrada, mantendo o mesmo backend, banco e storage.
+- **Região AWS (1ª etapa):** **Ohio (`us-east-2`)** — todos os recursos de dev (S3, CloudFront, IAM e, depois, compute) na mesma região. A região de produção é revisada na migração pós-V1.
 
 ## Ambientes
 
@@ -30,7 +31,7 @@ A Loja Club terá, ao longo do tempo:
 
 ```text
 dev local      (V1, Fases 0–4) — máquina do desenvolvedor
-dev online     (V1, Fases 5–6) — EC2 na AWS
+dev online     (V1, Fases 6–7) — EC2 na AWS
 production     (pós-V1)         — ECS/Fargate na AWS
 ```
 
@@ -57,7 +58,7 @@ adminer
 mailcatcher
 ```
 
-## Dev online na AWS (V1 — Fases 5–6)
+## Dev online na AWS (V1 — Fases 6–7)
 
 O ambiente online da V1 usa **EC2** (não ECS):
 
@@ -98,7 +99,7 @@ Serviços:
 | Route 53 | DNS |
 | ACM | SSL/TLS |
 | CloudWatch | Logs e métricas |
-| SES | E-mails |
+| SES | E-mails (enviados pelo worker) |
 | Sentry | Erros da aplicação |
 | Secrets Manager ou SSM | Segredos |
 
@@ -304,4 +305,4 @@ Para V1 barata, a expectativa inicial pode ficar em faixa controlada se usar:
 
 ## Decisão canônica
 
-A Loja Club usará Docker desde o começo. **Toda a V1 é dev**: Fases 0–4 em **dev local** (com S3/CloudFront reais) e Fases 5–6 em **dev online na AWS** com EC2 + Docker Compose + Traefik + RDS + Redis/ElastiCache + S3 + CloudFront. A **produção robusta com ECS/Fargate + ALB** é um passo **posterior à V1**.
+A Loja Club usará Docker desde o começo. **Toda a V1 é dev**: Fases 0–4 em **dev local** (com S3/CloudFront reais) e Fases 6–7 em **dev online na AWS** com EC2 + Docker Compose + Traefik + RDS + Redis/ElastiCache + S3 + CloudFront. A **produção robusta com ECS/Fargate + ALB** é um passo **posterior à V1**.

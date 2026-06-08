@@ -134,7 +134,7 @@ def update_settings(
 def set_store_published(
     *, session: Session, store_id: uuid.UUID, published: bool
 ) -> Store:
-    """Publish (active) or pause a store, keeping ``is_published`` consistent.
+    """Publish (``active``) or pause (``paused``) a store.
 
     Args:
         session: Active database session.
@@ -148,12 +148,6 @@ def set_store_published(
     if store is None:  # pragma: no cover - validated by the route dependency
         raise AppError("store_not_found", "Store not found", 404)
     store.status = StoreStatus.active if published else StoreStatus.paused
-    settings_row = session.exec(
-        select(StoreSettings).where(StoreSettings.store_id == store_id)
-    ).first()
-    if settings_row is not None:
-        settings_row.is_published = published
-        session.add(settings_row)
     session.add(store)
     session.commit()
     session.refresh(store)

@@ -8,7 +8,7 @@ A proposta é entregar uma solução com a base operacional de uma plataforma co
 
 O lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Loja Club, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
 
-Além do ecommerce comum, a Loja Club deve permitir produtos personalizáveis em 3D. O cliente escolhe um produto, como uma caneca, squeeze ou camisa, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho.
+Além do ecommerce comum, a Loja Club permitirá produtos personalizáveis em 3D **(Fase 5 — ver [Produtos 3D](./backlog/phase-5-3d-products.md); a Fase 2 de catálogo entrega só imagem)**. O cliente escolhe um produto, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho. **Os modelos 3D são gerados pelo lojista via API de terceiros** — não há biblioteca da plataforma.
 
 ## Posicionamento
 
@@ -20,7 +20,7 @@ A plataforma deve oferecer:
 - painel administrativo do lojista;
 - cadastro de produtos;
 - imagens e mídia;
-- biblioteca de modelos 3D criada pela Loja Club;
+- modelos 3D gerados pelo lojista via API (Fase 5);
 - produtos personalizáveis;
 - sessão de personalização salva;
 - carrinho;
@@ -48,7 +48,7 @@ O lojista deve conseguir:
 5. Escolher entre dois templates prontos na V1.
 6. Cadastrar produtos e imagens.
 7. Marcar produtos como personalizáveis quando fizer sentido.
-8. Vincular produtos a modelos 3D disponíveis na biblioteca da Loja Club.
+8. Gerar modelos 3D via API e vinculá-los aos produtos (Fase 5).
 9. Configurar checkout e pagamento.
 10. Definir frete simples, retirada local ou entrega combinada.
 11. Publicar a loja.
@@ -102,7 +102,7 @@ A V1 deve incluir:
 - subdomínio automático;
 - catálogo;
 - upload de imagens;
-- biblioteca de modelos 3D gerenciada pela Loja Club;
+- modelos 3D gerados pelo lojista via API, por loja (Fase 5);
 - produtos personalizáveis em 3D;
 - upload de arte pelo cliente final;
 - sessão de personalização persistida;

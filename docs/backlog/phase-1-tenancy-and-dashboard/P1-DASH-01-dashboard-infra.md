@@ -23,12 +23,12 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 ## Escopo (o que ENTRA)
 - **Traefik:** host do painel `dashboard.${DOMAIN}` → **`app.${DOMAIN}`** (labels em `compose.yml`).
 - **Papel do projeto:** tratar o `frontend/` do template como o **`frontend-dashboard`** (admin e storefront são projetos separados, Fases 6 e 3). `VITE_API_URL` por env (sem hardcode — INV-FE3; já aponta para a porta dev `8800`).
-- **Limpeza** de páginas/exemplos do template fora do escopo do painel: `routes/_layout/admin.tsx` (gestão de `account_users` é do **admin de plataforma**, Fase 6); `items` já removido na Fase 0.
+- **Limpeza** de páginas/exemplos do template fora do escopo do painel: `routes/_layout/admin.tsx` (gestão de `account_users` é do **admin de plataforma**, Fase 7); `items` já removido na Fase 0.
 - Smoke: o painel sobe e responde em `app.loja.localhost:8088`.
 
 ## Fora de escopo (o que NÃO entra)
 - Seletor de loja / contexto → `P1-DASH-02`; menu/telas → `P1-DASH-03`.
-- Projetos `frontend-admin` (Fase 6) e `frontend-storefront` (Fase 3).
+- Projetos `frontend-admin` (Fase 7) e `frontend-storefront` (Fase 3).
 - **Renomear fisicamente** o diretório `frontend/` → `frontend-dashboard/` (mexe em workspace bun/`bun.lock`/Dockerfiles): **opcional**; pode ficar para quando admin/storefront forem criados. Ver Notas.
 
 ## Arquivos a criar/alterar
@@ -56,9 +56,9 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 
 ## Notas / Reconciliações
 - Doc [05](../../05_frontend_architecture.md) pede 3 projetos separados (`frontend-dashboard`/`admin`/`storefront`). No MVP mapeamos o `frontend/` existente ao papel de **dashboard**; o **rename físico** do diretório (e a criação de admin/storefront) fica para o início das Fases 3/6 (mexe em workspace bun/`bun.lock`/Dockerfiles).
-- **Limpeza:** removido o cluster inteiro `routes/_layout/admin.tsx` + `components/Admin/*` (AddUser/columns/EditUser/DeleteUser/UserActionsMenu) — era **auto-contido** (nada fora dele importava) e é gestão de `account_users` = **admin de plataforma** (Fase 6, `frontend-admin`). O item "Admin" do `AppSidebar` (só superuser) saiu.
+- **Limpeza:** removido o cluster inteiro `routes/_layout/admin.tsx` + `components/Admin/*` (AddUser/columns/EditUser/DeleteUser/UserActionsMenu) — era **auto-contido** (nada fora dele importava) e é gestão de `account_users` = **admin de plataforma** (Fase 7, `frontend-admin`). O item "Admin" do `AppSidebar` (só superuser) saiu.
 - **`routeTree.gen.ts`** é gerado pelo plugin do TanStack Router; regenerado via `vite build` (não há `tsr` standalone local; `bun` ausente — usei o `node_modules` da raiz do workspace).
 - **Smoke ao vivo (manual):** `docker compose up -d proxy frontend` e então `curl -H "Host: app.loja.localhost" http://localhost:8088/` (ou abrir `http://app.loja.localhost:8088`). Não executado aqui (build da imagem do frontend é pesado); a mudança é só o label Traefik + o CORS já contempla o host.
 
 ## Follow-ups
-- [ ] **Rename físico `frontend/` → `frontend-dashboard/`** + criar `frontend-admin` (Fase 6) e `frontend-storefront` (Fase 3) como projetos separados. *Quando:* ao iniciar a Fase 3 ou 6. → [README da fase](./README.md#follow-ups--débitos-técnicos).
+- [ ] **Rename físico `frontend/` → `frontend-dashboard/`** + criar `frontend-admin` (Fase 7) e `frontend-storefront` (Fase 3) como projetos separados. *Quando:* ao iniciar a Fase 3 ou 6. → [README da fase](./README.md#follow-ups--débitos-técnicos).

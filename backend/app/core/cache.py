@@ -67,3 +67,8 @@ def cache_delete(key: str, *, prefix: str = "") -> None:
         prefix: Optional key prefix (joined with ``:``).
     """
     get_redis().delete(_build_key(key, prefix))
+
+
+def close() -> None:
+    """Close the shared Redis client's connection pool (on app shutdown, INV-F6)."""
+    redis_client.close()

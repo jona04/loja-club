@@ -13,7 +13,7 @@ tests: [unit, e2e]
 # P1-DASH-03 — Menu dinâmico por permissão + telas base
 
 ## Contexto
-O painel mostra um **menu modular** em que cada módulo só aparece se o papel do usuário permite (e, na Fase 5, se o plano permite) — doc [05](../../05_frontend_architecture.md)/[09](../../09_merchant_dashboard.md)/[08](../../08_modules_and_permissions.md). Esta task entrega o menu dinâmico e as **telas base** da Fase 1 (dashboard, configurações, equipe). A segurança real está no backend (`P1-PERM-03`); o front esconder módulo é só UX.
+O painel mostra um **menu modular** em que cada módulo só aparece se o papel do usuário permite (e, na Fase 6, se o plano permite) — doc [05](../../05_frontend_architecture.md)/[09](../../09_merchant_dashboard.md)/[08](../../08_modules_and_permissions.md). Esta task entrega o menu dinâmico e as **telas base** da Fase 1 (dashboard, configurações, equipe). A segurança real está no backend (`P1-PERM-03`); o front esconder módulo é só UX.
 
 ## Docs de referência
 - [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (menu, configurações, equipe, estados da loja)
@@ -21,7 +21,7 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
 - [08 — Modules and Permissions](../../08_modules_and_permissions.md) (módulo ↔ permissão base)
 
 ## Escopo (o que ENTRA)
-- **Menu modular dinâmico:** módulo aparece só se o papel do membro tem a permissão base (`*.view`). Gancho para gating de plano (Fase 5). Consome as **permissões do membro na loja ativa** expostas pela API.
+- **Menu modular dinâmico:** módulo aparece só se o papel do membro tem a permissão base (`*.view`). Gancho para gating de plano (Fase 6). Consome as **permissões do membro na loja ativa** expostas pela API.
 - **Dashboard inicial** (esqueleto; métricas reais conforme dados existirem em fases seguintes) — doc [09](../../09_merchant_dashboard.md).
 - **Configurações da loja** (nome, descrição, logo, contato, redes, WhatsApp, status publicada) → `PATCH /stores/{store_id}/settings`.
 - **Equipe** (listar membros, convidar, alterar papel, remover) → endpoints de equipe de `P1-STORE-02`.
@@ -29,8 +29,8 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
 
 ## Fora de escopo (o que NÃO entra)
 - Telas dos demais módulos (Produtos/Pedidos/etc.) → fases respectivas (só o item de menu, desabilitado/placeholder).
-- **Gating por plano** → Fase 5 (só o gancho).
-- Admin de plataforma → Fase 6.
+- **Gating por plano** → Fase 6 (só o gancho).
+- Admin de plataforma → Fase 7.
 
 ## Arquivos a criar/alterar
 - `frontend/src/` — componente de menu/sidebar dinâmico; rotas/telas de Dashboard, Configurações e Equipe; hook de permissões do membro ativo.
@@ -52,14 +52,14 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
   - e2e — salvar configurações reflete; convidar/alterar papel/remover membro na tela de Equipe.
 
 ## Definition of Done
-- [x] Menu modular dinâmico — `lib/menu.ts` (`buildMenu`, pura + unit) + `AppSidebar` consome `permissions`; gancho de plano `planAllowsModule` (Fase 5).
+- [x] Menu modular dinâmico — `lib/menu.ts` (`buildMenu`, pura + unit) + `AppSidebar` consome `permissions`; gancho de plano `planAllowsModule` (Fase 6).
 - [x] Telas: Dashboard (esqueleto + atalhos), Configurações (load `GET` + save `PATCH` gated por `settings.update` + publish/pause) e Equipe (listar/convidar/alterar papel/remover, ações gated por `team.*`) contra a API.
 - [x] `tsc`/`vitest` (14) verdes; build/biome ok. **E2E base deferido** (precisa do stack — ver Follow-ups).
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
 - **API:** as permissões do membro ativo já vêm de `GET /stores/{id}/me` (exposto na `P1-DASH-02`/`useActiveStore`). Adicionei **`GET /stores/{id}/settings`** (gated `settings.view`) — o form precisa carregar os valores e só havia `PATCH`; consistente com o contrato (doc [20](../../20_api_contracts_todo.md) não enumera endpoints, só a convenção de URL). Client regenerado.
-- **Menu:** `buildMenu(permissions)` — módulo aparece se permissão base (ou `null`) + `planAllowsModule` (stub Fase 5). 3 módulos reais (Dashboard/Configurações/Equipe); itens placeholder de outros módulos ficam para suas fases (evitei links 404).
+- **Menu:** `buildMenu(permissions)` — módulo aparece se permissão base (ou `null`) + `planAllowsModule` (stub Fase 6). 3 módulos reais (Dashboard/Configurações/Equipe); itens placeholder de outros módulos ficam para suas fases (evitei links 404).
 - **Gating é UX:** segurança real é o backend (`P1-PERM-03`). Save desabilitado sem `settings.update` (com unit); ações de equipe escondidas sem `team.*`.
 
 ## Follow-ups

@@ -123,6 +123,21 @@ class Settings(BaseSettings):
         auth = f":{self.REDIS_PASSWORD}@" if self.REDIS_PASSWORD else ""
         return f"redis://{auth}{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
+    # Object storage (AWS S3 + CloudFront). Region us-east-2 (Ohio) — 1st stage.
+    S3_REGION: str = "us-east-2"
+    S3_BUCKET: str = ""
+    AWS_ACCESS_KEY_ID: str = ""
+    AWS_SECRET_ACCESS_KEY: str = ""
+    CDN_BASE_URL: str = ""
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def storage_enabled(self) -> bool:
+        """Return whether object storage (S3) is configured (bucket + creds)."""
+        return bool(
+            self.S3_BUCKET and self.AWS_ACCESS_KEY_ID and self.AWS_SECRET_ACCESS_KEY
+        )
+
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
     SMTP_PORT: int = 587

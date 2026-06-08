@@ -48,3 +48,8 @@ def init_db(session: Session) -> None:
 
     seed_store_roles(session=session)
     seed_store_permissions(session=session)
+
+
+def dispose_engine() -> None:
+    """Dispose the engine's connection pool (on app shutdown, INV-F6)."""
+    engine.dispose()

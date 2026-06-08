@@ -46,13 +46,31 @@ def seed_store_roles(session: Session) -> None:
 
 
 def seed_store_permissions(session: Session) -> None:
-    """Seed the permission catalog and the role->permission map, idempotently.
+    """Seed the permission catalog and the role->permission map (authoritative).
 
-    Requires the roles to be seeded first (``seed_store_roles``).
+    Idempotent: adds what is missing and **removes** permissions no longer in
+    the catalog (and their grants), so a renamed/removed permission does not
+    linger. Requires the roles to be seeded first (``seed_store_roles``).
 
     Args:
         session: Active database session.
     """
+    # Drop permissions (and their grants) no longer in the catalog — e.g. a
+    # renamed/removed permission — so the catalog stays the source of truth.
+    canonical = set(PERMISSIONS)
+    obsolete = [
+        p for p in session.exec(select(StorePermission)).all() if p.key not in canonical
+    ]
+    if obsolete:
+        obsolete_ids = {p.id for p in obsolete}
+        for grant in session.exec(select(StoreRolePermission)).all():
+            if grant.permission_id in obsolete_ids:
+                session.delete(grant)
+        session.flush()  # remove the grants before their permissions (FK order)
+        for perm in obsolete:
+            session.delete(perm)
+        session.commit()
+
     existing_perms = {p.key for p in session.exec(select(StorePermission)).all()}
     new_perms = [
         StorePermission(key=key, module=key.split(".", 1)[0])
