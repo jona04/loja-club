@@ -63,6 +63,7 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 - **INV-F2 — Abstração de storage** (`app/core/storage.py`): S3 + CloudFront reais (boto3) desde o dev local; URLs assinadas para privados. → Fase 2 (`media`).
 - **INV-F3 — Cache no Redis com chaves padronizadas** e **invalidação centralizada** (doc [13](../13_performance_cache_and_cdn.md)). → `P0-CFG-03` + Fases 1/3.
 - **INV-F4 — Notificações por canal abstrato** (e-mail agora; SMS/WhatsApp na Fase 6) atrás de uma interface. → Fase 4 (e-mail), Fase 6 (SMS/WhatsApp).
+- **INV-F5 — Todo e-mail é enfileirado no worker** (task `send_email` via `enqueue()`), **nunca enviado inline** na requisição: o request valida/prepara e enfileira; o worker renderiza (MJML) e envia (SMTP/SES), com retry. Vale para **todos** os e-mails — transacionais (recuperação de senha, convite de membro), de pedido e de billing. → task em `P0-CFG-04`; cada e-mail enfileira de onde nasce.
 - **GARGALO:** acoplar direto a um SDK (fila/storage/gateway) trava troca de provedor. Mitigação: interfaces finas desde já.
 
 ## 7. Pagamentos & split

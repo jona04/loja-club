@@ -43,7 +43,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
 | 1 | [P2-MEDIA-01](./P2-MEDIA-01-storage-abstraction.md) | Abstração de storage (S3/boto3) + config + setup AWS dev | **done** | — |
-| 2 | [P2-CAT-01](./P2-CAT-01-catalog-models.md) | Modelos do `catalog` (produtos/variações/imagens/categorias/estoque/coleções) | todo | — |
+| 2 | [P2-CAT-01](./P2-CAT-01-catalog-models.md) | Modelos do `catalog` (produtos/variações/imagens/categorias/estoque/coleções) | **done** | — |
 | 3 | [P2-MEDIA-02](./P2-MEDIA-02-media-pipeline.md) | `media_files` + pipeline de upload + worker de thumbnails | todo | P2-MEDIA-01 |
 | 4 | [P2-CAT-02](./P2-CAT-02-catalog-service-routes.md) | `catalog`: serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens) | todo | P2-CAT-01, P2-MEDIA-02 |
 | 5 | [P2-FE-01](./P2-FE-01-products-screen.md) | Painel: tela de Produtos + componente de upload de imagem | todo | P2-CAT-02, P2-MEDIA-02 |
@@ -51,7 +51,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 ## Ordem sugerida de execução
 
 ```text
-P2-MEDIA-01 (done) → P2-CAT-01 → P2-MEDIA-02 → P2-CAT-02 → P2-FE-01
+P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 → P2-CAT-02 → P2-FE-01
 ```
 
 ## Reconciliações da fase (registrar conforme surgirem)

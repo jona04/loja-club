@@ -81,7 +81,7 @@ A produção robusta vem **depois** da V1. A sugestão é:
 - ACM para certificados;
 - CloudWatch para logs;
 - Sentry para erros;
-- SES para e-mails.
+- SES para e-mails (enviados pelo worker — INV-F5).
 
 ## Dev na AWS (V1 — Fases 6–7)
 
@@ -133,7 +133,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `shipping` | frete e entrega |
 | `discounts` | cupons |
 | `billing` | planos e cobrança da Loja Club |
-| `notifications` | e-mails e notificações |
+| `notifications` | e-mails e notificações (enfileirados no worker — INV-F5) |
 | `audit` | logs de auditoria |
 | `platform_admin` | administração interna |
 | `reports` | relatórios básicos |

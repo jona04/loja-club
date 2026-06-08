@@ -109,7 +109,8 @@ O health check público pode ser simples. Health checks internos podem validar d
 - tamanho da fila;
 - jobs processados;
 - jobs falhos;
-- tempo médio de execução.
+- tempo médio de execução;
+- e-mails enfileirados / enviados / falhos (todo e-mail é disparado pelo worker — INV-F5).
 
 ### CDN/S3
 

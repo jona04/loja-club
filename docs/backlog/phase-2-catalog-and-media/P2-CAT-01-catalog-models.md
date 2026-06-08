@@ -4,7 +4,7 @@ title: Modelos do catálogo (produtos/variações/imagens/categorias/estoque/col
 phase: 2
 etapa: "Etapa 5 — Módulo catalog"
 area: CAT
-status: todo
+status: done
 depends_on: []
 blocks: [P2-CAT-02]
 tests: [integration]
@@ -47,17 +47,24 @@ Modelos em `app/modules/catalog/models.py` (todos com `store_id` + mixins; enums
 ## Testes
 > Fundações §10. Constraints são fronteira real → integração.
 
-- **Cobrir:** `slug` único por loja quando ativo; mesmo slug em lojas diferentes ok; default de `status`; FK de imagem→`media_files`.
+- **Cobrir:** `slug` único por loja quando ativo; mesmo slug em lojas diferentes ok; default de `status`; **FK de `store_id`** (StoreScopedMixin); cadeia produto→variante→estoque.
 
 ## Definition of Done
-- [ ] Tabelas `catalog_*` com `store_id` + soft delete + índices do doc 07.
-- [ ] Migration aplica do zero; `alembic` autogenerate volta vazio.
-- [ ] Testes de modelo verdes.
-- [ ] Itens adiados varridos → Follow-ups + README (ou "nenhum").
+- [x] Tabelas `catalog_*` (7) com `store_id` + soft delete + índices do doc 07.
+- [x] Migration aplicada; `alembic check` → "No new upgrade operations detected".
+- [x] Testes de modelo verdes (7) — suíte 147 passed, cobertura 91%.
+- [x] Itens adiados varridos → Follow-ups + README.
+
+## Progresso
+- ✅ **Modelos** (`catalog/models.py`): `Product`, `ProductVariant`, `ProductImage`, `Category`, `ProductCategory`, `InventoryItem`, `Collection` — via `StoreScopedMixin` (FK `store_stores.id`) + soft delete + índices do doc 07. Enums `ProductStatus`/`ProductVariantStatus`. Registrados no `models_registry`.
+- ✅ **Migration** `db3416735b1e_create_catalog_tables` (autogenerate + revisão: ordem de FK, índices parciais de `slug`). `alembic check` vazio.
+- ✅ **Testes** `tests/integration/test_catalog_models.py` (defaults, slug único por loja, cross-store, soft-delete, FK de `store_id`, variante/estoque).
 
 ## Notas / Reconciliações
 - **Só imagem (sem 3D) nesta fase.** O `type` (`image` / `image_3d` / `image_3d_customizable`) e o vínculo a modelo 3D entram na **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)** (lojista gera o 3D via API 3rd-party) — ver doc [22](../../22_product_customization_3d.md). Por enquanto a tabela não tem `type`.
+- **`StoreScopedMixin` carrega a FK** (`foreign_key="store_stores.id"`) e o catálogo o usa. `store_settings`/`store_members`/`domain_hosts` mantêm FK explícita (uma é `unique`).
+- **`catalog_product_images.media_file_id`** é coluna indexada **sem FK** aqui; a FK → `media_files` entra na `P2-MEDIA-02` (tabela criada lá).
 - Preço como `Money` (amount_minor + currency, INV-G1) — moeda default herdada da loja na criação (decisão de `P2-CAT-02`).
 
 ## Follow-ups
-- (preencher)
+- — nenhum. (FK de `media_file_id` → `media_files` é escopo da `P2-MEDIA-02`.)

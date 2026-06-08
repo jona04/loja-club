@@ -31,7 +31,7 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
 
 ## Fora de escopo (o que NÃO entra)
 - Telas do painel → `P1-DASH-02`/`P1-DASH-03` (esta task entrega só a API).
-- Envio de e-mail de convite (texto/fluxo completo) → reusa `app/utils.py`; aqui só o registro do membro `invited`.
+- Envio de e-mail de convite (texto/fluxo completo) → **pelo worker** (task `send_email`, INV-F5); aqui só o registro do membro `invited`.
 - Domínio próprio → fora do MVP (`P1-DOM-01`).
 
 ## Arquivos a criar/alterar
@@ -69,6 +69,6 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
 - **Client OpenAPI:** regeneração deixada para a `P1-DASH-02` (quem consome).
 
 ## Follow-ups
-- [ ] **Convite por e-mail novo** (cria `account_user` shell + envia e-mail de onboarding via `app/utils.py`). *Quando:* quando o onboarding de equipe for necessário. → README da fase.
+- [ ] **Convite por e-mail novo** (cria `account_user` shell + **enfileira** o e-mail de onboarding no worker — INV-F5). *Quando:* quando o onboarding de equipe for necessário. → README da fase.
 - [ ] **Fluxo de aceite de convite** (`invited`→`active`); hoje membro `invited` não opera. *Quando:* junto do onboarding de equipe. → README da fase.
 - [ ] **Proteção do owner** (não permitir alterar papel/remover o último `owner`, evitando órfão). *Quando:* antes de produção. → README da fase.

@@ -113,11 +113,11 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ## Etapa 14 — Notificações essenciais + finalização local
 
-> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`). No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 6. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
+> Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`), **mas o envio roda no worker** (task `send_email` enfileirada via `enqueue()`, INV-F5) — nunca inline. No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 6. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
 
 - [ ] Template + envio: **pedido criado** (cliente).
 - [ ] Template + envio: **novo pedido** (lojista).
-- [ ] Disparo assíncrono via fila (lib da Fase 0). Doc [13](../13_performance_cache_and_cdn.md).
+- [ ] Envio **no worker** (task `send_email` enfileirada, INV-F5), com retry. Doc [13](../13_performance_cache_and_cdn.md).
 - [ ] Health checks `/health`, `/health/db`, `/health/redis` no ambiente **local**. Doc [15](../15_observability_and_operations.md).
 - [ ] Validar o **fluxo completo de ponta a ponta** no Docker Compose local (E2E do marco).
 

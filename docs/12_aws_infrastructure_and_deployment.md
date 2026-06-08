@@ -99,7 +99,7 @@ Serviços:
 | Route 53 | DNS |
 | ACM | SSL/TLS |
 | CloudWatch | Logs e métricas |
-| SES | E-mails |
+| SES | E-mails (enviados pelo worker) |
 | Sentry | Erros da aplicação |
 | Secrets Manager ou SSM | Segredos |
 

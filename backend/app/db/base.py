@@ -48,6 +48,6 @@ class SoftDeleteMixin(SQLModel):
 
 
 class StoreScopedMixin(SQLModel):
-    """Mixin adding ``store_id`` to isolate per-store business data."""
+    """Mixin adding a ``store_id`` foreign key to isolate per-store data."""
 
-    store_id: uuid.UUID = Field(index=True)
+    store_id: uuid.UUID = Field(foreign_key="store_stores.id", index=True)

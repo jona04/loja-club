@@ -29,7 +29,7 @@ Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias 
 - Catálogo de permissões (`store_permissions`) + mapa papel→permissões → `P1-PERM-02`.
 - `require_permission`/enforcement na rota → `P1-PERM-03`.
 - Overrides de permissão por membro: doc [07](../../07_database_strategy.md) lista `store_member_permissions` como **opcional** ("se necessário") → **fora do MVP** (só papel→permissões em `P1-PERM-02`).
-- Convite por e-mail (fluxo completo) → tela em `P1-DASH-03`; envio reaproveita `app/utils.py`.
+- Convite por e-mail (fluxo completo) → tela em `P1-DASH-03`; **envio pelo worker** (task `send_email`, INV-F5).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/stores/models.py` (alterar) — `StoreRole` (tabela) + `StoreMember`; `MembershipStatus` em `enums.py`.
