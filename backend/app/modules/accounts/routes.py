@@ -13,11 +13,12 @@ from app.api.deps import (
 )
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
+from app.db.base import get_datetime_utc
 from app.models import Message
 from app.modules.accounts import repositories
-from app.modules.accounts.models import (
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import (
     UpdatePassword,
-    User,
     UserCreate,
     UserPublic,
     UserRegister,
@@ -37,11 +38,17 @@ router = APIRouter(prefix="/users", tags=["users"])
 )
 def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """Retrieve a paginated list of users (superuser only)."""
-    count_statement = select(func.count()).select_from(User)
+    count_statement = (
+        select(func.count()).select_from(User).where(col(User.deleted_at).is_(None))
+    )
     count = session.exec(count_statement).one()
 
     statement = (
-        select(User).order_by(col(User.created_at).desc()).offset(skip).limit(limit)
+        select(User)
+        .where(col(User.deleted_at).is_(None))
+        .order_by(col(User.created_at).desc())
+        .offset(skip)
+        .limit(limit)
     )
     users = session.exec(statement).all()
 
@@ -127,7 +134,9 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to delete themselves"
         )
-    session.delete(current_user)
+    current_user.deleted_at = get_datetime_utc()
+    current_user.deleted_by_user_id = current_user.id
+    session.add(current_user)
     session.commit()
     return Message(message="User deleted successfully")
 
@@ -209,6 +218,8 @@ def delete_user(
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to delete themselves"
         )
-    session.delete(user)
+    user.deleted_at = get_datetime_utc()
+    user.deleted_by_user_id = current_user.id
+    session.add(user)
     session.commit()
     return Message(message="User deleted successfully")

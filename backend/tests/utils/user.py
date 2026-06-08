@@ -3,7 +3,8 @@ from sqlmodel import Session
 
 from app.core.config import settings
 from app.modules.accounts import repositories
-from app.modules.accounts.models import User, UserCreate, UserUpdate
+from app.modules.accounts.models import User
+from app.modules.accounts.schemas import UserCreate, UserUpdate
 from tests.utils.utils import random_email, random_lower_string
 
 
@@ -44,6 +45,8 @@ def authentication_token_from_email(
         user_in_update = UserUpdate(password=password)
         if not user.id:
             raise Exception("User id not set")
-        user = repositories.update_user(session=db, db_user=user, user_in=user_in_update)
+        user = repositories.update_user(
+            session=db, db_user=user, user_in=user_in_update
+        )
 
     return user_authentication_headers(client=client, email=email, password=password)

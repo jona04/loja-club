@@ -116,6 +116,7 @@ Exemplos:
 | `store_members` | Ligação usuário-loja |
 | `store_roles` | Papéis por loja |
 | `store_permissions` | Permissões disponíveis |
+| `store_role_permissions` | Mapa papel→permissões (positivo) |
 | `store_member_permissions` | Permissões customizadas, se necessário |
 | `domain_hosts` | Domínios/subdomínios da loja |
 | `store_settings` | Configurações da loja |
@@ -298,9 +299,10 @@ A performance depende muito dos índices compostos com `store_id`.
 | Tabela | Índice recomendado |
 |---|---|
 | `account_users` | `email` único |
-| `store_stores` | `slug` único |
+| `store_stores` | `slug` único quando ativo |
 | `store_members` | `store_id + user_id` único quando ativo |
-| `domain_hosts` | `host` único |
+| `store_role_permissions` | `role + permission` único |
+| `domain_hosts` | `host` único quando ativo |
 | `domain_hosts` | `store_id + status` |
 | `catalog_products` | `store_id + slug` único quando ativo |
 | `catalog_products` | `store_id + status` |

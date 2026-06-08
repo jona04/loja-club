@@ -71,6 +71,13 @@ export const HTTPValidationErrorSchema = {
     title: 'HTTPValidationError'
 } as const;
 
+export const MembershipStatusSchema = {
+    type: 'string',
+    enum: ['invited', 'active', 'removed'],
+    title: 'MembershipStatus',
+    description: 'Lifecycle status of a store membership.'
+} as const;
+
 export const MessageSchema = {
     properties: {
         message: {
@@ -82,6 +89,26 @@ export const MessageSchema = {
     required: ['message'],
     title: 'Message',
     description: 'Generic message response.'
+} as const;
+
+export const MyMembershipSchema = {
+    properties: {
+        role: {
+            type: 'string',
+            title: 'Role'
+        },
+        permissions: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Permissions'
+        }
+    },
+    type: 'object',
+    required: ['role', 'permissions'],
+    title: 'MyMembership',
+    description: "The current user's role and permissions in the active store."
 } as const;
 
 export const NewPasswordSchema = {
@@ -101,6 +128,44 @@ export const NewPasswordSchema = {
     required: ['token', 'new_password'],
     title: 'NewPassword',
     description: 'Password-reset payload (token + new password).'
+} as const;
+
+export const Page_StoreMemberPublic_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/StoreMemberPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[StoreMemberPublic]'
+} as const;
+
+export const Page_StorePublic_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/StorePublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[StorePublic]'
 } as const;
 
 export const PrivateUserCreateSchema = {
@@ -127,6 +192,391 @@ export const PrivateUserCreateSchema = {
     required: ['email', 'password', 'full_name'],
     title: 'PrivateUserCreate',
     description: 'Request body for creating a user through the private endpoint.'
+} as const;
+
+export const StoreCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Name'
+        },
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        currency: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 3
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Currency'
+        },
+        locale: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 35
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Locale'
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'StoreCreate',
+    description: 'Payload to create a store (slug/currency/locale default from platform).'
+} as const;
+
+export const StoreMemberInviteSchema = {
+    properties: {
+        email: {
+            type: 'string',
+            format: 'email',
+            title: 'Email'
+        },
+        role: {
+            type: 'string',
+            maxLength: 50,
+            title: 'Role'
+        }
+    },
+    type: 'object',
+    required: ['email', 'role'],
+    title: 'StoreMemberInvite',
+    description: 'Payload to invite a member by email with a role.'
+} as const;
+
+export const StoreMemberPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        },
+        email: {
+            type: 'string',
+            format: 'email',
+            title: 'Email'
+        },
+        role: {
+            type: 'string',
+            title: 'Role'
+        },
+        status: {
+            '$ref': '#/components/schemas/MembershipStatus'
+        }
+    },
+    type: 'object',
+    required: ['id', 'user_id', 'email', 'role', 'status'],
+    title: 'StoreMemberPublic',
+    description: 'A store member as returned via the API.'
+} as const;
+
+export const StoreMemberRoleUpdateSchema = {
+    properties: {
+        role: {
+            type: 'string',
+            maxLength: 50,
+            title: 'Role'
+        }
+    },
+    type: 'object',
+    required: ['role'],
+    title: 'StoreMemberRoleUpdate',
+    description: "Payload to change a member's role."
+} as const;
+
+export const StorePublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        status: {
+            '$ref': '#/components/schemas/StoreStatus',
+            default: 'draft'
+        },
+        currency: {
+            type: 'string',
+            maxLength: 3,
+            title: 'Currency',
+            description: 'ISO 4217 currency code'
+        },
+        locale: {
+            type: 'string',
+            maxLength: 35,
+            title: 'Locale'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        }
+    },
+    type: 'object',
+    required: ['name', 'slug', 'currency', 'locale', 'id'],
+    title: 'StorePublic',
+    description: 'Store as returned via the API.'
+} as const;
+
+export const StoreSettingsPublicSchema = {
+    properties: {
+        public_name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Public Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        logo_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Logo Url'
+        },
+        contact_email: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Contact Email'
+        },
+        contact_phone: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Contact Phone'
+        },
+        whatsapp_number: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Whatsapp Number'
+        },
+        address: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Address'
+        },
+        is_published: {
+            type: 'boolean',
+            title: 'Is Published',
+            default: false
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        social_links: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Social Links'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id'],
+    title: 'StoreSettingsPublic',
+    description: 'Store settings as returned via the API.'
+} as const;
+
+export const StoreSettingsUpdateSchema = {
+    properties: {
+        public_name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Public Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        logo_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Logo Url'
+        },
+        contact_email: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Contact Email'
+        },
+        contact_phone: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Contact Phone'
+        },
+        whatsapp_number: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Whatsapp Number'
+        },
+        address: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Address'
+        },
+        social_links: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Social Links'
+        }
+    },
+    type: 'object',
+    title: 'StoreSettingsUpdate',
+    description: 'Editable store settings (all optional).'
+} as const;
+
+export const StoreStatusSchema = {
+    type: 'string',
+    enum: ['draft', 'active', 'paused', 'suspended', 'blocked', 'archived'],
+    title: 'StoreStatus',
+    description: 'Lifecycle status of a store (doc 09).'
 } as const;
 
 export const TokenSchema = {

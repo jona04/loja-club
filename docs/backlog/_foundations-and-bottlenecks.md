@@ -50,7 +50,7 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 ## 5. Convenções de API
 
 - **INV-A1 — Versionada** sob `/api/v1`. Painel sob `/stores/{store_id}/…`; storefront público resolve por `Host`. → Fase 1.
-- **DEC-A2 — Padrão de paginação/erro/response** unificado (envelope, código de erro, paginação por cursor ou offset). Hoje o doc [20](../20_api_contracts_todo.md) é TODO. **Travar na primeira API real (Fase 1)** e reusar. → Fase 1.
+- **DEC-A2 — Padrão de paginação/erro/response** unificado. **Travado em `P1-API-01`:** lista = `{data, count}` (offset `skip`/`limit`); erro = `{error: {code, message, details?}}`. Documentado no doc [20](../20_api_contracts_todo.md). → Fase 1.
 - **INV-A3 — Idempotency-Key** em operações sensíveis (criar pedido/pagamento) além da idempotência de webhook. → Fase 4/5.
 - **INV-A4 — Autorização sempre no backend** (frontend esconder botão não é segurança). → Fase 1+.
 - **GARGALO:** padronizar resposta/erro depois que há 10 endpoints = retrabalho em todos. Mitigação: fixar em Fase 1.
@@ -125,7 +125,7 @@ Não duplicar cobertura de ramos no nível de cima.
 | DEC-2 | Arredondamento monetário | `ROUND_HALF_UP`; rateio de split por maior-resto | recomendado, confirmar antes da Fase 5 |
 | DEC-3 | Lib de fila | `arq` (async, Redis) | recomendado (`P0-CFG-04`) |
 | DEC-4 | Lib de telefone | `phonenumbers` (libphonenumber) | recomendado (Fase 4) |
-| DEC-5 | Paginação | a definir (cursor vs offset) na primeira API | **pendente** (Fase 1) |
+| DEC-5 | Paginação | **offset (`skip`/`limit`) + envelope `{data, count}`** | **decidido** (`P1-API-01`) |
 | DEC-6 | Gateway(s) de pagamento | abstrair; escolher BR (Pagar.me/MercadoPago/Asaas) + plano p/ internacional | **pendente** (Fase 5, doc [18](../18_open_decisions.md)) |
 | DEC-7 | Provedor SMS/WhatsApp | a definir | **pendente** (Fase 5) |
 | DEC-8 | Storage local em dev | AWS S3 + CloudFront reais (sem MinIO) | **decidido** (Fase 2) |

@@ -6,7 +6,20 @@ function extractErrorMessage(err: ApiError): string {
     return err.message
   }
 
-  const errDetail = (err.body as any)?.detail
+  const body = err.body as any
+
+  // Structured envelope: { error: { code, message, details? } } (P1-API-01).
+  const apiError = body?.error
+  if (apiError?.message) {
+    const details = apiError.details
+    if (Array.isArray(details) && details.length > 0) {
+      return details[0].msg ?? apiError.message
+    }
+    return apiError.message
+  }
+
+  // Fallback for the raw FastAPI shape.
+  const errDetail = body?.detail
   if (Array.isArray(errDetail) && errDetail.length > 0) {
     return errDetail[0].msg
   }
