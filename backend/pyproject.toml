@@ -22,6 +22,7 @@ dependencies = [
     "redis>=8.0.0",
     "arq>=0.25.0",
     "babel>=2.18.0",
+    "pillow>=11.0.0",
 ]
 
 [dependency-groups]

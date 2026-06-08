@@ -60,8 +60,6 @@ Exemplos:
 | `billing_plans` | Planos da Loja Club |
 | `platform_settings` | Configurações globais |
 | `content_theme_templates` | Templates globais disponíveis |
-| `customization_3d_models` | Modelos 3D globais criados pela Loja Club |
-| `customization_3d_model_versions` | Versões dos modelos 3D |
 | `feature_flags` | Flags de recursos |
 | `platform_admin_roles` | Papéis globais internos |
 
@@ -135,10 +133,12 @@ Exemplos:
 
 ### Personalização 3D
 
+> **Fase 5 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 5](backlog/phase-5-3d-products.md).
+
 | Tabela | Função |
 |---|---|
-| `customization_3d_models` | Biblioteca global de modelos 3D da Loja Club |
-| `customization_3d_model_versions` | Versões dos arquivos e parâmetros do modelo |
+| `customization_3d_models` | Modelos 3D do lojista (por loja; gerados via API) |
+| `customization_3d_model_versions` | Versões dos arquivos (GLB) e parâmetros do modelo |
 | `customization_product_settings` | Configuração de personalização por produto/loja |
 | `customization_sessions` | Sessões salvas de personalização do cliente |
 | `customization_uploads` | Arquivos enviados pelo cliente |
@@ -279,16 +279,16 @@ deleted_by_user_id
 delete_reason
 ```
 
-Quando uma ação parecer exclusão, o sistema deve arquivar ou marcar status.
+Quando uma ação for **exclusão**, é **soft delete** (`deleted_at`) — nunca hard delete, **nunca via status**. Status (`archived`/`paused`/`inactive`/`expired`) são **operacionais** (recurso fora do ar, reversível, expirado), **não** exclusão.
 
 Exemplos:
 
-- produto removido vira `archived`;
-- loja removida vira `archived`;
-- cupom removido vira `archived`;
+- produto **deletado** = soft-delete (`deleted_at`); `archived` é um **status offline reversível**, não delete;
+- loja **deletada** = soft delete (`deleted_at`); offline reversível = `paused`;
+- cupom **deletado** = soft delete (`deleted_at`);
 - membro removido recebe `removed_at`;
 - sessão expirada vira `expired`;
-- domínio removido vira `inactive` ou `archived`.
+- domínio **deletado** = soft delete (`deleted_at`); `inactive` = desativado (não é exclusão).
 
 Arquivos binários temporários sem valor de auditoria podem ser removidos do storage conforme política de retenção, mantendo o registro de histórico no banco.
 

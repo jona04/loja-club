@@ -29,7 +29,7 @@ Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias 
 - Catálogo de permissões (`store_permissions`) + mapa papel→permissões → `P1-PERM-02`.
 - `require_permission`/enforcement na rota → `P1-PERM-03`.
 - Overrides de permissão por membro: doc [07](../../07_database_strategy.md) lista `store_member_permissions` como **opcional** ("se necessário") → **fora do MVP** (só papel→permissões em `P1-PERM-02`).
-- Convite por e-mail (fluxo completo) → tela em `P1-DASH-03`; envio reaproveita `app/utils.py`.
+- Convite por e-mail (fluxo completo) → tela em `P1-DASH-03`; **envio pelo worker** (task `send_email`, INV-F5).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/stores/models.py` (alterar) — `StoreRole` (tabela) + `StoreMember`; `MembershipStatus` em `enums.py`.
@@ -60,4 +60,4 @@ Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias 
 - **Seed via `init_db`, não na migration (reconciliação):** os testes criam o schema com `create_all` (não rodam migrations), então o seed na migration não chegaria neles. Seguindo o padrão do superuser, os papéis são seedados em `init_db` (idempotente), com fonte única `STORE_ROLES` em `stores/repositories.py`. A migration só cria as tabelas. Prod: `prestart`→`init_db` semeia (como o superuser).
 - **`MembershipStatus`** (`invited|active|removed`) em `stores/enums.py`; **`StoreMember`** com mixins (soft delete) + FKs (`store_stores`/`account_users`/`store_roles`); **`StoreRole`** é lookup mínimo (`id`/`key`/`name`).
 - **`store_roles` é global/seed** (os 6 papéis valem para todas as lojas; aplicam-se no contexto da loja via `store_members`). Doc [07](../../07_database_strategy.md) diz "papéis por loja" — interpretado como "no contexto da loja", não linhas por-loja. Se a implementação exigir papéis editáveis por loja, registrar e atualizar o doc.
-- `account_users.is_superuser` ↔ admin de plataforma: superuser cobre acesso interno no MVP; `platform_admin_roles` na Fase 6 (herdado de `P0-MOD-04`).
+- `account_users.is_superuser` ↔ admin de plataforma: superuser cobre acesso interno no MVP; `platform_admin_roles` na Fase 7 (herdado de `P0-MOD-04`).

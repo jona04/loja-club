@@ -57,6 +57,144 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const Body_media_upload_mediaSchema = {
+    properties: {
+        file: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'File'
+        },
+        owner_type: {
+            type: 'string',
+            title: 'Owner Type',
+            default: 'product'
+        }
+    },
+    type: 'object',
+    required: ['file'],
+    title: 'Body_media-upload_media'
+} as const;
+
+export const CategoryCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'CategoryCreate',
+    description: 'Fields accepted when creating a category.'
+} as const;
+
+export const CategoryPublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        }
+    },
+    type: 'object',
+    required: ['name', 'slug', 'id', 'store_id'],
+    title: 'CategoryPublic',
+    description: 'Public representation of a category.'
+} as const;
+
+export const CategoryUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        }
+    },
+    type: 'object',
+    title: 'CategoryUpdate',
+    description: 'Partial update for a category.'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -69,6 +207,221 @@ export const HTTPValidationErrorSchema = {
     },
     type: 'object',
     title: 'HTTPValidationError'
+} as const;
+
+export const ImageAttachSchema = {
+    properties: {
+        media_file_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Media File Id'
+        },
+        position: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Position',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['media_file_id'],
+    title: 'ImageAttach',
+    description: 'Link a (processed) media file to a product at a position.'
+} as const;
+
+export const ImagePublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        media_file_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Media File Id'
+        },
+        position: {
+            type: 'integer',
+            title: 'Position'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        variants: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variants'
+        },
+        status: {
+            '$ref': '#/components/schemas/MediaStatus'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'product_id', 'media_file_id', 'position', 'url', 'variants', 'status'],
+    title: 'ImagePublic',
+    description: "Public representation of a product image (with its media's URL/status)."
+} as const;
+
+export const InventoryPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        variant_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variant Id'
+        },
+        quantity: {
+            type: 'integer',
+            title: 'Quantity'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'product_id', 'variant_id', 'quantity'],
+    title: 'InventoryPublic',
+    description: 'Public representation of a stock entry.'
+} as const;
+
+export const InventorySetSchema = {
+    properties: {
+        variant_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variant Id'
+        },
+        quantity: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Quantity'
+        }
+    },
+    type: 'object',
+    required: ['quantity'],
+    title: 'InventorySet',
+    description: 'Set the stock quantity for a product (optionally a specific variant).'
+} as const;
+
+export const MediaPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        owner_type: {
+            type: 'string',
+            title: 'Owner Type'
+        },
+        owner_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Owner Id'
+        },
+        key: {
+            type: 'string',
+            title: 'Key'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        variants: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variants'
+        },
+        content_type: {
+            type: 'string',
+            title: 'Content Type'
+        },
+        size: {
+            type: 'integer',
+            title: 'Size'
+        },
+        status: {
+            '$ref': '#/components/schemas/MediaStatus'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'owner_type', 'owner_id', 'key', 'url', 'variants', 'content_type', 'size', 'status'],
+    title: 'MediaPublic',
+    description: 'Public representation of an uploaded media file.'
+} as const;
+
+export const MediaStatusSchema = {
+    type: 'string',
+    enum: ['processing', 'ready', 'failed'],
+    title: 'MediaStatus',
+    description: 'Processing status of an uploaded media file.'
 } as const;
 
 export const MembershipStatusSchema = {
@@ -130,6 +483,44 @@ export const NewPasswordSchema = {
     description: 'Password-reset payload (token + new password).'
 } as const;
 
+export const Page_CategoryPublic_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/CategoryPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[CategoryPublic]'
+} as const;
+
+export const Page_ProductPublic_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/ProductPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[ProductPublic]'
+} as const;
+
 export const Page_StoreMemberPublic_Schema = {
     properties: {
         data: {
@@ -168,6 +559,25 @@ export const Page_StorePublic_Schema = {
     title: 'Page[StorePublic]'
 } as const;
 
+export const Page_VariantPublic_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/VariantPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[VariantPublic]'
+} as const;
+
 export const PrivateUserCreateSchema = {
     properties: {
         email: {
@@ -192,6 +602,225 @@ export const PrivateUserCreateSchema = {
     required: ['email', 'password', 'full_name'],
     title: 'PrivateUserCreate',
     description: 'Request body for creating a user through the private endpoint.'
+} as const;
+
+export const ProductCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        price_amount_minor: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Price Amount Minor'
+        },
+        price_currency: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 3
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Currency'
+        },
+        is_featured: {
+            type: 'boolean',
+            title: 'Is Featured',
+            default: false
+        }
+    },
+    type: 'object',
+    required: ['name', 'price_amount_minor'],
+    title: 'ProductCreate',
+    description: 'Fields accepted when creating a product (status starts as ``draft``).'
+} as const;
+
+export const ProductPublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        status: {
+            '$ref': '#/components/schemas/ProductStatus',
+            default: 'draft'
+        },
+        price_amount_minor: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Price Amount Minor',
+            description: 'Price in minor units (INV-D4)'
+        },
+        price_currency: {
+            type: 'string',
+            maxLength: 3,
+            title: 'Price Currency',
+            description: 'ISO 4217 currency code'
+        },
+        is_featured: {
+            type: 'boolean',
+            title: 'Is Featured',
+            default: false
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        }
+    },
+    type: 'object',
+    required: ['name', 'slug', 'price_amount_minor', 'price_currency', 'id', 'store_id'],
+    title: 'ProductPublic',
+    description: 'Public representation of a product.'
+} as const;
+
+export const ProductStatusSchema = {
+    type: 'string',
+    enum: ['draft', 'published', 'archived'],
+    title: 'ProductStatus',
+    description: `Lifecycle status of a catalog product (doc 09).
+
+- \`\`draft\`\`: never published; editable; the slug follows the name.
+- \`\`published\`\`: live on the storefront; the slug is fixed.
+- \`\`archived\`\`: taken offline but kept — reversible via publish; the slug
+  stays reserved.
+
+Deleting a product is a **soft delete** (\`\`deleted_at\`\`), not a status.`
+} as const;
+
+export const ProductUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        price_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Amount Minor'
+        },
+        price_currency: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 3
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Currency'
+        },
+        is_featured: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Featured'
+        }
+    },
+    type: 'object',
+    title: 'ProductUpdate',
+    description: 'Partial update for a product (unset fields are left unchanged).'
+} as const;
+
+export const ProductVariantStatusSchema = {
+    type: 'string',
+    enum: ['active', 'archived'],
+    title: 'ProductVariantStatus',
+    description: 'Lifecycle status of a product variant.'
 } as const;
 
 export const StoreCreateSchema = {
@@ -432,11 +1061,6 @@ export const StoreSettingsPublicSchema = {
             ],
             title: 'Address'
         },
-        is_published: {
-            type: 'boolean',
-            title: 'Is Published',
-            default: false
-        },
         id: {
             type: 'string',
             format: 'uuid',
@@ -574,9 +1198,17 @@ export const StoreSettingsUpdateSchema = {
 
 export const StoreStatusSchema = {
     type: 'string',
-    enum: ['draft', 'active', 'paused', 'suspended', 'blocked', 'archived'],
+    enum: ['draft', 'active', 'paused', 'suspended', 'blocked'],
     title: 'StoreStatus',
-    description: 'Lifecycle status of a store (doc 09).'
+    description: `Lifecycle status of a store (doc 09).
+
+- \`\`draft\`\`: created, not yet published (not served on the storefront).
+- \`\`active\`\`: published/live — the only status the storefront serves.
+- \`\`paused\`\`: taken offline by the merchant (reversible via publish).
+- \`\`suspended\`\`/\`\`blocked\`\`: turned off by the platform (Fase 7); the
+  dashboard guard blocks access.
+
+Removing a store is a **soft delete** (\`\`deleted_at\`\`), never a status.`
 } as const;
 
 export const TokenSchema = {
@@ -892,4 +1524,216 @@ export const ValidationErrorSchema = {
     type: 'object',
     required: ['loc', 'msg', 'type'],
     title: 'ValidationError'
+} as const;
+
+export const VariantCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        sku: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 100
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sku'
+        },
+        attributes: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Attributes'
+        },
+        price_override_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Amount Minor'
+        },
+        price_override_currency: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 3
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Currency'
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'VariantCreate',
+    description: 'Fields accepted when creating a product variant.'
+} as const;
+
+export const VariantPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        sku: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sku'
+        },
+        attributes: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Attributes'
+        },
+        price_override_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Amount Minor'
+        },
+        price_override_currency: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Currency'
+        },
+        status: {
+            '$ref': '#/components/schemas/ProductVariantStatus'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'product_id', 'name', 'sku', 'attributes', 'price_override_amount_minor', 'price_override_currency', 'status'],
+    title: 'VariantPublic',
+    description: 'Public representation of a product variant.'
+} as const;
+
+export const VariantUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        sku: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 100
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Sku'
+        },
+        attributes: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Attributes'
+        },
+        price_override_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Amount Minor'
+        },
+        price_override_currency: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 3
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Override Currency'
+        }
+    },
+    type: 'object',
+    title: 'VariantUpdate',
+    description: 'Partial update for a product variant.'
 } as const;

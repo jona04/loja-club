@@ -9,7 +9,9 @@ from sqlmodel import SQLModel
 
 import app.models  # noqa: F401
 import app.modules.accounts.models  # noqa: F401
+import app.modules.catalog.models  # noqa: F401
 import app.modules.domains.models  # noqa: F401
+import app.modules.media.models  # noqa: F401
 import app.modules.stores.models  # noqa: F401
 
 __all__ = ["SQLModel"]

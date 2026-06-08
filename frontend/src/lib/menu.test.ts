@@ -19,11 +19,14 @@ describe("buildMenu", () => {
     expect(titles(["team.view"])).toContain("Equipe")
   })
 
+  it("reveals Produtos with catalog.product.view", () => {
+    expect(titles(["catalog.product.view"])).toContain("Produtos")
+    expect(titles([])).not.toContain("Produtos")
+  })
+
   it("shows every module for a full permission set", () => {
-    expect(titles(["settings.view", "team.view"])).toEqual([
-      "Dashboard",
-      "Configurações",
-      "Equipe",
-    ])
+    expect(
+      titles(["catalog.product.view", "settings.view", "team.view"]),
+    ).toEqual(["Dashboard", "Produtos", "Configurações", "Equipe"])
   })
 })

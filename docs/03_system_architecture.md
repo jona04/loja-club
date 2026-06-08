@@ -81,11 +81,11 @@ A produção robusta vem **depois** da V1. A sugestão é:
 - ACM para certificados;
 - CloudWatch para logs;
 - Sentry para erros;
-- SES para e-mails.
+- SES para e-mails (enviados pelo worker — INV-F5).
 
-## Dev na AWS (V1 — Fases 5–6)
+## Dev na AWS (V1 — Fases 6–7)
 
-A V1 inteira é ambiente de **dev**. As Fases 0–4 rodam **local**; as Fases 5–6 sobem o sistema na AWS com **EC2**:
+A V1 inteira é ambiente de **dev**. As Fases 0–4 rodam **local**; as Fases 6–7 sobem o sistema na AWS com **EC2**:
 
 - EC2;
 - Docker Compose;
@@ -133,7 +133,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `shipping` | frete e entrega |
 | `discounts` | cupons |
 | `billing` | planos e cobrança da Loja Club |
-| `notifications` | e-mails e notificações |
+| `notifications` | e-mails e notificações (enfileirados no worker — INV-F5) |
 | `audit` | logs de auditoria |
 | `platform_admin` | administração interna |
 | `reports` | relatórios básicos |
@@ -159,6 +159,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 17. Registros de negócio usam soft delete/status arquivado.
 18. Tarefas pesadas devem ir para fila.
 19. Relatórios pesados não devem impactar a navegação pública.
+20. Clients de serviço externo (banco, Redis, storage, fila, HTTP) são abertos uma vez, reusados, e liberados num único ponto (lifespan). Ver INV-F6 nas Fundações.
 
 ## Estratégia de crescimento
 

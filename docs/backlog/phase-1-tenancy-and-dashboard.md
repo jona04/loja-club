@@ -56,8 +56,8 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 - [ ] Catálogo + mapa como **constantes canônicas** em `app/modules/stores/permissions.py` (fonte do seed) + helper `role_permissions(role)`; teste "toda permissão em ≥1 papel". Permissão nova → atualizar catálogo/mapa/doc.
 
 ### Autorização (`P1-PERM-03`)
-- [ ] Dependency `require_permission("catalog.product.update")` que valida: autenticado → membro da loja → papel tem a permissão → (gancho de plano para a Fase 5). Doc [08](../08_modules_and_permissions.md)/[14](../14_security_strategy.md).
-- [ ] Conceito de **admin de plataforma**: mapear `account_users.is_superuser` (template) para acesso de plataforma; permissões globais (`platform.*`) ficam para a Fase 6 (admin). Anotar reconciliação.
+- [ ] Dependency `require_permission("catalog.product.update")` que valida: autenticado → membro da loja → papel tem a permissão → (gancho de plano para a Fase 6). Doc [08](../08_modules_and_permissions.md)/[14](../14_security_strategy.md).
+- [ ] Conceito de **admin de plataforma**: mapear `account_users.is_superuser` (template) para acesso de plataforma; permissões globais (`platform.*`) ficam para a Fase 7 (admin). Anotar reconciliação.
 
 ---
 
@@ -88,14 +88,14 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ### Roteamento e infra (`P1-DASH-01`)
 - [ ] Traefik: renomear host `dashboard.${DOMAIN}` → `app.${DOMAIN}` (`compose.yml`). Doc [03](../03_system_architecture.md)/[05](../05_frontend_architecture.md).
-- [ ] Limpar páginas/example do template não usadas: `routes/_layout/admin.tsx` (admin é projeto à parte na Fase 6); `items` já removido na Fase 0.
+- [ ] Limpar páginas/example do template não usadas: `routes/_layout/admin.tsx` (admin é projeto à parte na Fase 7); `items` já removido na Fase 0.
 
 ### Telas — login + seletor de loja (`P1-DASH-02`)
 - [ ] **Login** (reaproveitar `routes/login.tsx`, `hooks/useAuth.ts`).
 - [ ] **Seletor de loja ativa**: após login, listar lojas do membro; 1 loja → entra direto; várias → seletor. Loja ativa define o contexto das chamadas (`/stores/{store_id}/...`). Doc [05](../05_frontend_architecture.md)/[09](../09_merchant_dashboard.md).
 
 ### Telas — menu + telas base (`P1-DASH-03`)
-- [ ] **Menu modular dinâmico por permissão**: módulo só aparece se o papel permite (e, na Fase 5, se o plano permite). Doc [05](../05_frontend_architecture.md)/[08](../08_modules_and_permissions.md).
+- [ ] **Menu modular dinâmico por permissão**: módulo só aparece se o papel permite (e, na Fase 6, se o plano permite). Doc [05](../05_frontend_architecture.md)/[08](../08_modules_and_permissions.md).
 - [ ] **Dashboard inicial** (esqueleto; métricas reais conforme dados existirem). Doc [09](../09_merchant_dashboard.md).
 - [ ] **Configurações da loja** (nome, descrição, logo, contato, redes, WhatsApp, status publicada). Doc [09](../09_merchant_dashboard.md).
 - [ ] **Equipe**: listar membros, convidar, alterar papel, remover. Doc [09](../09_merchant_dashboard.md)/[08](../08_modules_and_permissions.md).
@@ -115,5 +115,5 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ## Reconciliações (registrar aqui)
 
-- `account_users.is_superuser` (template) ↔ admin de plataforma (doc [08](../08_modules_and_permissions.md)): no MVP o superuser cobre o acesso interno; o modelo de `platform_admin_roles`/`platform.*` entra na Fase 6. Anotado.
+- `account_users.is_superuser` (template) ↔ admin de plataforma (doc [08](../08_modules_and_permissions.md)): no MVP o superuser cobre o acesso interno; o modelo de `platform_admin_roles`/`platform.*` entra na Fase 7. Anotado.
 - (demais divergências conforme surgirem)

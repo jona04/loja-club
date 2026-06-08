@@ -46,12 +46,13 @@ Por que esta task existe, em 1–3 linhas. Liga ao objetivo da etapa/fase.
 ## Definition of Done
 - [ ] critério testável 1
 - [ ] critério testável 2
+- [ ] **Modos de falha / edge cases mapeados** — para cada caminho feliz, perguntar "e se falhar / for grande demais / chegar fora de ordem?"; cada resposta é **tratada** aqui **ou** vira **Follow-up**. (Ex.: enqueue/worker falho, estado órfão `processing`, erro que não marca `failed`, `file.read()` sem limite.)
 - [ ] **Itens adiados varridos** (Notas, Fora-de-escopo, "opcional/fica para depois") → promovidos a **Follow-ups** + README da fase, ou confirmado "nenhum".
 
 ## Notas / Reconciliações
 - divergências código ↔ doc resolvidas aqui (citar o doc afetado)
 
 ## Follow-ups
-> Pendências/débitos **adiados** por esta task que **NÃO** estão cobertos por outra task ou fase futura. (Se já está rastreado em outra task/fase, não repetir aqui.) Cada item entra **também** na seção **"Follow-ups / débitos técnicos"** do README da fase, com referência a este ID. Marcar `[x]` quando resolvido. Se não houver, deixar "— nenhum".
+> Pendências/débitos **adiados** por esta task que **NÃO** estão cobertos por outra task ou fase futura. (Se já está rastreado em outra task/fase, não repetir aqui.) **Inclui obrigatoriamente os modos de falha / edge cases não tratados** — registrar **na hora**, sem esperar ser perguntado; deixar uma falha sem rastro é débito invisível. Cada item entra **também** na seção **"Follow-ups / débitos técnicos"** do README da fase, com referência a este ID. Marcar `[x]` quando resolvido. Se não houver, deixar "— nenhum".
 
 - [ ] item adiado — *Quando:* gatilho/condição. → README da fase.

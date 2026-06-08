@@ -131,7 +131,7 @@ dashboard.view
 catalog.product.view
 catalog.product.create
 catalog.product.update
-catalog.product.archive
+catalog.product.delete
 catalog.inventory.update
 catalog.category.manage
 catalog.product_customization.update
@@ -164,7 +164,7 @@ orders.export
 customers.view
 customers.update
 customers.export
-customers.archive
+customers.delete
 ```
 
 ### Checkout
@@ -200,7 +200,7 @@ layout.assets.update
 shipping.view
 shipping.create
 shipping.update
-shipping.archive
+shipping.delete
 shipping.private_delivery.update
 ```
 
@@ -210,7 +210,7 @@ shipping.private_delivery.update
 discounts.view
 discounts.create
 discounts.update
-discounts.archive
+discounts.delete
 ```
 
 ### Relatórios
@@ -228,7 +228,7 @@ domains.view
 domains.create
 domains.update
 domains.verify
-domains.archive
+domains.delete
 ```
 
 ### Equipe
@@ -253,7 +253,7 @@ billing.view_invoices
 ```text
 settings.view
 settings.update
-settings.archive_store
+settings.delete_store
 ```
 
 ## Permissões por papel da loja
@@ -268,7 +268,7 @@ catalog.view
 catalog.product.view
 catalog.product.create
 catalog.product.update
-catalog.product.archive
+catalog.product.delete
 catalog.inventory.update
 catalog.category.manage
 catalog.product_customization.update
@@ -286,7 +286,7 @@ orders.export
 customers.view
 customers.update
 customers.export
-customers.archive
+customers.delete
 checkout.view
 checkout.update
 checkout.policies.update
@@ -302,12 +302,12 @@ layout.assets.update
 shipping.view
 shipping.create
 shipping.update
-shipping.archive
+shipping.delete
 shipping.private_delivery.update
 discounts.view
 discounts.create
 discounts.update
-discounts.archive
+discounts.delete
 reports.view
 reports.export
 reports.financial.view
@@ -315,7 +315,7 @@ domains.view
 domains.create
 domains.update
 domains.verify
-domains.archive
+domains.delete
 team.view
 team.invite
 team.update_role
@@ -325,7 +325,7 @@ billing.update_plan
 billing.view_invoices
 settings.view
 settings.update
-settings.archive_store
+settings.delete_store
 ```
 
 ### Admin
@@ -336,7 +336,7 @@ catalog.view
 catalog.product.view
 catalog.product.create
 catalog.product.update
-catalog.product.archive
+catalog.product.delete
 catalog.inventory.update
 catalog.category.manage
 catalog.product_customization.update
@@ -366,12 +366,12 @@ layout.assets.update
 shipping.view
 shipping.create
 shipping.update
-shipping.archive
+shipping.delete
 shipping.private_delivery.update
 discounts.view
 discounts.create
 discounts.update
-discounts.archive
+discounts.delete
 reports.view
 reports.export
 domains.view
@@ -443,7 +443,7 @@ catalog.view
 catalog.product.view
 catalog.product.create
 catalog.product.update
-catalog.product.archive
+catalog.product.delete
 catalog.inventory.update
 catalog.category.manage
 catalog.product_customization.update
@@ -469,7 +469,7 @@ layout.assets.update
 discounts.view
 discounts.create
 discounts.update
-discounts.archive
+discounts.delete
 reports.view
 settings.view
 ```

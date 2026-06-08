@@ -31,7 +31,7 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
 
 ## Fora de escopo (o que NÃO entra)
 - Telas do painel → `P1-DASH-02`/`P1-DASH-03` (esta task entrega só a API).
-- Envio de e-mail de convite (texto/fluxo completo) → reusa `app/utils.py`; aqui só o registro do membro `invited`.
+- Envio de e-mail de convite (texto/fluxo completo) → **pelo worker** (task `send_email`, INV-F5); aqui só o registro do membro `invited`.
 - Domínio próprio → fora do MVP (`P1-DOM-01`).
 
 ## Arquivos a criar/alterar
@@ -64,11 +64,11 @@ Com modelos, membership, domínios, tenancy e autorização prontos, esta task e
 ## Notas / Reconciliações
 - **Endpoints:** `POST /` (criar), `GET /` (minhas lojas, `Page`), `GET /{id}` (`ActiveStore`), `PATCH /{id}/settings`, `POST /{id}/publish|pause`, `GET /{id}/me` (papel+permissões p/ o menu da `P1-DASH-03`), e equipe `GET|POST /{id}/members`, `PATCH|DELETE /{id}/members/{user_id}`. Gating via `dependencies=[Depends(require_permission(...))]` no decorator (evita arg não-usado).
 - **Slug** derivado do nome (`slugify`, DNS-safe) com override opcional; disponibilidade via `domains.is_subdomain_available`; `currency`/`locale` default do `PLATFORM_DEFAULT_*`.
-- **`is_published`** mantido consistente com `status` no publish/pause (active↔paused). Storefront público (Fase 3) decide o que usar.
+- **Publicar/pausar** alterna o `status` da loja (`active`↔`paused`); "no ar" = `status == active`.
 - **Convite (MVP):** só convida **usuário já existente** (e-mail → `account_user`); cria membro `invited`. Convite por e-mail novo (cria conta shell + e-mail de onboarding) e o **fluxo de aceite** (`invited`→`active`) ficam para depois — ver Follow-ups.
 - **Client OpenAPI:** regeneração deixada para a `P1-DASH-02` (quem consome).
 
 ## Follow-ups
-- [ ] **Convite por e-mail novo** (cria `account_user` shell + envia e-mail de onboarding via `app/utils.py`). *Quando:* quando o onboarding de equipe for necessário. → README da fase.
+- [ ] **Convite por e-mail novo** (cria `account_user` shell + **enfileira** o e-mail de onboarding no worker — INV-F5). *Quando:* quando o onboarding de equipe for necessário. → README da fase.
 - [ ] **Fluxo de aceite de convite** (`invited`→`active`); hoje membro `invited` não opera. *Quando:* junto do onboarding de equipe. → README da fase.
 - [ ] **Proteção do owner** (não permitir alterar papel/remover o último `owner`, evitando órfão). *Quando:* antes de produção. → README da fase.

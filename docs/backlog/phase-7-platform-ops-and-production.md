@@ -1,4 +1,4 @@
-# Fase 6 — Operação da plataforma, CI/CD e beta
+# Fase 7 — Operação da plataforma, CI/CD e beta
 
 > Roadmap: Etapas 19–22. Objetivo: equipe Loja Club opera a plataforma (admin), o ambiente **dev online na AWS** fica seguro e observável, o deploy vira **CI/CD automatizado** e a V1 é validada em **beta** com lojas reais. (Produção robusta com ECS/Fargate é **pós-V1** — ver o fim deste arquivo.)
 
@@ -6,7 +6,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [08](../08_modules_an
 
 ## Definition of Done da fase (= Critério de V1 completa)
 
-- Admin opera lojas, planos, webhooks, modelos 3D globais e auditoria em `admin.loja.club`.
+- Admin opera lojas, planos, webhooks e auditoria em `admin.loja.club` (a integração da API de geração 3D é Fase 5).
 - Segurança e observabilidade mínimas no ar (auditoria, Sentry, rate limit, URLs assinadas, backups, alertas).
 - **CI/CD** faz deploy automatizado para o **EC2 (dev online)**.
 - Beta validado com lojistas reais, incluindo pagamento e split.
@@ -28,7 +28,7 @@ Doc [05](../05_frontend_architecture.md), [08](../08_modules_and_permissions.md)
 ### Endpoints/telas (doc [09](../09_merchant_dashboard.md)/[20](../20_api_contracts_todo.md))
 - [ ] Listar lojas; detalhe; **bloquear/desbloquear**; ver usuários; pedidos por loja; volume transacionado; webhooks com erro; ver comissões; auditoria.
 - [ ] **Gerenciar planos** (consome `billing`).
-- [ ] **Gerenciar biblioteca global de modelos 3D** (a UI do que a Fase 2 semeou): cadastrar modelo, subir arquivos/versões, definir áreas/parâmetros, publicar/despublicar, vincular a categorias/planos, versionar. Doc [22](../22_product_customization_3d.md).
+- [ ] **Integração da API de geração 3D** (Fase 5): configurar provedor/chaves/limites de uso e moderar conteúdo. **Não há biblioteca global** — os modelos 3D são gerados pelo **lojista** (por loja). Doc [22](../22_product_customization_3d.md) / [Fase 5](./phase-5-3d-products.md).
 - [ ] **Suporte com impersonation** + auditoria obrigatória do acesso. Doc [08](../08_modules_and_permissions.md)/[14](../14_security_strategy.md)/[15](../15_observability_and_operations.md).
 
 ### Testes (doc [16](../16_testing_strategy.md))
@@ -54,7 +54,7 @@ Doc [14](../14_security_strategy.md), [15](../15_observability_and_operations.md
 
 ### Hardening
 - [ ] **Rate limit** em login, recuperação de senha, checkout, criação de conta, códigos de cliente, APIs públicas sensíveis. Doc [14](../14_security_strategy.md).
-- [ ] **Validação de webhooks** (assinatura/origem/idempotência) endurecida (consolida Fase 5). Doc [14](../14_security_strategy.md).
+- [ ] **Validação de webhooks** (assinatura/origem/idempotência) endurecida (consolida Fase 6). Doc [14](../14_security_strategy.md).
 - [ ] **Segredos** em SSM/env seguro; nada no código. Doc [14](../14_security_strategy.md).
 - [ ] **Uploads/arte privada**: validação + **URLs assinadas** para arquivos privados; separar por `store_id`. Doc [14](../14_security_strategy.md)/[22](../22_product_customization_3d.md).
 - [ ] **Backups** automáticos do RDS + **plano de restauração testado**. Doc [14](../14_security_strategy.md).

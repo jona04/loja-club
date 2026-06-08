@@ -49,3 +49,21 @@ def test_seed_is_idempotent(db: Session) -> None:
     seed_store_permissions(session=db)
     after = len(db.exec(select(StoreRolePermission)).all())
     assert before == after
+
+
+def test_seed_removes_obsolete_permission(db: Session) -> None:
+    # A permission no longer in the catalog (e.g. renamed) is reconciled away,
+    # together with its role grants.
+    owner = db.exec(select(StoreRole).where(StoreRole.key == "owner")).one()
+    obsolete = StorePermission(key="catalog.product.obsolete", module="catalog")
+    db.add(obsolete)
+    db.commit()
+    db.refresh(obsolete)
+    db.add(StoreRolePermission(role_id=owner.id, permission_id=obsolete.id))
+    db.commit()
+
+    seed_store_permissions(session=db)
+
+    keys = {p.key for p in db.exec(select(StorePermission)).all()}
+    assert "catalog.product.obsolete" not in keys
+    assert keys == set(PERMISSIONS)

@@ -5,3 +5,7 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Local env with secrets — never commit (use .env.example as the template)
+.env
+!.env.example

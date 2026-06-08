@@ -27,8 +27,8 @@ O painel é dividido em módulos com **permissões granulares**; as regras são 
 
 ## Fora de escopo (o que NÃO entra)
 - Enforcement na rota (`require_permission`) → `P1-PERM-03`.
-- Permissões globais da plataforma (`platform.*`) e papéis globais → Fase 6.
-- Camada de **plano** (plano permite o recurso) → Fase 5 (gancho em `P1-PERM-03`).
+- Permissões globais da plataforma (`platform.*`) e papéis globais → Fase 7.
+- Camada de **plano** (plano permite o recurso) → Fase 6 (gancho em `P1-PERM-03`).
 - Overrides por membro (`store_member_permissions`, opcional no doc [07](../../07_database_strategy.md)) → fora do MVP.
 
 ## Arquivos a criar/alterar
@@ -65,3 +65,4 @@ O painel é dividido em módulos com **permissões granulares**; as regras são 
 - Unit usa os **counts por papel** do doc 08 (owner 63 / admin 54 / manager 28 / support 10 / catalog 15 / marketing 14) como guarda contra erro de transcrição.
 - `store_permissions`/`store_role_permissions` são **globais/seed** (catálogo do produto, igual para toda loja), aplicados no contexto da loja via `store_members.role`. Mesma interpretação de `store_roles` (`P1-PERM-01`).
 - O **join `store_role_permissions`** não estava explícito no doc [07](../../07_database_strategy.md) (que listava só `store_roles` e `store_permissions`); adicionado por ser a forma normalizada do "papel recebe uma lista explícita de permissões" (doc [08](../../08_modules_and_permissions.md)).
+- **Seed autoritativo (reconcilia):** além de aditivo/idempotente, `seed_store_permissions` **remove** permissões fora do catálogo (e seus grants), então renomear/remover uma permissão não deixa órfã no banco (testado em `test_seed_removes_obsolete_permission`). Permissões destrutivas usam o sufixo **`.delete`** (ex.: `catalog.product.delete`).

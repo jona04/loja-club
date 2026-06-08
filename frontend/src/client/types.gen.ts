@@ -9,9 +9,109 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type Body_media_upload_media = {
+    file: string;
+    owner_type?: string;
+};
+
+/**
+ * Fields accepted when creating a category.
+ */
+export type CategoryCreate = {
+    name: string;
+    slug?: (string | null);
+    description?: (string | null);
+};
+
+/**
+ * Public representation of a category.
+ */
+export type CategoryPublic = {
+    name: string;
+    slug: string;
+    description?: (string | null);
+    id: string;
+    store_id: string;
+};
+
+/**
+ * Partial update for a category.
+ */
+export type CategoryUpdate = {
+    name?: (string | null);
+    slug?: (string | null);
+    description?: (string | null);
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
+
+/**
+ * Link a (processed) media file to a product at a position.
+ */
+export type ImageAttach = {
+    media_file_id: string;
+    position?: number;
+};
+
+/**
+ * Public representation of a product image (with its media's URL/status).
+ */
+export type ImagePublic = {
+    id: string;
+    store_id: string;
+    product_id: string;
+    media_file_id: string;
+    position: number;
+    url: string;
+    variants: ({
+    [key: string]: (string);
+} | null);
+    status: MediaStatus;
+};
+
+/**
+ * Public representation of a stock entry.
+ */
+export type InventoryPublic = {
+    id: string;
+    store_id: string;
+    product_id: string;
+    variant_id: (string | null);
+    quantity: number;
+};
+
+/**
+ * Set the stock quantity for a product (optionally a specific variant).
+ */
+export type InventorySet = {
+    variant_id?: (string | null);
+    quantity: number;
+};
+
+/**
+ * Public representation of an uploaded media file.
+ */
+export type MediaPublic = {
+    id: string;
+    store_id: string;
+    owner_type: string;
+    owner_id: (string | null);
+    key: string;
+    url: string;
+    variants: ({
+    [key: string]: (string);
+} | null);
+    content_type: string;
+    size: number;
+    status: MediaStatus;
+};
+
+/**
+ * Processing status of an uploaded media file.
+ */
+export type MediaStatus = 'processing' | 'ready' | 'failed';
 
 /**
  * Lifecycle status of a store membership.
@@ -41,6 +141,16 @@ export type NewPassword = {
     new_password: string;
 };
 
+export type Page_CategoryPublic_ = {
+    data: Array<CategoryPublic>;
+    count: number;
+};
+
+export type Page_ProductPublic_ = {
+    data: Array<ProductPublic>;
+    count: number;
+};
+
 export type Page_StoreMemberPublic_ = {
     data: Array<StoreMemberPublic>;
     count: number;
@@ -48,6 +158,11 @@ export type Page_StoreMemberPublic_ = {
 
 export type Page_StorePublic_ = {
     data: Array<StorePublic>;
+    count: number;
+};
+
+export type Page_VariantPublic_ = {
+    data: Array<VariantPublic>;
     count: number;
 };
 
@@ -60,6 +175,68 @@ export type PrivateUserCreate = {
     full_name: string;
     is_verified?: boolean;
 };
+
+/**
+ * Fields accepted when creating a product (status starts as ``draft``).
+ */
+export type ProductCreate = {
+    name: string;
+    slug?: (string | null);
+    description?: (string | null);
+    price_amount_minor: number;
+    price_currency?: (string | null);
+    is_featured?: boolean;
+};
+
+/**
+ * Public representation of a product.
+ */
+export type ProductPublic = {
+    name: string;
+    slug: string;
+    description?: (string | null);
+    status?: ProductStatus;
+    /**
+     * Price in minor units (INV-D4)
+     */
+    price_amount_minor: number;
+    /**
+     * ISO 4217 currency code
+     */
+    price_currency: string;
+    is_featured?: boolean;
+    id: string;
+    store_id: string;
+};
+
+/**
+ * Lifecycle status of a catalog product (doc 09).
+ *
+ * - ``draft``: never published; editable; the slug follows the name.
+ * - ``published``: live on the storefront; the slug is fixed.
+ * - ``archived``: taken offline but kept — reversible via publish; the slug
+ * stays reserved.
+ *
+ * Deleting a product is a **soft delete** (``deleted_at``), not a status.
+ */
+export type ProductStatus = 'draft' | 'published' | 'archived';
+
+/**
+ * Partial update for a product (unset fields are left unchanged).
+ */
+export type ProductUpdate = {
+    name?: (string | null);
+    slug?: (string | null);
+    description?: (string | null);
+    price_amount_minor?: (number | null);
+    price_currency?: (string | null);
+    is_featured?: (boolean | null);
+};
+
+/**
+ * Lifecycle status of a product variant.
+ */
+export type ProductVariantStatus = 'active' | 'archived';
 
 /**
  * Payload to create a store (slug/currency/locale default from platform).
@@ -123,7 +300,6 @@ export type StoreSettingsPublic = {
     contact_phone?: (string | null);
     whatsapp_number?: (string | null);
     address?: (string | null);
-    is_published?: boolean;
     id: string;
     store_id: string;
     social_links?: ({
@@ -149,8 +325,16 @@ export type StoreSettingsUpdate = {
 
 /**
  * Lifecycle status of a store (doc 09).
+ *
+ * - ``draft``: created, not yet published (not served on the storefront).
+ * - ``active``: published/live — the only status the storefront serves.
+ * - ``paused``: taken offline by the merchant (reversible via publish).
+ * - ``suspended``/``blocked``: turned off by the platform (Fase 7); the
+ * dashboard guard blocks access.
+ *
+ * Removing a store is a **soft delete** (``deleted_at``), never a status.
  */
-export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked' | 'archived';
+export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked';
 
 /**
  * JSON payload containing an access token.
@@ -237,6 +421,202 @@ export type ValidationError = {
     };
 };
 
+/**
+ * Fields accepted when creating a product variant.
+ */
+export type VariantCreate = {
+    name: string;
+    sku?: (string | null);
+    attributes?: ({
+    [key: string]: (string);
+} | null);
+    price_override_amount_minor?: (number | null);
+    price_override_currency?: (string | null);
+};
+
+/**
+ * Public representation of a product variant.
+ */
+export type VariantPublic = {
+    id: string;
+    store_id: string;
+    product_id: string;
+    name: string;
+    sku: (string | null);
+    attributes: ({
+    [key: string]: (string);
+} | null);
+    price_override_amount_minor: (number | null);
+    price_override_currency: (string | null);
+    status: ProductVariantStatus;
+};
+
+/**
+ * Partial update for a product variant.
+ */
+export type VariantUpdate = {
+    name?: (string | null);
+    sku?: (string | null);
+    attributes?: ({
+    [key: string]: (string);
+} | null);
+    price_override_amount_minor?: (number | null);
+    price_override_currency?: (string | null);
+};
+
+export type CatalogListProductsData = {
+    limit?: number;
+    skip?: number;
+    storeId: string;
+};
+
+export type CatalogListProductsResponse = (Page_ProductPublic_);
+
+export type CatalogCreateProductData = {
+    requestBody: ProductCreate;
+    storeId: string;
+};
+
+export type CatalogCreateProductResponse = (ProductPublic);
+
+export type CatalogGetProductData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogGetProductResponse = (ProductPublic);
+
+export type CatalogUpdateProductData = {
+    productId: string;
+    requestBody: ProductUpdate;
+    storeId: string;
+};
+
+export type CatalogUpdateProductResponse = (ProductPublic);
+
+export type CatalogDeleteProductData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogDeleteProductResponse = (void);
+
+export type CatalogPublishProductData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogPublishProductResponse = (ProductPublic);
+
+export type CatalogArchiveProductData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogArchiveProductResponse = (ProductPublic);
+
+export type CatalogListCategoriesData = {
+    limit?: number;
+    skip?: number;
+    storeId: string;
+};
+
+export type CatalogListCategoriesResponse = (Page_CategoryPublic_);
+
+export type CatalogCreateCategoryData = {
+    requestBody: CategoryCreate;
+    storeId: string;
+};
+
+export type CatalogCreateCategoryResponse = (CategoryPublic);
+
+export type CatalogUpdateCategoryData = {
+    categoryId: string;
+    requestBody: CategoryUpdate;
+    storeId: string;
+};
+
+export type CatalogUpdateCategoryResponse = (CategoryPublic);
+
+export type CatalogDeleteCategoryData = {
+    categoryId: string;
+    storeId: string;
+};
+
+export type CatalogDeleteCategoryResponse = (void);
+
+export type CatalogListVariantsData = {
+    limit?: number;
+    productId: string;
+    skip?: number;
+    storeId: string;
+};
+
+export type CatalogListVariantsResponse = (Page_VariantPublic_);
+
+export type CatalogCreateVariantData = {
+    productId: string;
+    requestBody: VariantCreate;
+    storeId: string;
+};
+
+export type CatalogCreateVariantResponse = (VariantPublic);
+
+export type CatalogUpdateVariantData = {
+    productId: string;
+    requestBody: VariantUpdate;
+    storeId: string;
+    variantId: string;
+};
+
+export type CatalogUpdateVariantResponse = (VariantPublic);
+
+export type CatalogDeleteVariantData = {
+    productId: string;
+    storeId: string;
+    variantId: string;
+};
+
+export type CatalogDeleteVariantResponse = (void);
+
+export type CatalogListImagesData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogListImagesResponse = (Array<ImagePublic>);
+
+export type CatalogAttachImageData = {
+    productId: string;
+    requestBody: ImageAttach;
+    storeId: string;
+};
+
+export type CatalogAttachImageResponse = (ImagePublic);
+
+export type CatalogRemoveImageData = {
+    imageId: string;
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogRemoveImageResponse = (void);
+
+export type CatalogGetInventoryData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CatalogGetInventoryResponse = ((InventoryPublic | null));
+
+export type CatalogSetInventoryData = {
+    productId: string;
+    requestBody: InventorySet;
+    storeId: string;
+};
+
+export type CatalogSetInventoryResponse = (InventoryPublic);
+
 export type HealthHealthResponse = ({
     [key: string]: (string);
 });
@@ -270,6 +650,13 @@ export type LoginRecoverPasswordHtmlContentData = {
 };
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
+
+export type MediaUploadMediaData = {
+    formData: Body_media_upload_media;
+    storeId: string;
+};
+
+export type MediaUploadMediaResponse = (MediaPublic);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;

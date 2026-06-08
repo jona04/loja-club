@@ -57,8 +57,9 @@ Cliente final não precisa usar login na V1.
 - listar produtos;
 - criar produto;
 - atualizar produto;
-- arquivar produto;
-- publicar/despublicar;
+- publicar produto;
+- arquivar produto (offline reversível);
+- deletar produto (soft-delete);
 - categorias;
 - variações;
 - estoque;
@@ -198,4 +199,4 @@ Cliente final não precisa usar login na V1.
 - [ ] Filtros (por endpoint, conforme a feature).
 - [ ] Schemas por módulo (cada fase).
 - [ ] Contratos públicos do storefront (Fase 3).
-- [ ] Contratos de webhook (Fase 5).
+- [ ] Contratos de webhook (Fase 6).
