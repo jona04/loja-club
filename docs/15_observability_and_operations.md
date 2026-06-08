@@ -112,6 +112,8 @@ O health check público pode ser simples. Health checks internos podem validar d
 - tempo médio de execução;
 - e-mails enfileirados / enviados / falhos (todo e-mail é disparado pelo worker — INV-F5).
 
+> Inspeção da fila no dev (Redis Insight / `redis-cli`, chaves `arq:*`, `arq:queue:health-check`): ver [`backend/README.md`](../backend/README.md).
+
 ### CDN/S3
 
 - tráfego;

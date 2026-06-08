@@ -1,121 +1,81 @@
-# FastAPI Project - Frontend
+# Loja Club — Frontend (merchant dashboard)
 
-The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [TanStack Query](https://tanstack.com/query), [TanStack Router](https://tanstack.com/router) and [Tailwind CSS](https://tailwindcss.com/).
+The merchant panel, built with [Vite](https://vitejs.dev/),
+[React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/),
+[TanStack Query + Router + Table](https://tanstack.com/), Tailwind CSS and
+shadcn/Radix. It talks to the backend through a generated OpenAPI client.
 
-## Requirements
+> This is the **dashboard**. The public storefront and the platform admin are
+> separate frontends (planned).
 
-- [Bun](https://bun.sh/) (recommended) or [Node.js](https://nodejs.org/)
+## Workspace & tooling note
 
-## Quick Start
+This package is part of a **Bun workspace** defined at the repo root:
 
-```bash
-bun install
-bun run dev
-```
+- there is a **single lockfile** (`bun.lock`) and a **single `node_modules` at the
+  repo root** (dependencies are hoisted) — there is no `frontend/node_modules`.
+- **Bun is not required to be installed globally.** You can either use
+  `npx bun@1.3.14 …` or call the tool binaries directly from the hoisted folder:
+  `../node_modules/.bin/<tool>`.
 
-* Then open your browser at http://localhost:5173/.
-
-Notice that this live server is not running inside Docker, it's for local development, and that is the recommended workflow. Once you are happy with your frontend, you can build the frontend Docker image and start it, to test it in a production-like environment. But building the image at every change will not be as productive as running the local development server with live reload.
-
-Check the file `package.json` to see other available options.
-
-### Removing the frontend
-
-If you are developing an API-only app and want to remove the frontend, you can do it easily:
-
-* Remove the `./frontend` directory.
-
-* In the `compose.yml` file, remove the whole service / section `frontend`.
-
-* In the `compose.override.yml` file, remove the whole service / section `frontend` and `playwright`.
-
-Done, you have a frontend-less (api-only) app. 🤓
-
----
-
-If you want, you can also remove the `FRONTEND` environment variables from:
-
-* `.env`
-* `./scripts/*.sh`
-
-But it would be only to clean them up, leaving them won't really have any effect either way.
-
-## Generate Client
-
-### Automatically
-
-* Activate the backend virtual environment.
-* From the top level project directory, run the script:
+Install dependencies from the **repo root**:
 
 ```bash
-bash ./scripts/generate-client.sh
+npx bun@1.3.14 install      # regenerates bun.lock when package.json changes
 ```
 
-* Commit the changes.
+## Commands
 
-### Manually
+From `./frontend`. Two equivalent ways — via Bun, or via the hoisted binaries
+(handy when Bun isn't installed locally):
 
-* Start the Docker Compose stack.
+| Task | With Bun | Without Bun (hoisted binaries) |
+|---|---|---|
+| Dev server (hot reload) | `bun run dev` | `../node_modules/.bin/vite` |
+| Type-check (build config) | — | `../node_modules/.bin/tsc -p tsconfig.build.json` |
+| Production build | `bun run build` | `../node_modules/.bin/vite build` |
+| Lint / format | `bun run lint` | `../node_modules/.bin/biome check src` (add `--write` to fix) |
+| Unit tests (Vitest) | `bun run test:unit` | `CI=true ../node_modules/.bin/vitest run` |
+| E2E (Playwright) | `bun run test` | `../node_modules/.bin/playwright test` |
+| Regenerate API client | `bun run generate-client` | `../node_modules/.bin/openapi-ts` |
 
-* Download the OpenAPI JSON file from `http://localhost/api/v1/openapi.json` and copy it to a new file `openapi.json` at the root of the `frontend` directory.
+The Vite dev server runs on http://localhost:5173 by default. Point it at a
+running API with `VITE_API_URL` (e.g. `http://localhost:8800`, or
+`http://api.loja.localhost:8088`) in `frontend/.env`. When you run the full
+Docker stack instead, the dashboard is served at http://localhost:5180 /
+http://app.loja.localhost:8088 (see the [root README](../README.md)).
 
-* To generate the frontend client, run:
+## Generated API client
+
+The client in `src/client/` is generated from the backend's OpenAPI schema
+(`@hey-api/openapi-ts`). Regenerate it whenever the backend API changes:
 
 ```bash
-bun run generate-client
+# with the backend running, then from ./frontend:
+../node_modules/.bin/openapi-ts        # or: bun run generate-client
 ```
 
-* Commit the changes.
+Commit the regenerated client.
 
-Notice that everytime the backend changes (changing the OpenAPI schema), you should follow these steps again to update the frontend client.
+## End-to-end tests (Playwright)
 
-## Using a Remote API
-
-If you want to use a remote API, you can set the environment variable `VITE_API_URL` to the URL of the remote API. For example, you can set it in the `frontend/.env` file:
-
-```env
-VITE_API_URL=https://api.my-domain.example.com
-```
-
-Then, when you run the frontend, it will use that URL as the base URL for the API.
-
-## Code Structure
-
-The frontend code is structured as follows:
-
-* `frontend/src` - The main frontend code.
-* `frontend/src/assets` - Static assets.
-* `frontend/src/client` - The generated OpenAPI client.
-* `frontend/src/components` -  The different components of the frontend.
-* `frontend/src/hooks` - Custom hooks.
-* `frontend/src/routes` - The different routes of the frontend which include the pages.
-
-## End-to-End Testing with Playwright
-
-The frontend includes initial end-to-end tests using Playwright. To run the tests, you need to have the Docker Compose stack running. Start the stack with the following command:
+E2E needs the Docker stack up:
 
 ```bash
 docker compose up -d --wait backend
+../node_modules/.bin/playwright test           # or: bun run test
+../node_modules/.bin/playwright test --ui      # interactive
+docker compose down -v                         # tear down + wipe test data
 ```
 
-Then, you can run the tests with the following command:
+## Code structure
 
-```bash
-bunx playwright test
+```text
+src/
+  client/       generated OpenAPI client (do not edit by hand)
+  components/    UI components
+  hooks/         custom hooks (e.g. useActiveStore)
+  lib/           helpers (menu, active store, …)
+  routes/        TanStack Router routes (pages)
+tests/          unit (Vitest)
 ```
-
-You can also run your tests in UI mode to see the browser and interact with it running:
-
-```bash
-bunx playwright test --ui
-```
-
-To stop and remove the Docker Compose stack and clean the data created in tests, use the following command:
-
-```bash
-docker compose down -v
-```
-
-To update the tests, navigate to the tests directory and modify the existing test files or add new ones as needed.
-
-For more information on writing and running Playwright tests, refer to the official [Playwright documentation](https://playwright.dev/docs/intro).

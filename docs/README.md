@@ -50,7 +50,7 @@ O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/
 - O sistema de subdomínios será feito com **wildcard DNS** e resolução da loja pelo `Host` da requisição.
 - O gateway de pagamento fará o split. A Loja Club **não vai reter dinheiro dos lojistas**.
 - A primeira versão terá **2 templates/layouts prontos** para as lojas públicas.
-- A V1 terá **personalização 3D de produtos** usando modelos criados pela Loja Club.
+- A **personalização 3D** é da **Fase 5**: o lojista gera os modelos via **API de terceiros** (não há catálogo 3D da plataforma).
 - O lojista poderá alterar o template ativo no painel, salvar e refletir imediatamente na loja pública.
 - Produtos comuns continuarão funcionando com fotos, variações e carrinho tradicional.
 - O cliente final poderá comprar e personalizar sem login obrigatório.
