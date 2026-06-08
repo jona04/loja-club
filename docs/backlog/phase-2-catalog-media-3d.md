@@ -4,6 +4,8 @@
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [12](../12_aws_infrastructure_and_deployment.md), [13](../13_performance_cache_and_cdn.md), [14](../14_security_strategy.md), [22](../22_product_customization_3d.md), [16](../16_testing_strategy.md).
 
+> **Esta fase já está decomposta em tasks** — ver [`phase-2-catalog-media-3d/`](./phase-2-catalog-media-3d/README.md) (9 tasks, com escopo, dependências, DoD e pré-requisitos). Este arquivo é a **visão geral (consulta)**: a trilha de alto nível. O detalhe e o status oficial estão no README da pasta.
+
 ## Definition of Done da fase
 
 - CRUD de produtos (simple e customizable_3d) com imagens, categorias, variações e estoque, isolado por loja.
