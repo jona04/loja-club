@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
 
 import { StoresService } from "@/client"
+import { StoreGate } from "@/components/Store/StoreGate"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,11 +13,19 @@ import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/store-settings")({
-  component: StoreSettingsScreen,
+  component: StoreSettingsRoute,
   head: () => ({
     meta: [{ title: "Configurações - Loja Club" }],
   }),
 })
+
+function StoreSettingsRoute() {
+  return (
+    <StoreGate>
+      <StoreSettingsScreen />
+    </StoreGate>
+  )
+}
 
 const FIELDS = [
   { key: "public_name", label: "Nome público" },

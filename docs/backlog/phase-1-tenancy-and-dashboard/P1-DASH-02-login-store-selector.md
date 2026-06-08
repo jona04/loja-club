@@ -61,6 +61,7 @@ Um usuário pode ser membro de várias lojas; o painel precisa, após o login, *
 - **store_id é path param:** o contexto expõe `activeStore.id` + `permissions`/`role` (de `/me`) que a `P1-DASH-03` consome no menu por permissão — é a "injeção" do `store_id` nas chamadas do painel.
 - **Client:** regenerado via dump `uv run … app.openapi()` + `openapi-ts`/`biome` pelo `node_modules` da raiz (bun ausente; `frontend/openapi.json` é artefato gitignored).
 - **E2E (impacto):** a suíte Playwright assertava "Welcome back" (removido) e o pós-login virou **gated por loja** (superuser tem 0 lojas → `NoStores`). Troquei os 4 asserts por `user-menu` (estável no novo fluxo). **Não rodei a suíte ao vivo** (precisa do stack) — ver Follow-ups. Removi `tests/admin.spec.ts` (órfão da página admin removida na `P1-DASH-01`).
+- **Correção pós-vistoria (gating de rota):** o gating de loja saiu do `_layout` para um `StoreGate` por rota de loja (Dashboard/Configurações/Equipe). Antes o layout escondia **todas** as rotas — inclusive `/settings` (conta) — no estado "sem loja"; agora rotas não-loja ficam acessíveis sem loja ativa.
 
 ## Follow-ups
 - [ ] **Rodar/validar a suíte Playwright ao vivo** no fluxo store-aware **+ escrever o E2E da jornada** DASH-02 (login → sem-loja → criar → painel; várias → seletor). *Quando:* com o stack de pé. → [README da fase](./README.md#follow-ups--débitos-técnicos).

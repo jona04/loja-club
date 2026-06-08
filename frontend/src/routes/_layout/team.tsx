@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
 
 import { StoresService } from "@/client"
+import { StoreGate } from "@/components/Store/StoreGate"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -34,11 +35,19 @@ import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/team")({
-  component: TeamScreen,
+  component: TeamRoute,
   head: () => ({
     meta: [{ title: "Equipe - Loja Club" }],
   }),
 })
+
+function TeamRoute() {
+  return (
+    <StoreGate>
+      <TeamScreen />
+    </StoreGate>
+  )
+}
 
 const ROLES = ["owner", "admin", "manager", "support", "catalog", "marketing"]
 

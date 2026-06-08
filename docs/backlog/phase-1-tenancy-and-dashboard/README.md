@@ -51,11 +51,13 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 ## Reconciliações da fase (registrar conforme surgirem)
 
 - `account_users.is_superuser` (template) ↔ admin de plataforma (doc [08](../../08_modules_and_permissions.md)): no MVP o superuser cobre o acesso interno; `platform_admin_roles`/`platform.*` entram na Fase 6. (Herdado de `P0-MOD-04`.)
-- **DEC-5 (paginação)** estava pendente nas Fundações; é **travada em `P1-API-01`** (a 1ª API real) e reusada — atualizar o status na tabela de decisões e o doc [20](../../20_api_contracts_todo.md).
+- **DEC-5 (paginação)** estava pendente nas Fundações; **travada em `P1-API-01`** e reusada. **Feito:** status atualizado na tabela de decisões (DEC-5 = *decidido*) e o padrão documentado no doc [20](../../20_api_contracts_todo.md).
 - **Domínio próprio** (`custom_domain` + verificação DNS) fica **fora do MVP** (doc [18](../../18_open_decisions.md)); a Fase 1 entrega só `platform_subdomain`.
 - **Gating por plano** (doc [08](../../08_modules_and_permissions.md) "plano + permissão") entra na Fase 5; aqui deixamos só o **gancho** em `require_permission`.
 - **Papéis/permissões em banco (decidido):** `store_roles`, `store_permissions` e o join `store_role_permissions` são **tabelas seedadas** (segue doc [07](../../07_database_strategy.md)), com o catálogo/mapa do doc [08](../../08_modules_and_permissions.md) como fonte de seed em código. São **globais** (não por-loja); aplicam-se no contexto da loja via `store_members`. O join foi **adicionado ao doc [07](../../07_database_strategy.md)**.
 - **Retrofit `account_users` (`P1-ACCT-01`):** o template fazia hard delete e não tinha `updated_at`/soft delete — corrigido para honrar INV-D2/doc [07](../../07_database_strategy.md).
+- **Pós-vistoria — status da loja no guard:** `get_active_membership` (`P1-TEN-01`) passou a barrar `suspended`/`blocked` (403 `store_unavailable`) e `archived` (404), além de `deleted_at`. Antes só checava `deleted_at` (lacuna latente até a Fase 6 ter suspender/bloquear). Com teste.
+- **Pós-vistoria — `/settings` (conta) acessível sem loja:** o gating de loja saiu do `_layout` para um `StoreGate` por rota de loja; rotas não-loja (configurações de conta) ficam acessíveis sem loja ativa. Corrige um bug introduzido na `P1-DASH-02` (o layout escondia tudo no estado "sem loja").
 
 ## Follow-ups / débitos técnicos
 
@@ -72,4 +74,5 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 - [ ] **Onboarding de loja completo** (checklist) — hoje só o CTA mínimo de criar loja. Origem: `P1-DASH-02`. *Quando:* fase posterior.
 - [ ] **E2E do painel** (Configurações salvar; Equipe convidar/alterar papel/remover) — escrever e rodar ao vivo (com o Playwright da DASH-02). Origem: `P1-DASH-03`. *Quando:* com o stack de pé.
 - [ ] **Campo de redes sociais (`social_links`)** no form de Configurações (é dict; fora do MVP). Origem: `P1-DASH-03`. *Quando:* quando o storefront exibir redes.
+- [ ] **Políticas básicas da loja** (devolução/troca/privacidade) — doc [09](../../09_merchant_dashboard.md) lista em Configurações, mas é escopo de checkout (`checkout.policies.*`). Origem: vistoria da Fase 1. *Quando:* Fase 4 (checkout).
 - [x] **Limpeza do ruído de `alembic autogenerate`** — `_MixinProbe` isolado em `MetaData()` próprio + índice `ix_user_email`→`ix_account_users_email` (migration `c2d3e4f5a6b7`); autogenerate volta a vir vazio. Origem: `P1-STORE-01`. *(feito)*

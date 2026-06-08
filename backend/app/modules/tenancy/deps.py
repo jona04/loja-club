@@ -9,7 +9,7 @@ from sqlmodel import Session, col, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.core.api import AppError
-from app.modules.stores.enums import MembershipStatus
+from app.modules.stores.enums import MembershipStatus, StoreStatus
 from app.modules.stores.models import (
     Store,
     StoreMember,
@@ -35,10 +35,15 @@ def get_active_membership(
 
     Raises:
         AppError: 404 if the store does not exist/is archived; 403 if the user
-            is not an active member (no internal data leaked).
+            is not an active member, or the store is suspended/blocked by the
+            platform (no internal data leaked).
     """
     store = session.get(Store, store_id)
-    if store is None or store.deleted_at is not None:
+    if (
+        store is None
+        or store.deleted_at is not None
+        or store.status == StoreStatus.archived
+    ):
         raise AppError("store_not_found", "Store not found", status_code=404)
     membership = session.exec(
         select(StoreMember).where(
@@ -51,6 +56,10 @@ def get_active_membership(
     if membership is None:
         raise AppError(
             "forbidden", "You do not have access to this store", status_code=403
+        )
+    if store.status in (StoreStatus.suspended, StoreStatus.blocked):
+        raise AppError(
+            "store_unavailable", "This store is not available", status_code=403
         )
     return membership
 

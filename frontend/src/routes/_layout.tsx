@@ -2,15 +2,13 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
 import { Footer } from "@/components/Common/Footer"
 import AppSidebar from "@/components/Sidebar/AppSidebar"
-import { NoStores } from "@/components/Store/NoStores"
-import { StoreSelector } from "@/components/Store/StoreSelector"
 import { StoreSwitcher } from "@/components/Store/StoreSwitcher"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { ActiveStoreProvider, useActiveStore } from "@/hooks/useActiveStore"
+import { ActiveStoreProvider } from "@/hooks/useActiveStore"
 import { isLoggedIn } from "@/hooks/useAuth"
 
 export const Route = createFileRoute("/_layout")({
@@ -23,21 +21,6 @@ export const Route = createFileRoute("/_layout")({
     }
   },
 })
-
-function LayoutContent() {
-  const { isLoading, resolution } = useActiveStore()
-
-  if (isLoading) {
-    return <p className="text-muted-foreground">Carregando…</p>
-  }
-  if (resolution.status === "none") {
-    return <NoStores />
-  }
-  if (resolution.status === "select") {
-    return <StoreSelector />
-  }
-  return <Outlet />
-}
 
 function Layout() {
   return (
@@ -53,7 +36,7 @@ function Layout() {
           </header>
           <main className="flex-1 p-6 md:p-8">
             <div className="mx-auto max-w-7xl">
-              <LayoutContent />
+              <Outlet />
             </div>
           </main>
           <Footer />

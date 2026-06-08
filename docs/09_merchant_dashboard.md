@@ -278,7 +278,7 @@ Funcionalidades:
 - telefone;
 - endereço;
 - redes sociais;
-- políticas básicas;
+- políticas básicas *(escopo de checkout — ver permissão `checkout.policies.*`; fora do MVP de configurações da Fase 1)*;
 - status da loja publicada/não publicada.
 
 ## Plano
@@ -318,7 +318,7 @@ A loja pode ter estados:
 
 ## Onboarding do lojista
 
-A V1 deve ter checklist inicial:
+A V1 deve ter checklist inicial — **construído incrementalmente** conforme os módulos chegam (passo 1 na Fase 1; produto/3D na Fase 2; layout na Fase 3; pagamento na Fase 5). O MVP da Fase 1 entrega apenas o **passo 1 (criar loja)** via CTA; o checklist completo é incremento posterior:
 
 ```text
 1. Criar loja

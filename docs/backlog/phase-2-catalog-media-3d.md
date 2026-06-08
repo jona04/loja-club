@@ -13,6 +13,15 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
+## Construído sobre a Fase 1 (reusar, não recriar)
+
+- **Autorização:** gate com `require_permission("catalog.product.update")` etc. — o **catálogo de permissões `catalog.*` já está seedado** (`P1-PERM-02`); só usar as chaves do doc [08](../08_modules_and_permissions.md).
+- **Tenancy:** rotas sob `/api/v1/stores/{store_id}/...` com `get_active_store`/`ActiveStore`; acessar recurso por **`store_id + id`** via `get_store_scoped` (`P1-TEN-01`, INV-T2) — nunca buscar só por id.
+- **API:** paginação/erro via `app/core/api.py` (`Page[T]`, `pagination_params`, `AppError`); listas retornam `{data, count}`.
+- **Convenção de módulo:** `models.py`/`enums.py`/`schemas.py`/`services.py`/`repositories.py`/`routes.py`; `slug` **único por loja quando ativo** (índice parcial `WHERE deleted_at IS NULL`, como em `store_stores`).
+
+---
+
 ## Etapa 5 — Módulo `catalog`
 
 ### Modelos (`app/modules/catalog/models.py`) — todos com `store_id` + soft delete

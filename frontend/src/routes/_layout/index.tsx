@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 
+import { StoreGate } from "@/components/Store/StoreGate"
 import { Card, CardContent } from "@/components/ui/card"
 import { useActiveStore } from "@/hooks/useActiveStore"
 import useAuth from "@/hooks/useAuth"
 import { buildMenu } from "@/lib/menu"
 
 export const Route = createFileRoute("/_layout/")({
-  component: Dashboard,
+  component: DashboardRoute,
   head: () => ({
     meta: [
       {
@@ -15,6 +16,14 @@ export const Route = createFileRoute("/_layout/")({
     ],
   }),
 })
+
+function DashboardRoute() {
+  return (
+    <StoreGate>
+      <Dashboard />
+    </StoreGate>
+  )
+}
 
 function Dashboard() {
   const { user: currentUser } = useAuth()

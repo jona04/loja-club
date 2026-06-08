@@ -7,7 +7,7 @@ from app.core.api import AppError
 from app.modules.accounts import repositories
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserCreate
-from app.modules.stores.enums import MembershipStatus
+from app.modules.stores.enums import MembershipStatus, StoreStatus
 from app.modules.stores.models import Store, StoreMember, StoreRole
 from app.modules.tenancy.deps import get_active_membership, require_permission
 from tests.utils.utils import random_email, random_lower_string
@@ -46,6 +46,31 @@ def test_get_active_membership_non_member_forbidden(db: Session) -> None:
     with pytest.raises(AppError) as exc:
         get_active_membership(store_id=store.id, session=db, current_user=outsider)
     assert exc.value.status_code == 403
+
+
+def test_get_active_membership_suspended_store_unavailable(db: Session) -> None:
+    store = _store(db, "perm-susp")
+    store.status = StoreStatus.suspended
+    db.add(store)
+    db.flush()
+    user = _user(db)
+    _member(db, store, user, "owner")
+    with pytest.raises(AppError) as exc:
+        get_active_membership(store_id=store.id, session=db, current_user=user)
+    assert exc.value.status_code == 403
+    assert exc.value.code == "store_unavailable"
+
+
+def test_get_active_membership_archived_store_not_found(db: Session) -> None:
+    store = _store(db, "perm-arch")
+    store.status = StoreStatus.archived
+    db.add(store)
+    db.flush()
+    user = _user(db)
+    _member(db, store, user, "owner")
+    with pytest.raises(AppError) as exc:
+        get_active_membership(store_id=store.id, session=db, current_user=user)
+    assert exc.value.status_code == 404
 
 
 def test_require_permission_owner_allowed(db: Session) -> None:
