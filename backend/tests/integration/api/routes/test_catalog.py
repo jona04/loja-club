@@ -222,10 +222,12 @@ def test_images_attach_list_remove_and_isolation(
     )
     assert attached.status_code == 201
     iid = attached.json()["id"]
-    assert (
-        client.get(f"{BASE}/{a.id}/products/{pid}/images", headers=h).json()[0]["id"]
-        == iid
-    )
+    # enriched with the media's url + status (no separate media GET needed)
+    assert attached.json()["status"] == "processing"
+    assert attached.json()["url"] == "https://cdn.test/x.png"
+    listed = client.get(f"{BASE}/{a.id}/products/{pid}/images", headers=h).json()
+    assert listed[0]["id"] == iid
+    assert listed[0]["url"] == "https://cdn.test/x.png"
 
     # attaching another store's media → 404 (isolation)
     cross = client.post(

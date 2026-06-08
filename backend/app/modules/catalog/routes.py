@@ -316,10 +316,9 @@ def list_images(
     store_id: uuid.UUID, product_id: uuid.UUID, session: SessionDep
 ) -> list[ImagePublic]:
     """List a product's images (ordered by position)."""
-    images = services.list_images(
+    return services.list_images(
         session=session, store_id=store_id, product_id=product_id
     )
-    return [ImagePublic.model_validate(i) for i in images]
 
 
 @router.post(
@@ -335,10 +334,9 @@ def attach_image(
     session: SessionDep,
 ) -> ImagePublic:
     """Link a media file to a product."""
-    image = services.attach_image(
+    return services.attach_image(
         session=session, store_id=store_id, product_id=product_id, payload=payload
     )
-    return ImagePublic.model_validate(image)
 
 
 @router.delete("/products/{product_id}/images/{image_id}", status_code=204)

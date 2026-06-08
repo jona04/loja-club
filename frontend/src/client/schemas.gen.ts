@@ -254,12 +254,33 @@ export const ImagePublicSchema = {
         position: {
             type: 'integer',
             title: 'Position'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        variants: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variants'
+        },
+        status: {
+            '$ref': '#/components/schemas/MediaStatus'
         }
     },
     type: 'object',
-    required: ['id', 'store_id', 'product_id', 'media_file_id', 'position'],
+    required: ['id', 'store_id', 'product_id', 'media_file_id', 'position', 'url', 'variants', 'status'],
     title: 'ImagePublic',
-    description: 'Public representation of a product image link.'
+    description: "Public representation of a product image (with its media's URL/status)."
 } as const;
 
 export const InventoryPublicSchema = {

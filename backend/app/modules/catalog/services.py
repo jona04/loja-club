@@ -24,6 +24,7 @@ from app.modules.catalog.schemas import (
     CategoryCreate,
     CategoryUpdate,
     ImageAttach,
+    ImagePublic,
     InventorySet,
     ProductCreate,
     ProductUpdate,
@@ -539,8 +540,8 @@ def archive_variant(
 
 def list_images(
     *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
-) -> Sequence[ProductImage]:
-    """Return a product's images ordered by position.
+) -> list[ImagePublic]:
+    """Return a product's images (with each media's URL/status), by position.
 
     Args:
         session: Active database session.
@@ -548,13 +549,32 @@ def list_images(
         product_id: The owning product id.
 
     Returns:
-        The image rows.
+        The images, each carrying its media file's URL, variants and status.
 
     Raises:
         AppError: 404 if the product is not found.
     """
     get_product(session=session, store_id=store_id, product_id=product_id)
-    return repo.list_product_images(session, store_id=store_id, product_id=product_id)
+    result: list[ImagePublic] = []
+    for image in repo.list_product_images(
+        session, store_id=store_id, product_id=product_id
+    ):
+        media = session.get(MediaFile, image.media_file_id)
+        if media is None:  # pragma: no cover - the FK guarantees the media exists
+            continue
+        result.append(
+            ImagePublic(
+                id=image.id,
+                store_id=image.store_id,
+                product_id=image.product_id,
+                media_file_id=image.media_file_id,
+                position=image.position,
+                url=media.url,
+                variants=media.variants,
+                status=media.status,
+            )
+        )
+    return result
 
 
 def attach_image(
@@ -563,7 +583,7 @@ def attach_image(
     store_id: uuid.UUID,
     product_id: uuid.UUID,
     payload: ImageAttach,
-) -> ProductImage:
+) -> ImagePublic:
     """Link a store's media file to a product at a position.
 
     Args:
@@ -573,7 +593,7 @@ def attach_image(
         payload: The media file id + position.
 
     Returns:
-        The created image link.
+        The created image link (with the media's URL, variants and status).
 
     Raises:
         AppError: 404 if the product or the media file is not in the store.
@@ -596,7 +616,16 @@ def attach_image(
     session.add(image)
     session.commit()
     session.refresh(image)
-    return image
+    return ImagePublic(
+        id=image.id,
+        store_id=image.store_id,
+        product_id=image.product_id,
+        media_file_id=image.media_file_id,
+        position=image.position,
+        url=media.url,
+        variants=media.variants,
+        status=media.status,
+    )
 
 
 def remove_image(

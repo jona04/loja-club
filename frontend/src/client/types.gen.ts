@@ -56,7 +56,7 @@ export type ImageAttach = {
 };
 
 /**
- * Public representation of a product image link.
+ * Public representation of a product image (with its media's URL/status).
  */
 export type ImagePublic = {
     id: string;
@@ -64,6 +64,11 @@ export type ImagePublic = {
     product_id: string;
     media_file_id: string;
     position: number;
+    url: string;
+    variants: ({
+    [key: string]: (string);
+} | null);
+    status: MediaStatus;
 };
 
 /**

@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 
 from app.modules.catalog.enums import ProductVariantStatus
 from app.modules.catalog.models import CategoryBase, ProductBase
+from app.modules.media.enums import MediaStatus
 
 # --- Products ---
 
@@ -113,13 +114,16 @@ class ImageAttach(SQLModel):
 
 
 class ImagePublic(SQLModel):
-    """Public representation of a product image link."""
+    """Public representation of a product image (with its media's URL/status)."""
 
     id: uuid.UUID
     store_id: uuid.UUID
     product_id: uuid.UUID
     media_file_id: uuid.UUID
     position: int
+    url: str
+    variants: dict[str, str] | None
+    status: MediaStatus
 
 
 # --- Inventory ---

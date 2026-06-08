@@ -46,12 +46,14 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 2 | [P2-CAT-01](./P2-CAT-01-catalog-models.md) | Modelos do `catalog` (produtos/variações/imagens/categorias/estoque/coleções) | **done** | — |
 | 3 | [P2-MEDIA-02](./P2-MEDIA-02-media-pipeline.md) | `media_files` + pipeline de upload + worker de thumbnails | **done** | P2-MEDIA-01 |
 | 4 | [P2-CAT-02](./P2-CAT-02-catalog-service-routes.md) | `catalog`: serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens) | **done** | P2-CAT-01, P2-MEDIA-02 |
-| 5 | [P2-FE-01](./P2-FE-01-products-screen.md) | Painel: tela de Produtos + componente de upload de imagem | todo | P2-CAT-02, P2-MEDIA-02 |
+| 5 | [P2-FE-01](./P2-FE-01-products-screen.md) | Painel: tela de Produtos + componente de upload de imagem | **done** | P2-CAT-02, P2-MEDIA-02 |
+
+> ✅ **Fase 2 completa** — as 5 tasks estão `done`.
 
 ## Ordem sugerida de execução
 
 ```text
-P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 → P2-FE-01
+P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (done) → P2-FE-01 (done)
 ```
 
 ## Reconciliações da fase (registrar conforme surgirem)
@@ -72,3 +74,6 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 →
 - [ ] **Estoque sem índice único** `(store_id, product_id, variant_id)` → upsert pode duplicar linha. Origem: `P2-CAT-02`.
 - [ ] **Archive de produto não cascateia** para variações/imagens/estoque (órfãos ativos). Origem: `P2-CAT-02`.
 - [ ] **Lazy-init de client sem lock** (`storage._s3_client`, `queue._get_pool`, INV-F6): 1ª chamada concorrente pode criar 2 clients/pools (um descartado) — **benigno**; `close_pool` engole `RuntimeError` cross-loop **só em teste**. Origem: refactor INV-F6 (`P2-MEDIA-01`/`P0-CFG-04`).
+- [ ] **Preço com expoente da moeda** (INV-G1) — a tela assume 2 casas. Origem: `P2-FE-01`.
+- [ ] **UI de variações/categorias** (backend já suporta). Origem: `P2-FE-01`.
+- [ ] **E2E ao vivo** (Playwright) da tela de Produtos. Origem: `P2-FE-01`.

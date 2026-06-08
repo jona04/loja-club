@@ -1,4 +1,10 @@
-import { LayoutDashboard, type LucideIcon, Settings, Users } from "lucide-react"
+import {
+  LayoutDashboard,
+  type LucideIcon,
+  Package,
+  Settings,
+  Users,
+} from "lucide-react"
 
 export interface MenuModule {
   title: string
@@ -11,6 +17,12 @@ export interface MenuModule {
 /** The dashboard's modular menu. Add modules here as their screens land. */
 export const MENU_MODULES: MenuModule[] = [
   { title: "Dashboard", path: "/", icon: LayoutDashboard, permission: null },
+  {
+    title: "Produtos",
+    path: "/products",
+    icon: Package,
+    permission: "catalog.product.view",
+  },
   {
     title: "Configurações",
     path: "/store-settings",

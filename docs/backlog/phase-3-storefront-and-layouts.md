@@ -19,6 +19,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 > Decisão fechada (doc [05](../05_frontend_architecture.md)/[10](../10_storefront_and_layouts.md)/[18](../18_open_decisions.md)): Next.js no storefront, Three.js no editor. É um projeto **separado** do `frontend-dashboard`.
 
+- [ ] **Renomear o `frontend/` atual para `frontend-dashboard/`** (o painel Vite): os docs ([05](../05_frontend_architecture.md)/[12](../12_aws_infrastructure_and_deployment.md)) já usam esse nome, mas o diretório ficou como `frontend/` nas Fases 0–2 para evitar churn antes de existir um segundo frontend. Ao introduzir o storefront, renomear o diretório + ajustar `compose*.yml`, Traefik, workspace `bun` (lockfile na raiz) e CI.
 - [ ] Criar `frontend-storefront/` (Next.js, TypeScript, Tailwind). Pode reutilizar componentes/cliente OpenAPI e padrões visuais do dashboard, mas com build/deploy próprios. Doc [05](../05_frontend_architecture.md).
 - [ ] Resolução por `Host`: middleware/SSR lê o host → chama API pública → obtém `store_id` e dados públicos. Doc [06](../06_multitenancy_and_domains.md)/[10](../10_storefront_and_layouts.md).
 - [ ] Página **"loja não encontrada"** amigável (sem vazar dado interno). Doc [06](../06_multitenancy_and_domains.md).

@@ -4,7 +4,7 @@ title: Painel — tela de Produtos + componente de upload de imagem
 phase: 2
 etapa: "Etapa 5 — Frontend (painel)"
 area: FE
-status: todo
+status: done
 depends_on: [P2-CAT-02, P2-MEDIA-02]
 blocks: []
 tests: [unit, e2e]
@@ -44,12 +44,23 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - **Cobrir:** unit — menu/ação escondidos/desabilitados sem permissão; e2e — criar/publicar produto reflete na lista.
 
 ## Definition of Done
-- [ ] Tela de Produtos (CRUD/publicar) + upload de imagem com estado de processamento, no contexto da loja ativa.
-- [ ] Gating por permissão (UX); `tsc`/`vitest` verdes (E2E base ou follow-up).
-- [ ] Itens adiados varridos → Follow-ups + README (ou "nenhum").
+- [x] Tela de Produtos (lista/criar/editar/publicar/despublicar/arquivar) + componente de upload de imagem (estado de processamento), no contexto da loja ativa.
+- [x] Gating por permissão (UX); `tsc`/`biome`/`vitest` verdes (17 passed) + `vite build` ok. E2E ao vivo = follow-up.
+- [x] Itens adiados varridos → Follow-ups + README.
+
+## Progresso
+- ✅ **Menu** "Produtos" (`lib/menu.ts`, permissão `catalog.product.view`) + teste.
+- ✅ **Tela** `routes/_layout/products.tsx` (`ProductsScreen` exportado p/ teste): lista **paginada** (`skip`/`limit`, `PAGE_SIZE=20`, prev/próxima), criar/editar (dialogs: nome/preço/descrição/destaque + estoque), publicar/despublicar, arquivar — gating por `catalog.product.*`.
+- ✅ **Upload** `components/Catalog/ProductImageUpload.tsx`: `uploadMedia` → `attachImage`; lista as **imagens salvas** (`listImages` traz `url`/`variants`/`status`), badge **processando** e **polling** (2s) até `ready`.
+- ✅ Client OpenAPI já regenerado na `P2-CAT-02`. Verde: biome/tsc/vitest/vite build.
 
 ## Notas / Reconciliações
-- E2E ao vivo pode virar follow-up (precisa do stack), como na Fase 1.
+- **Preço** em 2 casas (`×100`/`/100`) — assume expoente 2 (USD/BRL, default); INV-G1 quer o expoente da moeda → follow-up.
+- **Imagens:** `listImages` foi **enriquecido** com `url`/`variants`/`status` do media (via `session.get` no serviço — sem `GET /media` separado), então a tela mostra as imagens salvas e **pola** `processing→ready`. `attach_image` retorna o mesmo DTO enriquecido.
 
 ## Follow-ups
-- (preencher)
+- [x] **`listImages`/`attachImage` enriquecidos** com `url`/`variants`/`status` (sem `GET /media` separado) → tela mostra imagens salvas e **pola** `processing→ready`. *(feito)*
+- [x] **Paginação na UI** (`skip`/`limit` + prev/próxima, `PAGE_SIZE=20`). *(feito)*
+- [ ] **Preço com expoente da moeda** (INV-G1) — hoje assume 2 casas; derivar do `currency` (JPY=0, BHD=3). Origem: P2-FE-01.
+- [ ] **UI de variações e categorias** — backend (`P2-CAT-02`) suporta; a tela ainda não. Origem: P2-FE-01.
+- [ ] **E2E ao vivo** (Playwright) criar/publicar reflete na lista — precisa do stack. Origem: P2-FE-01.
