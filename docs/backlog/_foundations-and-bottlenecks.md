@@ -135,6 +135,7 @@ Não duplicar cobertura de ramos no nível de cima.
 | DEC-8 | Storage local em dev | AWS S3 + CloudFront reais (sem MinIO) | **decidido** (Fase 2) |
 | DEC-9 | Runner de unit no frontend | `vitest` + Testing Library | **decidido** (`P0-TEST-01`) |
 | DEC-10 | Isolamento de DB em teste | transação por teste (rollback/savepoint) | recomendado (`P0-TEST-01`) |
+| DEC-11 | Lib de imagem (thumbnails) | `Pillow` — variantes `thumbnail/card/product/zoom` no worker | **decidido** (`P2-MEDIA-02`) |
 | DEC-11 | Mock de AWS S3 em teste | `moto` (ou botocore Stubber) | recomendado (`P0-TEST-01`) |
 | DEC-12 | Lib de teste backend | `pytest` (+ `coverage`, já no template) | **decidido** |
 | DEC-13 | Docstrings Python | **Google style, em inglês**, em toda classe/método; enforce Ruff `D` | **decidido** (`CLAUDE.md`, `P0-CI-01`) |

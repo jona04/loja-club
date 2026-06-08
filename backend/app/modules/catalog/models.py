@@ -104,7 +104,7 @@ class ProductImage(
     )
 
     product_id: uuid.UUID = Field(foreign_key="catalog_products.id", index=True)
-    media_file_id: uuid.UUID = Field(index=True)
+    media_file_id: uuid.UUID = Field(foreign_key="media_files.id", index=True)
     position: int = Field(default=0)
 
 

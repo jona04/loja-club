@@ -71,6 +71,20 @@ def delete(key: str) -> None:
     _s3_client().delete_object(Bucket=settings.S3_BUCKET, Key=key)
 
 
+def download(key: str) -> bytes:
+    """Download an object's bytes from the bucket.
+
+    Args:
+        key: Object key to fetch.
+
+    Returns:
+        The object's raw bytes.
+    """
+    obj = _s3_client().get_object(Bucket=settings.S3_BUCKET, Key=key)
+    data: bytes = obj["Body"].read()
+    return data
+
+
 def public_url(key: str) -> str:
     """Return the public CloudFront (CDN) URL for ``key``.
 
