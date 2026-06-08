@@ -12,6 +12,7 @@ Docs de referência: [22](../22_product_customization_3d.md), [07](../07_databas
 - O lojista **gera um modelo 3D via API** a partir de uma imagem/descrição; o GLB fica no storage da loja (S3/CloudFront) e é vinculado ao produto.
 - Cliente personaliza no **editor 3D do storefront** (Three.js): arte, cor, texto, posição/escala/rotação, preview, autosave e **aprovação** antes do carrinho.
 - Personalização aprovada é **congelada no pedido** (cópia própria; não depende da sessão viva).
+- O lojista pode **montar a personalização em nome do cliente** (pré-cadastrado por e-mail/telefone); o cliente vê/aprova e segue o fluxo normal (carrinho/checkout).
 - Lojista vê as sessões/arte da própria loja e atualiza o **status de arte/produção**.
 - Testes: isolamento (sessão só da loja), arte **privada** (URL assinada), congelamento no pedido.
 
@@ -33,6 +34,7 @@ Docs de referência: [22](../22_product_customization_3d.md), [07](../07_databas
 - [ ] `customization_sessions` (campos do doc [07](../07_database_strategy.md)) + `customization_uploads` (arte privada). Status `draft|approved|added_to_cart|ordered|abandoned|expired`.
 - [ ] Rotas: iniciar/obter sessão; **autosave** do `state_json`; upload de arte (validado, privado, URL assinada); preview; **aprovar** (congela snapshot + versão + data). Expirar 30 dias → `expired` (worker).
 - [ ] Enum de status de arte/produção (`received…production_done`).
+- [ ] **Personalização assistida pelo lojista** (doc [22](../22_product_customization_3d.md)): sessão **criada pela loja em nome do cliente** (`created_by` = usuário da loja), pré-cadastrando o cliente por e-mail/telefone (`create_or_update_customer`, Fase 4). O cliente acessa e **aprova**; **acesso (login vs link público) = decisão em aberto** ([18](../18_open_decisions.md)).
 
 ### 5.5 — Editor 3D no storefront (Three.js)
 - [ ] Carregar o GLB do modelo+versão **do lojista** (CDN); upload de arte; texto/cor/posição/escala/rotação dentro da área imprimível; preview; **autosave**; **aprovação** obrigatória antes do carrinho; restaurar pela `guest_session_id`. Doc [10](../10_storefront_and_layouts.md)/[22](../22_product_customization_3d.md).
@@ -43,8 +45,10 @@ Docs de referência: [22](../22_product_customization_3d.md), [07](../07_databas
 ### 5.7 — Painel do lojista
 - [ ] Habilitar personalização no produto + **gerar o modelo via API** + observações de produção + preview.
 - [ ] Ver sessões/arte da loja (polling), baixar arquivos (URL assinada), atualizar status de arte/produção. Doc [09](../09_merchant_dashboard.md).
+- [ ] **Montar a personalização pelo cliente** (assistida): a partir do contato do cliente, abrir o editor em nome dele, salvar a sessão e gerar o **link de acesso** para o cliente ver/aprovar. Doc [22](../22_product_customization_3d.md).
 
 ## Reconciliações (registrar aqui)
 - **Modelos gerados pelo lojista via API**, por loja — **não** há biblioteca da plataforma. Ver doc [22](../22_product_customization_3d.md).
 - **Decisão do provedor de geração 3D** (Meshy/Tripo3D/Hyper3D) fica no doc [18](../18_open_decisions.md) — fechar ao iniciar esta fase.
 - **Restringir a personalização a plano pago** é da **Fase 6** (planos/pagamentos); aqui a geração/personalização é livre. O gancho de plano já existe em `require_permission` (Fase 1).
+- **Personalização assistida pelo lojista** (lojista monta em nome do cliente, pré-cadastrado por contato): documentada no doc [22](../22_product_customization_3d.md); o **acesso do cliente** (login vs link público compartilhável) é **decisão em aberto** ([18](../18_open_decisions.md)) — a parte de login depende da Fase 6.

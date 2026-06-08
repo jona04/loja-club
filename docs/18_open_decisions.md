@@ -167,6 +167,21 @@ Decisões pendentes:
 Definir lista exata dos primeiros modelos 3D e formatos finais dos assets.
 ```
 
+## Acesso à personalização criada pelo lojista (Fase 5/6)
+
+Contexto: na **personalização assistida pelo lojista** (o lojista monta a arte em nome do cliente, pré-cadastrado por e-mail/telefone — doc [22](22_product_customization_3d.md)), o cliente precisa **ver e aprovar** a personalização antes de comprar.
+
+Decisão pendente:
+
+```text
+Ver/aprovar a personalização criada pelo lojista exige login do cliente,
+ou é um link público compartilhável (sem login)?
+```
+
+- **Exigir login:** mais controle/privacidade; depende da conta do cliente (Fase 6).
+- **Link público:** o cliente pode **compartilhar com amigos** (veem sem conta); aprovar/comprar ainda pode pedir confirmação de contato.
+- Provável: **suportar os dois** (link público para ver/compartilhar; login/confirmação para aprovar e comprar). Fechar ao entrar na Fase 5/6.
+
 ## Frete na V1
 
 Sugestão:

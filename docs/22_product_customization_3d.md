@@ -206,6 +206,26 @@ Ao aprovar, o sistema deve salvar:
 O pedido deve usar esse estado aprovado.
 Alterações posteriores na sessão não devem mudar um pedido já criado.
 
+## Personalização assistida pelo lojista
+
+Nem todo cliente quer ou consegue personalizar sozinho. Um caminho comum: o cliente chega pelo site e vai **direto falar com o vendedor** (ex.: WhatsApp), não personaliza online e **pede para o lojista montar a personalização por ele**.
+
+Fluxo:
+
+- O lojista monta a personalização **em nome do cliente**, usando o **contato do cliente** (e-mail ou telefone) para **pré-cadastrá-lo** (reusa `create_or_update_customer` — e-mail/telefone normalizados).
+- A **sessão de personalização** é salva vinculada a esse cliente (mesma `customization_session`, marcada como criada pela loja — `created_by`).
+- O cliente **acessa a sua personalização** pelo e-mail/telefone que o lojista pré-cadastrou e **revisa**.
+- Ao **aprovar**, ele segue o **fluxo normal** — carrinho, pagamento etc. — **como se tivesse feito tudo sozinho** (a sessão aprovada vira item de carrinho/pedido pelas mesmas regras de Aprovação visual e Carrinho e pedido).
+
+**Acesso à personalização — decisão em aberto.** Ver a personalização criada pelo lojista pode:
+
+- **(a) exigir login** do cliente (com o e-mail/telefone pré-cadastrado) — depende da **conta do cliente (Fase 6)**; ou
+- **(b) ser um link público compartilhável** (sem login) — permite o cliente **compartilhar com amigos**, que veem o produto personalizado sem conta.
+
+Pode-se **combinar** (link público para *ver/compartilhar* + confirmação de contato/login para *aprovar e comprar*). A escolha fica para decidir mais à frente — ver doc [18](18_open_decisions.md).
+
+> **Quando:** junto com a personalização 3D (**Fase 5**); a parte de **login do cliente** depende da conta do cliente (**Fase 6**).
+
 ## Carrinho e pedido
 
 Um item de carrinho pode apontar para uma sessão de personalização aprovada.

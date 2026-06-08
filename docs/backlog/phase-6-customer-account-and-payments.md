@@ -64,6 +64,7 @@ Docs de referência: [12](../12_aws_infrastructure_and_deployment.md), [23](../2
 - [ ] solicitar código; verificar código; login senha; Google start/callback; logout; `me`.
 - [ ] recuperar carrinho/pedido por código (cross-device) — completa o que ficou na Fase 4. Doc [23](../23_customer_identity_and_guest_checkout.md).
 - [ ] área do cliente: histórico de pedidos, endereços (CRUD), personalizações, **editar perfil (inclui nome)**. Editar exige autenticação. Doc [23](../23_customer_identity_and_guest_checkout.md).
+- [ ] **Ver/aprovar personalização criada pelo lojista:** o cliente loga com o e-mail/telefone pré-cadastrado e **vê/aprova** a personalização que o lojista montou por ele (doc [22](../22_product_customization_3d.md)); aprovar segue o fluxo normal (carrinho/checkout). **Acesso (login vs link público) = decisão em aberto** ([18](../18_open_decisions.md)).
 
 ### Frontend (storefront, Next.js)
 - [ ] Modal/área de login (código, senha, Google); área do cliente (histórico, endereços, perfil). Doc [05](../05_frontend_architecture.md)/[21](../21_design_system_todo.md).
