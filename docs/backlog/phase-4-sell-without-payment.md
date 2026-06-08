@@ -1,17 +1,17 @@
 # Fase 4 — Venda sem pagamento online (dev local)
 
-> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela preço e personalização, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 6.
+> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela o preço, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 6.
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [10](../10_storefront_and_layouts.md), [11](../11_checkout_payments_and_split.md), [13](../13_performance_cache_and_cdn.md), [15](../15_observability_and_operations.md), [22](../22_product_customization_3d.md), [23](../23_customer_identity_and_guest_checkout.md), [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
 
-> **Nota:** vender sem pagamento + identidade do cliente é desta fase; a **personalização** (`image_3d_customizable`, congelar arte no pedido) é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)**; **pagamentos = Fase 6**.
+> **Nota:** vender sem pagamento + identidade do cliente é desta fase, com **produtos de imagem**. Toda a **personalização** (`image_3d_customizable`: sessões, editor 3D e **congelar a arte no carrinho/pedido**) é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)**, que **estende** o carrinho/checkout/pedido daqui; **pagamentos = Fase 6**.
 
 ## Definition of Done da fase (= Critério do MVP, dev local)
 
-- Cliente navega, personaliza, aprova, adiciona ao carrinho e finaliza checkout **sem login**.
+- Cliente navega, adiciona ao carrinho e finaliza checkout **sem login**.
 - Cliente é **identificado por e-mail/telefone normalizados** com deduplicação e primeiro-nome-vence.
-- Pedido criado como `pending_payment`; preço e personalização congelados.
-- Lojista vê pedido + arte aprovada no painel; cliente e lojista recebem e-mail (Mailcatcher).
+- Pedido criado como `pending_payment`; preço congelado.
+- Lojista vê o pedido no painel; cliente e lojista recebem e-mail (Mailcatcher).
 - **Tudo rodando 100% local** no Docker Compose; isolamento multi-tenant testado.
 
 ---
@@ -64,15 +64,16 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ### Modelos (com `store_id`)
 - [ ] `cart_carts`: `guest_session_id`|`customer_id`, `status`; índices `store_id+guest_session_id+status`, `store_id+customer_id+status`. Doc [07](../07_database_strategy.md).
-- [ ] `cart_items`; `customization_cart_items` (liga item à sessão de personalização aprovada; único por `cart_item`). Doc [07](../07_database_strategy.md)/[22](../22_product_customization_3d.md).
+- [ ] `cart_items`. (O `customization_cart_items` — liga o item à sessão de personalização aprovada — é da **[Fase 5](./phase-5-3d-products.md)**.) Doc [07](../07_database_strategy.md).
 
 ### Rotas/serviço (doc [20](../20_api_contracts_todo.md))
-- [ ] Criar carrinho; recuperar por sessão anônima; recuperar por token seguro; adicionar item; **adicionar item personalizado** (exige sessão `approved`); alterar quantidade; remover; aplicar cupom; resumo (subtotal); validar estoque. Doc [11](../11_checkout_payments_and_split.md)/[10](../10_storefront_and_layouts.md).
-- [ ] Regra: item `customizable_3d` só entra com `customization_session.status == approved`. Doc [11](../11_checkout_payments_and_split.md)/[22](../22_product_customization_3d.md).
+- [ ] Criar carrinho; recuperar por sessão anônima; recuperar por token seguro; adicionar item; alterar quantidade; remover; aplicar cupom; resumo (subtotal); validar estoque. Doc [11](../11_checkout_payments_and_split.md)/[10](../10_storefront_and_layouts.md).
+
+> Itens **personalizáveis** (`image_3d_customizable`, exigem sessão `approved`) estendem o carrinho na **[Fase 5](./phase-5-3d-products.md)** — não entram aqui.
 - [ ] Token seguro para continuar compra (aleatório, expira, escopado à loja). Doc [23](../23_customer_identity_and_guest_checkout.md).
 
 ### Frontend (storefront)
-- [ ] Página de carrinho: itens, quantidades, subtotal, cupom, frete estimado, método de entrega, **preview da personalização**, botão checkout. Doc [10](../10_storefront_and_layouts.md).
+- [ ] Página de carrinho: itens, quantidades, subtotal, cupom, frete estimado, método de entrega, botão checkout. Doc [10](../10_storefront_and_layouts.md).
 
 ---
 
@@ -85,8 +86,8 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Coletar dados do cliente (nome, e-mail, telefone, **seletor de país** para o telefone) sem senha.
 - [ ] `create_or_update_customer` (dedup) + endereço.
 - [ ] Selecionar método de entrega (inclui `private_delivery` com aviso).
-- [ ] Revisão; validar estoque, valores e personalizações aprovadas.
-- [ ] Criar **pedido `pending_payment`**; **congelar preços**; **congelar personalização** em `customization_order_items` (modelo, versão, JSON, arte original, preview, snapshot, data). Doc [11](../11_checkout_payments_and_split.md)/[22](../22_product_customization_3d.md).
+- [ ] Revisão; validar estoque e valores.
+- [ ] Criar **pedido `pending_payment`**; **congelar preços**. (O **congelamento de personalização** em `customization_order_items` é da **[Fase 5](./phase-5-3d-products.md)**.) Doc [11](../11_checkout_payments_and_split.md).
 - [ ] **Pagamento combinado fora da plataforma**: mensagem pós-compra explicando como será combinado (Pix/transferência/WhatsApp/entrega combinada).
 - [ ] **Preparar o ponto de integração do gateway** (interface no `payments`, sem implementar) para a Fase 6. Doc [17](../17_v1_roadmap.md).
 - [ ] Não exigir senha/cadastro. Doc [11](../11_checkout_payments_and_split.md).
@@ -100,14 +101,13 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ### Modelos (com `store_id`)
 - [ ] `order_orders`: status (`draft|pending_payment|paid|payment_failed|processing|shipped|delivered|canceled|refunded|chargeback`), total, frete, desconto, método de entrega, `customer_id`, `guest_session_id`. Doc [07](../07_database_strategy.md)/[11](../11_checkout_payments_and_split.md).
-- [ ] `order_items`; `customization_order_items` (congelada); `order_addresses`; `order_status_history`; `order_notes`; `order_fulfillments` (básico); `order_refunds` (stub). Doc [07](../07_database_strategy.md).
+- [ ] `order_items`; `order_addresses`; `order_status_history`; `order_notes`; `order_fulfillments` (básico); `order_refunds` (stub). (O `customization_order_items` — personalização congelada — é da **[Fase 5](./phase-5-3d-products.md)**.) Doc [07](../07_database_strategy.md).
 - [ ] Índices: `store_id+created_at`, `store_id+status`, `store_id+customer_id`, `order_items.store_id+order_id`, `order_status_history.store_id+order_id+created_at`. Doc [07](../07_database_strategy.md).
 
 ### Rotas/serviço + Frontend (painel) — doc [09](../09_merchant_dashboard.md)/[22](../22_product_customization_3d.md)
-- [ ] Lista (filtro por status/data), detalhe, cliente, itens, **personalização aprovada por item**, arquivos enviados (download via URL assinada), **status de arte/produção**, notas internas, alterar status operacional.
+- [ ] Lista (filtro por status/data), detalhe, cliente, itens, notas internas, alterar status operacional.
 - [ ] **Marcar pagamento recebido manualmente** (enquanto não há gateway). Doc [17](../17_v1_roadmap.md).
 - [ ] Cancelar quando permitido. (Reembolso real fica para a Fase 6.)
-- [ ] Lojista não altera arte aprovada sem nova aprovação; pedido preserva o que o cliente confirmou. Doc [09](../09_merchant_dashboard.md)/[22](../22_product_customization_3d.md).
 
 ---
 
@@ -132,13 +132,13 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 ## Etapa 9–14 — Testes (doc [16](../16_testing_strategy.md))
 - [ ] Compra sem login; carrinho recuperado no mesmo navegador; recuperação por token.
 - [ ] **Dedup**: mesmo e-mail/telefone cai no mesmo customer; primeiro-nome-vence; conflito resolve por e-mail.
-- [ ] Carrinho cria pedido `pending_payment`; **preço congelado**; **personalização congelada**; alteração posterior da sessão não muda o pedido.
-- [ ] Estoque validado; item `customizable_3d` exige sessão aprovada.
+- [ ] Carrinho cria pedido `pending_payment`; **preço congelado**.
+- [ ] Estoque validado.
 - [ ] Pedido não vira pago sozinho (sem gateway: fica `pending_payment` até marcação manual).
 - [ ] Isolamento multi-tenant em pedidos/clientes/carrinhos.
-- [ ] E2E do fluxo completo do marco (criar conta → loja → produto → 3D → carrinho → checkout → pedido → painel). Doc [16](../16_testing_strategy.md).
+- [ ] E2E do fluxo completo do marco (criar conta → loja → produto → carrinho → checkout → pedido → painel). Doc [16](../16_testing_strategy.md).
 
 ---
 
 ## Reconciliações (registrar aqui)
-- (preencher conforme surgirem)
+- **Personalização movida para a Fase 5:** sessões, editor 3D e o **congelamento da arte no carrinho/pedido** (`customization_cart_items`/`customization_order_items`, a regra "item `image_3d_customizable` só entra com sessão `approved`", preview/arte/status de produção no painel) eram leftover de antes do pivô. A Fase 4 vende **produtos de imagem**; a [Fase 5](./phase-5-3d-products.md) **estende** carrinho/checkout/pedido com a personalização.

@@ -15,7 +15,7 @@ O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100%
 | 0 | [phase-0-foundation.md](./phase-0-foundation.md) · [tasks](./phase-0-foundation/README.md) | 1–2 | Branding, config, Redis, esqueleto modular — **decomposta em tasks** |
 | 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
 | 2 | [phase-2-catalog-and-media.md](./phase-2-catalog-and-media.md) · [tasks](./phase-2-catalog-and-media/README.md) | 5 | Catálogo (imagem) + mídia/S3 — **decomposta em tasks** |
-| 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) | 7–8 | Storefront Next.js, layouts (sem editor 3D) |
+| 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) · [tasks](./phase-3-storefront-and-layouts/README.md) | 7–8 | Storefront Next.js, layouts (sem editor 3D) — **decomposta em tasks** |
 | 4 | [phase-4-sell-without-payment.md](./phase-4-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
 | 5 | [phase-5-3d-products.md](./phase-5-3d-products.md) | 6 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
 | 6 | [phase-6-customer-account-and-payments.md](./phase-6-customer-account-and-payments.md) | 15–18 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
@@ -35,7 +35,7 @@ Fase     → arquivo .md genérico (visão geral / trilha) — sempre presente
 - Cada **task** é um arquivo com descrição, dependências (`depends_on`), docs de referência, **Escopo / Fora de escopo**, arquivos a alterar e **DoD**. Modelo em [`_task-template.md`](./_task-template.md).
 - O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
 - **Follow-ups / débitos técnicos:** cada README de fase tem uma seção **"Follow-ups / débitos técnicos"** (checkboxes). Toda nota de task que diga "fica para depois" **também** entra lá (ou vira task) — não fica só em prosa.
-- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0, 1 e 2** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 3–7 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
+- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0, 1, 2 e 3** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 4–7 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
 
 ## Fundações & Gargalos (leitura obrigatória)
 

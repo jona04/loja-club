@@ -77,3 +77,4 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (do
 - [ ] **Preço com expoente da moeda** (INV-G1) — a tela assume 2 casas. Origem: `P2-FE-01`.
 - [ ] **UI de variações/categorias** (backend já suporta). Origem: `P2-FE-01`.
 - [ ] **E2E ao vivo** (Playwright) da tela de Produtos. Origem: `P2-FE-01`.
+- [ ] **Push do estado de imagem** (em vez do polling 2s do front) — WebSocket/SSE. Origem: `P2-FE-01`.

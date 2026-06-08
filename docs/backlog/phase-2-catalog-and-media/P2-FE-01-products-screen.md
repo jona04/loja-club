@@ -64,3 +64,4 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - [ ] **Preço com expoente da moeda** (INV-G1) — hoje assume 2 casas; derivar do `currency` (JPY=0, BHD=3). Origem: P2-FE-01.
 - [ ] **UI de variações e categorias** — backend (`P2-CAT-02`) suporta; a tela ainda não. Origem: P2-FE-01.
 - [ ] **E2E ao vivo** (Playwright) criar/publicar reflete na lista — precisa do stack. Origem: P2-FE-01.
+- [ ] **Estado de imagem por push em vez de polling** — hoje o front pola `listImages` (`refetchInterval` 2s) enquanto há `processing`; trocar por **WebSocket/SSE** (o backend avisa `ready`) quando valer a infra. Origem: P2-FE-01.
