@@ -41,9 +41,9 @@ From `./frontend`. Two equivalent ways — via Bun, or via the hoisted binaries
 
 The Vite dev server runs on http://localhost:5180 (set in `vite.config.ts`). Point it at a
 running API with `VITE_API_URL` (e.g. `http://localhost:8800`, or
-`http://api.loja.localhost:8088`) in `frontend/.env`. When you run the full
+`http://api.localhost:8088`) in `frontend/.env`. When you run the full
 Docker stack instead, the dashboard is served at http://localhost:5180 /
-http://app.loja.localhost:8088 (see the [root README](../README.md)).
+http://app.localhost:8088 (see the [root README](../README.md)).
 
 ## Generated API client
 

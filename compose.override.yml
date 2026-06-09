@@ -1,7 +1,7 @@
 services:
 
   # Dev services are exposed on the Loja Club host ports below. With
-  # DOMAIN=loja.localhost and Traefik they are also reachable at
+  # DOMAIN=localhost and Traefik they are also reachable at
   # api./app./admin.<DOMAIN> (routing wired up in later phases).
   proxy:
     image: traefik:3.6

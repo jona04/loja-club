@@ -106,7 +106,7 @@ Usuário cria loja e os dados ficam isolados por store_id.
 
 Entregas:
 
-- painel em `app.loja.club` (local: `app.loja.localhost`);
+- painel em `app.loja.club` (local: `app.localhost`);
 - login;
 - seleção de loja ativa;
 - menu modular;
@@ -176,7 +176,7 @@ Entregas:
 Resultado:
 
 ```text
-Loja pública abre em nomedaloja.loja.club (local: *.loja.localhost).
+Loja pública abre em nomedaloja.loja.club (local: *.localhost).
 ```
 
 ### Etapa 8 — Layouts/templates

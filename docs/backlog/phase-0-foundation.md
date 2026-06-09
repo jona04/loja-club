@@ -24,7 +24,7 @@ Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md)
 - [x] `PROJECT_NAME`/`STACK_NAME` e branding do frontend para Loja Club (sai o "Full Stack FastAPI Project").
 
 ### Variáveis de ambiente e domínio de dev ([P0-CFG-02](./phase-0-foundation/P0-CFG-02-env-config.md))
-- [x] `.env` com segredos fortes, `DOMAIN=loja.localhost`, `PLATFORM_DEFAULT_CURRENCY`/`PLATFORM_DEFAULT_LOCALE`, CORS para `app.`/`admin.`.
+- [x] `.env` com segredos fortes, `DOMAIN=localhost`, `PLATFORM_DEFAULT_CURRENCY`/`PLATFORM_DEFAULT_LOCALE`, CORS para `app.`/`admin.`.
 - [x] Portas de dev **não-padrão** no `compose.override.yml` (db 5442, redis 6399, backend 8800, frontend 5180, etc.) para não conflitar com serviços locais. Doc [06](../06_multitenancy_and_domains.md).
 
 ### Redis — cache/locks/fila leve ([P0-CFG-03](./phase-0-foundation/P0-CFG-03-redis.md))

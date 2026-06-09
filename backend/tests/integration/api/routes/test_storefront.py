@@ -22,7 +22,7 @@ def _published_store(
     store = Store(name="Loja", slug=slug, currency="USD", locale="en-US", status=status)
     db.add(store)
     db.flush()
-    host = f"{uuid.uuid4().hex[:10]}.loja.localhost"
+    host = f"{uuid.uuid4().hex[:10]}.localhost"
     db.add(DomainHost(host=host, store_id=store.id, status=DomainStatus.active))
     db.flush()
     return store, host
@@ -62,7 +62,7 @@ def test_home_for_published_store(client: TestClient, db: Session) -> None:
 
 
 def test_unknown_host_is_not_found(client: TestClient) -> None:
-    resp = client.get(f"{BASE}/home", headers={"host": "nope.loja.localhost"})
+    resp = client.get(f"{BASE}/home", headers={"host": "nope.localhost"})
     assert resp.status_code == 404
     assert resp.json()["error"]["code"] == "store_not_found"
 
