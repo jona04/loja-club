@@ -1211,6 +1211,205 @@ export const StoreStatusSchema = {
 Removing a store is a **soft delete** (\`\`deleted_at\`\`), never a status.`
 } as const;
 
+export const StoreThemeSettingsPublicSchema = {
+    properties: {
+        active_template_id: {
+            type: 'string',
+            title: 'Active Template Id'
+        },
+        banner_image_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Banner Image Url'
+        },
+        headline: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Headline'
+        },
+        featured_collection_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Featured Collection Id'
+        },
+        primary_color: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Primary Color'
+        },
+        background_color: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Background Color'
+        },
+        font_family: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font Family'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        }
+    },
+    type: 'object',
+    required: ['active_template_id', 'id', 'store_id'],
+    title: 'StoreThemeSettingsPublic',
+    description: "Public representation of a store's theme/appearance settings."
+} as const;
+
+export const ThemeTemplatePublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active',
+            default: true
+        },
+        preview_image_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Preview Image Url'
+        },
+        id: {
+            type: 'string',
+            title: 'Id'
+        }
+    },
+    type: 'object',
+    required: ['name', 'id'],
+    title: 'ThemeTemplatePublic',
+    description: 'Public representation of a global theme template.'
+} as const;
+
+export const ThemeUpdateSchema = {
+    properties: {
+        active_template_id: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Active Template Id'
+        },
+        banner_image_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Banner Image Url'
+        },
+        headline: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Headline'
+        },
+        featured_collection_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Featured Collection Id'
+        }
+    },
+    type: 'object',
+    title: 'ThemeUpdate',
+    description: `Partial theme update: apply a template and/or edit appearance.
+
+Only the fields actually sent are applied (\`\`exclude_unset\`\`). Setting
+\`\`active_template_id\`\` validates the target is an available template.`
+} as const;
+
 export const TokenSchema = {
     properties: {
         access_token: {

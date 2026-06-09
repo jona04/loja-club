@@ -1,8 +1,48 @@
 """Content repositories: seeding and queries for the content module."""
 
-from sqlmodel import Session, select
+import uuid
 
-from app.modules.content.models import ContentThemeTemplate
+from sqlmodel import Session, col, select
+
+from app.modules.content.models import ContentStoreThemeSettings, ContentThemeTemplate
+
+
+def list_active_templates(*, session: Session) -> list[ContentThemeTemplate]:
+    """Return the global theme templates available for selection.
+
+    Args:
+        session: Active database session.
+
+    Returns:
+        The active templates (e.g. ``classic``/``modern``).
+    """
+    return list(
+        session.exec(
+            select(ContentThemeTemplate).where(
+                col(ContentThemeTemplate.is_active).is_(True)
+            )
+        ).all()
+    )
+
+
+def get_store_theme_settings(
+    *, session: Session, store_id: uuid.UUID
+) -> ContentStoreThemeSettings | None:
+    """Return a store's theme settings row, or ``None`` if it has none yet.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose settings are fetched.
+
+    Returns:
+        The store's :class:`ContentStoreThemeSettings`, or ``None``.
+    """
+    return session.exec(
+        select(ContentStoreThemeSettings).where(
+            ContentStoreThemeSettings.store_id == store_id
+        )
+    ).first()
+
 
 # The storefront templates shipped in V1 (doc 10). Authoritative for the seed.
 CANONICAL_TEMPLATES: list[dict[str, str]] = [

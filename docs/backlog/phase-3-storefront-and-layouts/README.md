@@ -34,7 +34,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 |---|---|---|---|---|
 | 1 | [P3-FE-01](./P3-FE-01-frontends-setup.md) | Renomear painel → `frontend-dashboard` + scaffold `frontend-storefront` (Next.js) + compose/Traefik | ✅ done | — |
 | 2 | [P3-CONTENT-01](./P3-CONTENT-01-content-models.md) | Módulo `content`: modelos de tema/layout + seed `classic`/`modern` + migration | ✅ done | — |
-| 3 | [P3-CONTENT-02](./P3-CONTENT-02-content-service-routes.md) | `content`: serviço/rotas do painel (aplicar template + invalidar cache; editar layout) | todo | P3-CONTENT-01 |
+| 3 | [P3-CONTENT-02](./P3-CONTENT-02-content-service-routes.md) | `content`: serviço/rotas do painel (aplicar template + invalidar cache; editar layout) | ✅ done | P3-CONTENT-01 |
 | 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | todo | P3-CONTENT-01 |
 | 5 | [P3-SF-02](./P3-SF-02-storefront-rendering.md) | Storefront Next.js: host + "não encontrada" + templates `classic`/`modern` + cache | todo | P3-FE-01, P3-SF-01 |
 | 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | todo | P3-CONTENT-02 |
@@ -58,3 +58,6 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **Default de theme settings** (`P3-CONTENT-01`): loja sem row de theme → vitrine usa `classic` (fallback **read-side** em `P3-SF-01`/`P3-CONTENT-02`; CONTENT-01 não cria row por loja).
 - [ ] **`featured_collection_id` de coleção soft-deletada** (`P3-CONTENT-01`): a vitrine deve **pular** coleção com `deleted_at` ao renderizar o destaque → `P3-SF-01`.
 - [ ] **e2e polui o DB de host** (`P3-CONTENT-01`, infra): e2e (backend Docker) e testes de host compartilham o `loja-club-db` (5442↔5432) → usuários do e2e persistem e quebram o teste de isolamento (`count==1`). → e2e em DB separado **ou** limpeza pós-e2e.
+- [ ] **Invalidação de cache falha → stale** (`P3-CONTENT-02`): `cache_delete` roda após o commit; Redis fora → escrita persiste mas cache fica stale (request pode 500). Tratar (best-effort/log) ao entrar o cache de leitura (`P3-SF-01`).
+- [ ] **Race de aplicar template** (`P3-CONTENT-02`): PATCH concorrente = last-write-wins (sem lock). Aceitável no V1.
+- [ ] **CRUD de páginas/menus/banners no painel** (`P3-CONTENT-02`): modelos existem, faltam rotas/UI — adicionar quando a UI precisar.

@@ -337,6 +337,45 @@ export type StoreSettingsUpdate = {
 export type StoreStatus = 'draft' | 'active' | 'paused' | 'suspended' | 'blocked';
 
 /**
+ * Public representation of a store's theme/appearance settings.
+ */
+export type StoreThemeSettingsPublic = {
+    active_template_id: string;
+    banner_image_url?: (string | null);
+    headline?: (string | null);
+    featured_collection_id?: (string | null);
+    primary_color?: (string | null);
+    background_color?: (string | null);
+    font_family?: (string | null);
+    id: string;
+    store_id: string;
+};
+
+/**
+ * Public representation of a global theme template.
+ */
+export type ThemeTemplatePublic = {
+    name: string;
+    description?: (string | null);
+    is_active?: boolean;
+    preview_image_url?: (string | null);
+    id: string;
+};
+
+/**
+ * Partial theme update: apply a template and/or edit appearance.
+ *
+ * Only the fields actually sent are applied (``exclude_unset``). Setting
+ * ``active_template_id`` validates the target is an available template.
+ */
+export type ThemeUpdate = {
+    active_template_id?: (string | null);
+    banner_image_url?: (string | null);
+    headline?: (string | null);
+    featured_collection_id?: (string | null);
+};
+
+/**
  * JSON payload containing an access token.
  */
 export type Token = {
@@ -616,6 +655,32 @@ export type CatalogSetInventoryData = {
 };
 
 export type CatalogSetInventoryResponse = (InventoryPublic);
+
+export type ContentListTemplatesData = {
+    storeId: string;
+};
+
+export type ContentListTemplatesResponse = (Array<ThemeTemplatePublic>);
+
+export type ContentGetLayoutData = {
+    storeId: string;
+};
+
+export type ContentGetLayoutResponse = (StoreThemeSettingsPublic);
+
+export type ContentUpdateLayoutData = {
+    requestBody: ThemeUpdate;
+    storeId: string;
+};
+
+export type ContentUpdateLayoutResponse = (StoreThemeSettingsPublic);
+
+export type ContentPreviewLayoutData = {
+    storeId: string;
+    templateId: string;
+};
+
+export type ContentPreviewLayoutResponse = (StoreThemeSettingsPublic);
 
 export type HealthHealthResponse = ({
     [key: string]: (string);

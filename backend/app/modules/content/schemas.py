@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 from app.modules.content.enums import MenuLocation
 from app.modules.content.models import (
@@ -10,6 +10,19 @@ from app.modules.content.models import (
     ContentStoreThemeSettingsBase,
     ContentThemeTemplateBase,
 )
+
+
+class ThemeUpdate(SQLModel):
+    """Partial theme update: apply a template and/or edit appearance.
+
+    Only the fields actually sent are applied (``exclude_unset``). Setting
+    ``active_template_id`` validates the target is an available template.
+    """
+
+    active_template_id: str | None = None
+    banner_image_url: str | None = Field(default=None, max_length=2048)
+    headline: str | None = Field(default=None, max_length=255)
+    featured_collection_id: uuid.UUID | None = None
 
 
 class ThemeTemplatePublic(ContentThemeTemplateBase):
