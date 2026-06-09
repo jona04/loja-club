@@ -821,8 +821,9 @@ export class StorefrontService {
     
     /**
      * List Products
-     * List the store's published products (paginated).
+     * List the store's published products (paginated), optionally by category slug.
      * @param data The data for the request.
+     * @param data.category
      * @param data.skip
      * @param data.limit
      * @returns Page_StorefrontProduct_ Successful Response
@@ -833,6 +834,7 @@ export class StorefrontService {
             method: 'GET',
             url: '/api/v1/storefront/products',
             query: {
+                category: data.category,
                 skip: data.skip,
                 limit: data.limit
             },

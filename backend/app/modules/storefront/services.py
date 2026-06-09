@@ -8,6 +8,7 @@ invalidates the layout caches.
 """
 
 import uuid
+from typing import Any
 
 from pydantic import TypeAdapter
 from sqlmodel import Session, col, func, select
@@ -17,7 +18,7 @@ from app.core.api import AppError, PageParams
 from app.core.cache import cache_get, cache_set
 from app.modules.catalog import services as catalog_services
 from app.modules.catalog.enums import ProductStatus
-from app.modules.catalog.models import Category, Product
+from app.modules.catalog.models import Category, Product, ProductCategory
 from app.modules.catalog.schemas import CategoryPublic
 from app.modules.content.models import ContentPage
 from app.modules.content.repositories import get_store_theme_settings
@@ -137,7 +138,11 @@ def get_categories(*, session: Session, store: Store) -> list[CategoryPublic]:
 
 
 def list_products(
-    *, session: Session, store: Store, params: PageParams
+    *,
+    session: Session,
+    store: Store,
+    params: PageParams,
+    category: str | None = None,
 ) -> tuple[list[StorefrontProduct], int]:
     """List the store's published products (paginated; not cached).
 
@@ -145,21 +150,33 @@ def list_products(
         session: Active database session.
         store: The resolved, published store.
         params: Offset pagination parameters.
+        category: Optional category slug to filter by.
 
     Returns:
         A ``(products, total_count)`` tuple.
     """
-    count = session.exec(
-        select(func.count())
-        .select_from(Product)
-        .where(
-            Product.store_id == store.id,
-            Product.status == ProductStatus.published,
-            col(Product.deleted_at).is_(None),
+    filters: list[Any] = [
+        Product.store_id == store.id,
+        Product.status == ProductStatus.published,
+        col(Product.deleted_at).is_(None),
+    ]
+    if category is not None:
+        in_category = (
+            select(ProductCategory.product_id)
+            .join(Category, col(Category.id) == col(ProductCategory.category_id))
+            .where(
+                Category.store_id == store.id,
+                Category.slug == category,
+                col(Category.deleted_at).is_(None),
+            )
         )
+        filters.append(col(Product.id).in_(in_category))
+    count = session.exec(
+        select(func.count()).select_from(Product).where(*filters)
     ).one()
     rows = session.exec(
-        _published_products(store.id)
+        select(Product)
+        .where(*filters)
         .order_by(col(Product.created_at).desc())
         .offset(params.skip)
         .limit(params.limit)

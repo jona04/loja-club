@@ -7,7 +7,7 @@ from sqlmodel import Session
 
 from app.core.cache import cache_get
 from app.modules.catalog.enums import ProductStatus
-from app.modules.catalog.models import Product
+from app.modules.catalog.models import Category, Product, ProductCategory
 from app.modules.domains.enums import DomainStatus
 from app.modules.domains.models import DomainHost
 from app.modules.stores.enums import StoreStatus
@@ -102,3 +102,21 @@ def test_products_isolated_between_stores(client: TestClient, db: Session) -> No
     _product(db, store_b.id, slug="b-prod")
     resp = client.get(f"{BASE}/products", headers={"host": host_a})
     assert {p["slug"] for p in resp.json()["data"]} == {"a-prod"}
+
+
+def test_products_filtered_by_category(client: TestClient, db: Session) -> None:
+    store, host = _published_store(db, slug="sf-cat")
+    category = Category(store_id=store.id, name="Canecas", slug="canecas")
+    db.add(category)
+    db.flush()
+    in_cat = _product(db, store.id, slug="in-cat")
+    _product(db, store.id, slug="out-cat")
+    db.add(
+        ProductCategory(
+            store_id=store.id, product_id=in_cat.id, category_id=category.id
+        )
+    )
+    db.flush()
+    resp = client.get(f"{BASE}/products?category=canecas", headers={"host": host})
+    assert resp.status_code == 200
+    assert {p["slug"] for p in resp.json()["data"]} == {"in-cat"}

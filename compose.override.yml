@@ -115,7 +115,8 @@ services:
       context: .
       dockerfile: frontend-storefront/Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=http://localhost:8800
+        # SSR runs inside the container → reach the backend on the internal network.
+        - NEXT_PUBLIC_API_URL=http://backend:8000
 
   playwright:
     build:

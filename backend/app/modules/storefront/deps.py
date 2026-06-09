@@ -27,7 +27,10 @@ def get_published_store(request: Request, session: SessionDep) -> Store:
     Raises:
         AppError: 404 if the host is unknown or the store is not published.
     """
-    host = (request.headers.get("host") or "").split(":")[0]
+    # Behind the storefront SSR/proxy the original store host arrives as
+    # ``X-Forwarded-Host`` (plain ``Host`` would be the backend's own host).
+    raw_host = request.headers.get("x-forwarded-host") or request.headers.get("host")
+    host = (raw_host or "").split(":")[0]
     store = resolve_store_by_host(session=session, host=host)
     if store is None or store.status != StoreStatus.active:
         raise AppError("store_not_found", "Loja não encontrada", status_code=404)

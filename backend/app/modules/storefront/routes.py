@@ -38,10 +38,15 @@ def list_categories(store: PublishedStore, session: SessionDep) -> list[Category
 
 @router.get("/products", response_model=Page[StorefrontProduct])
 def list_products(
-    store: PublishedStore, session: SessionDep, params: Params
+    store: PublishedStore,
+    session: SessionDep,
+    params: Params,
+    category: str | None = None,
 ) -> Page[StorefrontProduct]:
-    """List the store's published products (paginated)."""
-    items, count = services.list_products(session=session, store=store, params=params)
+    """List the store's published products (paginated), optionally by category slug."""
+    items, count = services.list_products(
+        session=session, store=store, params=params, category=category
+    )
     return Page[StorefrontProduct](data=items, count=count)
 
 

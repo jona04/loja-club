@@ -811,6 +811,7 @@ export type StorefrontGetHomeResponse = (StorefrontHome);
 export type StorefrontListCategoriesResponse = (Array<CategoryPublic>);
 
 export type StorefrontListProductsData = {
+    category?: (string | null);
     limit?: number;
     skip?: number;
 };
