@@ -61,6 +61,7 @@ def _store_public(store: Store, settings: StoreSettings | None) -> StorefrontSto
         name=store.name,
         slug=store.slug,
         currency=store.currency,
+        locale=store.locale,
         public_name=settings.public_name if settings else None,
         description=settings.description if settings else None,
         logo_url=settings.logo_url if settings else None,

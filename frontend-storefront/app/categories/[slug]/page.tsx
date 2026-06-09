@@ -42,7 +42,11 @@ export default async function CategoryPage({
       {products.data.length ? (
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
           {products.data.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              locale={home.store.locale}
+            />
           ))}
         </div>
       ) : (

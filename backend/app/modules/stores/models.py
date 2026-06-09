@@ -22,6 +22,9 @@ class StoreBase(SQLModel):
     name: str = Field(max_length=255)
     slug: str = Field(max_length=255)
     status: StoreStatus = Field(default=StoreStatus.draft)
+    country: str = Field(
+        default="BR", max_length=2, description="ISO 3166-1 alpha-2 country code"
+    )
     currency: str = Field(max_length=3, description="ISO 4217 currency code")
     locale: str = Field(max_length=35)
 

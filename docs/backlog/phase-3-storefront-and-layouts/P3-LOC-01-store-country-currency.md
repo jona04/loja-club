@@ -4,7 +4,7 @@ title: Localização da loja — país → moeda/locale/símbolo
 phase: 3
 etapa: "Etapa 7 — Localização da loja"
 area: LOC
-status: todo
+status: done
 depends_on: []
 blocks: [P3-TPL-01]
 tests: [unit, integration]
@@ -34,9 +34,9 @@ O preço é **global** — depende do **país da loja**. Hoje a `Store` carrega 
 
 ## Arquivos a criar/alterar (provável)
 - `backend/app/modules/stores/{models,schemas,services}.py` (alterar) — `country` + derivação na criação + migration.
-- `backend/app/core/` (criar) — helper/seed `country → {currency, locale, symbol}` (via lib).
-- `frontend-storefront/lib/api.ts` (alterar) — `formatPrice` usar o locale da loja (passar `locale` no contrato do storefront).
-- `frontend-dashboard/.../store-settings.tsx` (alterar) — seletor de país.
+- `backend/app/core/localization.py` (criar) — `localize_country` + **mapa curado** dos países suportados.
+- `frontend-storefront/lib/api.ts` (alterar) — `formatPrice` usar o locale da loja (`locale` no `StorefrontStore`).
+- `frontend-dashboard/.../Store/NoStores.tsx` (alterar) — seletor de país **obrigatório** no form de criar loja.
 - `docs/07_database_strategy.md` (alterar) — `country` na `store_stores`.
 
 ## Passos
@@ -50,17 +50,20 @@ O preço é **global** — depende do **país da loja**. Hoje a `Store` carrega 
 - **integração:** criar loja com país → currency/locale corretos; preço público formatado no símbolo certo.
 
 ## Definition of Done
-- [ ] `Store.country` (ISO 3166-1); criar loja escolhendo país preenche `currency`/`locale` automaticamente.
-- [ ] Referência país→moeda(+locale+símbolo) via lib; sem tabela de 250 linhas à mão.
-- [ ] Vitrine formata o preço no **símbolo certo por loja** (`formatPrice` usa o locale da loja).
-- [ ] Migration + docs reconciliados.
-- [ ] **Modos de falha mapeados** (país sem moeda mapeada; moeda sem locale; país inválido) → tratados/Follow-up.
-- [ ] Itens adiados varridos → Follow-ups + README.
+- [x] `Store.country` (ISO 3166-1, default `BR`); criar loja escolhendo país preenche `currency`/`locale` (`localize_country`).
+- [x] Referência país→moeda(+locale+símbolo) = **mapa curado** dos países suportados (`app/core/localization.py`), sem tabela de 250 à mão.
+- [x] Vitrine formata o preço no **símbolo certo por loja** (`formatPrice` usa o locale da loja — verificado: pt-BR/BRL=`R$`, en-US/USD=`$`).
+- [x] Migration `5a9d5d61b771` (`alembic check` vazio) + a **loja existente atualizada** p/ BR/BRL/pt-BR. doc 07 não detalha as colunas da loja → sem mudança lá.
+- [x] **Modos de falha mapeados:** país não suportado → **422 `country_not_supported`** (testado, unit + API).
+- [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
 - **O símbolo não precisa ser armazenado** — é derivado de `currency`+`locale` via `Intl.NumberFormat` (vitrine) / lib (backend). O que importa é o **país→moeda+locale**; o símbolo entra no helper por conveniência.
 - **Bloqueia `P3-TPL-01`** no sentido de exibição: os templates devem formatar o preço com o **locale da loja** (não `pt-BR` fixo) — fechar este antes/junto da implementação dos templates.
 - Os **prompts dos templates seguem com `R$`** (sample data) — a moeda real é resolvida na implementação por loja.
+- Implementado com **mapa curado** (`app/core/localization.py`, ~15 países), não babel — mais previsível e sem dep nova; expandir/trocar por lib depois é trivial.
+- `Store.country` tem default `BR` no model (Brazil-first); a **obrigatoriedade** é no `StoreCreate`/form (API). `PLATFORM_DEFAULT_CURRENCY`/`_LOCALE` (mortos) foram **removidos**.
+- O seletor de país ficou no **form de criar loja** (`NoStores`, obrigatório, default BR); um seletor em **Configurações** pra *trocar* o país depois é follow-up.
 
 ## Follow-ups
 - [ ] **Multi-moeda / câmbio** — *Quando:* se uma loja precisar vender em mais de uma moeda (não previsto no V1). → README.

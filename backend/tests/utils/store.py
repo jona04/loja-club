@@ -63,6 +63,7 @@ def create_store(
         name="Test Store",
         slug=slug or f"s-{random_lower_string()[:12]}",
         status=status,
+        country="US",
         currency="USD",
         locale="en-US",
     )

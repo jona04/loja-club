@@ -10,12 +10,11 @@ from app.modules.stores.models import StoreBase, StoreSettingsBase
 
 
 class StoreCreate(SQLModel):
-    """Payload to create a store (slug/currency/locale default from platform)."""
+    """Payload to create a store. The ``country`` derives currency/locale (P3-LOC-01)."""
 
     name: str = Field(min_length=1, max_length=255)
     slug: str | None = Field(default=None, max_length=255)
-    currency: str | None = Field(default=None, max_length=3)
-    locale: str | None = Field(default=None, max_length=35)
+    country: str = Field(min_length=2, max_length=2, description="ISO 3166-1 alpha-2")
 
 
 class StorePublic(StoreBase):

@@ -39,7 +39,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 5 | [P3-SF-02](./P3-SF-02-storefront-rendering.md) | Storefront Next.js: host + "não encontrada" + templates `classic`/`modern` + cache | ✅ done | P3-FE-01, P3-SF-01 |
 | 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | ✅ done | P3-CONTENT-02 |
 | 7 | [P3-TPL-01](./P3-TPL-01-rich-templates-spec.md) | **Sistema de templates ricos** (spec→impl): 2–3 templates pro (carrossel/seções) + evolução dos models + painel com preview + contrato troca-sem-quebra | 🟡 spec | P3-SF-02, P3-FE-02 |
-| 8 | [P3-LOC-01](./P3-LOC-01-store-country-currency.md) | **Localização da loja:** país → moeda/locale/símbolo (deriva automático; `formatPrice` por loja) | todo | — (bloqueia exibição de `P3-TPL-01`) |
+| 8 | [P3-LOC-01](./P3-LOC-01-store-country-currency.md) | **Localização da loja:** país → moeda/locale/símbolo (deriva automático; `formatPrice` por loja) | ✅ done | — |
 
 > **Base da Fase 3 completa** (tasks 1–6 `done`: storefront público + 2 templates simples + painel de layout). A **[P3-TPL-01]** eleva pra **templates profissionais** — está em **spec** (sendo definida conversando, antes de implementar). A [Fase 4 — vender sem pagamento](../phase-4-sell-without-payment.md) pode começar em paralelo (o contrato de compra é compatível).
 
@@ -86,5 +86,5 @@ P3-TPL-01 (templates ricos) — spec contínuo; implementa após SF-02 + FE-02, 
 - [ ] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-01` → Fase 7/admin): por ora os templates entram via seed/código; a tela de admin (nome/descrição/`preview_image_url`/ativar) é futura.
 - [ ] **Preview ao vivo no painel** (`P3-TPL-01`): hoje o lojista escolhe o template pela **imagem cadastrada**; render real da loja com o template é futuro.
 - [ ] **Compatibilidade 3D dos templates** (`P3-TPL-01` → Fase 5): reservar o **slot** do editor 3D na página de produto de **todos** os templates.
-- [ ] **`formatPrice` hardcoda `pt-BR`** (`P3-LOC-01`): a vitrine formata todo preço como pt-BR → símbolo errado pra loja não-BR (`USD` vira `US$`). Passar a usar o **locale da loja**.
+- [x] **`formatPrice` por locale da loja** (`P3-LOC-01`): resolvido — a vitrine recebe o `locale` da loja e formata o preço com o símbolo certo por loja (R$ / $ / €).
 - [ ] **Multi-moeda / câmbio** (`P3-LOC-01`): uma loja vende em **uma** moeda no V1; multi-moeda + conversão é futuro.

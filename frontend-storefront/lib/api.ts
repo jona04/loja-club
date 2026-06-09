@@ -14,6 +14,7 @@ export interface StorefrontStore {
   name: string
   slug: string
   currency: string
+  locale: string
   public_name: string | null
   description: string | null
   logo_url: string | null
@@ -103,9 +104,13 @@ export const listProducts = (
       : "/products",
   )
 
-/** Format a minor-unit price with its ISO currency for pt-BR. */
-export function formatPrice(amountMinor: number, currency: string): string {
-  return new Intl.NumberFormat("pt-BR", {
+/** Format a minor-unit price with its ISO currency, using the store's locale. */
+export function formatPrice(
+  amountMinor: number,
+  currency: string,
+  locale: string,
+): string {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
   }).format(amountMinor / 100)

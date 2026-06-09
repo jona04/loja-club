@@ -46,7 +46,11 @@ export default async function ProductPage({
             className="mt-4 text-3xl font-semibold"
             style={{ color: "var(--primary)" }}
           >
-            {formatPrice(product.price_amount_minor, product.price_currency)}
+            {formatPrice(
+              product.price_amount_minor,
+              product.price_currency,
+              home.store.locale,
+            )}
           </p>
           {product.description ? (
             <div className="mt-6 border-t border-gray-100 pt-6">

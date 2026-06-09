@@ -17,6 +17,7 @@ class StorefrontStore(SQLModel):
     name: str
     slug: str
     currency: str
+    locale: str
     public_name: str | None = None
     description: str | None = None
     logo_url: str | None = None

@@ -86,10 +86,6 @@ class Settings(BaseSettings):
         """Return the platform admin hostname derived from ``DOMAIN``."""
         return f"admin.{self.DOMAIN}"
 
-    # Platform defaults; each store and customer carries its own.
-    PLATFORM_DEFAULT_CURRENCY: str = "USD"
-    PLATFORM_DEFAULT_LOCALE: str = "en-US"
-
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
     POSTGRES_SERVER: str

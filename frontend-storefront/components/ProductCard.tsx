@@ -9,7 +9,13 @@ import { formatPrice, type StorefrontProduct } from "@/lib/api"
  * @param product - The product to render.
  * @returns The card.
  */
-export function ProductCard({ product }: { product: StorefrontProduct }) {
+export function ProductCard({
+  product,
+  locale,
+}: {
+  product: StorefrontProduct
+  locale: string
+}) {
   const cover = product.images[0]?.url
   return (
     <Link href={`/products/${product.slug}`} className="group block">
@@ -34,7 +40,11 @@ export function ProductCard({ product }: { product: StorefrontProduct }) {
           className="mt-1 text-sm font-semibold"
           style={{ color: "var(--primary)" }}
         >
-          {formatPrice(product.price_amount_minor, product.price_currency)}
+          {formatPrice(
+            product.price_amount_minor,
+            product.price_currency,
+            locale,
+          )}
         </p>
       </div>
     </Link>

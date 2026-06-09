@@ -256,13 +256,15 @@ export type ProductUpdate = {
 export type ProductVariantStatus = 'active' | 'archived';
 
 /**
- * Payload to create a store (slug/currency/locale default from platform).
+ * Payload to create a store. The ``country`` derives currency/locale (P3-LOC-01).
  */
 export type StoreCreate = {
     name: string;
     slug?: (string | null);
-    currency?: (string | null);
-    locale?: (string | null);
+    /**
+     * ISO 3166-1 alpha-2
+     */
+    country: string;
 };
 
 /**
@@ -303,6 +305,7 @@ export type StorefrontStore = {
     name: string;
     slug: string;
     currency: string;
+    locale: string;
     public_name?: (string | null);
     description?: (string | null);
     logo_url?: (string | null);
@@ -358,6 +361,10 @@ export type StorePublic = {
     name: string;
     slug: string;
     status?: StoreStatus;
+    /**
+     * ISO 3166-1 alpha-2 country code
+     */
+    country?: string;
     /**
      * ISO 4217 currency code
      */

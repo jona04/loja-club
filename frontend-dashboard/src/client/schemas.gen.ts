@@ -907,35 +907,18 @@ export const StoreCreateSchema = {
             ],
             title: 'Slug'
         },
-        currency: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 3
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Currency'
-        },
-        locale: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 35
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Locale'
+        country: {
+            type: 'string',
+            maxLength: 2,
+            minLength: 2,
+            title: 'Country',
+            description: 'ISO 3166-1 alpha-2'
         }
     },
     type: 'object',
-    required: ['name'],
+    required: ['name', 'country'],
     title: 'StoreCreate',
-    description: 'Payload to create a store (slug/currency/locale default from platform).'
+    description: 'Payload to create a store. The ``country`` derives currency/locale (P3-LOC-01).'
 } as const;
 
 export const StoreMemberInviteSchema = {
@@ -1017,6 +1000,13 @@ export const StorePublicSchema = {
         status: {
             '$ref': '#/components/schemas/StoreStatus',
             default: 'draft'
+        },
+        country: {
+            type: 'string',
+            maxLength: 2,
+            title: 'Country',
+            description: 'ISO 3166-1 alpha-2 country code',
+            default: 'BR'
         },
         currency: {
             type: 'string',
@@ -1475,6 +1465,10 @@ export const StorefrontStoreSchema = {
             type: 'string',
             title: 'Currency'
         },
+        locale: {
+            type: 'string',
+            title: 'Locale'
+        },
         public_name: {
             anyOf: [
                 {
@@ -1521,7 +1515,7 @@ export const StorefrontStoreSchema = {
         }
     },
     type: 'object',
-    required: ['name', 'slug', 'currency'],
+    required: ['name', 'slug', 'currency', 'locale'],
     title: 'StorefrontStore',
     description: 'Public store identity/contact (from ``stores``/``store_settings``).'
 } as const;
