@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.modules.accounts import repositories
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserCreate
+from app.modules.content.repositories import seed_content_templates
 from app.modules.stores.repositories import seed_store_permissions, seed_store_roles
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
@@ -17,12 +18,13 @@ engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
 
 def init_db(session: Session) -> None:
-    """Seed bootstrap data: first superuser, store roles and permissions.
+    """Seed bootstrap data: superuser, store roles/permissions, theme templates.
 
     Tables themselves are managed by Alembic migrations; this ensures the
-    bootstrap superuser (from settings), the store roles and the permission
-    catalog/map exist. All idempotent. Runs on prestart and is also used by the
-    test fixtures (whose schema comes from ``create_all``, not migrations).
+    bootstrap superuser (from settings), the store roles, the permission
+    catalog/map and the global theme templates exist. All idempotent. Runs on
+    prestart and is also used by the test fixtures (whose schema comes from
+    ``create_all``, not migrations).
 
     Args:
         session: Active database session used to query and seed.
@@ -48,6 +50,7 @@ def init_db(session: Session) -> None:
 
     seed_store_roles(session=session)
     seed_store_permissions(session=session)
+    seed_content_templates(session=session)
 
 
 def dispose_engine() -> None:
