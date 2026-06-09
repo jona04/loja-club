@@ -22,7 +22,7 @@ Relaciona-se com: [03](../03_system_architecture.md), [06](../06_multitenancy_an
 - **INV-G4 — Telefone em E.164 para qualquer país**, via lib (libphonenumber/`phonenumbers`); país vem do seletor → código de discagem. Sem `+55`/DDD hard-coded. → convenção no [doc 23](../23_customer_identity_and_guest_checkout.md); util na Fase 4.
 - **INV-G5 — Endereço país-aware** (ISO 3166-1; campos flexíveis; sem CEP/UF fixos). → modelo (Fase 4).
 - **INV-G6 — Timestamps em UTC** no banco; formatação por locale/timezone só no frontend. → template já faz; confirmado em `P0-MOD-05`.
-- **INV-G7 — Storefront e e-mails i18n-ready** (textos parametrizáveis por locale). → storefront (Fase 3), e-mails (Fase 4).
+- **INV-G7 — Storefront e e-mails i18n-ready** (textos parametrizáveis por locale). → storefront (Fase 3), e-mails (Fase 4). **Pendência:** o storefront V1 está em **pt-BR** com strings inline; extrair para um módulo locale-aware (usando `Store.locale`) é follow-up de `P3-SF-02`.
 
 ## 2. Multi-tenancy (isolamento)
 

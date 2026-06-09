@@ -212,10 +212,11 @@ Funcionalidades da V1:
 - escolher entre 2 templates prontos;
 - visualizar preview;
 - aplicar template;
-- atualizar logo;
 - atualizar banner principal;
 - atualizar texto principal;
-- escolher produtos em destaque.
+- definir a coleção em destaque (`featured_collection_id`).
+
+> **`logo_url` e a descrição ficam em Configurações** (Fase 1, `store_settings`), não nesta tela — o tema cuida só de aparência/layout (doc 10, §"Configuração no banco"). O destaque da home no V1 usa produtos `is_featured` (atributo do produto, Fase 2); `featured_collection_id` é forward-looking (ver follow-up "Destaque por coleção" no README da Fase 3).
 
 Quando salvar, a loja pública deve refletir a alteração.
 

@@ -1,15 +1,10 @@
 import { StoreShell } from "@/components/StoreShell"
-import {
-  formatPrice,
-  getCategories,
-  getHome,
-  getProduct,
-  whatsappLink,
-} from "@/lib/api"
+import { formatPrice, getCategories, getHome, getProduct } from "@/lib/api"
 
 /**
- * Product detail page (image-only V1). Buying happens via WhatsApp until the
- * cart/checkout arrive in Fase 4.
+ * Product detail page (image-only V1): images, name, price and description.
+ * Purchasing arrives with the cart in Fase 4; the only WhatsApp element is the
+ * store-wide floating button (see StoreShell).
  *
  * @param params - Route params carrying the product `slug`.
  * @returns The product page.
@@ -49,16 +44,6 @@ export default async function ProductPage({
             <p className="mt-4 whitespace-pre-line text-gray-600">
               {product.description}
             </p>
-          ) : null}
-          {home.store.whatsapp_number ? (
-            <a
-              href={whatsappLink(home.store.whatsapp_number)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-green-500 px-6 py-3 font-semibold text-white transition hover:bg-green-600"
-            >
-              Comprar pelo WhatsApp
-            </a>
           ) : null}
           {product.images.length > 1 ? (
             <div className="mt-6 flex flex-wrap gap-2">

@@ -53,7 +53,7 @@ A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e 
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Carrinho/checkout ficam como **placeholder** até a Fase 4 (a CTA do produto é **"Comprar pelo WhatsApp"**); o `ProductCustomizer` entra na Fase 5.
+- Carrinho/checkout = **Fase 4** (a página de produto é **informativa, sem CTA de compra**; o único WhatsApp da vitrine é o **botão flutuante** de contato → WhatsApp web); o `ProductCustomizer` entra na Fase 5.
 - **SSR resolvido por Host:** o Next encaminha o host original como `X-Forwarded-Host`; **`P3-SF-01` foi estendida** — o dep lê `X-Forwarded-Host` (fallback `Host`) e `/products` ganhou `?category=` (para a CategoryPage).
 - **Cache:** fetch `no-store` (não cacheia no Next — a chave por URL vazaria entre lojas); o cache por-loja é do backend (Redis, doc 13). Trocar o template invalida `store:{id}:home` (`P3-CONTENT-02`) → a vitrine reflete.
 - **Templates:** `classic` (headline + grid simples) vs `modern` (hero com banner + cards maiores) + cores do tema; trocar o template ativo muda a home.
@@ -61,6 +61,7 @@ A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e 
 - **Verificação:** `next build` + smoke (home/produto renderizam, host desconhecido → 404), com cleanup.
 
 ## Follow-ups
+- [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 4): a página de produto é **informativa** no V1 (sem botão de compra); adicionar o **carrinho** na Fase 4. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
 - [ ] **e2e Playwright do storefront** (`P3-SF-02`): a suíte é só painel (:5180); o render foi validado por smoke manual. Automatizar host→loja / 404 / home-produto-categoria / troca de template (a task permite e2e como follow-up).
 - [ ] **API fora → erro amigável** (`P3-SF-02`): `apiGet` joga em `!ok` (não-404) → 500 genérico; adicionar `app/error.tsx`.
 - [ ] **next/image** (`P3-SF-02`): trocar `<img>` por `next/image` + `remotePatterns` do CDN (perf/LCP).

@@ -58,14 +58,13 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **Dockerfile do storefront single-stage** (`P3-FE-01`): otimizar p/ Next standalone depois.
 - [ ] **`bun.lock`** (`P3-FE-01`): confirmar/regerar com o `bun` do usuário antes de commitar (regenerado via `oven/bun:1` 1.3.14).
 - [x] **Default de theme settings** (`P3-CONTENT-01`): loja sem row de theme → vitrine usa `classic` — fallback **read-side** feito em `P3-SF-01` (`_theme` retorna `classic` sem criar row); o painel cria via `get_or_create` (`P3-CONTENT-02`).
-- [ ] **`featured_collection_id` de coleção soft-deletada** (`P3-CONTENT-01`): a vitrine deve **pular** coleção com `deleted_at` ao renderizar o destaque → `P3-SF-01`.
 - [ ] **e2e polui o DB de host** (`P3-CONTENT-01`, infra): e2e (backend Docker) e testes de host compartilham o `loja-club-db` (5442↔5432) → usuários do e2e persistem e quebram o teste de isolamento (`count==1`). → e2e em DB separado **ou** limpeza pós-e2e.
 - [ ] **Invalidação de cache falha → stale** (`P3-CONTENT-02`): `cache_delete` roda após o commit; Redis fora → escrita persiste mas cache fica stale (request pode 500). Tratar (best-effort/log) ao entrar o cache de leitura (`P3-SF-01`).
 - [ ] **Race de aplicar template** (`P3-CONTENT-02`): PATCH concorrente = last-write-wins (sem lock). Aceitável no V1.
 - [ ] **CRUD de páginas/menus/banners no painel** (`P3-CONTENT-02`): modelos existem, faltam rotas/UI — adicionar quando a UI precisar.
 - [ ] **Cache stale após edição de catálogo** (`P3-SF-01`): escritas do `catalog` não invalidam `store:{id}:categories|product:{slug}|home` (só o TTL de 5 min). Adicionar invalidação no `catalog` antes da vitrine ir pra produção.
 - [ ] **N+1 de imagens na vitrine** (`P3-SF-01`): `list_products`/home chamam `list_images` por produto — otimizar com query em lote.
-- [ ] **Destaque por coleção** (`P3-SF-01`): ligar `featured_collection_id` quando existir link produto↔coleção (hoje destaque = `is_featured`).
+- [ ] **Destaque por coleção** (`P3-SF-01`): ligar `featured_collection_id` quando existir link produto↔coleção (hoje destaque = `is_featured`); ao ligar, **pular coleção com `deleted_at`** ao renderizar.
 - [ ] **Menu + caches `settings`/`theme` separados** (`P3-SF-01`): home dobra settings+theme; menu não servido (sem CRUD); chaves reservadas.
 - [ ] **e2e Playwright do storefront** (`P3-SF-02`): suíte é só painel (:5180); render validado por smoke manual — automatizar host→loja / 404 / home-produto-categoria / troca de template.
 - [ ] **API fora → erro amigável** (`P3-SF-02`): adicionar `app/error.tsx` (hoje 500 genérico em falha não-404).
@@ -74,3 +73,8 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **Rebuild do storefront + smoke do Traefik** (`P3-SF-02`, infra): `docker compose up -d --build frontend-storefront` + abrir a vitrine em `{loja}.localhost` via Traefik.
 - [ ] **Picker de coleção em destaque** (`P3-FE-02`): `featured_collection_id` é UUID cru — select quando houver endpoint de listar coleções (+ vitrine renderizar destaque por coleção, ver `P3-SF-01`).
 - [ ] **Preview visual** (`P3-FE-02`): hoje o preview é aviso de dados (template aplicado); evoluir para abrir a vitrine com o template previsto / render visual.
+- [ ] **i18n-readiness do storefront** (`P3-SF-02`, `INV-G7`): strings estão **pt-BR inline** — extrair para módulo locale-aware usando `Store.locale` (doc 10 + INV-G7 pedem i18n-ready na Fase 3).
+- [ ] **Produto: variações + disponibilidade + relacionados** (`P3-SF-01`/`P3-SF-02`): doc 10 §"Página de produto" — `SF-01` retornar variações/estoque e `SF-02` exibir (hoje só imagem/nome/preço/descrição).
+- [ ] **Categoria: paginação-UI + filtros + ordenação** (`P3-SF-02`): doc 10 §"Página de categoria" — a API já pagina (`skip/limit`); faltam a UI de paginação + filtros/ordenação.
+- [ ] **Home: contato + links sociais** (`P3-SF-02`): doc 10 §"Componentes da home" — além do WhatsApp, expor contato/links sociais (menu configurável já coberto pelos follow-ups de menu).
+- [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 4): a página de produto é **informativa** no V1 (sem botão de compra); o **carrinho** entra na Fase 4. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").

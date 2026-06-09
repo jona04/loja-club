@@ -16,6 +16,8 @@ presentescriativos.loja.club
 www.minhaloja.com.br
 ```
 
+> **Estado da Fase 3 (V1) — o que o código entrega vs. esta visão.** A Fase 3 entrega o **storefront base (imagem)**: resolução por `Host`, templates `classic`/`modern` (realizados por **renderização condicional** nas páginas do App Router — a home difere por template; produto/categoria compartilham com o estilo do tema —, sem árvores `classic/`+`modern/` separadas), **home** (logo, banner, headline, destaques por `is_featured`, categorias, rodapé e **botão flutuante de WhatsApp** de contato), **produto** (imagem/nome/preço/descrição, **sem CTA de compra**) e **categoria** (nome + produtos), com cache por-loja no backend. **Deferido** (follow-ups no [README da Fase 3](backlog/phase-3-storefront-and-layouts/README.md)): carrinho/checkout/entrega → **Fase 4**; editor 3D/`Personalizar` → **Fase 5**; e, como follow-up dentro da Fase 3: variações/disponibilidade/relacionados (produto), paginação-UI/filtros/ordenação (categoria), menu configurável + links sociais (home), destaque por **coleção** (hoje `is_featured`) e **i18n-readiness** (o V1 sai em pt-BR; ver `INV-G7`).
+
 ## Tecnologia recomendada
 
 A recomendação para o storefront é Next.js.
@@ -214,6 +216,8 @@ Deve mostrar:
 - botão comprar/adicionar ao carrinho;
 - botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
+
+> **Fase 3 V1:** a página é **informativa** (imagem/nome/preço/descrição), **sem ação de compra** — carrinho/checkout/entrega chegam na **Fase 4**. O único elemento de WhatsApp na vitrine é um **botão flutuante** de contato (em toda a loja) que redireciona pro WhatsApp web; usa `whatsapp_number` de `store_settings`. Variações, disponibilidade e relacionados = follow-up; `Personalizar` = Fase 5.
 
 Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
 O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
