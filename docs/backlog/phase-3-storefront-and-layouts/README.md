@@ -35,7 +35,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 1 | [P3-FE-01](./P3-FE-01-frontends-setup.md) | Renomear painel → `frontend-dashboard` + scaffold `frontend-storefront` (Next.js) + compose/Traefik | ✅ done | — |
 | 2 | [P3-CONTENT-01](./P3-CONTENT-01-content-models.md) | Módulo `content`: modelos de tema/layout + seed `classic`/`modern` + migration | ✅ done | — |
 | 3 | [P3-CONTENT-02](./P3-CONTENT-02-content-service-routes.md) | `content`: serviço/rotas do painel (aplicar template + invalidar cache; editar layout) | ✅ done | P3-CONTENT-01 |
-| 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | todo | P3-CONTENT-01 |
+| 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | ✅ done | P3-CONTENT-01 |
 | 5 | [P3-SF-02](./P3-SF-02-storefront-rendering.md) | Storefront Next.js: host + "não encontrada" + templates `classic`/`modern` + cache | todo | P3-FE-01, P3-SF-01 |
 | 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | todo | P3-CONTENT-02 |
 
@@ -61,3 +61,7 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **Invalidação de cache falha → stale** (`P3-CONTENT-02`): `cache_delete` roda após o commit; Redis fora → escrita persiste mas cache fica stale (request pode 500). Tratar (best-effort/log) ao entrar o cache de leitura (`P3-SF-01`).
 - [ ] **Race de aplicar template** (`P3-CONTENT-02`): PATCH concorrente = last-write-wins (sem lock). Aceitável no V1.
 - [ ] **CRUD de páginas/menus/banners no painel** (`P3-CONTENT-02`): modelos existem, faltam rotas/UI — adicionar quando a UI precisar.
+- [ ] **Cache stale após edição de catálogo** (`P3-SF-01`): escritas do `catalog` não invalidam `store:{id}:categories|product:{slug}|home` (só o TTL de 5 min). Adicionar invalidação no `catalog` antes da vitrine ir pra produção.
+- [ ] **N+1 de imagens na vitrine** (`P3-SF-01`): `list_products`/home chamam `list_images` por produto — otimizar com query em lote.
+- [ ] **Destaque por coleção** (`P3-SF-01`): ligar `featured_collection_id` quando existir link produto↔coleção (hoje destaque = `is_featured`).
+- [ ] **Menu + caches `settings`/`theme` separados** (`P3-SF-01`): home dobra settings+theme; menu não servido (sem CRUD); chaves reservadas.

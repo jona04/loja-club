@@ -195,6 +195,51 @@ export const CategoryUpdateSchema = {
     description: 'Partial update for a category.'
 } as const;
 
+export const ContentPagePublicSchema = {
+    properties: {
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        title: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Title'
+        },
+        body: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Body'
+        },
+        is_published: {
+            type: 'boolean',
+            title: 'Is Published',
+            default: false
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        }
+    },
+    type: 'object',
+    required: ['slug', 'title', 'id', 'store_id'],
+    title: 'ContentPagePublic',
+    description: 'Public representation of an editorial page.'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -557,6 +602,25 @@ export const Page_StorePublic_Schema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'Page[StorePublic]'
+} as const;
+
+export const Page_StorefrontProduct_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/StorefrontProduct'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[StorefrontProduct]'
 } as const;
 
 export const Page_VariantPublic_Schema = {
@@ -1304,6 +1368,245 @@ export const StoreThemeSettingsPublicSchema = {
     required: ['active_template_id', 'id', 'store_id'],
     title: 'StoreThemeSettingsPublic',
     description: "Public representation of a store's theme/appearance settings."
+} as const;
+
+export const StorefrontHomeSchema = {
+    properties: {
+        store: {
+            '$ref': '#/components/schemas/StorefrontStore'
+        },
+        theme: {
+            '$ref': '#/components/schemas/StorefrontTheme'
+        },
+        featured_products: {
+            items: {
+                '$ref': '#/components/schemas/StorefrontProduct'
+            },
+            type: 'array',
+            title: 'Featured Products'
+        }
+    },
+    type: 'object',
+    required: ['store', 'theme', 'featured_products'],
+    title: 'StorefrontHome',
+    description: 'The storefront home payload: store identity, active theme and highlights.'
+} as const;
+
+export const StorefrontProductSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        status: {
+            '$ref': '#/components/schemas/ProductStatus',
+            default: 'draft'
+        },
+        price_amount_minor: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Price Amount Minor',
+            description: 'Price in minor units (INV-D4)'
+        },
+        price_currency: {
+            type: 'string',
+            maxLength: 3,
+            title: 'Price Currency',
+            description: 'ISO 4217 currency code'
+        },
+        is_featured: {
+            type: 'boolean',
+            title: 'Is Featured',
+            default: false
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        images: {
+            items: {
+                '$ref': '#/components/schemas/ImagePublic'
+            },
+            type: 'array',
+            title: 'Images',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['name', 'slug', 'price_amount_minor', 'price_currency', 'id', 'store_id'],
+    title: 'StorefrontProduct',
+    description: 'A published product with its images, for storefront cards and detail.'
+} as const;
+
+export const StorefrontStoreSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        slug: {
+            type: 'string',
+            title: 'Slug'
+        },
+        currency: {
+            type: 'string',
+            title: 'Currency'
+        },
+        public_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Public Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        logo_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Logo Url'
+        },
+        whatsapp_number: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Whatsapp Number'
+        }
+    },
+    type: 'object',
+    required: ['name', 'slug', 'currency'],
+    title: 'StorefrontStore',
+    description: 'Public store identity/contact (from ``stores``/``store_settings``).'
+} as const;
+
+export const StorefrontThemeSchema = {
+    properties: {
+        active_template_id: {
+            type: 'string',
+            title: 'Active Template Id'
+        },
+        banner_image_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Banner Image Url'
+        },
+        headline: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Headline'
+        },
+        featured_collection_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Featured Collection Id'
+        },
+        primary_color: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Primary Color'
+        },
+        background_color: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Background Color'
+        },
+        font_family: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font Family'
+        }
+    },
+    type: 'object',
+    required: ['active_template_id'],
+    title: 'StorefrontTheme',
+    description: `Public appearance for rendering (active template + theme fields).
+
+Read-only: a store with no settings yet falls back to the default template
+(\`\`classic\`\`) without creating a row.`
 } as const;
 
 export const ThemeTemplatePublicSchema = {

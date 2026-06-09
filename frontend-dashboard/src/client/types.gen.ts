@@ -43,6 +43,18 @@ export type CategoryUpdate = {
     description?: (string | null);
 };
 
+/**
+ * Public representation of an editorial page.
+ */
+export type ContentPagePublic = {
+    slug: string;
+    title: string;
+    body?: (string | null);
+    is_published?: boolean;
+    id: string;
+    store_id: string;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -151,6 +163,11 @@ export type Page_ProductPublic_ = {
     count: number;
 };
 
+export type Page_StorefrontProduct_ = {
+    data: Array<StorefrontProduct>;
+    count: number;
+};
+
 export type Page_StoreMemberPublic_ = {
     data: Array<StoreMemberPublic>;
     count: number;
@@ -246,6 +263,66 @@ export type StoreCreate = {
     slug?: (string | null);
     currency?: (string | null);
     locale?: (string | null);
+};
+
+/**
+ * The storefront home payload: store identity, active theme and highlights.
+ */
+export type StorefrontHome = {
+    store: StorefrontStore;
+    theme: StorefrontTheme;
+    featured_products: Array<StorefrontProduct>;
+};
+
+/**
+ * A published product with its images, for storefront cards and detail.
+ */
+export type StorefrontProduct = {
+    name: string;
+    slug: string;
+    description?: (string | null);
+    status?: ProductStatus;
+    /**
+     * Price in minor units (INV-D4)
+     */
+    price_amount_minor: number;
+    /**
+     * ISO 4217 currency code
+     */
+    price_currency: string;
+    is_featured?: boolean;
+    id: string;
+    store_id: string;
+    images?: Array<ImagePublic>;
+};
+
+/**
+ * Public store identity/contact (from ``stores``/``store_settings``).
+ */
+export type StorefrontStore = {
+    name: string;
+    slug: string;
+    currency: string;
+    public_name?: (string | null);
+    description?: (string | null);
+    logo_url?: (string | null);
+    whatsapp_number?: (string | null);
+};
+
+/**
+ * Public appearance for rendering (active template + theme fields).
+ *
+ * Read-only: a store with no settings yet falls back to the default template
+ * (``classic``) without creating a row.
+ */
+export type StorefrontTheme = {
+    active_template_id: string;
+    banner_image_url?: (string | null);
+    headline?: (string | null);
+    featured_collection_id?: (string | null);
+    primary_color?: (string | null);
+    background_color?: (string | null);
+    font_family?: (string | null);
 };
 
 /**
@@ -728,6 +805,29 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type StorefrontGetHomeResponse = (StorefrontHome);
+
+export type StorefrontListCategoriesResponse = (Array<CategoryPublic>);
+
+export type StorefrontListProductsData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type StorefrontListProductsResponse = (Page_StorefrontProduct_);
+
+export type StorefrontGetProductData = {
+    slug: string;
+};
+
+export type StorefrontGetProductResponse = (StorefrontProduct);
+
+export type StorefrontGetPageData = {
+    slug: string;
+};
+
+export type StorefrontGetPageResponse = (ContentPagePublic);
 
 export type StoresCreateStoreData = {
     requestBody: StoreCreate;

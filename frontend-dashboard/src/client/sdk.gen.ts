@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentPreviewLayoutData, ContentPreviewLayoutResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentPreviewLayoutData, ContentPreviewLayoutResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CatalogService {
     /**
@@ -785,6 +785,99 @@ export class PrivateService {
             url: '/api/v1/private/users/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class StorefrontService {
+    /**
+     * Get Home
+     * Return the storefront home for the host's store.
+     * @returns StorefrontHome Successful Response
+     * @throws ApiError
+     */
+    public static getHome(): CancelablePromise<StorefrontGetHomeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/home'
+        });
+    }
+    
+    /**
+     * List Categories
+     * List the store's categories.
+     * @returns CategoryPublic Successful Response
+     * @throws ApiError
+     */
+    public static listCategories(): CancelablePromise<StorefrontListCategoriesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/categories'
+        });
+    }
+    
+    /**
+     * List Products
+     * List the store's published products (paginated).
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_StorefrontProduct_ Successful Response
+     * @throws ApiError
+     */
+    public static listProducts(data: StorefrontListProductsData = {}): CancelablePromise<StorefrontListProductsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/products',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Product
+     * Return a published product by slug.
+     * @param data The data for the request.
+     * @param data.slug
+     * @returns StorefrontProduct Successful Response
+     * @throws ApiError
+     */
+    public static getProduct(data: StorefrontGetProductData): CancelablePromise<StorefrontGetProductResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/products/{slug}',
+            path: {
+                slug: data.slug
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Page
+     * Return a published editorial page by slug.
+     * @param data The data for the request.
+     * @param data.slug
+     * @returns ContentPagePublic Successful Response
+     * @throws ApiError
+     */
+    public static getPage(data: StorefrontGetPageData): CancelablePromise<StorefrontGetPageResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/pages/{slug}',
+            path: {
+                slug: data.slug
+            },
             errors: {
                 422: 'Validation Error'
             }
