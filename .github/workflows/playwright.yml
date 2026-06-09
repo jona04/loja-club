@@ -30,7 +30,8 @@ jobs:
         filters: |
           changed:
             - backend/**
-            - frontend/**
+            - frontend-dashboard/**
+            - frontend-storefront/**
             - .env
             - compose*.yml
             - .github/workflows/playwright.yml
@@ -64,7 +65,7 @@ jobs:
     - run: uv sync
       working-directory: backend
     - run: bun ci
-      working-directory: frontend
+      working-directory: frontend-dashboard
     - run: bash scripts/generate-client.sh
     - run: docker compose build
     - run: docker compose down -v --remove-orphans
@@ -76,7 +77,7 @@ jobs:
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
         name: blob-report-${{ matrix.shardIndex }}
-        path: frontend/blob-report
+        path: frontend-dashboard/blob-report
         include-hidden-files: true
         retention-days: 1
 
@@ -95,17 +96,17 @@ jobs:
     - name: Download blob reports from GitHub Actions Artifacts
       uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
       with:
-        path: frontend/all-blob-reports
+        path: frontend-dashboard/all-blob-reports
         pattern: blob-report-*
         merge-multiple: true
     - name: Merge into HTML Report
       run: bunx playwright merge-reports --reporter html ./all-blob-reports
-      working-directory: frontend
+      working-directory: frontend-dashboard
     - name: Upload HTML report
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
         name: html-report--attempt-${{ github.run_attempt }}
-        path: frontend/playwright-report
+        path: frontend-dashboard/playwright-report
         retention-days: 30
         include-hidden-files: true
 

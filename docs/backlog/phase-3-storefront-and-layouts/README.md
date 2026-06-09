@@ -22,18 +22,17 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 - **Tenancy:** `resolve_store_by_host` (`P1-TEN-01`, cache-aside `domain:{host}`); `get_active_store`/`require_permission`. `store_settings` (Fase 1) é a fonte de **contato/negócio** (`public_name`, `description`, `logo_url`); publicação da loja = `status == active`.
 - **Catálogo:** produtos/categorias/imagens públicos vêm do módulo `catalog` (Fase 2) — `ImagePublic` já traz `url`/`variants`.
 - **API/infra:** `Page[T]`, `AppError`/envelope (`P1-API-01`); cache Redis (doc 13); `Money`.
-- **Frontend:** o painel Vite existente (a renomear para `frontend-dashboard`).
+- **Frontend:** o painel Vite **`frontend-dashboard`** + a vitrine **`frontend-storefront`** (Next.js, scaffold) no workspace `bun`.
 
-## Pré-requisitos (o que ainda falta)
+## Pré-requisitos
 
-- **Next.js** (novo projeto `frontend-storefront`) — decisão fechada (doc [05](../../05_frontend_architecture.md)/[18](../../18_open_decisions.md)).
-- Renomear `frontend/` → `frontend-dashboard/` (`P3-FE-01`).
+- **Next.js** (`frontend-storefront`, scaffold + placeholder) e o **painel `frontend-dashboard`** — entregues por **`P3-FE-01`** (✅). Telas reais da vitrine = `P3-SF-02`.
 
 ## Tasks
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P3-FE-01](./P3-FE-01-frontends-setup.md) | Renomear painel → `frontend-dashboard` + scaffold `frontend-storefront` (Next.js) + compose/Traefik | todo | — |
+| 1 | [P3-FE-01](./P3-FE-01-frontends-setup.md) | Renomear painel → `frontend-dashboard` + scaffold `frontend-storefront` (Next.js) + compose/Traefik | ✅ done | — |
 | 2 | [P3-CONTENT-01](./P3-CONTENT-01-content-models.md) | Módulo `content`: modelos de tema/layout + seed `classic`/`modern` + migration | todo | — |
 | 3 | [P3-CONTENT-02](./P3-CONTENT-02-content-service-routes.md) | `content`: serviço/rotas do painel (aplicar template + invalidar cache; editar layout) | todo | P3-CONTENT-01 |
 | 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | todo | P3-CONTENT-01 |
@@ -51,4 +50,8 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 
 > Item adiado vira checkbox aqui (origem + quando), e também na seção Follow-ups da task.
 
-- (nenhum aberto — a fase ainda não começou)
+- [ ] **Smoke do Traefik** (`P3-FE-01`): com o proxy rodando, confirmar `app.`→painel, `api.`→backend, `{loja}.${DOMAIN}`→storefront (o wildcard só foi validado por `compose config`, não no roteamento real).
+- [ ] **Lint/test do `frontend-storefront` nos gates** (`P3-FE-01`): pre-commit/CI só cobrem `frontend-dashboard` — plugar quando o storefront tiver código real (`P3-SF-02`).
+- [ ] **Pipeline da imagem do `frontend-storefront`** (`P3-FE-01`): `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 6/7.
+- [ ] **Dockerfile do storefront single-stage** (`P3-FE-01`): otimizar p/ Next standalone depois.
+- [ ] **`bun.lock`** (`P3-FE-01`): confirmar/regerar com o `bun` do usuário antes de commitar (regenerado via `oven/bun:1` 1.3.14).

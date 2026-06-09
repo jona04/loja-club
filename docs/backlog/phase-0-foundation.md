@@ -65,6 +65,6 @@ Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md)
 - `account_users.is_superuser` (template) ↔ admin de plataforma: no MVP o superuser cobre o acesso interno; `platform_admin_roles`/`platform.*` entram na Fase 7. Registrado em [P0-MOD-04](./phase-0-foundation/P0-MOD-04-accounts-user.md).
 - **Global desde a base** ([P0-MOD-05](./phase-0-foundation/P0-MOD-05-shared-money-locale.md)): dinheiro `(valor + ISO 4217)`; telefone/endereço/locale globais (telefone normalizado por `phonenumbers`; endereço país-aware na Fase 4 — doc [23](../23_customer_identity_and_guest_checkout.md)).
 - **Testes** ([P0-TEST-01](./phase-0-foundation/P0-TEST-01-testing-foundation.md) + Fundações §10): unit p/ lógica pura, integração no seam, isolamento por rollback, S3 mockado, `vitest`+RTL. Fixtures multi-tenant ficam para a Fase 1.
-- **CI/portas/lockfile** ([P0-CI-01](./phase-0-foundation/P0-CI-01-ci-lint-tests.md)): CI roda no host nas portas publicadas (5442/6399); `bun.lock` único na raiz do workspace (regenerar ao mudar `frontend/package.json`); automação do template (board/labels/release-notes) removida.
+- **CI/portas/lockfile** ([P0-CI-01](./phase-0-foundation/P0-CI-01-ci-lint-tests.md)): CI roda no host nas portas publicadas (5442/6399); `bun.lock` único na raiz do workspace (regenerar ao mudar `frontend-dashboard/package.json`); automação do template (board/labels/release-notes) removida.
 
 > **Detalhe e status oficial por task:** [`phase-0-foundation/README.md`](./phase-0-foundation/README.md).

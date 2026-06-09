@@ -4,7 +4,7 @@ title: Renomear painel + scaffold do storefront (Next.js)
 phase: 3
 etapa: "Etapa 7 — Projeto frontend-storefront (Next.js)"
 area: FE
-status: todo
+status: done
 depends_on: []
 blocks: [P3-SF-02]
 tests: none
@@ -48,14 +48,26 @@ A V1 tem **dois** frontends: o painel (`frontend-dashboard`, Vite) e a vitrine p
 - **Cobrir:** o gate do dashboard (`tsc`/`biome`/`vitest`) continua verde após o rename.
 
 ## Definition of Done
-- [ ] `frontend-dashboard/` sobe em `app.${DOMAIN}`; gate do dashboard verde após o rename.
-- [ ] `frontend-storefront/` (Next.js) sobe via Traefik wildcard `*.${DOMAIN}` com placeholder.
-- [ ] `compose*.yml`, Traefik, CI e workspace `bun` consistentes (lockfile na raiz regenerado).
-- [ ] **Modos de falha mapeados** (rename quebrando CI/Traefik/imports) → tratados ou Follow-up.
-- [ ] Itens adiados varridos → Follow-ups + README, ou "nenhum".
+- [x] Gate do dashboard verde após o rename (**biome + tsc + vitest 18**); imagem Docker do painel builda. *(roteamento Traefik `app.` = smoke pendente — ver Follow-ups)*
+- [x] `frontend-storefront/` (Next.js) com placeholder: **`next build` verde** + imagem Docker builda. *(wildcard Traefik = smoke pendente)*
+- [x] `compose*.yml`, Traefik, CI e workspace `bun` consistentes; **`bun.lock` regenerado** (2 membros, bun 1.3.14) — **`compose config` válido**.
+- [x] **e2e Playwright 41/41** após o rename (corrigido teste de tema flaky do template).
+- [x] **Modos de falha mapeados** → Follow-ups.
+- [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
 - O painel ficou como `frontend/` nas Fases 0–2 (sem segundo frontend, sem motivo pra churn). Os docs já o chamam de `frontend-dashboard` — o rename fecha a divergência.
+- **Serviço compose também renomeado:** `frontend` → `frontend-dashboard` (+ routers Traefik `-frontend-dashboard-*`), pra casar com `frontend-storefront`.
+- **Caminho interno dos Dockerfiles → `/app/frontend-dashboard`** (o `bun install` resolve o workspace pelo root `package.json`, tem que casar). Os Dockerfiles do dashboard (build + playwright) copiam **os dois** manifestos (`frontend-dashboard/` **e** `frontend-storefront/package.json`) antes do `bun install` — workspace de 2 membros.
+- **Scaffold do storefront feito à mão** (não `create-next-app`, que pede bun/rede): Next 15 + React 19 (casando versões do dashboard) + Tailwind 4 via `@tailwindcss/postcss`.
+- **Traefik:** storefront usa `HostRegexp(^.+\.${DOMAIN}$)` com `priority=1` (baixa) pra os routers `Host()` específicos (`app.`/`api.`/`adminer.`) ganharem.
+- **Vite dev/e2e em `:5180`** (= painel, casa com `FRONTEND_HOST`+CORS); `bun.lock` regenerado via `docker run oven/bun:1` (bun **1.3.14 = CI**).
+- **Teste de tema flaky do template corrigido:** `user-settings.spec.ts "Selected mode is preserved"` usava `page.evaluate(classList)` sem auto-wait → reescrito p/ `toHaveClass` (sem isso o CI quebra por `--fail-on-flaky-tests`).
 
 ## Follow-ups
-- (preencher ao executar)
+- [ ] **Smoke do Traefik** (com o proxy rodando): `app.${DOMAIN}`→painel, `api.`→backend, `{loja}.${DOMAIN}`→storefront. O wildcard só foi validado por `compose config`, **não** no roteamento real. *Modo de falha:* prioridade/regex errada faz o catch-all do storefront engolir `app.`/`api.`/`adminer.`.
+- [ ] **Lint/test do storefront nos gates:** o hook biome do `.pre-commit` é só `^frontend-dashboard/`; o storefront não tem lint/test no pre-commit nem job de CI — plugar quando tiver código real (`P3-SF-02`).
+- [ ] **Pipeline da imagem do storefront:** `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push da imagem (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 6/7.
+- [ ] **Dockerfile do storefront é single-stage** (não-standalone) — otimizar p/ Next standalone depois.
+- [x] **Refs `frontend/` em docs de tasks concluídas (P0/P1/P2)** varridas p/ `frontend-dashboard/` — mantido `frontend/` só onde o texto descreve o próprio mapeamento/rename (`P1-DASH-01` linhas 25/58 e esta task).
+- [ ] **`bun.lock`:** confirmar/regerar com o `bun` do usuário antes de commitar (foi via `oven/bun:1` 1.3.14, deve bater).

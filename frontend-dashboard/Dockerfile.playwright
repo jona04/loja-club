@@ -10,12 +10,13 @@ ENV PATH="/root/.bun/bin:$PATH"
 
 COPY package.json bun.lock /app/
 
-COPY frontend/package.json /app/frontend/
+COPY frontend-dashboard/package.json /app/frontend-dashboard/
+COPY frontend-storefront/package.json /app/frontend-storefront/
 
-WORKDIR /app/frontend
+WORKDIR /app/frontend-dashboard
 
 RUN bun install
 
-COPY ./frontend /app/frontend
+COPY ./frontend-dashboard /app/frontend-dashboard
 
 ARG VITE_API_URL

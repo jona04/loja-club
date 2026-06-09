@@ -32,9 +32,9 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 - **Renomear fisicamente** o diretório `frontend/` → `frontend-dashboard/` (mexe em workspace bun/`bun.lock`/Dockerfiles): **opcional**; pode ficar para quando admin/storefront forem criados. Ver Notas.
 
 ## Arquivos a criar/alterar
-- `compose.yml` (alterar) — labels Traefik do serviço frontend: host `app.${DOMAIN}`.
-- `compose.override.yml` (alterar, se necessário) — args/host do frontend dev.
-- `frontend/src/routes/_layout/admin.tsx` (remover/neutralizar) e refs no menu.
+- `compose.yml` (alterar) — labels Traefik do serviço frontend-dashboard: host `app.${DOMAIN}`.
+- `compose.override.yml` (alterar, se necessário) — args/host do frontend-dashboard dev.
+- `frontend-dashboard/src/routes/_layout/admin.tsx` (remover/neutralizar) e refs no menu.
 
 ## Passos
 1. Trocar o host Traefik do painel para `app.${DOMAIN}`.

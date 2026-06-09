@@ -63,7 +63,7 @@ Todas as tarefas começam em `[ ]`.
 O que o template **já entrega** e vamos reaproveitar:
 
 - **Backend:** FastAPI, SQLModel, Pydantic v2, Alembic, JWT (`app/core/security.py`), recuperação de senha + e-mail (`app/utils.py` + MJML em `app/email-templates/`; o **envio passará pelo worker** — INV-F5), settings (`app/core/config.py`), `engine`/`init_db` (`app/core/db.py`), Pytest (`backend/tests/`).
-- **Frontend (painel):** React 19, Vite 7, TanStack Router + Query + Table, Tailwind v4, shadcn/Radix, react-hook-form, zod, axios, cliente OpenAPI gerado via `@hey-api/openapi-ts` (`frontend/src/client/`).
+- **Frontend (painel):** React 19, Vite 7, TanStack Router + Query + Table, Tailwind v4, shadcn/Radix, react-hook-form, zod, axios, cliente OpenAPI gerado via `@hey-api/openapi-ts` (`frontend-dashboard/src/client/`).
 - **Infra dev:** Docker Compose (`compose.yml` + `compose.override.yml`), Traefik (`proxy`), Postgres 18 (`db`), Adminer, Mailcatcher, Playwright; Dockerfiles; GitHub Actions; pre-commit.
 
 O que **não existe** ainda e precisa ser criado (resumo; detalhe nas fases):

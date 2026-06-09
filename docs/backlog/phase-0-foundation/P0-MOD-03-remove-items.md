@@ -22,7 +22,7 @@ O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Rem
 - Backend: remover `ItemBase/Item/ItemCreate/ItemUpdate/ItemPublic/ItemsPublic` de `app/models.py`; remover `create_item` de `app/crud.py`; remover `app/api/routes/items.py` e seu include em `app/api/main.py`.
 - Remover a relação `items` em `User` (em `app/models.py`).
 - Testes: remover `backend/tests/api/routes/test_items.py` e `backend/tests/utils/item.py` (e referências).
-- Frontend: remover `frontend/src/routes/_layout/items.tsx` e `frontend/src/components/Items/`.
+- Frontend: remover `frontend-dashboard/src/routes/_layout/items.tsx` e `frontend-dashboard/src/components/Items/`.
 - Migration Alembic dropando a tabela `item` (dev: perda de dados aceitável).
 
 ## Fora de escopo (o que NÃO entra)
@@ -35,7 +35,7 @@ O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Rem
 - `backend/app/api/routes/items.py` (remover).
 - `backend/app/api/main.py` (alterar) — remover include de items.
 - `backend/tests/api/routes/test_items.py` (remover); `backend/tests/utils/item.py` (remover).
-- `frontend/src/routes/_layout/items.tsx` (remover); `frontend/src/components/Items/` (remover).
+- `frontend-dashboard/src/routes/_layout/items.tsx` (remover); `frontend-dashboard/src/components/Items/` (remover).
 - `backend/app/alembic/versions/xxxx_drop_item.py` (criar).
 
 ## Passos

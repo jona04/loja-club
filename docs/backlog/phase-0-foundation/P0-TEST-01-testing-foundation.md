@@ -23,7 +23,7 @@ O template é integração-pesado (Pytest contra Postgres real, limpeza por `del
 - **Backend layout:** `backend/tests/unit/` e `backend/tests/integration/`; mover os testes de rota/crud atuais para `integration/`.
 - **Isolamento por teste (DEC-10):** fixture que roda cada teste numa **transação com rollback** (savepoint), substituindo o `delete(User/Item)` de fim de sessão do `conftest.py`. Cada teste começa limpo, sem depender de ordem.
 - **Mock de externos (DEC-11):** convenção/fixtures para **S3 via `moto`** (ou botocore stubber), e-mail (já via `patch`), relógio e aleatoriedade — para não bater na AWS nem em rede em teste.
-- **Frontend unit (DEC-9):** adicionar **`vitest` + `@testing-library/react`** ao `frontend/`; script `test:unit`; setup; manter Playwright para E2E.
+- **Frontend unit (DEC-9):** adicionar **`vitest` + `@testing-library/react`** ao `frontend-dashboard/`; script `test:unit`; setup; manter Playwright para E2E.
 - **Samples provando o chão:** 1 teste unit backend, 1 integração backend (round-trip no DB com rollback), 1 unit frontend (ex.: formatação de moeda/locale).
 - Ajustar `backend/scripts/test.sh` para rodar `unit` + `integration` com `coverage` (mantendo `mypy strict`/`ruff`).
 

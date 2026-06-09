@@ -175,4 +175,4 @@ are served via CloudFront. Config in `.env` (region default `us-east-2`):
 ## Generate the OpenAPI client
 
 After changing the API, regenerate the frontend client (see
-[`frontend/README.md`](../frontend/README.md)).
+[`frontend-dashboard/README.md`](../frontend-dashboard/README.md)).
