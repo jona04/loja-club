@@ -17,6 +17,7 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
 import { Route as LayoutStoreSettingsRouteImport } from './routes/_layout/store-settings'
+import { Route as LayoutStoreLayoutRouteImport } from './routes/_layout/store-layout'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutProductsRouteImport } from './routes/_layout/products'
 
@@ -59,6 +60,11 @@ const LayoutStoreSettingsRoute = LayoutStoreSettingsRouteImport.update({
   path: '/store-settings',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutStoreLayoutRoute = LayoutStoreLayoutRouteImport.update({
+  id: '/store-layout',
+  path: '/store-layout',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
   '/team': typeof LayoutTeamRoute
 }
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
   '/team': typeof LayoutTeamRoute
   '/': typeof LayoutIndexRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_layout/products': typeof LayoutProductsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/store-layout': typeof LayoutStoreLayoutRoute
   '/_layout/store-settings': typeof LayoutStoreSettingsRoute
   '/_layout/team': typeof LayoutTeamRoute
   '/_layout/': typeof LayoutIndexRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/products'
     | '/settings'
+    | '/store-layout'
     | '/store-settings'
     | '/team'
   fileRoutesByTo: FileRoutesByTo
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/products'
     | '/settings'
+    | '/store-layout'
     | '/store-settings'
     | '/team'
     | '/'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_layout/products'
     | '/_layout/settings'
+    | '/_layout/store-layout'
     | '/_layout/store-settings'
     | '/_layout/team'
     | '/_layout/'
@@ -208,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutStoreSettingsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/store-layout': {
+      id: '/_layout/store-layout'
+      path: '/store-layout'
+      fullPath: '/store-layout'
+      preLoaderRoute: typeof LayoutStoreLayoutRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -228,6 +247,7 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutProductsRoute: typeof LayoutProductsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutStoreLayoutRoute: typeof LayoutStoreLayoutRoute
   LayoutStoreSettingsRoute: typeof LayoutStoreSettingsRoute
   LayoutTeamRoute: typeof LayoutTeamRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -236,6 +256,7 @@ interface LayoutRouteChildren {
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutProductsRoute: LayoutProductsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutStoreLayoutRoute: LayoutStoreLayoutRoute,
   LayoutStoreSettingsRoute: LayoutStoreSettingsRoute,
   LayoutTeamRoute: LayoutTeamRoute,
   LayoutIndexRoute: LayoutIndexRoute,

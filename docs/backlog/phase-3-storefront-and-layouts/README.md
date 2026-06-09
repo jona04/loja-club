@@ -37,7 +37,9 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 3 | [P3-CONTENT-02](./P3-CONTENT-02-content-service-routes.md) | `content`: serviço/rotas do painel (aplicar template + invalidar cache; editar layout) | ✅ done | P3-CONTENT-01 |
 | 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | ✅ done | P3-CONTENT-01 |
 | 5 | [P3-SF-02](./P3-SF-02-storefront-rendering.md) | Storefront Next.js: host + "não encontrada" + templates `classic`/`modern` + cache | ✅ done | P3-FE-01, P3-SF-01 |
-| 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | todo | P3-CONTENT-02 |
+| 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | ✅ done | P3-CONTENT-02 |
+
+> **✅ Fase 3 completa** — as 6 tasks estão `done`. Próxima: [Fase 4 — vender sem pagamento](../phase-4-sell-without-payment.md). (Follow-ups abertos abaixo; nenhum bloqueia a Fase 4.)
 
 ## Ordem sugerida de execução
 
@@ -69,4 +71,6 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **API fora → erro amigável** (`P3-SF-02`): adicionar `app/error.tsx` (hoje 500 genérico em falha não-404).
 - [ ] **next/image** (`P3-SF-02`): trocar `<img>` por `next/image` + `remotePatterns` do CDN.
 - [ ] **API URL server-only** (`P3-SF-02`): SSR usa `NEXT_PUBLIC_API_URL` (exposto ao client) — separar `INTERNAL_API_URL`.
-- [ ] **Rebuild + smoke do Traefik** (`P3-SF-02`, infra): `docker compose up -d --build backend frontend-storefront` + abrir `{loja}.localhost` via Traefik.
+- [ ] **Rebuild do storefront + smoke do Traefik** (`P3-SF-02`, infra): `docker compose up -d --build frontend-storefront` + abrir a vitrine em `{loja}.localhost` via Traefik.
+- [ ] **Picker de coleção em destaque** (`P3-FE-02`): `featured_collection_id` é UUID cru — select quando houver endpoint de listar coleções (+ vitrine renderizar destaque por coleção, ver `P3-SF-01`).
+- [ ] **Preview visual** (`P3-FE-02`): hoje o preview é aviso de dados (template aplicado); evoluir para abrir a vitrine com o template previsto / render visual.

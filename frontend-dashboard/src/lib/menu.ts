@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Package,
+  Palette,
   Settings,
   Users,
 } from "lucide-react"
@@ -22,6 +23,12 @@ export const MENU_MODULES: MenuModule[] = [
     path: "/products",
     icon: Package,
     permission: "catalog.product.view",
+  },
+  {
+    title: "Layout",
+    path: "/store-layout",
+    icon: Palette,
+    permission: "layout.view",
   },
   {
     title: "Configurações",
