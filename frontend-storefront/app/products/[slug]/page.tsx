@@ -1,8 +1,11 @@
+import Link from "next/link"
+
+import { ProductGallery } from "@/components/ProductGallery"
 import { StoreShell } from "@/components/StoreShell"
 import { formatPrice, getCategories, getHome, getProduct } from "@/lib/api"
 
 /**
- * Product detail page (image-only V1): images, name, price and description.
+ * Product detail page (image-only V1): gallery, name, price and description.
  * Purchasing arrives with the cart in Fase 4; the only WhatsApp element is the
  * store-wide floating button (see StoreShell).
  *
@@ -20,41 +23,37 @@ export default async function ProductPage({
     getCategories(),
     getProduct(slug),
   ])
-  const cover = product.images[0]
   return (
     <StoreShell store={home.store} theme={home.theme} categories={categories}>
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-gray-100">
-          {cover ? (
-            <img
-              src={cover.url}
-              alt={product.name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="text-gray-400">sem imagem</span>
-          )}
-        </div>
+      <nav className="mb-6 text-sm text-gray-400">
+        <Link href="/" className="transition hover:text-gray-700">
+          Início
+        </Link>
+        <span className="px-1.5">/</span>
+        <Link href="/products" className="transition hover:text-gray-700">
+          Produtos
+        </Link>
+        <span className="px-1.5">/</span>
+        <span className="text-gray-600">{product.name}</span>
+      </nav>
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+        <ProductGallery images={product.images} alt={product.name} />
         <div>
-          <h1 className="text-2xl font-semibold">{product.name}</h1>
-          <p className="mt-2 text-xl text-gray-800">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+            {product.name}
+          </h1>
+          <p
+            className="mt-4 text-3xl font-semibold"
+            style={{ color: "var(--primary)" }}
+          >
             {formatPrice(product.price_amount_minor, product.price_currency)}
           </p>
           {product.description ? (
-            <p className="mt-4 whitespace-pre-line text-gray-600">
-              {product.description}
-            </p>
-          ) : null}
-          {product.images.length > 1 ? (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {product.images.slice(1).map((image) => (
-                <img
-                  key={image.url}
-                  src={image.url}
-                  alt=""
-                  className="h-16 w-16 rounded object-cover"
-                />
-              ))}
+            <div className="mt-6 border-t border-gray-100 pt-6">
+              <h2 className="text-sm font-medium text-gray-900">Descrição</h2>
+              <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-gray-600">
+                {product.description}
+              </p>
             </div>
           ) : null}
         </div>

@@ -1,6 +1,10 @@
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import type { ReactNode } from "react"
+
 import "./globals.css"
+
+const inter = Inter({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
   title: "Loja Club",
@@ -15,8 +19,8 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
-      <body>{children}</body>
+    <html lang="pt-BR" className={inter.className}>
+      <body className="bg-white text-gray-900">{children}</body>
     </html>
   )
 }

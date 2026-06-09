@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 import { ProductCard } from "@/components/ProductCard"
 import { StoreShell } from "@/components/StoreShell"
 import { getCategories, getHome, listProducts } from "@/lib/api"
@@ -19,20 +21,34 @@ export default async function CategoryPage({
     getCategories(),
     listProducts(slug),
   ])
-  const category = categories.find((c) => c.slug === slug)
+  const category = categories.find((item) => item.slug === slug)
   return (
     <StoreShell store={home.store} theme={home.theme} categories={categories}>
-      <h1 className="mb-6 text-2xl font-semibold">
-        {category?.name ?? "Categoria"}
-      </h1>
+      <nav className="mb-6 text-sm text-gray-400">
+        <Link href="/" className="transition hover:text-gray-700">
+          Início
+        </Link>
+        <span className="px-1.5">/</span>
+        <span className="text-gray-600">{category?.name ?? "Categoria"}</span>
+      </nav>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          {category?.name ?? "Categoria"}
+        </h1>
+        {category?.description ? (
+          <p className="mt-1 text-sm text-gray-500">{category.description}</p>
+        ) : null}
+      </div>
       {products.data.length ? (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
           {products.data.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <p className="text-gray-500">Nenhum produto nesta categoria.</p>
+        <div className="rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+          <p className="text-gray-500">Nenhum produto nesta categoria.</p>
+        </div>
       )}
     </StoreShell>
   )

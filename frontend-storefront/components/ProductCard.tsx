@@ -3,41 +3,37 @@ import Link from "next/link"
 import { formatPrice, type StorefrontProduct } from "@/lib/api"
 
 /**
- * A product card linking to its detail page.
+ * A product card linking to its detail page. The price uses the store's theme
+ * accent (`--primary`).
  *
  * @param product - The product to render.
- * @param big - Larger image/spacing (used by the modern template).
  * @returns The card.
  */
-export function ProductCard({
-  product,
-  big = false,
-}: {
-  product: StorefrontProduct
-  big?: boolean
-}) {
+export function ProductCard({ product }: { product: StorefrontProduct }) {
   const cover = product.images[0]?.url
   return (
-    <Link
-      href={`/products/${product.slug}`}
-      className="group block overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:shadow-md"
-    >
-      <div
-        className={`flex items-center justify-center overflow-hidden bg-gray-100 ${big ? "aspect-square" : "aspect-[4/3]"}`}
-      >
+    <Link href={`/products/${product.slug}`} className="group block">
+      <div className="aspect-square overflow-hidden rounded-xl bg-gray-100">
         {cover ? (
           <img
             src={cover}
             alt={product.name}
-            className="h-full w-full object-cover transition group-hover:scale-105"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         ) : (
-          <span className="text-sm text-gray-400">sem imagem</span>
+          <div className="flex h-full items-center justify-center text-sm text-gray-400">
+            sem imagem
+          </div>
         )}
       </div>
-      <div className="p-3">
-        <h3 className="truncate font-medium text-gray-900">{product.name}</h3>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mt-3">
+        <h3 className="truncate text-sm font-medium text-gray-900">
+          {product.name}
+        </h3>
+        <p
+          className="mt-1 text-sm font-semibold"
+          style={{ color: "var(--primary)" }}
+        >
           {formatPrice(product.price_amount_minor, product.price_currency)}
         </p>
       </div>
