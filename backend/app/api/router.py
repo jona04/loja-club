@@ -23,5 +23,5 @@ api_router.include_router(storefront_router)
 api_router.include_router(utils.router)
 
 
-if settings.ENVIRONMENT == "local":
+if settings.ENVIRONMENT == "development":
     api_router.include_router(private.router)

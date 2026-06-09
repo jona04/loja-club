@@ -186,7 +186,7 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 
 1. Criar projeto a partir do template.
 2. Ajustar nome, domínio, envs e branding.
-3. Validar ambiente local.
+3. Validar o ambiente de desenvolvimento.
 4. Refatorar backend para módulos.
 5. Criar entidades centrais: `Store`, `StoreMember`, `Domain`.
 6. Criar middleware/contexto multi-tenant.

@@ -13,7 +13,7 @@ tests: [unit]
 # P0-CFG-02 — Variáveis de ambiente e domínio de dev
 
 ## Contexto
-Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar o multi-tenant, o ambiente local precisa de um domínio que suporte subdomínios e de CORS para `app.`/`admin.`/`*.`. Também precisamos eliminar os segredos `changethis`.
+Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar o multi-tenant, o ambiente de desenvolvimento precisa de um domínio que suporte subdomínios e de CORS para `app.`/`admin.`/`*.`. Também precisamos eliminar os segredos `changethis`.
 
 ## Docs de referência
 - [03 — System Architecture](../../03_system_architecture.md)

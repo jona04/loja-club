@@ -329,7 +329,7 @@ Entregas:
 
 - e-mail de **pedido criado** para o cliente (Mailcatcher no dev local);
 - e-mail de **novo pedido** para o lojista (Mailcatcher no dev local);
-- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente local;
+- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente de desenvolvimento;
 - fluxo completo validado de ponta a ponta no Docker Compose local.
 
 Resultado:
