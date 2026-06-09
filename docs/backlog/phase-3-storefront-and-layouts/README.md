@@ -38,14 +38,18 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 4 | [P3-SF-01](./P3-SF-01-storefront-public-api.md) | Módulo `storefront`: API pública de leitura + filtro de publicação + cache | ✅ done | P3-CONTENT-01 |
 | 5 | [P3-SF-02](./P3-SF-02-storefront-rendering.md) | Storefront Next.js: host + "não encontrada" + templates `classic`/`modern` + cache | ✅ done | P3-FE-01, P3-SF-01 |
 | 6 | [P3-FE-02](./P3-FE-02-layout-screen.md) | Painel: tela "Layout da Loja" | ✅ done | P3-CONTENT-02 |
+| 7 | [P3-TPL-01](./P3-TPL-01-rich-templates-spec.md) | **Sistema de templates ricos** (spec→impl): 2–3 templates pro (carrossel/seções) + evolução dos models + painel com preview + contrato troca-sem-quebra | 🟡 spec | P3-SF-02, P3-FE-02 |
+| 8 | [P3-LOC-01](./P3-LOC-01-store-country-currency.md) | **Localização da loja:** país → moeda/locale/símbolo (deriva automático; `formatPrice` por loja) | todo | — (bloqueia exibição de `P3-TPL-01`) |
 
-> **✅ Fase 3 completa** — as 6 tasks estão `done`. Próxima: [Fase 4 — vender sem pagamento](../phase-4-sell-without-payment.md). (Follow-ups abertos abaixo; nenhum bloqueia a Fase 4.)
+> **Base da Fase 3 completa** (tasks 1–6 `done`: storefront público + 2 templates simples + painel de layout). A **[P3-TPL-01]** eleva pra **templates profissionais** — está em **spec** (sendo definida conversando, antes de implementar). A [Fase 4 — vender sem pagamento](../phase-4-sell-without-payment.md) pode começar em paralelo (o contrato de compra é compatível).
 
 ## Ordem sugerida de execução
 
 ```text
 P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
                          └→ P3-SF-01 → P3-SF-02   (SF-02 também depende de P3-FE-01)
+
+P3-TPL-01 (templates ricos) — spec contínuo; implementa após SF-02 + FE-02, provável divisão em sub-tasks
 ```
 
 ## Follow-ups / débitos técnicos
@@ -78,4 +82,9 @@ P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
 - [ ] **Categoria: paginação-UI + filtros + ordenação** (`P3-SF-02`): doc 10 §"Página de categoria" — a API já pagina (`skip/limit`); faltam a UI de paginação + filtros/ordenação.
 - [ ] **Home: contato + links sociais** (`P3-SF-02`): doc 10 §"Componentes da home" — além do WhatsApp, expor contato/links sociais (menu configurável já coberto pelos follow-ups de menu).
 - [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 4): a página de produto é **informativa** no V1 (sem botão de compra); o **carrinho** entra na Fase 4. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
-- [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../21_design_system_todo.md).
+- [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../21_design_system_todo.md). (O salto pra **templates profissionais** é a `P3-TPL-01`.)
+- [ ] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-01` → Fase 7/admin): por ora os templates entram via seed/código; a tela de admin (nome/descrição/`preview_image_url`/ativar) é futura.
+- [ ] **Preview ao vivo no painel** (`P3-TPL-01`): hoje o lojista escolhe o template pela **imagem cadastrada**; render real da loja com o template é futuro.
+- [ ] **Compatibilidade 3D dos templates** (`P3-TPL-01` → Fase 5): reservar o **slot** do editor 3D na página de produto de **todos** os templates.
+- [ ] **`formatPrice` hardcoda `pt-BR`** (`P3-LOC-01`): a vitrine formata todo preço como pt-BR → símbolo errado pra loja não-BR (`USD` vira `US$`). Passar a usar o **locale da loja**.
+- [ ] **Multi-moeda / câmbio** (`P3-LOC-01`): uma loja vende em **uma** moeda no V1; multi-moeda + conversão é futuro.

@@ -218,6 +218,8 @@ Funcionalidades da V1:
 
 > **`logo_url` e a descrição ficam em Configurações** (Fase 1, `store_settings`), não nesta tela — o tema cuida só de aparência/layout (doc 10, §"Configuração no banco"). O destaque da home no V1 usa produtos `is_featured` (atributo do produto, Fase 2); `featured_collection_id` é forward-looking (ver follow-up "Destaque por coleção" no README da Fase 3).
 
+> A evolução pra **templates ricos** (carrossel/seções) é a [`P3-TPL-01`](../backlog/phase-3-storefront-and-layouts/P3-TPL-01-rich-templates-spec.md): o lojista escolhe o template por uma **lista com imagem de preview** (sem preview ao vivo ainda); o **cadastro** de templates é via admin da plataforma (futuro). Trocar de template **não quebra** o fluxo de compra.
+
 Quando salvar, a loja pública deve refletir a alteração.
 
 ## Cupons
