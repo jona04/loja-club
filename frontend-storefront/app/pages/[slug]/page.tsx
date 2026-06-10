@@ -1,19 +1,48 @@
 import { getCategories, getHome } from "@/lib/api"
 import { resolveTemplate } from "@/lib/templates"
 
-const TITLES: Record<string, string> = {
-  sobre: "Sobre a loja",
-  privacidade: "Política de Privacidade",
-  termos: "Termos de Uso",
-  trocas: "Trocas e Devoluções",
+const PAGES: Record<string, { title: string; body: string[] }> = {
+  sobre: {
+    title: "Sobre a loja",
+    body: [
+      "Trabalhamos todos os dias para oferecer produtos selecionados, um atendimento próximo e uma experiência de compra simples e segura.",
+      "Obrigado por visitar a nossa loja — é um prazer ter você por aqui. Qualquer dúvida, fale com a gente.",
+    ],
+  },
+  privacidade: {
+    title: "Política de Privacidade",
+    body: [
+      "A sua privacidade é importante para nós. Os dados que você compartilha são usados apenas para processar e acompanhar os seus pedidos e para melhorar a sua experiência de compra.",
+      "Não vendemos os seus dados a terceiros. Em caso de dúvidas sobre como tratamos as suas informações, entre em contato com o nosso atendimento.",
+    ],
+  },
+  termos: {
+    title: "Termos de Uso",
+    body: [
+      "Ao navegar e comprar em nossa loja, você concorda com as condições desta página. Buscamos sempre clareza nas informações de produtos, preços e prazos.",
+      "Em caso de dúvidas sobre um pedido, prazos ou condições, entre em contato com o nosso atendimento antes de finalizar a compra.",
+    ],
+  },
+  trocas: {
+    title: "Trocas e Devoluções",
+    body: [
+      "Quer trocar ou devolver um produto? É simples: entre em contato com o nosso atendimento e nós orientamos todo o processo, do começo ao fim.",
+      "Trabalhamos para que a sua compra seja sempre tranquila — antes, durante e depois da entrega.",
+    ],
+  },
 }
 
-const LOREM =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+const FALLBACK = {
+  title: "Página",
+  body: [
+    "Estamos preparando o conteúdo desta página. Enquanto isso, fique à vontade para explorar os nossos produtos.",
+  ],
+}
 
 /**
- * Institutional page (placeholder): lorem content inside the active template's
- * shell. The merchant will fill these via the dashboard in a later task.
+ * Institutional page: presentable default copy inside the active template's
+ * shell. The merchant's own content arrives with editable `content_pages` in a
+ * later task.
  *
  * @param params - Route params carrying the page `slug`.
  * @returns The institutional page.
@@ -26,7 +55,7 @@ export default async function InstitutionalPage({
   const { slug } = await params
   const [home, categories] = await Promise.all([getHome(), getCategories()])
   const Template = resolveTemplate(home.theme.active_template_id)
-  const title = TITLES[slug] ?? "Página"
+  const page = PAGES[slug] ?? FALLBACK
 
   return (
     <Template.Shell
@@ -36,16 +65,13 @@ export default async function InstitutionalPage({
     >
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-3xl font-semibold tracking-tight text-gray-900">
-          {title}
+          {page.title}
         </h1>
         <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-          <p>{LOREM}</p>
-          <p>{LOREM}</p>
-          <p>{LOREM}</p>
+          {page.body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
-        <p className="mt-10 text-xs text-gray-400">
-          Conteúdo de exemplo — o lojista poderá editar esta página pelo painel.
-        </p>
       </div>
     </Template.Shell>
   )

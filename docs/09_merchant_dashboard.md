@@ -209,10 +209,10 @@ Ela deve deixar claro no checkout e no pedido que a entrega será combinada com 
 
 Funcionalidades da V1:
 
-- escolher entre 2 templates prontos;
-- visualizar preview;
+- escolher entre os templates prontos (Aurora, Bazar, Studio) pela **lista com thumbnail**;
+- ver o **preview** (imagem em tamanho real);
 - aplicar template;
-- atualizar banner principal;
+- **enviar a imagem** do banner principal;
 - atualizar texto principal;
 - definir a coleção em destaque (`featured_collection_id`).
 

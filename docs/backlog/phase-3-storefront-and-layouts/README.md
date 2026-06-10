@@ -41,10 +41,10 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 7 | [P3-TPL-01](./P3-TPL-01-template-architecture-aurora.md) | **Arquitetura de templates + Aurora (POC):** resolver/registry + blocos compartilhados + Aurora (navegação) | ✅ done | P3-SF-02, P3-FE-02, P3-LOC-01 |
 | 8 | [P3-LOC-01](./P3-LOC-01-store-country-currency.md) | **Localização da loja:** país → moeda/locale/símbolo (deriva automático; `formatPrice` por loja) | ✅ done | — |
 | 9 | [P3-TPL-02](./P3-TPL-02-templates-bazar-studio.md) | **Bazar + Studio** — o **teste do contrato** (seções de categoria / sidebar; `category_sections`; `Shell` no contrato) | ✅ done | P3-TPL-01 |
-| 10 | [P3-TPL-03](./P3-TPL-03-dashboard-template-picker.md) | **Painel — Layout da loja:** seletor de template (nome + **thumb**) + **upload do banner** + corrigir **preview** + defaults apresentáveis | todo | P3-TPL-01 |
+| 10 | [P3-TPL-03](./P3-TPL-03-dashboard-template-picker.md) | **Painel — Layout da loja:** seletor de template (nome + **thumb**) + **upload do banner** + **preview** (Dialog) + defaults apresentáveis | ✅ done | P3-TPL-01 |
 | 11 | [P3-TPL-04](./P3-TPL-04-template-settings-schema.md) | **Personalização por template** (theme settings **schema-driven**): manifesto por template → form genérico no painel; valores por loja×template; vitrine lê com defaults | todo | P3-TPL-02, P3-TPL-03 |
 
-> **Fase 3 quase completa.** Tasks 1–6 + `P3-LOC-01` + **`P3-TPL-01` (Aurora)** + **`P3-TPL-02` (Bazar + Studio)** `done` — o **contrato está VALIDADO**: 3 templates estruturalmente distintos (destaques / seções de categoria / sidebar) consomem os **mesmos dados + fluxo**. Faltam **`P3-TPL-03`** (painel: seletor + banner + preview + defaults apresentáveis) e **`P3-TPL-04`** (personalização por template — **schema-driven**; pode ir pro pós-lançamento se pesar). Checkout/confirmação funcionais = **[Fase 4](../phase-4-sell-without-payment.md)**.
+> **Fase 3 quase completa.** Tasks 1–6 + `P3-LOC-01` + **`P3-TPL-01` (Aurora)** + **`P3-TPL-02` (Bazar + Studio)** `done` — o **contrato está VALIDADO**: 3 templates estruturalmente distintos (destaques / seções de categoria / sidebar) consomem os **mesmos dados + fluxo**. **`P3-TPL-03`** `done` (painel: picker + thumb + **upload do banner** + **preview** em Dialog + defaults apresentáveis). Falta só **`P3-TPL-04`** (personalização por template — **schema-driven**; pode ir pro pós-lançamento se pesar). Checkout/confirmação funcionais = **[Fase 4](../phase-4-sell-without-payment.md)**.
 
 ## Ordem sugerida de execução
 
@@ -103,10 +103,14 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [x] **`classic`/`modern` removidos** (P3-TPL): templates legados saíram do seed/DB/resolver; **default = `aurora`**; `templates/base` + `StoreShell` removidos da vitrine.
 - [x] **Aurora portado FIEL ao template** (`P3-TPL-01`): barra de anúncio, header com 3 ícones, **cart drawer** deslizante + carrinho client (`lib/cart.tsx`, localStorage), cards com overlay "Adicionar", footer escuro `bg-brand-900`, FontAwesome, páginas `/checkout` · `/order-confirmation` · `/account` · `/pages/[slug]`. Build + biome + smoke ✓.
 - [x] **Bazar + Studio portados FIEL** (`P3-TPL-02`): Bazar (indigo/rose + Plus Jakarta Sans, home com **seções de categoria**, card marketplace) + Studio (black/gray + **sidebar** catálogo). Backend `StorefrontHome.category_sections`. **Contrato validado** (smoke real dos 3). Build/biome/cov ✓.
-- [ ] **Conteúdo estático/lorem → dinâmico** (`P3-TPL-03`): barra de anúncio, subtítulo do hero, seção editorial, trust indicators, páginas institucionais (`/institucional/*` = lorem), contato do footer e subtítulo do card são **fixos/lorem** — precisam de campos no painel pro lojista preencher.
+- [ ] **Conteúdo de chrome editável** (`P3-TPL-04`): barra de anúncio, subtítulo do hero, seção editorial, trust indicators, contato do footer e subtítulo do card são **fixos** — a edição pelo lojista é o **schema-driven** da `P3-TPL-04`. (As páginas institucionais `/pages/*` já têm **defaults apresentáveis**; conteúdo real = `content_pages`.)
 - [ ] **FontAwesome via CDN** (`P3-TPL-01`): a vitrine carrega FA por CDN (`layout.tsx`); empacotar local pra produção (offline + performance).
 - [ ] **Tema da loja no Aurora** (`P3-TPL-01`): o Aurora usa a paleta fixa `brand` do template; aplicar cores/fonte do lojista (`theme.primary_color` etc.) é futuro.
 - [x] **Páginas avulsas via resolver** (`P3-TPL-02`): resolvido — `Template` ganhou `Shell`; `/pages/*` · `/account` · `/checkout` · `/order-confirmation` resolvem o **shell do template ativo**.
 - [ ] **Carrinho/checkout reais** (`P3-TPL-01` → Fase 4): o carrinho é client (localStorage) e checkout/pedido são telas de exemplo; o pedido real (sem pagamento) é a Fase 4.
 - [ ] **Sidebar do Studio no mobile** (`P3-TPL-02`): hoje `lg:block`; no mobile o catálogo vem por `/products` — drawer mobile é follow-up.
 - [ ] **`CheckoutView` compartilhado** (`P3-TPL-02`): mora em `templates/aurora/` mas é usado pelos 3; mover pra local neutro.
+- [x] **Banner enviável + preview por imagem** (`P3-TPL-03`): upload do banner via `media` → `banner_image_url`; preview = Dialog com a imagem; thumbnails na lista de templates.
+- [ ] **`previewLayout` (backend) sem uso na UI** (`P3-TPL-03`): o preview virou imagem (client); remover o endpoint ou usar pra live-preview.
+- [ ] **Permissão do upload do banner** (`P3-TPL-03`): reusa o endpoint de `media` (gated `catalog.product.update`); pra layout deveria aceitar `layout.update`.
+- [ ] **Páginas institucionais via `content_pages`** (`P3-TPL-03`): `/pages/*` têm defaults apresentáveis; o conteúdo real (editável) sai de `content_pages` (feature à parte).

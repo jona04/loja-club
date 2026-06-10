@@ -1,11 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
+import { type ChangeEvent, useEffect, useRef, useState } from "react"
 
-import { ContentService } from "@/client"
+import { ContentService, MediaService } from "@/client"
 import { StoreGate } from "@/components/Store/StoreGate"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useActiveStore } from "@/hooks/useActiveStore"
@@ -46,6 +53,8 @@ export function StoreLayoutScreen() {
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
+  const [previewId, setPreviewId] = useState<string | null>(null)
+  const bannerRef = useRef<HTMLInputElement>(null)
 
   const canEdit = permissions.includes("layout.update")
   const storeId = activeStore?.id ?? ""
@@ -93,9 +102,16 @@ export function StoreLayoutScreen() {
     onError: handleError.bind(showErrorToast),
   })
 
-  const previewMutation = useMutation({
-    mutationFn: (templateId: string) =>
-      ContentService.previewLayout({ storeId, templateId }),
+  const bannerUpload = useMutation({
+    mutationFn: async (file: File) => {
+      const media = await MediaService.uploadMedia({
+        storeId,
+        formData: { file: file as unknown as string, owner_type: "banner" },
+      })
+      return media.url
+    },
+    onSuccess: (url) =>
+      setForm((current) => ({ ...current, banner_image_url: url })),
     onError: handleError.bind(showErrorToast),
   })
 
@@ -104,7 +120,15 @@ export function StoreLayoutScreen() {
   }
 
   const templates = templatesQuery.data ?? []
-  const preview = previewMutation.data
+  const previewTemplate = templates.find((t) => t.id === previewId) ?? null
+
+  const onPickBanner = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      bannerUpload.mutate(file)
+    }
+    event.target.value = ""
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -120,57 +144,73 @@ export function StoreLayoutScreen() {
           <CardTitle>Template</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {templates.map((template) => {
               const selected = form.active_template_id === template.id
               return (
                 <div
                   key={template.id}
-                  className={`rounded-lg border p-4 ${selected ? "border-primary ring-1 ring-primary" : "border-border"}`}
+                  className={`overflow-hidden rounded-lg border ${selected ? "border-primary ring-2 ring-primary" : "border-border"}`}
                 >
-                  <h3 className="font-medium">{template.name}</h3>
-                  {template.description ? (
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {template.description}
-                    </p>
-                  ) : null}
-                  <div className="mt-3 flex gap-2">
-                    <Button
-                      size="sm"
-                      variant={selected ? "default" : "outline"}
-                      disabled={!canEdit}
-                      onClick={() =>
-                        setForm((current) => ({
-                          ...current,
-                          active_template_id: template.id,
-                        }))
-                      }
-                    >
-                      {selected ? "Selecionado" : "Selecionar"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      disabled={previewMutation.isPending}
-                      onClick={() => previewMutation.mutate(template.id)}
-                    >
-                      Pré-visualizar
-                    </Button>
+                  <button
+                    type="button"
+                    className="block aspect-[4/3] w-full bg-muted"
+                    onClick={() => setPreviewId(template.id)}
+                    title="Pré-visualizar"
+                  >
+                    {template.preview_image_url ? (
+                      <img
+                        src={template.preview_image_url}
+                        alt={template.name}
+                        className="h-full w-full object-cover object-top"
+                      />
+                    ) : null}
+                  </button>
+                  <div className="p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-medium">{template.name}</h3>
+                      {selected ? (
+                        <span className="text-xs font-medium text-primary">
+                          Ativo
+                        </span>
+                      ) : null}
+                    </div>
+                    {template.description ? (
+                      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                        {template.description}
+                      </p>
+                    ) : null}
+                    <div className="mt-3 flex gap-2">
+                      <Button
+                        size="sm"
+                        variant={selected ? "default" : "outline"}
+                        disabled={!canEdit}
+                        onClick={() =>
+                          setForm((current) => ({
+                            ...current,
+                            active_template_id: template.id,
+                          }))
+                        }
+                      >
+                        {selected ? "Selecionado" : "Selecionar"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setPreviewId(template.id)}
+                      >
+                        Pré-visualizar
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )
             })}
           </div>
-
-          {preview ? (
-            <p className="text-sm text-muted-foreground">
-              Pré-visualização (não salva) — template{" "}
-              <span className="font-medium text-foreground">
-                {preview.active_template_id}
-              </span>
-              .
-            </p>
-          ) : null}
+          <p className="text-sm text-muted-foreground">
+            Selecione um template e clique em <strong>Salvar</strong> para
+            aplicar na vitrine.
+          </p>
         </CardContent>
       </Card>
 
@@ -179,6 +219,59 @@ export function StoreLayoutScreen() {
           <CardTitle>Aparência</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-1.5">
+            <Label>Banner / imagem de destaque</Label>
+            <div className="flex items-start gap-4">
+              <div className="h-24 w-40 overflow-hidden rounded-md border bg-muted">
+                {form.banner_image_url ? (
+                  <img
+                    src={form.banner_image_url}
+                    alt="Banner atual"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                    Sem imagem
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  ref={bannerRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={onPickBanner}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!canEdit || bannerUpload.isPending}
+                  onClick={() => bannerRef.current?.click()}
+                >
+                  {bannerUpload.isPending ? "Enviando…" : "Enviar imagem"}
+                </Button>
+                {form.banner_image_url ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={!canEdit}
+                    onClick={() =>
+                      setForm((current) => ({
+                        ...current,
+                        banner_image_url: "",
+                      }))
+                    }
+                  >
+                    Remover
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="headline">Título de destaque</Label>
             <Input
@@ -189,20 +282,6 @@ export function StoreLayoutScreen() {
                 setForm((current) => ({
                   ...current,
                   headline: event.target.value,
-                }))
-              }
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="banner_image_url">URL do banner</Label>
-            <Input
-              id="banner_image_url"
-              value={form.banner_image_url}
-              disabled={!canEdit}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  banner_image_url: event.target.value,
                 }))
               }
             />
@@ -240,6 +319,38 @@ export function StoreLayoutScreen() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={previewId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPreviewId(null)
+          }
+        }}
+      >
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              {previewTemplate?.name ?? "Pré-visualização"}
+            </DialogTitle>
+            <DialogDescription>
+              Prévia do design do template. Selecione e salve para aplicar na
+              vitrine.
+            </DialogDescription>
+          </DialogHeader>
+          {previewTemplate?.preview_image_url ? (
+            <img
+              src={previewTemplate.preview_image_url}
+              alt={previewTemplate.name}
+              className="max-h-[70vh] w-full rounded-md border object-contain"
+            />
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Sem prévia disponível.
+            </p>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
