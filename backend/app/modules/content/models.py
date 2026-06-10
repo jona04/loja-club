@@ -9,7 +9,7 @@ API schemas live in ``schemas.py``; enums in ``enums.py``.
 
 import uuid
 
-from sqlalchemy import Index, text
+from sqlalchemy import JSON, Column, Index, text
 from sqlmodel import Field, SQLModel
 
 from app.db.base import SoftDeleteMixin, StoreScopedMixin, TimestampMixin, UUIDMixin
@@ -37,6 +37,9 @@ class ContentThemeTemplate(TimestampMixin, ContentThemeTemplateBase, table=True)
     __tablename__ = "content_theme_templates"
 
     id: str = Field(primary_key=True, max_length=50)
+    settings_schema: list[dict[str, object]] | None = Field(
+        default=None, sa_column=Column(JSON)
+    )
 
 
 class ContentStoreThemeSettingsBase(SQLModel):

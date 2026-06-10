@@ -17,9 +17,16 @@ from app.modules.billing.schemas import (
     BillingPlanPublic,
     BillingPlanUpdate,
 )
+from app.modules.content.models import ContentThemeTemplate
 from app.modules.platform_admin import services
 from app.modules.platform_admin.deps import require_platform_permission
-from app.modules.platform_admin.schemas import StoreAdminDetail, StoreAdminListItem
+from app.modules.platform_admin.schemas import (
+    StoreAdminDetail,
+    StoreAdminListItem,
+    ThemeTemplateAdminPublic,
+    ThemeTemplateCreate,
+    ThemeTemplateUpdate,
+)
 from app.modules.stores.enums import StoreStatus
 
 router = APIRouter(prefix="/platform", tags=["platform-admin"])
@@ -192,3 +199,50 @@ def delete_plan(plan_id: uuid.UUID, session: SessionDep) -> Message:
     """Soft-delete a subscription plan definition."""
     billing_services.delete_plan(session=session, plan_id=plan_id)
     return Message(message="Plan deleted")
+
+
+@router.get(
+    "/templates",
+    response_model=list[ThemeTemplateAdminPublic],
+    dependencies=[Depends(require_platform_permission("platform.templates.view"))],
+)
+def list_templates(session: SessionDep) -> list[ContentThemeTemplate]:
+    """List the registered theme templates."""
+    return services.list_templates(session=session)
+
+
+@router.get(
+    "/templates/{template_id}",
+    response_model=ThemeTemplateAdminPublic,
+    dependencies=[Depends(require_platform_permission("platform.templates.view"))],
+)
+def get_template(template_id: str, session: SessionDep) -> ContentThemeTemplate:
+    """Get a registered theme template by id."""
+    return services.get_template(session=session, template_id=template_id)
+
+
+@router.post(
+    "/templates",
+    response_model=ThemeTemplateAdminPublic,
+    status_code=201,
+    dependencies=[Depends(require_platform_permission("platform.templates.manage"))],
+)
+def create_template(
+    payload: ThemeTemplateCreate, session: SessionDep
+) -> ContentThemeTemplate:
+    """Register a theme template (its code must already exist in the storefront)."""
+    return services.create_template(session=session, payload=payload)
+
+
+@router.patch(
+    "/templates/{template_id}",
+    response_model=ThemeTemplateAdminPublic,
+    dependencies=[Depends(require_platform_permission("platform.templates.manage"))],
+)
+def update_template(
+    template_id: str, payload: ThemeTemplateUpdate, session: SessionDep
+) -> ContentThemeTemplate:
+    """Update a theme template's metadata/status."""
+    return services.update_template(
+        session=session, template_id=template_id, payload=payload
+    )

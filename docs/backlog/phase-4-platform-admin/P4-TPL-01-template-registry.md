@@ -4,7 +4,7 @@ title: Registro de templates — CRUD + schema seedado do código
 phase: 4
 etapa: "Etapa 3 — Cadastro/gestão de templates"
 area: TPL
-status: todo
+status: done
 depends_on: [P4-PLAT-01]
 blocks: [P4-TPL-02, P4-TPL-03, P4-ADMIN-03]
 tests: [integration]
@@ -50,13 +50,17 @@ O admin gerencia o **registro** (dados) de um template; o **código** (component
 - **Cobrir:** CRUD gated `platform.templates.*`; seed do schema idempotente; só template **ativo** é selecionável (consumo na vitrine/Fase 5); `alembic check` vazio.
 
 ## Definition of Done
-- [ ] `content_theme_templates` com `settings_schema`+status; CRUD admin (gated `platform.templates.*`); schema seedado do `settings-schema.json`; `alembic check` vazio.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `content_theme_templates` com `settings_schema` (JSON) + status (`is_active`); CRUD admin (`/platform/templates`) gated `platform.templates.view`/`manage`; schema **seedado** do `settings-schema.json` por template; `alembic check` vazio.
+- [x] **Modos de falha mapeados** → tratados (id duplicado → 409, não-encontrado → 404) ou Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** coluna `settings_schema` em `content_theme_templates` (migration `18847c0960d7`); `settings-schema.json` por template (aurora/bazar/studio) em `frontend-storefront/templates/<id>/`; o seed lê + sincroniza o schema; CRUD em `platform_admin`. Gate: **235 testes** (8 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
 - **Schema vem do código** (manifesto `settings-schema.json` por template), não autorado no admin — evita divergência schema↔código (doc [26](../../26_template_system.md)). Reusa `content_theme_templates` (`P3-CONTENT-01`).
 - **`platform.templates.*`** foi acrescentado ao catálogo do doc [08](../../08_modules_and_permissions.md) (sob `platform_catalog`/`platform_owner`) — não existia.
+- **Mecanismo do seed:** o seed do `content` lê cada `settings-schema.json` (do `frontend-storefront`) e **sincroniza** `content_theme_templates.settings_schema` (insere o que falta; atualiza quando o JSON muda) — o JSON é a fonte única.
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] **Empacotar os `settings-schema.json` no deploy do backend:** o seed lê de `frontend-storefront/templates/<id>/settings-schema.json` (caminho relativo). Na **imagem Docker do backend** esse diretório **não** está presente → o build precisa **copiar** os JSONs pro backend, senão o seed não encontra o schema (em deploy fica `null`). → README da fase.
+- [ ] **Conteúdo do schema por template** (Fase 5): os `settings-schema.json` têm um conjunto **representativo** de campos; o schema completo de cada template + a vitrine lendo `theme.settings[key]` são a Fase 5. → README da fase.

@@ -17,7 +17,12 @@ from app.core.security import create_access_token
 from app.modules.accounts.models import User
 from app.modules.accounts.repositories import get_active_user
 from app.modules.audit.services import record_audit
-from app.modules.platform_admin.schemas import StoreAdminDetail
+from app.modules.content.models import ContentThemeTemplate
+from app.modules.platform_admin.schemas import (
+    StoreAdminDetail,
+    ThemeTemplateCreate,
+    ThemeTemplateUpdate,
+)
 from app.modules.stores.enums import StoreStatus
 from app.modules.stores.models import Store, StoreMember, StoreRole, StoreSettings
 from app.modules.stores.schemas import StoreMemberPublic, StoreSettingsPublic
@@ -236,3 +241,90 @@ def impersonate(*, session: Session, actor: User, user_id: uuid.UUID) -> str:
     return create_access_token(
         target.id, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
+
+
+def list_templates(*, session: Session) -> list[ContentThemeTemplate]:
+    """Return all registered theme templates, ordered by id.
+
+    Args:
+        session: Active database session.
+
+    Returns:
+        The theme templates.
+    """
+    return list(
+        session.exec(
+            select(ContentThemeTemplate).order_by(col(ContentThemeTemplate.id))
+        ).all()
+    )
+
+
+def get_template(*, session: Session, template_id: str) -> ContentThemeTemplate:
+    """Return a registered theme template by id.
+
+    Args:
+        session: Active database session.
+        template_id: The template id.
+
+    Returns:
+        The theme template.
+
+    Raises:
+        AppError: 404 if the template does not exist.
+    """
+    template = session.get(ContentThemeTemplate, template_id)
+    if template is None:
+        raise AppError("template_not_found", "Template not found", status_code=404)
+    return template
+
+
+def create_template(
+    *, session: Session, payload: ThemeTemplateCreate
+) -> ContentThemeTemplate:
+    """Register a theme template (its code must already exist in the storefront).
+
+    Args:
+        session: Active database session.
+        payload: The template metadata.
+
+    Returns:
+        The registered template.
+
+    Raises:
+        AppError: 409 if a template already uses the id.
+    """
+    if session.get(ContentThemeTemplate, payload.id) is not None:
+        raise AppError(
+            "template_exists",
+            "A template with this id already exists",
+            status_code=409,
+        )
+    template = ContentThemeTemplate.model_validate(payload)
+    session.add(template)
+    session.commit()
+    session.refresh(template)
+    return template
+
+
+def update_template(
+    *, session: Session, template_id: str, payload: ThemeTemplateUpdate
+) -> ContentThemeTemplate:
+    """Update a theme template's metadata/status.
+
+    Args:
+        session: Active database session.
+        template_id: The template id.
+        payload: Fields to change.
+
+    Returns:
+        The updated template.
+
+    Raises:
+        AppError: 404 if the template does not exist.
+    """
+    template = get_template(session=session, template_id=template_id)
+    template.sqlmodel_update(payload.model_dump(exclude_unset=True))
+    session.add(template)
+    session.commit()
+    session.refresh(template)
+    return template

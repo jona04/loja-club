@@ -1,10 +1,32 @@
 """Content repositories: seeding and queries for the content module."""
 
+import json
 import uuid
+from pathlib import Path
 
 from sqlmodel import Session, col, select
 
 from app.modules.content.models import ContentStoreThemeSettings, ContentThemeTemplate
+
+_TEMPLATES_DIR = (
+    Path(__file__).resolve().parents[4] / "frontend-storefront" / "templates"
+)
+
+
+def _load_settings_schema(template_id: str) -> list[dict[str, object]] | None:
+    """Load a template's editable-field manifest from its ``settings-schema.json``.
+
+    Args:
+        template_id: The template id (folder under the storefront templates).
+
+    Returns:
+        The parsed schema, or ``None`` when the file is absent.
+    """
+    path = _TEMPLATES_DIR / template_id / "settings-schema.json"
+    if not path.is_file():
+        return None
+    schema: list[dict[str, object]] = json.loads(path.read_text(encoding="utf-8"))
+    return schema
 
 
 def list_active_templates(*, session: Session) -> list[ContentThemeTemplate]:
@@ -44,7 +66,7 @@ def get_store_theme_settings(
     ).first()
 
 
-# The storefront templates shipped in V1 (doc 10). Authoritative for the seed.
+# The storefront templates shipped in V1. Authoritative for the seed.
 # ``preview_image_url`` is served by the dashboard (hardcoded; CloudFront later).
 CANONICAL_TEMPLATES: list[dict[str, str]] = [
     {
@@ -78,18 +100,25 @@ def seed_content_templates(*, session: Session) -> None:
     Args:
         session: Active database session used to query and seed.
     """
-    existing = {t.id for t in session.exec(select(ContentThemeTemplate)).all()}
-    created = False
+    existing = {t.id: t for t in session.exec(select(ContentThemeTemplate)).all()}
+    changed = False
     for template in CANONICAL_TEMPLATES:
-        if template["id"] not in existing:
+        schema = _load_settings_schema(template["id"])
+        row = existing.get(template["id"])
+        if row is None:
             session.add(
                 ContentThemeTemplate(
                     id=template["id"],
                     name=template["name"],
                     description=template["description"],
                     preview_image_url=template["preview_image_url"],
+                    settings_schema=schema,
                 )
             )
-            created = True
-    if created:
+            changed = True
+        elif row.settings_schema != schema:
+            row.settings_schema = schema
+            session.add(row)
+            changed = True
+    if changed:
         session.commit()

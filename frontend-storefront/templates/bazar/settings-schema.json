@@ -1,0 +1,6 @@
+[
+  { "key": "announcement_text", "type": "text", "label": "Texto da barra de anúncio", "group": "Topo", "default": "", "max_length": 120 },
+  { "key": "hero_subtitle", "type": "textarea", "label": "Subtítulo do hero", "group": "Home", "default": "" },
+  { "key": "show_category_strip", "type": "boolean", "label": "Mostrar faixa de categorias", "group": "Home", "default": true },
+  { "key": "footer_contact", "type": "text", "label": "Contato do rodapé", "group": "Rodapé", "default": "", "max_length": 160 }
+]
