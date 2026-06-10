@@ -1,6 +1,6 @@
 # Fase 2 — Catálogo e mídia
 
-> O **3D/personalização** é a [Fase 5 — Produtos 3D](../phase-5-3d-products.md) (lojista gera os modelos via API de terceiros). Esta fase entrega só imagem.
+> O **3D/personalização** é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md) (lojista gera os modelos via API de terceiros). Esta fase entrega só imagem.
 
 > Roadmap: Etapa 5. Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja.
 
@@ -15,7 +15,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 - Tela de **Produtos** no painel (listar/criar/editar/arquivar/publicar + upload de imagem).
 - Testes de isolamento e de regras (slug único por loja; arte/upload válidos) passando.
 
-> **Fora desta fase:** o **3D** (produto `image_3d`/`image_3d_customizable`, geração de modelo via API, sessões de personalização e o editor 3D do storefront) é a **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)**; **planos + pagamentos** são a **Fase 6**.
+> **Fora desta fase:** o **3D** (produto `image_3d`/`image_3d_customizable`, geração de modelo via API, sessões de personalização e o editor 3D do storefront) é a **[Fase 7 — Produtos 3D](../phase-7-3d-products.md)**; **planos + pagamentos** são a **Fase 8**.
 
 ## Construído sobre as Fases 0–1 (não recriar)
 
@@ -36,7 +36,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 - **Região (1ª etapa):** **Ohio (`us-east-2`)** — S3 + CloudFront + IAM na mesma região.
 - **Best practices (dev):** bucket **privado** (Block Public Access) → público via **CloudFront/OAC**; arquivos privados via **presigned**; IAM **mínimo**; lifecycle p/ temporários.
 - **Garantia de que funciona:** toda task que usa AWS tem **2 níveis de teste** — `moto` (CI, sem credencial) **e** **smoke real** env-gated (sobe/baixa de verdade no bucket dev; pulado no CI sem secrets).
-- **Prod (Fase 7):** bucket/distribuição de prod + **IAM role** (sem chave longa) + segredos via SSM.
+- **Prod (Fase 9):** bucket/distribuição de prod + **IAM role** (sem chave longa) + segredos via SSM.
 
 ## Tasks
 
@@ -58,8 +58,8 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (do
 
 ## Reconciliações da fase (registrar conforme surgirem)
 
-- **3D é a [Fase 5 — Produtos 3D](../phase-5-3d-products.md).** O **lojista gera o modelo via API 3rd-party** (Meshy/Tripo3D/Hyper3D); não há catálogo 3D da plataforma. Decompõe em tasks quando chegar a fase.
-- **Produto = imagem.** O campo `type` (`image`/`image_3d`/`image_3d_customizable`) entra na **Fase 5** (migration no `catalog_products`).
+- **3D é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md).** O **lojista gera o modelo via API 3rd-party** (Meshy/Tripo3D/Hyper3D); não há catálogo 3D da plataforma. Decompõe em tasks quando chegar a fase.
+- **Produto = imagem.** O campo `type` (`image`/`image_3d`/`image_3d_customizable`) entra na **Fase 7** (migration no `catalog_products`).
 - **Storage real (sem MinIO):** S3 + CloudFront de verdade desde o dev local (DEC-8); testes com `moto` + smoke real (`P2-MEDIA-01`).
 - **Pillow** para thumbnails: registrar a decisão de lib nas Fundações ao implementar `P2-MEDIA-02`.
 

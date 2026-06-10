@@ -30,7 +30,7 @@ Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura
 ## Fora de escopo (o que NÃO entra)
 - Render no Next.js → `P3-SF-02`.
 - Rotas do **painel** (aplicar template) → `P3-CONTENT-02`.
-- Carrinho/checkout → Fase 4.
+- Carrinho/checkout → Fase 6.
 
 ## Arquivos a criar/alterar
 - `app/modules/storefront/{routes,services,schemas}.py` (criar).

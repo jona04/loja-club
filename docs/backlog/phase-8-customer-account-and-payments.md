@@ -1,4 +1,4 @@
-# Fase 6 — Dev online na AWS: conta do cliente, pagamentos e monetização
+# Fase 8 — Dev online na AWS: conta do cliente, pagamentos e monetização
 
 > Roadmap: Etapas 15–18. O sistema **vai para o ar** (ambiente **dev**) em **EC2** e ganha conta do cliente, gateway com split e billing.
 
@@ -30,12 +30,12 @@ Docs de referência: [12](../12_aws_infrastructure_and_deployment.md), [23](../2
 - [ ] **RDS PostgreSQL** (single-AZ, backups automáticos). Doc [12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **Redis**: container no EC2 ou **ElastiCache**.
 - [ ] **S3 + CloudFront** do ambiente online (implementação já existe desde o dev local; apontar para bucket/distribuição do ambiente). Doc [12](../12_aws_infrastructure_and_deployment.md)/[13](../13_performance_cache_and_cdn.md).
-- [ ] **Route 53**: `*.loja.club`, `api.`, `app.` (e `admin.` quando a Fase 7 entrar). Doc [06](../06_multitenancy_and_domains.md)/[12](../12_aws_infrastructure_and_deployment.md).
+- [ ] **Route 53**: `*.loja.club`, `api.`, `app.` (e `admin.` quando a Fase 9 entrar). Doc [06](../06_multitenancy_and_domains.md)/[12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **SSL** via Traefik/Let's Encrypt (ACM fica para produção). Doc [12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **SES/SMTP real** para os e-mails (substitui o Mailcatcher do dev local). Doc [12](../12_aws_infrastructure_and_deployment.md)/[21](../21_design_system_todo.md).
 - [ ] **Não expor** Adminer/Mailcatcher/Traefik dashboard. Doc [04](../04_fastapi_template_adaptation.md)/[14](../14_security_strategy.md).
 - [ ] **Segredos** fora do código (env seguro/SSM). Doc [14](../14_security_strategy.md).
-- [ ] Compose dedicado do ambiente online (ex.: `compose.aws.yml`) + script de deploy manual (o pipeline automatizado vem na Fase 7/Etapa 21).
+- [ ] Compose dedicado do ambiente online (ex.: `compose.aws.yml`) + script de deploy manual (o pipeline automatizado vem na Fase 9/Etapa 21).
 - [ ] Health checks acessíveis (`/health`, `/health/db`, `/health/redis`). Doc [15](../15_observability_and_operations.md).
 
 ### DoD da etapa
@@ -47,7 +47,7 @@ Docs de referência: [12](../12_aws_infrastructure_and_deployment.md), [23](../2
 
 ## Etapa 16 — Conta e login do cliente (extensão do módulo `customers`)
 
-> No MVP o cliente já é identificado por e-mail/telefone (Fase 4). Aqui ele ganha **autenticação** e **área do cliente**. Doc [23](../23_customer_identity_and_guest_checkout.md).
+> No MVP o cliente já é identificado por e-mail/telefone (Fase 6). Aqui ele ganha **autenticação** e **área do cliente**. Doc [23](../23_customer_identity_and_guest_checkout.md).
 
 ### Modelos (com `store_id`)
 - [ ] `customer_auth_identities`: `store_id`, `customer_id`, `provider` (`password|google|code`), `provider_subject` (e-mail/`sub` do Google), `secret_hash?`. Índices `store_id+provider+provider_subject` único e `store_id+customer_id`. Doc [07](../07_database_strategy.md)/[23](../23_customer_identity_and_guest_checkout.md).
@@ -58,11 +58,11 @@ Docs de referência: [12](../12_aws_infrastructure_and_deployment.md), [23](../2
 - [ ] **Código (sem senha):** solicitar código por e-mail/telefone → enviar via e-mail/SMS/WhatsApp → verificar → emitir token. Anti brute force + rate limit. Doc [23](../23_customer_identity_and_guest_checkout.md)/[14](../14_security_strategy.md).
 - [ ] **Senha:** definir senha opcional; login e-mail + senha.
 - [ ] **Google (OAuth):** start + callback; vincular `sub` ao customer.
-- [ ] **Sincronização guest ↔ conta:** resolver por e-mail/telefone normalizados (Fase 4); nunca duplicar; ligar identidades ao mesmo `customer_profiles`. Doc [23](../23_customer_identity_and_guest_checkout.md).
+- [ ] **Sincronização guest ↔ conta:** resolver por e-mail/telefone normalizados (Fase 6); nunca duplicar; ligar identidades ao mesmo `customer_profiles`. Doc [23](../23_customer_identity_and_guest_checkout.md).
 
 ### Rotas/serviço (doc [20](../20_api_contracts_todo.md))
 - [ ] solicitar código; verificar código; login senha; Google start/callback; logout; `me`.
-- [ ] recuperar carrinho/pedido por código (cross-device) — completa o que ficou na Fase 4. Doc [23](../23_customer_identity_and_guest_checkout.md).
+- [ ] recuperar carrinho/pedido por código (cross-device) — completa o que ficou na Fase 6. Doc [23](../23_customer_identity_and_guest_checkout.md).
 - [ ] área do cliente: histórico de pedidos, endereços (CRUD), personalizações, **editar perfil (inclui nome)**. Editar exige autenticação. Doc [23](../23_customer_identity_and_guest_checkout.md).
 - [ ] **Ver/aprovar personalização criada pelo lojista:** o cliente loga com o e-mail/telefone pré-cadastrado e **vê/aprova** a personalização que o lojista montou por ele (doc [22](../22_product_customization_3d.md)); aprovar segue o fluxo normal (carrinho/checkout). **Acesso (login vs link público) = decisão em aberto** ([18](../18_open_decisions.md)).
 
@@ -88,7 +88,7 @@ Doc [11](../11_checkout_payments_and_split.md), [14](../14_security_strategy.md)
 
 ### Fluxo (doc [11](../11_checkout_payments_and_split.md))
 - [ ] Conectar recebedor/subconta da loja no gateway (KYC).
-- [ ] No checkout, **substituir o "pagamento combinado" pela criação de transação no gateway** (consumir o ponto de integração preparado na Fase 4). Manter combinado como opção/fallback se a loja quiser.
+- [ ] No checkout, **substituir o "pagamento combinado" pela criação de transação no gateway** (consumir o ponto de integração preparado na Fase 6). Manter combinado como opção/fallback se a loja quiser.
 - [ ] **Split automático** com a comissão do plano (vem do `billing`).
 - [ ] **Webhook:** validar assinatura/origem, **idempotência** (`gateway_event_id`), pertencimento à loja, status válido → atualizar transação + pedido. **Requer o sistema no ar (Etapa 15).** Doc [11](../11_checkout_payments_and_split.md)/[14](../14_security_strategy.md).
 - [ ] Métodos: Pix, cartão, boleto (parcelado com cuidado). Doc [11](../11_checkout_payments_and_split.md).
@@ -121,7 +121,7 @@ Doc [02](../02_business_model_and_rules.md), [07](../07_database_strategy.md), [
 
 ### Frontend (painel — Plano)
 - [ ] Plano atual, comissão, mensalidade, status, faturas, trocar plano, alerta de inadimplência. Doc [09](../09_merchant_dashboard.md).
-- [ ] (Gestão de planos pela Loja Club é no `frontend-admin` — Fase 7.)
+- [ ] (Gestão de planos pela Loja Club é no `frontend-admin` — Fase 9.)
 
 ### Testes (doc [16](../16_testing_strategy.md))
 - [ ] gating por plano; comissão aplicada no split; inadimplência bloqueia recursos/loja.

@@ -29,8 +29,8 @@ O template guarda `User` em `app/models.py` (tabela `user`) e a lógica em `app/
 
 ## Fora de escopo (o que NÃO entra)
 - Papéis/permissões por loja, `store_members`, `store_roles` → Fase 1 (`P1-PERM-*`/`P1-STORE-*`).
-- Conceito de admin de plataforma e `platform_admin_roles` → Fase 7.
-- Autenticação do cliente final (customer) → Fase 6.
+- Conceito de admin de plataforma e `platform_admin_roles` → Fase 4.
+- Autenticação do cliente final (customer) → Fase 8.
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/accounts/models.py` (criar) — `AccountUser` (`__tablename__="account_users"`) + schemas de usuário.
@@ -65,6 +65,6 @@ O template guarda `User` em `app/models.py` (tabela `user`) e a lógica em `app/
 
 ## Notas / Reconciliações
 - Doc [07](../../07_database_strategy.md) usa `account_users`; o template usa `user`. Resolvido via `__tablename__`.
-- `is_superuser` (template) **permanece** e, no MVP, cobre o acesso interno. O mapeamento para papéis globais de plataforma (`platform.*`) entra na Fase 7 — registrado aqui para não esquecer.
+- `is_superuser` (template) **permanece** e, no MVP, cobre o acesso interno. O mapeamento para papéis globais de plataforma (`platform.*`) entra na Fase 4 — registrado aqui para não esquecer.
 - **Implementado:** módulo `accounts` com `models.py` (User → `account_users`), `repositories.py` (create/update/get), `services.py` (authenticate), `auth.py` (login/token) e `routes.py` (user CRUD). `app/models.py` ficou só com genéricos (Message/Token/TokenPayload/NewPassword); `deps.py`/`core/db.py`/`api/main.py`/`models_registry` atualizados; `app/crud.py` removido. Migrations `f0a1b2c3d4e5` (drop item) + `b1c2d3e4f5a6` (rename). 68 testes verdes; gate `app` verde.
 - **Reconciliação da convenção:** as rotas ficaram em **dois arquivos** (`auth.py` login/token + `routes.py` user mgmt) em vez de um único `routes.py` — concerns distintos. Testes e código de produção usam `repositories.X`/`services.X` diretamente (sem alias `crud`). Índices/PK herdados (ex.: `ix_user_email`) seguem após o `rename_table` (funcional/cosmético).

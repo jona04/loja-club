@@ -6,9 +6,9 @@ Construir uma primeira versão da Loja Club capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–4 rodam **local** (na máquina do desenvolvedor) e as Fases 6–7 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–7 rodam **local** (na máquina do desenvolvedor) e as Fases 8–9 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
 
-A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 4), deixando a **integração de pagamento/split para o final** (Fase 6).
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração de pagamento/split para o final** (Fase 8).
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
 
@@ -26,11 +26,11 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
-- **Toda a V1 é dev:** Fases 0–4 **local**; Fases 6–7 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
+- **Toda a V1 é dev:** Fases 0–7 **local**; Fases 8–9 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
 - Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
-- O **marco do MVP (dev local)** acontece ao fim da Fase 4, **antes** de subir para a AWS e de pagamentos.
+- O **marco do MVP (dev local)** acontece ao fim da Fase 6, **antes** de subir para a AWS e de pagamentos.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 6–7.
+- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 8–9.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
 
 ---
@@ -137,7 +137,7 @@ Entregas:
 - estoque;
 - status publicado/rascunho;
 - upload de imagens;
-- produto com imagem; 3D / 3D-personalizável → Fase 5;
+- produto com imagem; 3D / 3D-personalizável → Fase 7;
 - S3 (AWS real, ambiente dev);
 - worker para thumbnails;
 - CloudFront para imagens;
@@ -149,7 +149,7 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFront).
 ```
 
-> A personalização 3D é a **Fase 5 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
+> A personalização 3D é a **Fase 7 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
 
 ---
 
@@ -201,11 +201,47 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ---
 
-## Fase 4 — Venda sem pagamento online (dev local)
+## Fase 4 — Admin do SaaS (dev local)
+
+> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (assets no CDN + preview navegável). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
+
+Entregas:
+
+- `frontend-admin` em `admin.${DOMAIN}` (Traefik) + papéis globais `platform.*` (substitui `is_superuser`);
+- operar lojas (listar/detalhe/bloquear), planos, usuários; suporte com impersonation + auditoria mínima;
+- **cadastro de templates:** metadados + **upload de assets pro CDN** + **settings schema** + **preview navegável** publicado.
+
+Resultado:
+
+```text
+Equipe opera a plataforma e cadastra templates (CDN + preview); a vitrine sai do hardcoded.
+```
+
+---
+
+## Fase 5 — Configuração da loja pelo lojista (dev local)
+
+> Objetivo: com os templates cadastrados (Fase 4), o lojista **personaliza** o template da loja — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](./backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md).
+
+Entregas:
+
+- form gerado do `settings_schema` do template ativo (campos `text/textarea/image/boolean/select`);
+- valores por **loja × template** (não perde ao trocar; resetar = excluir); imagens com **default no CDN**;
+- vitrine lê `theme.settings[key] ?? default`; botão "ver preview completo" (outra aba).
+
+Resultado:
+
+```text
+Lojista personaliza o template pelo painel; a vitrine reflete.
+```
+
+---
+
+## Fase 6 — Venda sem pagamento online (dev local)
 
 > Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem o gateway**.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
-> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 6.
+> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 8.
 
 ### Etapa 9 — Frete e cupons (base)
 
@@ -271,7 +307,7 @@ Entregas:
 - congelamento da personalização aprovada;
 - sessão de checkout;
 - **pagamento combinado fora da plataforma** (Pix manual/transferência/WhatsApp), com mensagem pós-compra explicando como o pagamento será combinado;
-- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 6).
+- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 8).
 
 Resultado:
 
@@ -323,7 +359,7 @@ Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, me
 
 ### Etapa 14 — Notificações essenciais + finalização local
 
-> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 6.
+> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 8.
 
 Entregas:
 
@@ -363,9 +399,9 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 ---
 
-## Fase 5 — Produtos 3D (dev local)
+## Fase 7 — Produtos 3D (dev local)
 
-> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-5-3d-products.md`](./backlog/phase-5-3d-products.md).
+> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](./backlog/phase-7-3d-products.md).
 
 ### Etapa 6 — Produtos 3D e personalização
 
@@ -391,7 +427,7 @@ Cliente personaliza, em 3D, um produto cujo modelo o próprio lojista gerou via 
 
 ---
 
-## Fase 6 — Dev online na AWS (EC2)
+## Fase 8 — Dev online na AWS (EC2)
 
 > Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
 
@@ -480,30 +516,9 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ---
 
-## Fase 7 — Operação da plataforma, CI/CD e beta
+## Fase 9 — Operação da plataforma, CI/CD e beta
 
-### Etapa 19 — Admin da plataforma
-
-Entregas:
-
-- projeto `frontend-admin`;
-- `admin.loja.club`;
-- listar lojas;
-- ver detalhes de loja;
-- bloquear/desbloquear loja;
-- ver usuários;
-- ver pedidos por loja;
-- ver webhooks com erro;
-- configurar a integração da API de geração 3D (Fase 5);
-- gerenciar planos;
-- ver comissões;
-- auditoria.
-
-Resultado:
-
-```text
-Equipe Loja Club consegue operar a plataforma.
-```
+> O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
 
 ### Etapa 20 — Segurança e observabilidade
 

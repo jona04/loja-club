@@ -10,9 +10,9 @@ Decisão fechada: usar arq (async, baseado em Redis).
 
 Motivos: async (casa com o backend), Redis já presente, leve e com cron embutido. Ver também `docs/backlog/_foundations-and-bottlenecks.md` (DEC-3).
 
-## API de geração de modelos 3D (Fase 5)
+## API de geração de modelos 3D (Fase 7)
 
-O 3D é a **Fase 5** e os modelos são **gerados pelo lojista via API de terceiros** (image/text → GLB), não pela plataforma.
+O 3D é a **Fase 7** e os modelos são **gerados pelo lojista via API de terceiros** (image/text → GLB), não pela plataforma.
 
 Candidatos a avaliar:
 
@@ -20,7 +20,7 @@ Candidatos a avaliar:
 - [Tripo3D](https://www.tripo3d.ai/api)
 - [Hyper3D](https://hyper3d.ai/api-dashboard)
 
-Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 5. Ver [Fase 5](backlog/phase-5-3d-products.md).
+Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 7. Ver [Fase 7](backlog/phase-7-3d-products.md).
 
 ## Gateway principal
 
@@ -71,13 +71,13 @@ Opções:
 
 Recomendação (decidido):
 
-- **toda a V1 é dev**: Fases 0–4 local; Fases 6–7 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
+- **toda a V1 é dev**: Fases 0–7 local; Fases 8–9 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
 - **produção robusta (pós-V1)**: ECS/Fargate + ALB + RDS.
 
 Decisão:
 
 ```text
-V1 = dev em EC2 (Fases 6–7). ECS/Fargate fica para a produção pós-V1.
+V1 = dev em EC2 (Fases 8–9). ECS/Fargate fica para a produção pós-V1.
 ```
 
 ## Domínio próprio na V1
@@ -167,7 +167,7 @@ Decisões pendentes:
 Definir lista exata dos primeiros modelos 3D e formatos finais dos assets.
 ```
 
-## Acesso à personalização criada pelo lojista (Fase 5/6)
+## Acesso à personalização criada pelo lojista (Fase 7/8)
 
 Contexto: na **personalização assistida pelo lojista** (o lojista monta a arte em nome do cliente, pré-cadastrado por e-mail/telefone — doc [22](22_product_customization_3d.md)), o cliente precisa **ver e aprovar** a personalização antes de comprar.
 
@@ -178,9 +178,9 @@ Ver/aprovar a personalização criada pelo lojista exige login do cliente,
 ou é um link público compartilhável (sem login)?
 ```
 
-- **Exigir login:** mais controle/privacidade; depende da conta do cliente (Fase 6).
+- **Exigir login:** mais controle/privacidade; depende da conta do cliente (Fase 8).
 - **Link público:** o cliente pode **compartilhar com amigos** (veem sem conta); aprovar/comprar ainda pode pedir confirmação de contato.
-- Provável: **suportar os dois** (link público para ver/compartilhar; login/confirmação para aprovar e comprar). Fechar ao entrar na Fase 5/6.
+- Provável: **suportar os dois** (link público para ver/compartilhar; login/confirmação para aprovar e comprar). Fechar ao entrar na Fase 7/8.
 
 ## Frete na V1
 

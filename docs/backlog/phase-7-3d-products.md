@@ -1,6 +1,6 @@
-# Fase 5 — Produtos 3D (lojista gera via API)
+# Fase 7 — Produtos 3D (lojista gera via API)
 
-> Objetivo: a loja passa a vender **produtos 3D** e **3D personalizáveis**. O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** a partir de uma imagem/descrição; o cliente personaliza no storefront (editor 3D), aprova, e a personalização é **congelada no pedido**. Construída sobre as Fases 2 (catálogo), 3 (storefront) e 4 (checkout).
+> Objetivo: a loja passa a vender **produtos 3D** e **3D personalizáveis**. O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** a partir de uma imagem/descrição; o cliente personaliza no storefront (editor 3D), aprova, e a personalização é **congelada no pedido**. Construída sobre as Fases 2 (catálogo), 3 (storefront) e 6 (checkout).
 
 Docs de referência: [22](../22_product_customization_3d.md), [07](../07_database_strategy.md), [13](../13_performance_cache_and_cdn.md), [14](../14_security_strategy.md), [18](../18_open_decisions.md), [10](../10_storefront_and_layouts.md), [09](../09_merchant_dashboard.md), [16](../16_testing_strategy.md).
 
@@ -34,7 +34,7 @@ Docs de referência: [22](../22_product_customization_3d.md), [07](../07_databas
 - [ ] `customization_sessions` (campos do doc [07](../07_database_strategy.md)) + `customization_uploads` (arte privada). Status `draft|approved|added_to_cart|ordered|abandoned|expired`.
 - [ ] Rotas: iniciar/obter sessão; **autosave** do `state_json`; upload de arte (validado, privado, URL assinada); preview; **aprovar** (congela snapshot + versão + data). Expirar 30 dias → `expired` (worker).
 - [ ] Enum de status de arte/produção (`received…production_done`).
-- [ ] **Personalização assistida pelo lojista** (doc [22](../22_product_customization_3d.md)): sessão **criada pela loja em nome do cliente** (`created_by` = usuário da loja), pré-cadastrando o cliente por e-mail/telefone (`create_or_update_customer`, Fase 4). O cliente acessa e **aprova**; **acesso (login vs link público) = decisão em aberto** ([18](../18_open_decisions.md)).
+- [ ] **Personalização assistida pelo lojista** (doc [22](../22_product_customization_3d.md)): sessão **criada pela loja em nome do cliente** (`created_by` = usuário da loja), pré-cadastrando o cliente por e-mail/telefone (`create_or_update_customer`, Fase 6). O cliente acessa e **aprova**; **acesso (login vs link público) = decisão em aberto** ([18](../18_open_decisions.md)).
 
 ### 5.5 — Editor 3D no storefront (Three.js)
 - [ ] Carregar o GLB do modelo+versão **do lojista** (CDN); upload de arte; texto/cor/posição/escala/rotação dentro da área imprimível; preview; **autosave**; **aprovação** obrigatória antes do carrinho; restaurar pela `guest_session_id`. Doc [10](../10_storefront_and_layouts.md)/[22](../22_product_customization_3d.md).
@@ -50,5 +50,5 @@ Docs de referência: [22](../22_product_customization_3d.md), [07](../07_databas
 ## Reconciliações (registrar aqui)
 - **Modelos gerados pelo lojista via API**, por loja — **não** há biblioteca da plataforma. Ver doc [22](../22_product_customization_3d.md).
 - **Decisão do provedor de geração 3D** (Meshy/Tripo3D/Hyper3D) fica no doc [18](../18_open_decisions.md) — fechar ao iniciar esta fase.
-- **Restringir a personalização a plano pago** é da **Fase 6** (planos/pagamentos); aqui a geração/personalização é livre. O gancho de plano já existe em `require_permission` (Fase 1).
-- **Personalização assistida pelo lojista** (lojista monta em nome do cliente, pré-cadastrado por contato): documentada no doc [22](../22_product_customization_3d.md); o **acesso do cliente** (login vs link público compartilhável) é **decisão em aberto** ([18](../18_open_decisions.md)) — a parte de login depende da Fase 6.
+- **Restringir a personalização a plano pago** é da **Fase 8** (planos/pagamentos); aqui a geração/personalização é livre. O gancho de plano já existe em `require_permission` (Fase 1).
+- **Personalização assistida pelo lojista** (lojista monta em nome do cliente, pré-cadastrado por contato): documentada no doc [22](../22_product_customization_3d.md); o **acesso do cliente** (login vs link público compartilhável) é **decisão em aberto** ([18](../18_open_decisions.md)) — a parte de login depende da Fase 8.

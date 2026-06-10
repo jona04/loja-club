@@ -13,7 +13,7 @@ tests: [unit, integration, e2e]
 # P3-TPL-04 — Personalização por template (settings schema-driven)
 
 ## Contexto
-Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio + faixa editorial + trust indicators (Aurora), promo + badge "Oferta Especial" (Bazar), "Nova Coleção" + subtítulo do banner (Studio). **Alguns blocos existem num template e não no outro.** Logo, **não serve** um form genérico único, e **tela-por-template não escala** (quebraria a Fase 7, onde o admin cadastra template novo). A solução é **schema-driven**: cada template **declara** os campos que expõe; o painel renderiza **um form genérico** a partir desse schema; os valores ficam por **loja × template**; a vitrine lê com **defaults**. Encaixa no princípio do sistema: o **dado é contrato** (compartilhado), a **apresentação é por template**.
+Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio + faixa editorial + trust indicators (Aurora), promo + badge "Oferta Especial" (Bazar), "Nova Coleção" + subtítulo do banner (Studio). **Alguns blocos existem num template e não no outro.** Logo, **não serve** um form genérico único, e **tela-por-template não escala** (quebraria a Fase 4, onde o admin cadastra template novo). A solução é **schema-driven**: cada template **declara** os campos que expõe; o painel renderiza **um form genérico** a partir desse schema; os valores ficam por **loja × template**; a vitrine lê com **defaults**. Encaixa no princípio do sistema: o **dado é contrato** (compartilhado), a **apresentação é por template**.
 
 ## Abordagem (schema-driven — como Shopify / WP Customizer)
 - **Manifesto por template** (`settings_schema`): campos `{ key, type, label, group, default, max_length? }`. Tipos V1: `text` · `textarea` · `image` · `boolean` · `select` (cor = Follow-up).
@@ -23,7 +23,7 @@ Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio
 - **Valores por loja × template** — trocar de template e voltar **não perde** o preenchido. O painel **lista os templates já editados**; **resetar = excluir** (soft delete) → re-selecionar volta **zerado** (defaults).
 - **Painel = 1 renderizador genérico** (`TemplateSettingsForm`): monta o form do schema do template ativo (input por `type`, agrupado por `group`). **Um componente, N schemas.**
 - **Vitrine** lê `theme.settings[key] ?? <default do template>` (cada template conhece suas chaves).
-- **Fase 7:** admin cadastra template + schema → painel e vitrine **só funcionam**, sem código de painel novo.
+- **Fase 4:** admin cadastra template + schema → painel e vitrine **só funcionam**, sem código de painel novo.
 
 ## Docs de referência
 - [`P3-TPL-03`](./P3-TPL-03-dashboard-template-picker.md) (picker + banner) · [`P3-TPL-01`](./P3-TPL-01-template-architecture-aurora.md) (templates/contrato) · [`P3-TPL-02`](./P3-TPL-02-templates-bazar-studio.md)
@@ -41,7 +41,7 @@ Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio
 
 ## Fora de escopo (o que NÃO entra)
 - **Editor visual drag-drop / reordenar blocos livres** → V1 = campos declarados no schema.
-- **Cadastro de template novo pelo admin** → Fase 7 (mas o design já prevê).
+- **Cadastro de template novo pelo admin** → Fase 4 (mas o design já prevê).
 - **Preview ao vivo enquanto edita** → follow-up (o preview por imagem é do `P3-TPL-03`).
 - **Schema por idioma (i18n)** → futuro.
 - **Cores do tema** (acento por loja) → **task à parte** (por ora cada template usa as cores originais — ver Follow-ups).
@@ -86,5 +86,5 @@ Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio
 ## Follow-ups
 - [ ] **Preview ao vivo enquanto edita** — *Quando:* pós-V1. → README.
 - [ ] **Schema por idioma (i18n)** — *Quando:* pós-V1. → README.
-- [ ] **Admin cadastra template + schema** — *Quando:* Fase 7 (o design já prevê). → README.
+- [ ] **Admin cadastra template + schema** — *Quando:* Fase 4 (o design já prevê). → README.
 - [ ] **Cores do tema por loja** (acento aplicado a cada template) — *Quando:* task à parte (por ora cada template usa as cores originais). → README.

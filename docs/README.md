@@ -30,10 +30,12 @@ A documentação está em português por enquanto. A estrutura de pastas e nomes
 22. [Product Customization 3D](./22_product_customization_3d.md)
 23. [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md)
 24. [V2 Ideas](./24_v2_ideas.md)
+25. [Platform Admin](./25_platform_admin.md)
+26. [Template System](./26_template_system.md)
 
 ## Backlog de implementação
 
-O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/](./backlog/README.md). Foco atual: Fases 0–4 (o MVP utilizável para teste).
+O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/](./backlog/README.md). Foco atual: Fases 0–6 (o MVP utilizável para teste).
 
 ## Decisões canônicas até agora
 
@@ -50,7 +52,7 @@ O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/
 - O sistema de subdomínios será feito com **wildcard DNS** e resolução da loja pelo `Host` da requisição.
 - O gateway de pagamento fará o split. A Loja Club **não vai reter dinheiro dos lojistas**.
 - A primeira versão terá **2 templates/layouts prontos** para as lojas públicas.
-- A **personalização 3D** é da **Fase 5**: o lojista gera os modelos via **API de terceiros** (não há catálogo 3D da plataforma).
+- A **personalização 3D** é da **Fase 7**: o lojista gera os modelos via **API de terceiros** (não há catálogo 3D da plataforma).
 - O lojista poderá alterar o template ativo no painel, salvar e refletir imediatamente na loja pública.
 - Produtos comuns continuarão funcionando com fotos, variações e carrinho tradicional.
 - O cliente final poderá comprar e personalizar sem login obrigatório.
@@ -59,5 +61,5 @@ O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/
 - O painel do lojista será dividido por módulos, permitindo bloqueio por permissão e por plano.
 - Um usuário poderá gerenciar várias lojas, e uma loja poderá ter vários usuários.
 - A V1 deve ser completa e funcional, mas sem microserviços e sem Kubernetes no primeiro momento.
-- Toda a V1 é ambiente de **dev**: Fases 0–4 rodam **local** (com S3/CloudFront reais) e Fases 6–7 sobem na AWS com **EC2** + Docker Compose + Traefik.
+- Toda a V1 é ambiente de **dev**: Fases 0–7 rodam **local** (com S3/CloudFront reais) e Fases 8–9 sobem na AWS com **EC2** + Docker Compose + Traefik.
 - A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**.

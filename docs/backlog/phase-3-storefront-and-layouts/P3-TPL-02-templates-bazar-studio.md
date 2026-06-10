@@ -34,7 +34,7 @@ Com a arquitetura pronta (`P3-TPL-01`/Aurora), portar **Bazar** (home por **seç
 - **Nav overflow:** "Todas as categorias" (top N + menu/página) nos 3 templates.
 
 ## Fora de escopo (o que NÃO entra)
-- **Checkout + confirmação** dos 2 (funcionais): **Fase 4** (designs já existem).
+- **Checkout + confirmação** dos 2 (funcionais): **Fase 6** (designs já existem).
 - **Busca real** (a barra de busca da topbar do Studio é **placeholder** agora) → futuro.
 - **Filtros avançados** (a sidebar do Studio tem filtros simples/visuais; faceted search real) → futuro.
 - **Home 100% configurável** (lojista liga/desliga blocos) → futuro (V1 = defaults por template + ordem das categorias).
@@ -80,7 +80,7 @@ Com a arquitetura pronta (`P3-TPL-01`/Aurora), portar **Bazar** (home por **seç
 - **Implementação:** **Bazar** (`templates/bazar/*`) = **indigo/rose** (defaults Tailwind = a paleta do template, sem `@theme` novo) + **Plus Jakarta Sans** (`--font-jakarta` no `layout.tsx`) + shadows `soft`/`float` no `globals.css @theme`. **Studio** (`templates/studio/*`) = **black/gray** (defaults) + Inter + **sidebar `lg:block`** (catálogo). Aurora = `brand` custom. `Template` ganhou **`Shell`**; cada index exporta o seu. Rotas avulsas em **inglês**: `account`/`order-confirmation`/`pages/[slug]`/`checkout` resolvem o shell ativo. `CheckoutView` (single-page) é compartilhado (mora em `templates/aurora/`).
 
 ## Follow-ups
-- [ ] **Checkout + confirmação (Bazar/Studio)** — *Quando:* **Fase 4**. → README.
+- [ ] **Checkout + confirmação (Bazar/Studio)** — *Quando:* **Fase 6**. → README.
 - [ ] **Busca real** (topbar do Studio é placeholder) — *Quando:* pós-V1. → README.
 - [ ] **Filtros avançados / faceted** (sidebar do Studio é simples) — *Quando:* pós-V1. → README.
 - [ ] **Home 100% configurável (blocos)** — *Quando:* pós-V1 (hoje defaults por template + ordem das categorias). → README.

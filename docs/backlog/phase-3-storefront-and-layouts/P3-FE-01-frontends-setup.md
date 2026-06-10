@@ -67,7 +67,7 @@ A V1 tem **dois** frontends: o painel (`frontend-dashboard`, Vite) e a vitrine p
 ## Follow-ups
 - [ ] **Smoke do Traefik** (com o proxy rodando): `app.${DOMAIN}`→painel, `api.`→backend, `{loja}.${DOMAIN}`→storefront. O wildcard só foi validado por `compose config`, **não** no roteamento real. *Modo de falha:* prioridade/regex errada faz o catch-all do storefront engolir `app.`/`api.`/`adminer.`.
 - [ ] **Lint/test do storefront nos gates:** o hook biome do `.pre-commit` é só `^frontend-dashboard/`; o storefront não tem lint/test no pre-commit nem job de CI — plugar quando tiver código real (`P3-SF-02`).
-- [ ] **Pipeline da imagem do storefront:** `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push da imagem (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 6/7.
+- [ ] **Pipeline da imagem do storefront:** `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push da imagem (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 8/9.
 - [ ] **Dockerfile do storefront é single-stage** (não-standalone) — otimizar p/ Next standalone depois.
 - [x] **Refs `frontend/` em docs de tasks concluídas (P0/P1/P2)** varridas p/ `frontend-dashboard/` — mantido `frontend/` só onde o texto descreve o próprio mapeamento/rename (`P1-DASH-01` linhas 25/58 e esta task).
 - [ ] **`bun.lock`:** confirmar/regerar com o `bun` do usuário antes de commitar (foi via `oven/bun:1` 1.3.14, deve bater).

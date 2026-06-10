@@ -19,7 +19,7 @@ Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, 
 - **E2E (Playwright):** `docker compose run --rm playwright bunx playwright test` — sobe o Vite **dev** na porta **`5180`** (= painel, casando com `FRONTEND_HOST` + `BACKEND_CORS_ORIGINS`) contra o `backend`. **Rodar local antes de dar por pronto:** o que falha no CI tem que falhar aqui primeiro — `tsc`/`vitest` verdes **não** cobrem o e2e.
 
 ## Roadmap
-8 fases sequenciais; **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
+10 fases sequenciais (0–9); **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
 
 ## Disciplina (sempre)
 - **Modos de falha / edge cases viram follow-up na hora** — ao escrever o caminho feliz, registrar o que acontece se falhar / for grande demais / chegar fora de ordem (na task **e** no README da fase). Nunca deixar uma falha sem rastro.

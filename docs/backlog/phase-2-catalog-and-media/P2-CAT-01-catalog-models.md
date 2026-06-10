@@ -21,7 +21,7 @@ Base de dados do catálogo, **isolada por loja** (`store_id` + soft delete), com
 
 ## Escopo (o que ENTRA)
 Modelos em `app/modules/catalog/models.py` (todos com `store_id` + mixins; enums em `enums.py`):
-- `catalog_products`: `store_id`, `slug` (único por loja quando ativo), `name`, `description`, `status` (`draft|published|archived`), preço (`price_amount_minor` + `price_currency`, INV-G1/D4), `is_featured`. *(Produto com imagem; o campo `type` (3D) entra na Fase 5.)*
+- `catalog_products`: `store_id`, `slug` (único por loja quando ativo), `name`, `description`, `status` (`draft|published|archived`), preço (`price_amount_minor` + `price_currency`, INV-G1/D4), `is_featured`. *(Produto com imagem; o campo `type` (3D) entra na Fase 7.)*
 - `catalog_product_variants`: `store_id`, `product_id`, atributos (ex.: tamanho/cor), `price_override_amount_minor?`, `status`.
 - `catalog_product_images`: `store_id`, `product_id`, `media_file_id`, `position`.
 - `catalog_categories`: `store_id`, `slug` (único por loja quando ativo), `name`.
@@ -61,7 +61,7 @@ Modelos em `app/modules/catalog/models.py` (todos com `store_id` + mixins; enums
 - ✅ **Testes** `tests/integration/test_catalog_models.py` (defaults, slug único por loja, cross-store, soft-delete, FK de `store_id`, variante/estoque).
 
 ## Notas / Reconciliações
-- **Só imagem (sem 3D) nesta fase.** O `type` (`image` / `image_3d` / `image_3d_customizable`) e o vínculo a modelo 3D entram na **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)** (lojista gera o 3D via API 3rd-party) — ver doc [22](../../22_product_customization_3d.md). Por enquanto a tabela não tem `type`.
+- **Só imagem (sem 3D) nesta fase.** O `type` (`image` / `image_3d` / `image_3d_customizable`) e o vínculo a modelo 3D entram na **[Fase 7 — Produtos 3D](../phase-7-3d-products.md)** (lojista gera o 3D via API 3rd-party) — ver doc [22](../../22_product_customization_3d.md). Por enquanto a tabela não tem `type`.
 - **`StoreScopedMixin` carrega a FK** (`foreign_key="store_stores.id"`) e o catálogo o usa. `store_settings`/`store_members`/`domain_hosts` mantêm FK explícita (uma é `unique`).
 - **`catalog_product_images.media_file_id`** é coluna indexada **sem FK** aqui; a FK → `media_files` entra na `P2-MEDIA-02` (tabela criada lá).
 - Preço como `Money` (amount_minor + currency, INV-G1) — moeda default herdada da loja na criação (decisão de `P2-CAT-02`).

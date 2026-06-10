@@ -28,7 +28,7 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 - Acesso a recurso por `store_id + id` (`get_store_scoped`). Incluir router no `api/router.py`. Regenerar client OpenAPI.
 
 ## Fora de escopo (o que NÃO entra)
-- Vincular produto a modelo 3D / marcar personalizável → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)**. Telas → `P2-FE-01`.
+- Vincular produto a modelo 3D / marcar personalizável → **[Fase 7 — Produtos 3D](../phase-7-3d-products.md)**. Telas → `P2-FE-01`.
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/catalog/services.py`/`repositories.py`/`routes.py`/`schemas.py` (preencher).

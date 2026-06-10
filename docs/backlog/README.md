@@ -2,11 +2,11 @@
 
 Este diretório contém o **backlog de implementação** da Loja Club, organizado **por fase**, espelhando o [V1 Roadmap](../17_v1_roadmap.md) mas em nível de tarefa.
 
-O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100% local**. A **Fase 5** adiciona produtos **3D** (ainda local). As **Fases 6–7** sobem o sistema **no ar na AWS (EC2)** e cobrem conta do cliente, pagamentos, billing, admin, CI/CD e beta.
+O **admin do SaaS** ([Fase 4](./phase-4-platform-admin.md)) e a **configuração da loja** ([Fase 5](./phase-5-store-configuration.md)) entram **antes do lançamento**. O **MVP utilizável** (vender sem pagamento online) vai até a **[Fase 6](./phase-6-sell-without-payment.md)** e roda **100% local**. A **[Fase 7](./phase-7-3d-products.md)** adiciona produtos **3D** (ainda local). As **Fases 8–9** sobem o sistema **no ar na AWS (EC2)** e cobrem conta do cliente, pagamentos, billing, segurança, CI/CD e beta.
 
-> **Toda a V1 é ambiente de dev.** Fases 0–5 = **dev local**; Fases 6–7 = **dev online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**. Os arquivos usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO). Ver [doc 12](../12_aws_infrastructure_and_deployment.md).
+> **Toda a V1 é ambiente de dev.** Fases 0–7 = **dev local**; Fases 8–9 = **dev online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**. Os arquivos usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO). Ver [doc 12](../12_aws_infrastructure_and_deployment.md).
 
-> **Estrutura:** o **3D/personalização** é a **Fase 5 — Produtos 3D** (o lojista **gera os modelos via API de terceiros**; não há catálogo 3D da plataforma); **conta do cliente + pagamentos/planos** são a **Fase 6**; **ops/produção** a **Fase 7**. Cada fase é um incremento detalhado antes de virar tasks.
+> **Estrutura:** o **admin da plataforma** é a **[Fase 4](./phase-4-platform-admin.md)** (puxado pra antes do lançamento — cadastra templates + CDN + preview); a **configuração da loja** (lojista personaliza o template, schema-driven) é a **[Fase 5](./phase-5-store-configuration.md)**; o **3D/personalização** é a **[Fase 7](./phase-7-3d-products.md)** (o lojista **gera os modelos via API de terceiros**; não há catálogo 3D da plataforma); **conta do cliente + pagamentos/planos** são a **[Fase 8](./phase-8-customer-account-and-payments.md)**; **segurança/ops/CI-CD/beta** a **[Fase 9](./phase-9-platform-ops-and-production.md)**. Cada fase é um incremento detalhado antes de virar tasks.
 
 ## Arquivos
 
@@ -16,12 +16,14 @@ O **MVP utilizável** (sem pagamento online) vai até a **Fase 4** e roda **100%
 | 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
 | 2 | [phase-2-catalog-and-media.md](./phase-2-catalog-and-media.md) · [tasks](./phase-2-catalog-and-media/README.md) | 5 | Catálogo (imagem) + mídia/S3 — **decomposta em tasks** |
 | 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) · [tasks](./phase-3-storefront-and-layouts/README.md) | 7–8 | Storefront Next.js, layouts (sem editor 3D) — **decomposta em tasks** |
-| 4 | [phase-4-sell-without-payment.md](./phase-4-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
-| 5 | [phase-5-3d-products.md](./phase-5-3d-products.md) | 6 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
-| 6 | [phase-6-customer-account-and-payments.md](./phase-6-customer-account-and-payments.md) | 15–18 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
-| 7 | [phase-7-platform-ops-and-production.md](./phase-7-platform-ops-and-production.md) | 19–22 | Admin da plataforma, segurança/observabilidade, **CI/CD**, beta |
+| 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) | (admin) | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **cadastrar templates** (CDN + preview navegável) — **antes do lançamento** |
+| 5 | [phase-5-store-configuration.md](./phase-5-store-configuration.md) | (config) | **Configuração da loja**: lojista personaliza o template (**schema-driven**) + preview navegável (task `P3-TPL-04`, schema-driven) |
+| 6 | [phase-6-sell-without-payment.md](./phase-6-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
+| 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 6 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
+| 8 | [phase-8-customer-account-and-payments.md](./phase-8-customer-account-and-payments.md) | 15–18 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
+| 9 | [phase-9-platform-ops-and-production.md](./phase-9-platform-ops-and-production.md) | 20–22 | Segurança/observabilidade, **CI/CD**, beta (o admin é a Fase 4) |
 
-> **Fim do MVP (dev local):** Fase 4. **V1 completa (dev online na AWS):** Fase 7.
+> **Fim do MVP (dev local):** Fase 6. **V1 completa (dev online na AWS):** Fase 9.
 
 ## Granularidade: fases, etapas e tasks
 
@@ -35,7 +37,7 @@ Fase     → arquivo .md genérico (visão geral / trilha) — sempre presente
 - Cada **task** é um arquivo com descrição, dependências (`depends_on`), docs de referência, **Escopo / Fora de escopo**, arquivos a alterar e **DoD**. Modelo em [`_task-template.md`](./_task-template.md).
 - O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
 - **Follow-ups / débitos técnicos:** cada README de fase tem uma seção **"Follow-ups / débitos técnicos"** (checkboxes). Toda nota de task que diga "fica para depois" **também** entra lá (ou vira task) — não fica só em prosa.
-- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0, 1, 2 e 3** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 4–7 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
+- **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0, 1, 2 e 3** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 4–9 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
 
 ## Fundações & Gargalos (leitura obrigatória)
 
@@ -84,8 +86,8 @@ Estas decisões alinham o template aos docs e evitam divergência:
 5. **Soft delete** para todo registro de negócio; nunca hard delete (doc [07](../07_database_strategy.md)/[14](../14_security_strategy.md)).
 6. **Toda query comercial filtra por `store_id`** (doc [06](../06_multitenancy_and_domains.md)/[14](../14_security_strategy.md)).
 7. **APIs do painel** sob `/api/v1/stores/{store_id}/...`; **APIs públicas do storefront** resolvem a loja pelo header `Host` (doc [06](../06_multitenancy_and_domains.md)/[08](../08_modules_and_permissions.md)).
-8. **Pagamento fica para a Fase 6.** Até lá, checkout cria pedido `pending_payment` e o pagamento é combinado fora da plataforma (doc [17](../17_v1_roadmap.md)).
-9. **Ambiente:** toda a V1 é **dev**. Fases 0–4 rodam **local** (Docker Compose); Fases 6–7 sobem **no ar na AWS (EC2)**. **Storage:** AWS S3 + CloudFront **reais desde o dev local** (sem MinIO), via boto3. Produção (ECS/Fargate) é **pós-V1**. Doc [12](../12_aws_infrastructure_and_deployment.md).
+8. **Pagamento fica para a Fase 8.** Até lá, checkout cria pedido `pending_payment` e o pagamento é combinado fora da plataforma (doc [17](../17_v1_roadmap.md)).
+9. **Ambiente:** toda a V1 é **dev**. Fases 0–7 rodam **local** (Docker Compose); Fases 8–9 sobem **no ar na AWS (EC2)**. **Storage:** AWS S3 + CloudFront **reais desde o dev local** (sem MinIO), via boto3. Produção (ECS/Fargate) é **pós-V1**. Doc [12](../12_aws_infrastructure_and_deployment.md).
 10. **Global desde a base — nada assume Brasil.** Dinheiro é sempre `(valor + moeda ISO 4217)` (expoente não fixo em 2); telefone **E.164 para qualquer país** (lib, sem `+55` hard-coded); endereço **país-aware** (ISO 3166-1); `currency`/`locale` por loja e por cliente; timestamps em **UTC**. Base em `P0-MOD-05`; convenções completas no doc de Fundações.
 11. **Clients de serviço externo abrem uma vez e são reusados** (DB, Redis, S3, pool do arq, HTTP `httpx`): **sync** = singleton de módulo em `app/core/*`; **async** (arq, httpx) = criados lazy por accessor e **fechados no lifespan** (`app/main.py`). Nunca abrir/fechar por chamada; por requisição usa-se só uma *unidade de trabalho*. Detalhe: **INV-F6** nas Fundações.
 

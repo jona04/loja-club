@@ -1,40 +1,15 @@
-# Fase 7 — Operação da plataforma, CI/CD e beta
+# Fase 9 — Operação da plataforma, CI/CD e beta
 
-> Roadmap: Etapas 19–22. Objetivo: equipe Loja Club opera a plataforma (admin), o ambiente **dev online na AWS** fica seguro e observável, o deploy vira **CI/CD automatizado** e a V1 é validada em **beta** com lojas reais. (Produção robusta com ECS/Fargate é **pós-V1** — ver o fim deste arquivo.)
+> Roadmap: Etapas 20–22. Objetivo: o ambiente **dev online na AWS** fica seguro e observável, o deploy vira **CI/CD automatizado** e a V1 é validada em **beta** com lojas reais. (O **admin da plataforma** é a **[Fase 4](./phase-4-platform-admin.md)**; produção robusta com ECS/Fargate é **pós-V1** — ver o fim deste arquivo.)
 
 Docs de referência: [05](../05_frontend_architecture.md), [08](../08_modules_and_permissions.md), [09](../09_merchant_dashboard.md), [22](../22_product_customization_3d.md), [14](../14_security_strategy.md), [15](../15_observability_and_operations.md), [12](../12_aws_infrastructure_and_deployment.md), [13](../13_performance_cache_and_cdn.md), [19](../19_legal_and_compliance_todo.md), [16](../16_testing_strategy.md), [17](../17_v1_roadmap.md).
 
 ## Definition of Done da fase (= Critério de V1 completa)
 
-- Admin opera lojas, planos, webhooks e auditoria em `admin.loja.club` (a integração da API de geração 3D é Fase 5).
+- O **admin da plataforma** ([Fase 4](./phase-4-platform-admin.md)) está no ar em `admin.loja.club` operando lojas/planos/webhooks/auditoria.
 - Segurança e observabilidade mínimas no ar (auditoria, Sentry, rate limit, URLs assinadas, backups, alertas).
 - **CI/CD** faz deploy automatizado para o **EC2 (dev online)**.
 - Beta validado com lojistas reais, incluindo pagamento e split.
-
----
-
-## Etapa 19 — Admin da plataforma (`frontend-admin` + módulo `platform_admin`)
-
-Doc [05](../05_frontend_architecture.md), [08](../08_modules_and_permissions.md), [09](../09_merchant_dashboard.md), [22](../22_product_customization_3d.md).
-
-### Projeto `frontend-admin` — NOVO
-- [ ] Criar `frontend-admin/` (React/Vite, separado do dashboard), em `admin.loja.club`. Pode reutilizar componentes/cliente OpenAPI e padrões visuais, mas com build/rotas/deploy/permissões próprios e **indicação visual clara de ambiente interno**. Doc [05](../05_frontend_architecture.md)/[21](../21_design_system_todo.md).
-- [ ] Traefik/Route 53: host `admin.${DOMAIN}` no ambiente dev online (EC2).
-
-### Módulo `platform_admin` + permissões globais
-- [ ] Permissões `platform.*` e papéis globais (`platform_owner|platform_ops|platform_finance|platform_support|platform_catalog`) conforme doc [08](../08_modules_and_permissions.md).
-- [ ] `platform_admin_roles` (doc [07](../07_database_strategy.md)) e **migração de `account_users.is_superuser`** (template/Fase 1) para o modelo de papéis globais. Doc [08](../08_modules_and_permissions.md).
-
-### Endpoints/telas (doc [09](../09_merchant_dashboard.md)/[20](../20_api_contracts_todo.md))
-- [ ] Listar lojas; detalhe; **bloquear/desbloquear**; ver usuários; pedidos por loja; volume transacionado; webhooks com erro; ver comissões; auditoria.
-- [ ] **Gerenciar planos** (consome `billing`).
-- [ ] **Integração da API de geração 3D** (Fase 5): configurar provedor/chaves/limites de uso e moderar conteúdo. **Não há biblioteca global** — os modelos 3D são gerados pelo **lojista** (por loja). Doc [22](../22_product_customization_3d.md) / [Fase 5](./phase-5-3d-products.md).
-- [ ] **Suporte com impersonation** + auditoria obrigatória do acesso. Doc [08](../08_modules_and_permissions.md)/[14](../14_security_strategy.md)/[15](../15_observability_and_operations.md).
-
-### Testes (doc [16](../16_testing_strategy.md))
-- [ ] permissões globais respeitadas; impersonation gera auditoria; admin não vaza dados entre escopos indevidos.
-
-**Reconciliação:** o template só tem o frontend do painel. O admin é projeto novo (doc [05](../05_frontend_architecture.md)). O `is_superuser` é substituído pelos papéis globais (anotado desde a Fase 1).
 
 ---
 
@@ -54,7 +29,7 @@ Doc [14](../14_security_strategy.md), [15](../15_observability_and_operations.md
 
 ### Hardening
 - [ ] **Rate limit** em login, recuperação de senha, checkout, criação de conta, códigos de cliente, APIs públicas sensíveis. Doc [14](../14_security_strategy.md).
-- [ ] **Validação de webhooks** (assinatura/origem/idempotência) endurecida (consolida Fase 6). Doc [14](../14_security_strategy.md).
+- [ ] **Validação de webhooks** (assinatura/origem/idempotência) endurecida (consolida Fase 8). Doc [14](../14_security_strategy.md).
 - [ ] **Segredos** em SSM/env seguro; nada no código. Doc [14](../14_security_strategy.md).
 - [ ] **Uploads/arte privada**: validação + **URLs assinadas** para arquivos privados; separar por `store_id`. Doc [14](../14_security_strategy.md)/[22](../22_product_customization_3d.md).
 - [ ] **Backups** automáticos do RDS + **plano de restauração testado**. Doc [14](../14_security_strategy.md).

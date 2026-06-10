@@ -30,7 +30,7 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
 ## Fora de escopo (o que NÃO entra)
 - Serviço/rotas (criar/listar/publicar) → `P1-STORE-02`.
 - `store_members`/papéis → `P1-PERM-01`; `domain_hosts` → `P1-DOM-01`.
-- `currency`/`locale` do **cliente** → Fase 4.
+- `currency`/`locale` do **cliente** → Fase 6.
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/stores/models.py` (criar) — `Store`/`StoreSettings` + schemas públicos.

@@ -28,7 +28,7 @@ Pipeline de imagem do doc [13](../../13_performance_cache_and_cdn.md): valida �
 - **Dep:** adicionar **Pillow** (decisão de lib de imagem → registrar nas Fundações).
 
 ## Fora de escopo (o que NÃO entra)
-- Vincular imagem a produto → `P2-CAT-02`. Arte privada do cliente → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)** (reusa o `storage`, com presigned).
+- Vincular imagem a produto → `P2-CAT-02`. Arte privada do cliente → **[Fase 7 — Produtos 3D](../phase-7-3d-products.md)** (reusa o `storage`, com presigned).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/media/models.py`/`enums.py`/`schemas.py`/`services.py`/`routes.py` (preencher).
@@ -62,7 +62,7 @@ Pipeline de imagem do doc [13](../../13_performance_cache_and_cdn.md): valida �
 - **Lib de imagem = Pillow** (DEC-11). Variantes mantêm o formato do original (aspect-ratio preservado por `thumbnail()`).
 - **Permissão da rota de upload:** reusa **`catalog.product.update`** (consumidor principal são imagens de produto); não há permissão `media.*` dedicada. Se surgir upload fora do catálogo (ex.: logo da loja), avaliar uma permissão própria.
 - **FK `media_file_id`:** criada aqui (a `P2-CAT-01` deixou a coluna indexada sem FK porque `media_files` não existia ainda).
-- **Originais/variantes são públicos via CDN**; bucket privado (INV-F2). Arte privada do cliente (presigned) é da Fase 5.
+- **Originais/variantes são públicos via CDN**; bucket privado (INV-F2). Arte privada do cliente (presigned) é da Fase 7.
 
 ## Follow-ups
 - [ ] **Falha no `enqueue` após o original já no S3** (ex.: Redis fora): o `media_files` fica preso em `processing` sem job. Falta reconciliação/retry de órfãos (varrer `processing` antigos → re-enfileirar ou marcar `failed`). Origem: P2-MEDIA-02.

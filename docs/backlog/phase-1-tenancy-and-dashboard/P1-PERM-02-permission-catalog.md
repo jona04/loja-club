@@ -27,8 +27,8 @@ O painel é dividido em módulos com **permissões granulares**; as regras são 
 
 ## Fora de escopo (o que NÃO entra)
 - Enforcement na rota (`require_permission`) → `P1-PERM-03`.
-- Permissões globais da plataforma (`platform.*`) e papéis globais → Fase 7.
-- Camada de **plano** (plano permite o recurso) → Fase 6 (gancho em `P1-PERM-03`).
+- Permissões globais da plataforma (`platform.*`) e papéis globais → Fase 4.
+- Camada de **plano** (plano permite o recurso) → Fase 8 (gancho em `P1-PERM-03`).
 - Overrides por membro (`store_member_permissions`, opcional no doc [07](../../07_database_strategy.md)) → fora do MVP.
 
 ## Arquivos a criar/alterar

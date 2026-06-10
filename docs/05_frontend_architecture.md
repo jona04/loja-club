@@ -109,7 +109,7 @@ Responsabilidades:
 - gerenciar planos;
 - ver webhooks com erro;
 - gerenciar templates/layouts;
-- configurar a integração da API de geração 3D (Fase 5);
+- configurar a integração da API de geração 3D (Fase 7);
 - consultar logs de auditoria;
 - suporte ao lojista.
 

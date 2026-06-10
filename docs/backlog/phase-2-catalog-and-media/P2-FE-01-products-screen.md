@@ -27,7 +27,7 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - Gating de UI: salvar/publicar exigem a permissão (ex.: sem `catalog.product.update` vê mas não salva). Regenerar client se preciso.
 
 ## Fora de escopo (o que NÃO entra)
-- Personalização 3D no produto → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)**. Storefront → Fase 3.
+- Personalização 3D no produto → **[Fase 7 — Produtos 3D](../phase-7-3d-products.md)**. Storefront → Fase 3.
 
 ## Arquivos a criar/alterar
 - `frontend-dashboard/src/` — rota/tela de Produtos, componente de upload, hooks; `lib/menu.ts` (módulo Produtos).
