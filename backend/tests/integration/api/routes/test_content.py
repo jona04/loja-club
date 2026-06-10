@@ -23,18 +23,18 @@ def test_list_templates_and_apply(
 
     templates = client.get(f"{base}/templates", headers=h)
     assert templates.status_code == 200
-    assert {t["id"] for t in templates.json()} >= {"classic", "modern"}
+    assert {t["id"] for t in templates.json()} >= {"aurora", "bazar", "studio"}
 
-    # Default settings are created on first read, with the classic template.
+    # Default settings are created on first read, with the default template.
     got = client.get(base, headers=h)
     assert got.status_code == 200
-    assert got.json()["active_template_id"] == "classic"
+    assert got.json()["active_template_id"] == "aurora"
 
     # Applying a template persists it AND drops the storefront read cache.
     cache_set(f"{a.id}:theme", "stale", prefix="store")
-    applied = client.patch(base, headers=h, json={"active_template_id": "modern"})
+    applied = client.patch(base, headers=h, json={"active_template_id": "bazar"})
     assert applied.status_code == 200
-    assert applied.json()["active_template_id"] == "modern"
+    assert applied.json()["active_template_id"] == "bazar"
     assert cache_get(f"{a.id}:theme", prefix="store") is None
 
 
@@ -67,13 +67,13 @@ def test_preview_does_not_persist(
 ) -> None:
     a = two_stores.store_a
     h = two_stores.owner_a_headers
-    preview = client.get(f"{BASE}/{a.id}/layout/preview/modern", headers=h)
+    preview = client.get(f"{BASE}/{a.id}/layout/preview/bazar", headers=h)
     assert preview.status_code == 200
-    assert preview.json()["active_template_id"] == "modern"
+    assert preview.json()["active_template_id"] == "bazar"
     # The active template stays the default after a preview.
     assert (
         client.get(f"{BASE}/{a.id}/layout", headers=h).json()["active_template_id"]
-        == "classic"
+        == "aurora"
     )
 
 

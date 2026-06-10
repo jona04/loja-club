@@ -45,16 +45,25 @@ def get_store_theme_settings(
 
 
 # The storefront templates shipped in V1 (doc 10). Authoritative for the seed.
+# ``preview_image_url`` is served by the dashboard (hardcoded; CloudFront later).
 CANONICAL_TEMPLATES: list[dict[str, str]] = [
     {
-        "id": "classic",
-        "name": "Clássico",
-        "description": "Layout tradicional, com foco no catálogo.",
+        "id": "aurora",
+        "name": "Aurora",
+        "description": "Premium minimalista: home curada com destaques.",
+        "preview_image_url": "/templates/aurora_preview.png",
     },
     {
-        "id": "modern",
-        "name": "Moderno",
-        "description": "Layout amplo, com destaque visual.",
+        "id": "bazar",
+        "name": "Bazar",
+        "description": "Vibrante marketplace: home por seções de categoria.",
+        "preview_image_url": "/templates/bazar_preview.png",
+    },
+    {
+        "id": "studio",
+        "name": "Studio",
+        "description": "Catálogo com sidebar de categorias e filtros.",
+        "preview_image_url": "/templates/studio_preview.png",
     },
 ]
 
@@ -62,9 +71,9 @@ CANONICAL_TEMPLATES: list[dict[str, str]] = [
 def seed_content_templates(*, session: Session) -> None:
     """Seed the global storefront theme templates (idempotent).
 
-    Inserts any canonical template (``classic``/``modern``) that is missing;
-    existing rows are left untouched. Safe to run repeatedly — used by prestart
-    and the test fixtures.
+    Inserts any canonical template (``aurora``/``bazar``/``studio``) that is
+    missing; existing rows are left untouched. Safe to run repeatedly — used by
+    prestart and the test fixtures.
 
     Args:
         session: Active database session used to query and seed.
@@ -78,6 +87,7 @@ def seed_content_templates(*, session: Session) -> None:
                     id=template["id"],
                     name=template["name"],
                     description=template["description"],
+                    preview_image_url=template["preview_image_url"],
                 )
             )
             created = True

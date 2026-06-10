@@ -96,7 +96,7 @@ frontend-storefront/
 
 ## Sistema de templates (evolução — `P3-TPL-01`)
 
-> O V1 entrega **2 templates simples** (`classic`/`modern`) por renderização condicional. A [`P3-TPL-01`](backlog/phase-3-storefront-and-layouts/P3-TPL-01-rich-templates-spec.md) eleva isso a um **sistema de templates profissionais** (spec em definição). Direção:
+> O V1 entrega **2 templates simples** (`classic`/`modern`) por renderização condicional. A [`P3-TPL-01`](backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md) eleva isso a um **sistema de templates profissionais** (spec em definição). Direção:
 
 - **Cada template = uma árvore de componentes própria** no `frontend-storefront` (`templates/<nome>/{Home,Category,Product,blocos}`), não só estilo condicional; um **resolver** mapeia `active_template_id` → a árvore.
 - **2–3 templates** bem distintos (carrossel no topo, hero, seções ricas), adaptados de **referências de design** fornecidas.
@@ -104,6 +104,7 @@ frontend-storefront/
 - **Models mais ricos:** carrossel (vários banners ordenados → `content_banners`), seções configuráveis, etc. — reaproveita `content_banners`/`content_menus`/`content_pages`; campos/tabelas novos **a definir** no spec.
 - **Contrato (invariante):** trocar de template **não quebra** o fluxo do cliente — todos consomem o mesmo contrato de dados e levam ao mesmo **fluxo de compra** (Fase 4); e **todos reservam um slot pro editor 3D** (Fase 5).
 - **Telas por template (V1 + Fase 4):** Home · Categoria · Produto · **Checkout single-page** · Confirmação. O **carrinho é um drawer** (mini-carrinho no header), não página separada. Editor 3D (Fase 5) e área do cliente/login/acompanhar pedido (Fase 6) entram depois; **página institucional** reusa o *shell* do template.
+- **Estado (implementado em `P3-TPL-01`):** o storefront tem um **resolver** (`lib/templates.ts`) que mapeia `active_template_id` → árvore de componentes (`templates/<nome>/{Home,Category,Product}`), com **fallback** pro `base` (render legado `classic`/`modern`). **Aurora** portado (navegação: home/categoria/produto + drawer + slot 3D); **Bazar/Studio** caem no `base` até `P3-TPL-02`; checkout/confirmação dos templates = Fase 4.
 
 ## Configuração no banco
 

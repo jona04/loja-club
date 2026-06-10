@@ -57,7 +57,7 @@ def test_home_for_published_store(client: TestClient, db: Session) -> None:
     assert resp.status_code == 200
     body = resp.json()
     assert body["store"]["slug"] == "sf-home"
-    assert body["theme"]["active_template_id"] == "classic"  # default, no row
+    assert body["theme"]["active_template_id"] == "aurora"  # default, no row
     assert any(p["slug"] == "mug" for p in body["featured_products"])
 
 

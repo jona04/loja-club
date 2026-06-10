@@ -4,7 +4,7 @@ title: Arquitetura de templates + Aurora (POC)
 phase: 3
 etapa: "Etapa 8 — Templates no storefront"
 area: TPL
-status: todo
+status: done
 depends_on: [P3-SF-02, P3-FE-02, P3-LOC-01]
 blocks: [P3-TPL-02, P3-TPL-03]
 tests: [unit, e2e]
@@ -58,18 +58,22 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
   - e2e — home/categoria/produto do Aurora renderizam; card→produto navega; drawer abre/fecha.
 
 ## Definition of Done
-- [ ] Resolver + seed: loja com `active_template_id=aurora` renderiza a **árvore do Aurora**; ausente/inválido → **fallback** sem quebrar.
-- [ ] Aurora `home`/`category`/`product` portados (hero/carrossel, faixa de categorias, destaques, galeria, slot 3D), **preço pelo locale da loja**.
-- [ ] **CartDrawer** abre/fecha (estado client; **sem** lógica de carrinho ainda — isso é Fase 4).
-- [ ] Gates verdes: storefront (`next build` + biome) + backend (lint/cobertura) + **e2e local**; docs 10 reconciliado.
-- [ ] **Modos de falha mapeados** (template/preview ausente; banners 0/1/N → estático vs carrossel; loja sem destaques; imagem de produto ausente) → tratados **ou** Follow-up.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Resolver + seed: loja com `active_template_id=aurora` renderiza a **árvore do Aurora** (smoke real: `data-template="aurora"` + Destaques/Ver produtos/Todas as categorias/carrinho); ausente/inválido → **fallback base**.
+- [x] Aurora `home`/`category`/`product` portados (hero, faixa de categorias, destaques, galeria, **slot "Personalizar em 3D"**), **preço pelo locale da loja**.
+- [x] **CartDrawer** (botão no header + drawer) abre/fecha — estado client; **sem** lógica de carrinho (Fase 4).
+- [x] Gates verdes: storefront (`next build` + biome) + backend (lint/cobertura) + **smoke real** da home Aurora. *(e2e Playwright do storefront ainda não existe — follow-up de `P3-SF-02`.)* docs 10 reconciliado.
+- [x] **Modos de falha mapeados:** template ausente/inválido → **fallback base**; banner ausente → fundo `--primary`; sem categorias → strip some; sem destaques → estado vazio. (Carrossel multi-banner = follow-up.)
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - O **spec/contrato** vive no guia [`README.md`](../../design/templates/README.md); esta task é a **implementação**. `content_banners`/`content_menus` (`P3-CONTENT-01`) já existem e são a base de carrossel/navegação.
 - Os designs vêm do uxpilot via **Tailwind CDN**; no porting convertem-se pra **Tailwind v4** do projeto + tema (`--primary`, fontes) da loja.
+- **Implementação:** resolver em `frontend-storefront/lib/templates.ts` (fallback `base`); `templates/{base,aurora}/{Home,Category,Product}` (árvores); `components/CartDrawer.tsx` (client). As páginas (`app/**`) ficaram **finas** (fetch → `resolveTemplate` → render). `base` = render legado (classic/modern); **bazar/studio caem no base** até `P3-TPL-02`. Seed `aurora/bazar/studio` em `content_theme_templates`; tbrindes setada em `aurora` no dev.
 
 ## Follow-ups
 - [ ] **Checkout + confirmação do Aurora** (funcionais) — *Quando:* **Fase 4** (carrinho/pedido). Designs prontos em `docs/design/templates/aurora/`. → README.
 - [ ] **Bazar + Studio** (navegação) + dados de bloco — rastreado em `P3-TPL-02`. → README.
 - [ ] **Painel: seletor de template com preview** — rastreado em `P3-TPL-03`. → README.
+- [ ] **Carrossel multi-banner na home** — *Quando:* quando a API pública expor a lista de banners (hoje o hero usa `theme.banner_image_url` único). → README.
+- [ ] **Imagens de categoria** — *Quando:* quando `Category` tiver imagem (hoje a faixa de categorias usa a inicial do nome). → README.
+- [ ] **`preview_image_url` dos templates** — *Quando:* quando houver os `print.png` (hoje seedam sem imagem de preview). → README/`P3-TPL-03`.

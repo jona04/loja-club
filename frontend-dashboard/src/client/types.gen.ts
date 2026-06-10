@@ -203,6 +203,7 @@ export type ProductCreate = {
     price_amount_minor: number;
     price_currency?: (string | null);
     is_featured?: boolean;
+    category_ids: Array<(string)>;
 };
 
 /**

@@ -77,11 +77,13 @@ export function ProductsScreen() {
   const [editing, setEditing] = useState<ProductPublic | null>(null)
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(20)
+  const [newCategory, setNewCategory] = useState("")
   const [form, setForm] = useState({
     name: "",
     price: "",
     description: "",
     featured: false,
+    categoryIds: [] as string[],
   })
 
   const storeId = activeStore?.id ?? ""
@@ -101,8 +103,34 @@ export function ProductsScreen() {
     enabled: storeId !== "" && canView,
   })
 
+  const categoriesQuery = useQuery({
+    queryKey: ["categories", storeId],
+    queryFn: () => CatalogService.listCategories({ storeId, limit: 100 }),
+    enabled: storeId !== "" && canView,
+  })
+  const categories = categoriesQuery.data?.data ?? []
+
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ["products", storeId] })
+
+  const toggleCategory = (id: string) =>
+    setForm((f) => ({
+      ...f,
+      categoryIds: f.categoryIds.includes(id)
+        ? f.categoryIds.filter((c) => c !== id)
+        : [...f.categoryIds, id],
+    }))
+
+  const createCategoryMutation = useMutation({
+    mutationFn: (name: string) =>
+      CatalogService.createCategory({ storeId, requestBody: { name } }),
+    onSuccess: (cat) => {
+      queryClient.invalidateQueries({ queryKey: ["categories", storeId] })
+      setForm((f) => ({ ...f, categoryIds: [...f.categoryIds, cat.id] }))
+      setNewCategory("")
+    },
+    onError: handleError.bind(showErrorToast),
+  })
 
   const createMutation = useMutation({
     mutationFn: () =>
@@ -113,13 +141,20 @@ export function ProductsScreen() {
           description: form.description || null,
           price_amount_minor: toMinor(form.price),
           is_featured: form.featured,
+          category_ids: form.categoryIds,
         },
       }),
     onSuccess: (created) => {
       showSuccessToast("Produto criado")
       invalidate()
       setCreateOpen(false)
-      setForm({ name: "", price: "", description: "", featured: false })
+      setForm({
+        name: "",
+        price: "",
+        description: "",
+        featured: false,
+        categoryIds: [],
+      })
       // Continue straight into the product's details (image, stock) — these
       // need the product to exist first (FK), so they live in the edit dialog.
       setEditing(created)
@@ -206,6 +241,50 @@ export function ProductsScreen() {
                   }
                 />
               </Field>
+              <Field label="Categorias">
+                <div className="space-y-2">
+                  {categories.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((cat) => {
+                        const selected = form.categoryIds.includes(cat.id)
+                        return (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            onClick={() => toggleCategory(cat.id)}
+                            className={`rounded-full border px-3 py-1 text-sm transition ${selected ? "border-primary bg-primary text-primary-foreground" : "border-input hover:bg-accent"}`}
+                          >
+                            {cat.name}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      Nenhuma categoria ainda — crie a primeira abaixo.
+                    </p>
+                  )}
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nova categoria"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={
+                        !newCategory.trim() || createCategoryMutation.isPending
+                      }
+                      onClick={() =>
+                        createCategoryMutation.mutate(newCategory.trim())
+                      }
+                    >
+                      Adicionar
+                    </Button>
+                  </div>
+                </div>
+              </Field>
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="create-featured"
@@ -220,7 +299,11 @@ export function ProductsScreen() {
             <DialogFooter>
               <Button
                 onClick={() => createMutation.mutate()}
-                disabled={!form.name.trim() || createMutation.isPending}
+                disabled={
+                  !form.name.trim() ||
+                  form.categoryIds.length === 0 ||
+                  createMutation.isPending
+                }
               >
                 Criar
               </Button>

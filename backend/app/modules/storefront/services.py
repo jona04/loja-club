@@ -32,7 +32,7 @@ from app.modules.stores.models import Store, StoreSettings
 
 # Storefront read caches live ~5 min (doc 13); panel writes invalidate eagerly.
 _TTL = 300
-DEFAULT_TEMPLATE_ID = "classic"
+DEFAULT_TEMPLATE_ID = "aurora"
 _FEATURED_LIMIT = 12
 _CATEGORIES_ADAPTER = TypeAdapter(list[CategoryPublic])
 

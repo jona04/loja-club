@@ -1,6 +1,6 @@
 ---
 id: P3-TPL-03
-title: Painel — seletor de template com preview
+title: Painel — Layout da loja (template + thumb, banner, preview)
 phase: 3
 etapa: "Etapa 8 — Templates no storefront"
 area: TPL
@@ -10,19 +10,25 @@ blocks: []
 tests: [e2e]
 ---
 
-# P3-TPL-03 — Painel: seletor de template com preview
+# P3-TPL-03 — Painel: Layout da loja (template + banner + preview)
 
 ## Contexto
 A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates com imagem de preview**: o lojista escolhe o template ativo **pela imagem** (sem preview ao vivo ainda) e a vitrine passa a renderizar o escolhido. Depende do registro `content_theme_templates` (com `preview_image_url`) criado em `P3-TPL-01`.
 
 ## Docs de referência
 - [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (§"Layout da loja")
-- [`P3-FE-02`](./P3-FE-02-layout-screen.md) (tela atual) · [`P3-TPL-01`](./P3-TPL-01-rich-templates-spec.md) (registry/`active_template_id`)
+- [`P3-FE-02`](./P3-FE-02-layout-screen.md) (tela atual) · [`P3-TPL-01`](./P3-TPL-01-template-architecture-aurora.md) (registry/`active_template_id`)
+
+> **Princípio:** todo recurso que o template usa (banner/hero, destaques, …) precisa ter **como o lojista usar/editar** no painel. Hoje há funcionalidades no template **sem UI** pra alimentá-las.
 
 ## Escopo (o que ENTRA)
-- **Lista de templates** (de `content_theme_templates`) com **`preview_image_url`** + nome/descrição, na tela "Layout da Loja".
+- **Lista de templates** (de `content_theme_templates`) com **NOME + THUMBNAIL** (a `preview_image_url`) na tela "Layout da Loja" — hoje mostra **só o nome**. As imagens já estão **seedadas** (`/templates/<id>_preview.png`) e **servidas hardcoded** do `frontend-dashboard/public/templates/` (subir pro CloudFront = follow-up).
 - **Selecionar** um template → grava `active_template_id` da loja (endpoint existente do `P3-FE-02` ou novo).
 - **Indicar o ativo** (estado selecionado) e refletir na vitrine.
+- **Upload da imagem do banner/hero** da home: o lojista **sobe a imagem** pela tela "Layout da Loja" (S3 + CloudFront, como as imagens de produto/`media`), gravando em `banner_image_url`. Hoje o template tem hero/banner mas **não há como enviar a imagem**.
+- **Corrigir o botão "Preview"** da tela de Layout (hoje **não funciona**).
+- **Tornar editável o conteúdo hoje fixo/lorem** do template: subtítulo do hero, **barra de anúncio**, seção editorial, trust indicators, **páginas institucionais** (`/institucional/*` → `content_pages`), contato do footer e subtítulo do card. (Hoje hardcoded/lorem no Aurora — `P3-TPL-01`.)
+- **Aplicar o tema da loja** (cores/fonte: `theme.primary_color` etc.) nos templates — hoje o Aurora usa a **paleta fixa** do template.
 
 ## Fora de escopo (o que NÃO entra)
 - **Preview ao vivo** (render real da loja com o template) → futuro.
@@ -49,13 +55,16 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 ## Definition of Done
 - [ ] Painel lista os templates **com imagem de preview**; selecionar **grava** o `active_template_id`; o ativo fica indicado.
 - [ ] A **vitrine reflete** o template escolhido.
+- [ ] **Banner** enviável (S3) + **preview** funcionando; o conteúdo hoje fixo/lorem do template (anúncio, editorial, institucional, etc.) tem **campos no painel**; o **tema da loja** (cores) reflete no template.
 - [ ] Gates verdes (dashboard `tsc`/biome/`vitest` + **e2e local**) + docs 09 reconciliado.
 - [ ] **Modos de falha mapeados** (`preview_image_url` ausente → placeholder; lista vazia; gravação falha) → tratados **ou** Follow-up.
 - [ ] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Reaproveita o endpoint de seleção de template do `P3-FE-02` quando existir; senão, cria um mínimo.
+- A task **cresceu** (picker + banner + preview + tornar todo o conteúdo editável + tema): ao fechar o spec, **provável dividir** — ex.: `P3-TPL-03a` (picker + banner + preview) e `P3-TPL-03b` (editor do conteúdo do template + tema).
 
 ## Follow-ups
 - [ ] **Preview ao vivo no painel** — *Quando:* pós-V1 (hoje só a imagem). → README.
 - [ ] **Admin de cadastro de templates** — *Quando:* Fase 7. → README.
+- [ ] **Previews no CloudFront** — *Quando:* antes de produção (hoje os PNGs vêm do `public/` do dashboard; subir pro S3/CloudFront + `preview_image_url` com URL real). → README.

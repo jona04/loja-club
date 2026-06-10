@@ -1,9 +1,17 @@
-import { ProductCard } from "@/components/ProductCard"
-import { StoreShell } from "@/components/StoreShell"
+import type { Category } from "@/lib/api"
 import { getCategories, getHome, listProducts } from "@/lib/api"
+import { resolveTemplate } from "@/lib/templates"
+
+const ALL_PRODUCTS: Category = {
+  id: "all",
+  name: "Todos os produtos",
+  slug: "",
+  description: null,
+}
 
 /**
- * Full product listing for the host's store.
+ * Full product listing: renders the active template's Category with a synthetic
+ * "all products" category (`P3-TPL-01`).
  *
  * @returns The products page.
  */
@@ -13,31 +21,13 @@ export default async function ProductsPage() {
     getCategories(),
     listProducts(),
   ])
+  const Template = resolveTemplate(home.theme.active_template_id)
   return (
-    <StoreShell store={home.store} theme={home.theme} categories={categories}>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-          Produtos
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          {products.count} {products.count === 1 ? "produto" : "produtos"}
-        </p>
-      </div>
-      {products.data.length ? (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
-          {products.data.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              locale={home.store.locale}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-dashed border-gray-200 py-16 text-center">
-          <p className="text-gray-500">Nenhum produto disponível.</p>
-        </div>
-      )}
-    </StoreShell>
+    <Template.Category
+      home={home}
+      categories={categories}
+      category={ALL_PRODUCTS}
+      products={products}
+    />
   )
 }

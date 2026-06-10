@@ -16,7 +16,7 @@ from app.modules.content import repositories
 from app.modules.content.models import ContentStoreThemeSettings, ContentThemeTemplate
 from app.modules.content.schemas import StoreThemeSettingsPublic, ThemeUpdate
 
-DEFAULT_TEMPLATE_ID = "classic"
+DEFAULT_TEMPLATE_ID = "aurora"
 _CACHE_SUFFIXES = ("theme", "home", "settings")
 
 

@@ -719,10 +719,19 @@ export const ProductCreateSchema = {
             type: 'boolean',
             title: 'Is Featured',
             default: false
+        },
+        category_ids: {
+            items: {
+                type: 'string',
+                format: 'uuid'
+            },
+            type: 'array',
+            minItems: 1,
+            title: 'Category Ids'
         }
     },
     type: 'object',
-    required: ['name', 'price_amount_minor'],
+    required: ['name', 'price_amount_minor', 'category_ids'],
     title: 'ProductCreate',
     description: 'Fields accepted when creating a product (status starts as ``draft``).'
 } as const;

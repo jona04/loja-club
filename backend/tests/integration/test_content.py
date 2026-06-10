@@ -28,9 +28,9 @@ def _store(db: Session, slug: str) -> Store:
     return store
 
 
-def test_seed_creates_classic_and_modern(db: Session) -> None:
+def test_seed_creates_templates(db: Session) -> None:
     ids = {t.id for t in db.exec(select(ContentThemeTemplate)).all()}
-    assert {"classic", "modern"} <= ids
+    assert {"aurora", "bazar", "studio"} <= ids
 
 
 def test_seed_is_idempotent(db: Session) -> None:
@@ -42,9 +42,9 @@ def test_seed_is_idempotent(db: Session) -> None:
 
 def test_store_theme_settings_unique_per_store(db: Session) -> None:
     store = _store(db, "theme-uniq")
-    db.add(ContentStoreThemeSettings(store_id=store.id, active_template_id="classic"))
+    db.add(ContentStoreThemeSettings(store_id=store.id, active_template_id="aurora"))
     db.flush()
-    db.add(ContentStoreThemeSettings(store_id=store.id, active_template_id="modern"))
+    db.add(ContentStoreThemeSettings(store_id=store.id, active_template_id="bazar"))
     with pytest.raises(IntegrityError):
         db.flush()
     db.rollback()
@@ -78,8 +78,8 @@ def test_menu_with_items(db: Session) -> None:
 
 def test_theme_template_public_schema(db: Session) -> None:
     template = db.exec(
-        select(ContentThemeTemplate).where(ContentThemeTemplate.id == "classic")
+        select(ContentThemeTemplate).where(ContentThemeTemplate.id == "aurora")
     ).one()
     public = ThemeTemplatePublic.model_validate(template)
-    assert public.id == "classic"
+    assert public.id == "aurora"
     assert public.name
