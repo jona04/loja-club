@@ -1,10 +1,15 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Plus_Jakarta_Sans } from "next/font/google"
 import type { ReactNode } from "react"
 
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jakarta",
+})
 
 export const metadata: Metadata = {
   title: "Loja Club",
@@ -20,7 +25,7 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={inter.className}>
+    <html lang="pt-BR" className={`${inter.className} ${jakarta.variable}`}>
       <body className="bg-white text-gray-900">
         <link
           rel="stylesheet"

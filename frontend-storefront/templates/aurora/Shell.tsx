@@ -7,7 +7,7 @@ import { whatsappLink } from "@/lib/format"
 
 import { AuroraHeader } from "./AuroraHeader"
 
-const INSTITUCIONAL = [
+const FOOTER_PAGES = [
   { slug: "sobre", label: "Sobre a loja" },
   { slug: "privacidade", label: "Política de Privacidade" },
   { slug: "termos", label: "Termos de Uso" },
@@ -72,7 +72,7 @@ export function AuroraShell({
                   {["instagram", "pinterest", "tiktok"].map((s) => (
                     <Link
                       key={s}
-                      href="/institucional/sobre"
+                      href="/pages/sobre"
                       className="text-gray-400 transition-colors hover:text-white"
                       aria-label={s}
                     >
@@ -113,10 +113,10 @@ export function AuroraShell({
                   Institucional
                 </h3>
                 <ul className="space-y-4">
-                  {INSTITUCIONAL.map((item) => (
+                  {FOOTER_PAGES.map((item) => (
                     <li key={item.slug}>
                       <Link
-                        href={`/institucional/${item.slug}`}
+                        href={`/pages/${item.slug}`}
                         className="text-sm text-gray-400 transition-colors hover:text-white"
                       >
                         {item.label}

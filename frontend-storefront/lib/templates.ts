@@ -5,10 +5,13 @@
  */
 import type { Template } from "@/lib/template-types"
 import { template as aurora } from "@/templates/aurora"
+import { template as bazar } from "@/templates/bazar"
+import { template as studio } from "@/templates/studio"
 
 const TEMPLATES: Record<string, Template> = {
   aurora,
-  // bazar / studio: P3-TPL-02 (fall back to Aurora until ported).
+  bazar,
+  studio,
 }
 
 /**

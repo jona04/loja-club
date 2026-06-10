@@ -41,7 +41,7 @@ export function CheckoutView({ locale }: { locale: string }) {
   const currency = cart.items[0].priceCurrency
   const confirm = () => {
     cart.clear()
-    router.push("/pedido")
+    router.push("/order-confirmation")
   }
   const field =
     "w-full rounded-sm border border-gray-200 px-3 py-2.5 text-sm focus:border-brand-900 focus:outline-none"

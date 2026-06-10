@@ -52,13 +52,24 @@ def _product(
 
 def test_home_for_published_store(client: TestClient, db: Session) -> None:
     store, host = _published_store(db, slug="sf-home")
-    _product(db, store.id, slug="mug", featured=True)
+    mug = _product(db, store.id, slug="mug", featured=True)
+    category = Category(store_id=store.id, name="Canecas", slug="canecas")
+    db.add(category)
+    db.flush()
+    db.add(
+        ProductCategory(store_id=store.id, product_id=mug.id, category_id=category.id)
+    )
+    db.flush()
     resp = client.get(f"{BASE}/home", headers={"host": host})
     assert resp.status_code == 200
     body = resp.json()
     assert body["store"]["slug"] == "sf-home"
     assert body["theme"]["active_template_id"] == "aurora"  # default, no row
     assert any(p["slug"] == "mug" for p in body["featured_products"])
+    # category sections (for templates like Bazar): the mug's category appears.
+    assert any(
+        p["slug"] == "mug" for s in body["category_sections"] for p in s["products"]
+    )
 
 
 def test_unknown_host_is_not_found(client: TestClient) -> None:

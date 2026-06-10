@@ -12,6 +12,7 @@ import type {
   Paginated,
   StorefrontHome,
   StorefrontProduct,
+  StorefrontStore,
 } from "@/lib/api"
 
 /** Props for a template's home (store identity, theme, highlights, categories). */
@@ -35,9 +36,18 @@ export interface ProductProps {
   product: StorefrontProduct
 }
 
+/** Props for a template's chrome — used by the standalone pages (checkout, …). */
+export interface ShellProps {
+  store: StorefrontStore
+  categories: Category[]
+  locale: string
+  children: ReactNode
+}
+
 /** A template's component tree (one per template id). */
 export interface Template {
   Home: (props: HomeProps) => ReactNode
   Category: (props: CategoryProps) => ReactNode
   Product: (props: ProductProps) => ReactNode
+  Shell: (props: ShellProps) => ReactNode
 }

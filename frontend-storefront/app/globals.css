@@ -6,6 +6,9 @@
   --color-brand-100: #e7e7e7;
   --color-brand-200: #d1d1d1;
   --color-brand-900: #111111;
+  /* Bazar (vibrant) uses Tailwind indigo/rose + these soft shadows. */
+  --shadow-soft: 0 4px 20px -2px rgb(0 0 0 / 0.05);
+  --shadow-float: 0 10px 30px -5px rgb(0 0 0 / 0.08);
 }
 
 html {

@@ -85,7 +85,7 @@ export function AuroraHeader({
                 <i className="fa-solid fa-magnifying-glass text-lg" />
               </Link>
               <Link
-                href="/conta"
+                href="/account"
                 className="text-gray-500 transition-colors hover:text-brand-900"
                 aria-label="Minha conta"
               >

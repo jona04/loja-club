@@ -23,6 +23,7 @@ from app.modules.catalog.schemas import CategoryPublic
 from app.modules.content.models import ContentPage
 from app.modules.content.repositories import get_store_theme_settings
 from app.modules.storefront.schemas import (
+    StorefrontCategorySection,
     StorefrontHome,
     StorefrontProduct,
     StorefrontStore,
@@ -34,6 +35,8 @@ from app.modules.stores.models import Store, StoreSettings
 _TTL = 300
 DEFAULT_TEMPLATE_ID = "aurora"
 _FEATURED_LIMIT = 12
+_HOME_CATEGORIES = 6
+_SECTION_PRODUCTS = 8
 _CATEGORIES_ADAPTER = TypeAdapter(list[CategoryPublic])
 
 
@@ -77,6 +80,52 @@ def _theme(*, session: Session, store_id: uuid.UUID) -> StorefrontTheme:
     return StorefrontTheme.model_validate(row)
 
 
+def _category_sections(
+    *, session: Session, store_id: uuid.UUID
+) -> list[StorefrontCategorySection]:
+    """Build the home's category sections (for templates like Bazar).
+
+    The first categories (by name), each with its first published products;
+    empty categories are skipped.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+
+    Returns:
+        Up to ``_HOME_CATEGORIES`` non-empty sections.
+    """
+    categories = session.exec(
+        select(Category)
+        .where(Category.store_id == store_id, col(Category.deleted_at).is_(None))
+        .order_by(col(Category.name))
+        .limit(_HOME_CATEGORIES)
+    ).all()
+    sections: list[StorefrontCategorySection] = []
+    for cat in categories:
+        in_cat = select(ProductCategory.product_id).where(
+            ProductCategory.category_id == cat.id,
+            ProductCategory.store_id == store_id,
+        )
+        products = session.exec(
+            _published_products(store_id)
+            .where(col(Product.id).in_(in_cat))
+            .order_by(col(Product.created_at).desc())
+            .limit(_SECTION_PRODUCTS)
+        ).all()
+        if products:
+            sections.append(
+                StorefrontCategorySection(
+                    category=CategoryPublic.model_validate(cat),
+                    products=[
+                        _to_storefront_product(session=session, product=p)
+                        for p in products
+                    ],
+                )
+            )
+    return sections
+
+
 def get_home(*, session: Session, store: Store) -> StorefrontHome:
     """Return the storefront home (store + theme + highlights), cache-aside.
 
@@ -105,6 +154,7 @@ def get_home(*, session: Session, store: Store) -> StorefrontHome:
         featured_products=[
             _to_storefront_product(session=session, product=p) for p in featured
         ],
+        category_sections=_category_sections(session=session, store_id=store.id),
     )
     cache_set(f"{store.id}:home", home.model_dump_json(), ttl=_TTL, prefix="store")
     return home

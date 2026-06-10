@@ -4,7 +4,7 @@ title: Templates Bazar + Studio (navegação) — teste do contrato
 phase: 3
 etapa: "Etapa 8 — Templates no storefront"
 area: TPL
-status: todo
+status: done
 depends_on: [P3-TPL-01]
 blocks: []
 tests: [unit, e2e]
@@ -64,22 +64,26 @@ Com a arquitetura pronta (`P3-TPL-01`/Aurora), portar **Bazar** (home por **seç
   - e2e — Bazar e Studio renderizam home/categoria/produto; **trocar template mantém** a navegação card→produto→"comprar".
 
 ## Definition of Done
-- [ ] Bazar + Studio renderizam `home`/`category`/`product`; **trocar template não quebra** o fluxo do cliente.
-- [ ] **Port fiel** ao template (FontAwesome, hover/animações, **paleta própria** via `@theme`); **"Adicionar ao carrinho" funciona** (carrinho compartilhado); **cada clique leva a uma página**; as páginas avulsas (`/checkout`, etc.) usam o **Shell do template ativo**.
-- [ ] Home do **Bazar** = seções de categoria (dado produtos-por-categoria); home do **Studio** = **sidebar + grid** (drawer no mobile).
-- [ ] **Contrato validado:** os 3 templates consomem os **mesmos dados/fluxo** (a composição é o único diferente).
-- [ ] **Nav overflow** ("Todas as categorias") nos 3.
-- [ ] Gates verdes (storefront + backend + **e2e local**) + docs 10 reconciliado.
-- [ ] **Modos de falha mapeados** (categoria sem produtos; muitas categorias no nav/home; sidebar no mobile; loja sem banners) → tratados **ou** Follow-up.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Bazar + Studio renderizam `home`/`category`/`product`; **trocar template não quebra** o fluxo (resolver `{aurora, bazar, studio}`; **smoke real** de cada).
+- [x] **Port fiel** ao template (FontAwesome, hover/animações, paleta própria); **"Adicionar ao carrinho" funciona** (carrinho compartilhado); **cada clique leva a uma página**; as páginas avulsas (`/checkout`·`/account`·`/order-confirmation`·`/pages/*`) usam o **Shell do template ativo** (`Template.Shell`).
+- [x] Home do **Bazar** = seções de categoria (`StorefrontHome.category_sections`); home do **Studio** = **sidebar + grid** (sidebar desktop; drawer no mobile = follow-up).
+- [x] **Contrato VALIDADO:** os 3 (Aurora destaques / Bazar seções / Studio sidebar) consomem os **mesmos dados/fluxo** — a hipótese "composição ≠ contrato" se confirma.
+- [x] **Nav overflow** ("Todas as categorias") nos 3.
+- [x] Gates verdes (storefront build/biome + backend lint/cobertura **94%** + **smoke real** dos 3); docs 10 reconciliado.
+- [x] **Modos de falha mapeados:** categoria sem produtos → seção pulada; loja sem banners → fallback gradiente/cor; muitas categorias → "Todas as categorias". (Sidebar mobile + busca/filtros reais = follow-up.)
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Seguir o **padrão do Aurora** (`P3-TPL-01`): port fiel do HTML, **Shell + ProductCard + paleta por template**, reusando carrinho/`format`/resolver/FontAwesome. Como **cada template tem seu Shell**, o resolver passa a expor `Shell` no contrato `Template` pras **páginas avulsas** (`/checkout`, `/pedido`, `/conta`, `/institucional/*`) renderizarem o shell certo.
 - **Conteúdo estático/lorem** de cada template (anúncio/editorial/etc.) → dinâmico no painel = `P3-TPL-03`.
 - "Produtos por categoria (N)" era follow-up de `P3-TPL-01`/`P3-SF-01` — **promovido pra escopo** aqui.
+- **Implementação:** **Bazar** (`templates/bazar/*`) = **indigo/rose** (defaults Tailwind = a paleta do template, sem `@theme` novo) + **Plus Jakarta Sans** (`--font-jakarta` no `layout.tsx`) + shadows `soft`/`float` no `globals.css @theme`. **Studio** (`templates/studio/*`) = **black/gray** (defaults) + Inter + **sidebar `lg:block`** (catálogo). Aurora = `brand` custom. `Template` ganhou **`Shell`**; cada index exporta o seu. Rotas avulsas em **inglês**: `account`/`order-confirmation`/`pages/[slug]`/`checkout` resolvem o shell ativo. `CheckoutView` (single-page) é compartilhado (mora em `templates/aurora/`).
 
 ## Follow-ups
 - [ ] **Checkout + confirmação (Bazar/Studio)** — *Quando:* **Fase 4**. → README.
 - [ ] **Busca real** (topbar do Studio é placeholder) — *Quando:* pós-V1. → README.
 - [ ] **Filtros avançados / faceted** (sidebar do Studio é simples) — *Quando:* pós-V1. → README.
 - [ ] **Home 100% configurável (blocos)** — *Quando:* pós-V1 (hoje defaults por template + ordem das categorias). → README.
+- [ ] **Sidebar do Studio no mobile (drawer)** — *Quando:* pós-V1 (hoje `lg:block`; no mobile o catálogo vem por `/products`). → README.
+- [ ] **`CheckoutView` em local compartilhado** — *Quando:* refino (hoje em `templates/aurora/`, usado pelos 3 templates). → README.
+- [ ] **Home do Studio mostra os destaques** (não o catálogo todo) — *Quando:* quando a home expuser uma lista paginada de produtos (hoje usa `featured_products`). → README.

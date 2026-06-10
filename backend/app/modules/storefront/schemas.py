@@ -8,7 +8,11 @@ import uuid
 
 from sqlmodel import SQLModel
 
-from app.modules.catalog.schemas import ImagePublic, ProductPublic
+from app.modules.catalog.schemas import (
+    CategoryPublic,
+    ImagePublic,
+    ProductPublic,
+)
 
 
 class StorefrontStore(SQLModel):
@@ -46,9 +50,17 @@ class StorefrontProduct(ProductPublic):
     images: list[ImagePublic] = []
 
 
+class StorefrontCategorySection(SQLModel):
+    """A category with its first products (templates with category sections)."""
+
+    category: CategoryPublic
+    products: list[StorefrontProduct]
+
+
 class StorefrontHome(SQLModel):
     """The storefront home payload: store identity, active theme and highlights."""
 
     store: StorefrontStore
     theme: StorefrontTheme
     featured_products: list[StorefrontProduct]
+    category_sections: list[StorefrontCategorySection] = []

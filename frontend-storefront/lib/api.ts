@@ -46,10 +46,16 @@ export interface StorefrontProduct {
   images: ProductImage[]
 }
 
+export interface StorefrontCategorySection {
+  category: Category
+  products: StorefrontProduct[]
+}
+
 export interface StorefrontHome {
   store: StorefrontStore
   theme: StorefrontTheme
   featured_products: StorefrontProduct[]
+  category_sections: StorefrontCategorySection[]
 }
 
 export interface Category {
