@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Aurora brand palette (matches docs/design/templates/aurora). */
+@theme {
+  --color-brand-50: #f6f6f6;
+  --color-brand-100: #e7e7e7;
+  --color-brand-200: #d1d1d1;
+  --color-brand-900: #111111;
+  /* Bazar (vibrant) uses Tailwind indigo/rose + these soft shadows. */
+  --shadow-soft: 0 4px 20px -2px rgb(0 0 0 / 0.05);
+  --shadow-float: 0 10px 30px -5px rgb(0 0 0 / 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Lojaflex 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#000000', // Black accent for utility/catalog vibe
+                        surface: '#f9fafb',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+        
+        /* Hide number input spinners */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Custom Radio styling */
+        .delivery-radio:checked + div {
+            border-color: #000000;
+            background-color: #fafafa;
+        }
+        .delivery-radio:checked + div .radio-icon {
+            color: #000000;
+            opacity: 1;
+        }
+        .delivery-radio:focus-visible + div {
+            outline: 2px solid #000000;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans m-0 p-0 min-h-screen flex flex-col antialiased">
+
+    <!-- Simplified Header for Checkout -->
+    <header id="header" class="bg-white border-b border-gray-200 py-6 w-full flex flex-col items-center justify-center px-4 sticky top-0 z-40">
+        <a href="#" class="flex items-center gap-2 text-2xl font-bold tracking-tight text-brand">
+            <i class="fa-solid fa-shapes text-brand"></i>
+            Lojaflex 4
+        </a>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-1 w-full max-w-[1200px] mx-auto px-4 lg:px-8 py-10 lg:py-16">
+        
+        <!-- Breadcrumb -->
+        <nav class="flex text-xs text-gray-500 mb-8" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" class="hover:text-brand transition-colors">Carrinho</a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-chevron-right text-[8px] mx-2"></i>
+                        <span class="text-gray-900 font-medium">Finalizar Pedido</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            
+            <!-- LEFT COLUMN: Forms -->
+            <div class="lg:col-span-7 flex flex-col gap-12">
+                
+                <!-- Section: Seu Pedido -->
+                <section id="checkout-items">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="bg-brand text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                        Seu pedido
+                    </h2>
+                    
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <ul class="divide-y divide-gray-200">
+                            <!-- Item 1 -->
+                            <li class="p-4 sm:p-6 flex gap-4 sm:gap-6 bg-white">
+                                <div class="w-20 h-24 sm:w-24 sm:h-28 bg-surface rounded-md border border-gray-100 flex-shrink-0 overflow-hidden relative">
+                                    <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_b5bf76b7a3_9bda3129fe3fbb52.png" alt="minimalist white leather sneaker, product photography, white background" />
+                                </div>
+                                <div class="flex flex-col flex-1">
+                                    <div class="flex justify-between items-start gap-4">
+                                        <div>
+                                            <h3 class="text-base font-medium text-gray-900">Tênis Couro Minimal</h3>
+                                            <p class="text-sm text-gray-500 mt-1">Branco / 42</p>
+                                        </div>
+                                        <span class="text-base font-bold text-gray-900">R$ 389,90</span>
+                                    </div>
+                                    <div class="mt-auto flex items-center justify-between pt-4">
+                                        <div class="flex items-center border border-gray-300 rounded-md">
+                                            <button type="button" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors">-</button>
+                                            <input type="number" value="1" min="1" class="w-10 text-center text-sm font-medium border-0 focus:ring-0 p-0 text-gray-900">
+                                            <button type="button" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors">+</button>
+                                        </div>
+                                        <button type="button" class="text-sm font-medium text-gray-400 hover:text-red-600 transition-colors underline underline-offset-2">
+                                            Remover
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Item 2 -->
+                            <li class="p-4 sm:p-6 flex gap-4 sm:gap-6 bg-white">
+                                <div class="w-20 h-24 sm:w-24 sm:h-28 bg-surface rounded-md border border-gray-100 flex-shrink-0 overflow-hidden relative">
+                                    <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_d021731906_ed687c1297c10cbf.png" alt="minimalist basic white t-shirt, flat lay, high quality fabric, white background" />
+                                </div>
+                                <div class="flex flex-col flex-1">
+                                    <div class="flex justify-between items-start gap-4">
+                                        <div>
+                                            <h3 class="text-base font-medium text-gray-900">Camiseta Essencial Branca</h3>
+                                            <p class="text-sm text-gray-500 mt-1">Básico / M</p>
+                                        </div>
+                                        <span class="text-base font-bold text-gray-900">R$ 89,90</span>
+                                    </div>
+                                    <div class="mt-auto flex items-center justify-between pt-4">
+                                        <div class="flex items-center border border-gray-300 rounded-md">
+                                            <button type="button" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors">-</button>
+                                            <input type="number" value="2" min="1" class="w-10 text-center text-sm font-medium border-0 focus:ring-0 p-0 text-gray-900">
+                                            <button type="button" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors">+</button>
+                                        </div>
+                                        <button type="button" class="text-sm font-medium text-gray-400 hover:text-red-600 transition-colors underline underline-offset-2">
+                                            Remover
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section: Contato -->
+                <section id="checkout-contact">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="bg-brand text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                        Contato
+                    </h2>
+                    <p class="text-sm text-gray-500 mb-6">Usaremos estes dados para entrar em contato sobre o seu pedido. Não é necessário criar conta.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                        <div class="md:col-span-2">
+                            <label for="nome" class="block text-sm font-medium text-gray-900 mb-1.5">Nome completo</label>
+                            <input type="text" id="nome" name="nome" placeholder="João da Silva" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="email" class="block text-sm font-medium text-gray-900 mb-1.5">E-mail</label>
+                            <input type="email" id="email" name="email" placeholder="joao@exemplo.com" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label for="telefone" class="block text-sm font-medium text-gray-900 mb-1.5">WhatsApp / Telefone</label>
+                            <div class="flex rounded-md shadow-sm border border-gray-300 focus-within:border-brand focus-within:ring-1 focus-within:ring-brand overflow-hidden transition-colors">
+                                <!-- Country Selector -->
+                                <div class="relative flex items-center border-r border-gray-300 bg-surface">
+                                    <select id="country" name="country" class="h-full py-0 pl-3 pr-8 text-gray-500 bg-transparent border-0 focus:ring-0 sm:text-sm cursor-pointer appearance-none">
+                                        <option value="BR">🇧🇷 +55</option>
+                                        <option value="US">🇺🇸 +1</option>
+                                        <option value="PT">🇵🇹 +351</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                    </div>
+                                </div>
+                                <!-- Phone Input -->
+                                <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" class="block flex-1 border-0 bg-white py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Entrega -->
+                <section id="checkout-delivery">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="bg-brand text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                        Entrega
+                    </h2>
+
+                    <!-- Address Form -->
+                    <div class="mb-8">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Endereço de destino</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-6 gap-x-6 gap-y-5">
+                            <div class="md:col-span-2">
+                                <label for="cep" class="block text-sm font-medium text-gray-900 mb-1.5">CEP</label>
+                                <input type="text" id="cep" name="cep" placeholder="00000-000" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors">
+                            </div>
+                            
+                            <div class="md:col-span-4">
+                                <label for="endereco" class="block text-sm font-medium text-gray-900 mb-1.5">Endereço</label>
+                                <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida, etc." class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors bg-gray-50" readonly>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="numero" class="block text-sm font-medium text-gray-900 mb-1.5">Número</label>
+                                <input type="text" id="numero" name="numero" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors">
+                            </div>
+
+                            <div class="md:col-span-4">
+                                <label for="complemento" class="block text-sm font-medium text-gray-900 mb-1.5">Complemento <span class="text-gray-400 font-normal">(Opcional)</span></label>
+                                <input type="text" id="complemento" name="complemento" placeholder="Apto, Bloco, etc." class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="bairro" class="block text-sm font-medium text-gray-900 mb-1.5">Bairro</label>
+                                <input type="text" id="bairro" name="bairro" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors bg-gray-50" readonly>
+                            </div>
+
+                            <div class="md:col-span-3">
+                                <label for="cidade" class="block text-sm font-medium text-gray-900 mb-1.5">Cidade</label>
+                                <input type="text" id="cidade" name="cidade" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors bg-gray-50" readonly>
+                            </div>
+
+                            <div class="md:col-span-1">
+                                <label for="estado" class="block text-sm font-medium text-gray-900 mb-1.5">UF</label>
+                                <input type="text" id="estado" name="estado" class="block w-full rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm transition-colors bg-gray-50" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Methods -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Opções de Entrega</h3>
+                        
+                        <div class="space-y-3">
+                            <!-- Option 1: Entrega Combinada (Selected by default) -->
+                            <label class="relative block cursor-pointer group">
+                                <input type="radio" name="delivery_method" value="combinada" class="peer sr-only delivery-radio" checked>
+                                <div class="rounded-lg border border-gray-200 bg-white p-4 sm:p-5 hover:bg-gray-50 transition-colors flex gap-4">
+                                    <div class="flex items-center h-5">
+                                        <div class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center peer-checked:border-brand peer-checked:bg-brand">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 radio-icon transition-opacity"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-medium text-gray-900">Entrega Combinada</span>
+                                            <span class="text-sm font-bold text-gray-900">A combinar</span>
+                                        </div>
+                                        <div class="mt-2 flex items-start gap-2 bg-blue-50 p-3 rounded-md border border-blue-100">
+                                            <i class="fa-solid fa-circle-info text-blue-500 mt-0.5 text-sm"></i>
+                                            <span class="text-xs text-blue-800 leading-relaxed">
+                                                <strong>Aviso importante:</strong> A loja entrará em contato com você via WhatsApp ou E-mail logo após a confirmação do pedido para combinar o valor do frete e o método de pagamento.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Option 2: Frete Fixo -->
+                            <label class="relative block cursor-pointer group">
+                                <input type="radio" name="delivery_method" value="fixo" class="peer sr-only delivery-radio">
+                                <div class="rounded-lg border border-gray-200 bg-white p-4 sm:p-5 hover:bg-gray-50 transition-colors flex gap-4">
+                                    <div class="flex items-center h-5">
+                                        <div class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center peer-checked:border-brand peer-checked:bg-brand">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 radio-icon transition-opacity"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-medium text-gray-900">Frete Fixo (Correios/Transportadora)</span>
+                                            <span class="text-sm font-bold text-gray-900">R$ 25,00</span>
+                                        </div>
+                                        <span class="block mt-1 text-sm text-gray-500">Entrega em até 7 dias úteis após a confirmação.</span>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Option 3: Retirada -->
+                            <label class="relative block cursor-pointer group">
+                                <input type="radio" name="delivery_method" value="retirada" class="peer sr-only delivery-radio">
+                                <div class="rounded-lg border border-gray-200 bg-white p-4 sm:p-5 hover:bg-gray-50 transition-colors flex gap-4">
+                                    <div class="flex items-center h-5">
+                                        <div class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center peer-checked:border-brand peer-checked:bg-brand">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 radio-icon transition-opacity"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-medium text-gray-900">Retirada no Local</span>
+                                            <span class="text-sm font-bold text-green-600">Grátis</span>
+                                        </div>
+                                        <span class="block mt-1 text-sm text-gray-500">Rua Exemplo, 123 - Centro, São Paulo. Retirada em 1 dia útil.</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Order Summary (Sticky) -->
+            <div class="lg:col-span-5 relative">
+                <div class="sticky top-24 bg-surface border border-gray-200 rounded-xl p-6 sm:p-8 flex flex-col gap-6">
+                    
+                    <h2 class="text-lg font-bold text-gray-900 border-b border-gray-200 pb-4">Resumo do Pedido</h2>
+
+                    <!-- Discount Code -->
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Código de desconto" class="flex-1 rounded-md border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder-gray-400 focus:border-brand focus:ring-1 focus:ring-brand sm:text-sm">
+                        <button type="button" class="bg-gray-200 text-gray-700 px-4 py-2.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors">
+                            Aplicar
+                        </button>
+                    </div>
+
+                    <!-- Cost Breakdown -->
+                    <div class="space-y-3 text-sm border-b border-gray-200 pb-6">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal (3 itens)</span>
+                            <span class="font-medium text-gray-900">R$ 569,70</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Descontos</span>
+                            <span class="font-medium text-green-600">- R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Frete</span>
+                            <span class="font-medium text-gray-900">A combinar</span>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="flex items-end justify-between">
+                        <span class="text-base font-semibold text-gray-900">Total parcial</span>
+                        <div class="text-right">
+                            <span class="text-xs text-gray-500 block mb-1">BRL</span>
+                            <span class="text-3xl font-bold text-brand tracking-tight">R$ 569,70</span>
+                        </div>
+                    </div>
+
+                    <!-- Notice before CTA -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4 flex gap-3">
+                        <i class="fa-solid fa-bell text-yellow-600 mt-0.5"></i>
+                        <p class="text-xs text-yellow-800 leading-relaxed">
+                            <strong>Nenhum pagamento é exigido agora.</strong> Ao confirmar, seu pedido será registrado e entraremos em contato para finalizar o pagamento e a entrega.
+                        </p>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <button type="button" class="w-full h-14 bg-brand text-white rounded-md font-bold text-lg hover:bg-brand/90 transition-colors shadow-sm mt-2 flex items-center justify-center gap-2 group">
+                        Confirmar Pedido
+                        <i class="fa-solid fa-check transition-transform group-hover:scale-110"></i>
+                    </button>
+
+                    <div class="flex items-center justify-center gap-4 mt-2 text-gray-400">
+                        <i class="fa-solid fa-lock text-sm"></i>
+                        <span class="text-xs">Ambiente seguro. Seus dados estão protegidos.</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-surface border-t border-gray-200 pt-12 pb-8 mt-auto w-full">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand Info -->
+                <div class="col-span-1 md:col-span-1">
+                    <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight text-brand mb-4">
+                        <i class="fa-solid fa-shapes"></i>
+                        Lojaflex 4
+                    </a>
+                    <p class="text-sm text-gray-500 mb-4 pr-4">Curadoria de produtos essenciais, minimalistas e utilitários para o seu dia a dia.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Institucional</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Sobre a Lojaflex 4</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Termos de Serviço</a></li>
+                    </ul>
+                </div>
+
+                <!-- Atendimento -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Atendimento</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Dúvidas Frequentes</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Trocas e Devoluções</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Rastrear Pedido</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contato -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contato</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-brands fa-whatsapp text-lg text-green-500 mt-0.5"></i>
+                            <div>
+                                <span class="block text-gray-900 font-medium">(11) 99999-9999</span>
+                                <span class="text-xs text-gray-400">Seg a Sex, 9h às 18h</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 mt-4">
+                            <i class="fa-regular fa-envelope text-lg text-gray-400 mt-0.5"></i>
+                            <a href="mailto:contato@lojaflex4.com.br" class="text-gray-900 font-medium hover:text-brand">contato@lojaflex4.com.br</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-400">&copy; 2024 Lojaflex 4. Todos os direitos reservados.</p>
+                <div class="flex gap-2">
+                    <span class="text-xs text-gray-400">Desenvolvido com plataforma Loja Club</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

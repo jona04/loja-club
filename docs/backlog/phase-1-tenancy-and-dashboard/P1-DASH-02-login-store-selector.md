@@ -31,9 +31,9 @@ Um usuário pode ser membro de várias lojas; o painel precisa, após o login, *
 - Criação de loja por onboarding (checklist) → pode entrar em `P1-DASH-03`/fase posterior.
 
 ## Arquivos a criar/alterar
-- `frontend/src/client/*` (regenerar) — endpoints de stores.
-- `frontend/src/` — contexto/hook de loja ativa (ex.: `hooks/useActiveStore.ts`), componente de seletor, guarda de rota pós-login.
-- `frontend/src/routes/_layout.tsx` (alterar) — header com switcher.
+- `frontend-dashboard/src/client/*` (regenerar) — endpoints de stores.
+- `frontend-dashboard/src/` — contexto/hook de loja ativa (ex.: `hooks/useActiveStore.ts`), componente de seletor, guarda de rota pós-login.
+- `frontend-dashboard/src/routes/_layout.tsx` (alterar) — header com switcher.
 
 ## Passos
 1. Regenerar o client após `P1-STORE-02`.
@@ -59,7 +59,7 @@ Um usuário pode ser membro de várias lojas; o painel precisa, após o login, *
 ## Notas / Reconciliações
 - **Persistência:** `localStorage["active_store_id"]`. Resolução pura em `lib/activeStore.ts` (testada): 0 → `NoStores` (CTA "Criar loja", dialog mínimo nome → `POST /stores` → ativa a nova); várias sem escolha válida → `StoreSelector`; 1 ou escolha persistida válida → entra. Estado, não URL (URL com `store_id` pode vir depois se preciso).
 - **store_id é path param:** o contexto expõe `activeStore.id` + `permissions`/`role` (de `/me`) que a `P1-DASH-03` consome no menu por permissão — é a "injeção" do `store_id` nas chamadas do painel.
-- **Client:** regenerado via dump `uv run … app.openapi()` + `openapi-ts`/`biome` pelo `node_modules` da raiz (bun ausente; `frontend/openapi.json` é artefato gitignored).
+- **Client:** regenerado via dump `uv run … app.openapi()` + `openapi-ts`/`biome` pelo `node_modules` da raiz (bun ausente; `frontend-dashboard/openapi.json` é artefato gitignored).
 - **E2E (impacto):** a suíte Playwright assertava "Welcome back" (removido) e o pós-login virou **gated por loja** (superuser tem 0 lojas → `NoStores`). Troquei os 4 asserts por `user-menu` (estável no novo fluxo). **Não rodei a suíte ao vivo** (precisa do stack) — ver Follow-ups. Removi `tests/admin.spec.ts` (órfão da página admin removida na `P1-DASH-01`).
 - **Correção pós-vistoria (gating de rota):** o gating de loja saiu do `_layout` para um `StoreGate` por rota de loja (Dashboard/Configurações/Equipe). Antes o layout escondia **todas** as rotas — inclusive `/settings` (conta) — no estado "sem loja"; agora rotas não-loja ficam acessíveis sem loja ativa.
 

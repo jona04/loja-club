@@ -106,7 +106,7 @@ Usuário cria loja e os dados ficam isolados por store_id.
 
 Entregas:
 
-- painel em `app.loja.club` (local: `app.loja.localhost`);
+- painel em `app.loja.club` (local: `app.localhost`);
 - login;
 - seleção de loja ativa;
 - menu modular;
@@ -176,7 +176,7 @@ Entregas:
 Resultado:
 
 ```text
-Loja pública abre em nomedaloja.loja.club (local: *.loja.localhost).
+Loja pública abre em nomedaloja.loja.club (local: *.localhost).
 ```
 
 ### Etapa 8 — Layouts/templates
@@ -329,7 +329,7 @@ Entregas:
 
 - e-mail de **pedido criado** para o cliente (Mailcatcher no dev local);
 - e-mail de **novo pedido** para o lojista (Mailcatcher no dev local);
-- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente local;
+- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente de desenvolvimento;
 - fluxo completo validado de ponta a ponta no Docker Compose local.
 
 Resultado:

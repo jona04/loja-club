@@ -6,7 +6,7 @@ import uuid
 from sqlmodel import Session, select
 
 from app.core.api import AppError
-from app.core.config import settings
+from app.core.localization import localize_country
 from app.db.base import get_datetime_utc
 from app.modules.accounts.models import User
 from app.modules.accounts.repositories import get_user_by_email
@@ -61,12 +61,14 @@ def create_store(*, session: Session, owner: User, payload: StoreCreate) -> Stor
     if owner_role is None:  # pragma: no cover - roles are seeded by init_db
         raise AppError("role_missing", "owner role is not seeded", 500)
 
+    loc = localize_country(payload.country)
     store = Store(
         name=payload.name,
         slug=slug,
         status=StoreStatus.draft,
-        currency=payload.currency or settings.PLATFORM_DEFAULT_CURRENCY,
-        locale=payload.locale or settings.PLATFORM_DEFAULT_LOCALE,
+        country=payload.country.upper(),
+        currency=loc["currency"],
+        locale=loc["locale"],
     )
     session.add(store)
     session.flush()

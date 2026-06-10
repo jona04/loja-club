@@ -63,7 +63,7 @@ Todas as tarefas começam em `[ ]`.
 O que o template **já entrega** e vamos reaproveitar:
 
 - **Backend:** FastAPI, SQLModel, Pydantic v2, Alembic, JWT (`app/core/security.py`), recuperação de senha + e-mail (`app/utils.py` + MJML em `app/email-templates/`; o **envio passará pelo worker** — INV-F5), settings (`app/core/config.py`), `engine`/`init_db` (`app/core/db.py`), Pytest (`backend/tests/`).
-- **Frontend (painel):** React 19, Vite 7, TanStack Router + Query + Table, Tailwind v4, shadcn/Radix, react-hook-form, zod, axios, cliente OpenAPI gerado via `@hey-api/openapi-ts` (`frontend/src/client/`).
+- **Frontend (painel):** React 19, Vite 7, TanStack Router + Query + Table, Tailwind v4, shadcn/Radix, react-hook-form, zod, axios, cliente OpenAPI gerado via `@hey-api/openapi-ts` (`frontend-dashboard/src/client/`).
 - **Infra dev:** Docker Compose (`compose.yml` + `compose.override.yml`), Traefik (`proxy`), Postgres 18 (`db`), Adminer, Mailcatcher, Playwright; Dockerfiles; GitHub Actions; pre-commit.
 
 O que **não existe** ainda e precisa ser criado (resumo; detalhe nas fases):
@@ -95,4 +95,4 @@ Estas decisões alinham o template aos docs e evitam divergência:
 
 - **Lib de fila/worker** (Fase 0/2): Celery vs RQ vs arq vs `BackgroundTasks`. Os docs pedem "fila leve com Redis" e "worker", sem fixar a lib.
 - ~~Storage local~~ **(decidido)**: usar **AWS S3 + CloudFront reais** desde o dev local (sem MinIO). Requer bucket/distribuição/credenciais IAM de dev — tarefa na Fase 2.
-- **Domínio de dev** (decidido): `loja.localhost` (e `*.loja.localhost`) localmente, espelhando o `*.loja.club` de produção. `*.localhost` resolve para 127.0.0.1 nos navegadores; usar `/etc/hosts` para ferramentas de CLI que precisarem.
+- **Domínio de dev** (decidido): `localhost` (e `*.localhost`) localmente, espelhando o `*.loja.club` de produção. `*.localhost` resolve para 127.0.0.1 nos navegadores; usar `/etc/hosts` para ferramentas de CLI que precisarem.

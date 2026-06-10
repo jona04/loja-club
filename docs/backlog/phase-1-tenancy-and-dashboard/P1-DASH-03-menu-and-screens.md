@@ -33,7 +33,7 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
 - Admin de plataforma → Fase 7.
 
 ## Arquivos a criar/alterar
-- `frontend/src/` — componente de menu/sidebar dinâmico; rotas/telas de Dashboard, Configurações e Equipe; hook de permissões do membro ativo.
+- `frontend-dashboard/src/` — componente de menu/sidebar dinâmico; rotas/telas de Dashboard, Configurações e Equipe; hook de permissões do membro ativo.
 - Regenerar client OpenAPI se a API expuser novo campo de permissões/membro.
 
 ## Passos

@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_HOST: str = "http://localhost:5173"
-    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
+    ENVIRONMENT: Literal["development", "staging", "production"] = "development"
 
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
@@ -85,10 +85,6 @@ class Settings(BaseSettings):
     def admin_host(self) -> str:
         """Return the platform admin hostname derived from ``DOMAIN``."""
         return f"admin.{self.DOMAIN}"
-
-    # Platform defaults; each store and customer carries its own.
-    PLATFORM_DEFAULT_CURRENCY: str = "USD"
-    PLATFORM_DEFAULT_LOCALE: str = "en-US"
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
@@ -171,7 +167,7 @@ class Settings(BaseSettings):
                 f'The value of {var_name} is "changethis", '
                 "for security, please change it, at least for deployments."
             )
-            if self.ENVIRONMENT == "local":
+            if self.ENVIRONMENT == "development":
                 warnings.warn(message, stacklevel=1)
             else:
                 raise ValueError(message)

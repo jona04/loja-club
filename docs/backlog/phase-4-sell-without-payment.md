@@ -73,7 +73,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Token seguro para continuar compra (aleatório, expira, escopado à loja). Doc [23](../23_customer_identity_and_guest_checkout.md).
 
 ### Frontend (storefront)
-- [ ] Página de carrinho: itens, quantidades, subtotal, cupom, frete estimado, método de entrega, botão checkout. Doc [10](../10_storefront_and_layouts.md).
+- [ ] **Mini-carrinho (drawer)**: itens, quantidades, subtotal, botão "finalizar compra" → checkout. (Não há página de carrinho separada — os itens também aparecem no topo do checkout single-page.) Doc [10](../10_storefront_and_layouts.md).
 
 ---
 
@@ -93,7 +93,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Não exigir senha/cadastro. Doc [11](../11_checkout_payments_and_split.md).
 
 ### Frontend (storefront)
-- [ ] Páginas de checkout (dados, endereço, entrega, revisão, confirmação) nos 2 templates. Doc [10](../10_storefront_and_layouts.md).
+- [ ] Checkout **single-page** (itens + contato c/ seletor de país + endereço + entrega + resumo) + **confirmação**, **nos 3 templates** (Aurora/Bazar/Studio) — designs prontos em `docs/design/templates/<nome>/` (`P3-TPL-*`); o **drawer** de mini-carrinho vem dos templates. Doc [10](../10_storefront_and_layouts.md)/[11](../11_checkout_payments_and_split.md).
 
 ---
 
@@ -141,4 +141,5 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 ---
 
 ## Reconciliações (registrar aqui)
+- **Telas dos templates (checkout/confirmação) já desenhadas (Fase 3):** os 3 templates (Aurora/Bazar/Studio) têm **checkout single-page + confirmação** em `docs/design/templates/<nome>/` (`P3-TPL-*`). A Fase 3 porta a **navegação** (home/categoria/produto); esta fase **liga** checkout/confirmação ao carrinho/pedido. **Carrinho = drawer** (mini-carrinho), não página separada.
 - **Personalização movida para a Fase 5:** sessões, editor 3D e o **congelamento da arte no carrinho/pedido** (`customization_cart_items`/`customization_order_items`, a regra "item `image_3d_customizable` só entra com sessão `approved`", preview/arte/status de produção no painel) eram leftover de antes do pivô. A Fase 4 vende **produtos de imagem**; a [Fase 5](./phase-5-3d-products.md) **estende** carrinho/checkout/pedido com a personalização.

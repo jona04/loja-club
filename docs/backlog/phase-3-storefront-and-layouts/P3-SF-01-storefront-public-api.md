@@ -4,7 +4,7 @@ title: Módulo storefront — API pública de leitura
 phase: 3
 etapa: "Etapa 7 — Módulo storefront (API pública)"
 area: SF
-status: todo
+status: done
 depends_on: [P3-CONTENT-01]
 blocks: [P3-SF-02]
 tests: [integration]
@@ -48,13 +48,21 @@ Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura
 - **Cobrir:** host inexistente → 404; loja `draft` → 404 (sem vazar); home/produto/categoria de loja `active` retornam; isolamento por loja; cache hit/miss.
 
 ## Definition of Done
-- [ ] Loja não publicada/host inexistente → "loja não encontrada" (sem vazar dado interno).
-- [ ] Home/categorias/produtos(paginado)/produto-por-slug retornam para loja `active`, cacheados.
-- [ ] **Modos de falha mapeados** (cache stale após edição, slug inexistente, loja pausada com cache quente) → tratados ou Follow-up.
-- [ ] Itens adiados varridos → Follow-ups + README, ou "nenhum".
+- [x] Loja não publicada/host inexistente → **404 `store_not_found`** (mesma resposta, sem vazar; testado).
+- [x] Home/categorias/produtos(paginado)/produto-por-slug retornam para loja `active`, com **cache-aside**.
+- [x] **Modos de falha mapeados** (slug inexistente → 404; loja pausada → status checado **live**, não cacheado; cache stale → Follow-up) → tratados/Follow-up.
+- [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
-- `resolve_store_by_host` **já existe** (`P1-TEN-01`, cache `domain:{host}`); esta task só adiciona o **filtro de publicação** + as chaves de leitura.
+- `resolve_store_by_host` **já existe** (`P1-TEN-01`, cache `domain:{host}`); esta task adiciona o **filtro de publicação** (`status == active`, checado **live** por request — pausar a loja reflete na hora) + as chaves de leitura. Host lido do header (porta removida).
+- **Endpoints** (`/storefront`, sem auth, resolvidos por Host): `home`, `categories`, `products` (paginado), `products/{slug}`, `pages/{slug}`.
+- **Cache-aside** (TTL 5 min): `store:{id}:home|categories|product:{slug}`. O `home` agrega store+theme+destaques (dobra `settings`+`theme`); produtos paginados e páginas **não** são cacheados.
+- **Theme read-only:** loja sem row → default `classic` (sem criar) — atende ao fallback da `P3-CONTENT-01`.
+- **Destaques** = produtos `is_featured` published (não há link produto↔coleção no `catalog`, então o `featured_collection_id` do theme ainda não é usado).
+- Queries públicas **separadas** das admin (published + não-deletado + `store_id`). Stub `enums.py` removido (storefront é só leitura).
 
 ## Follow-ups
-- (preencher ao executar)
+- [ ] **Cache stale após edição de catálogo** (`P3-SF-01`): escritas do `catalog` (produto/categoria) **não** invalidam `store:{id}:categories|product:{slug}|home` — só o TTL (5 min) resolve. Adicionar invalidação no `catalog` (hook/sinal) quando a vitrine for pra produção.
+- [ ] **N+1 de imagens** (`P3-SF-01`): `list_products`/home chamam `list_images` por produto. Otimizar com query em lote para listas grandes.
+- [ ] **Destaque por coleção** (`P3-SF-01`): ligar `featured_collection_id` quando existir o link produto↔coleção no `catalog` (hoje destaque = `is_featured`).
+- [ ] **Menu + caches `settings`/`theme` separados** (`P3-SF-01`): a home dobra settings+theme; o menu não é servido (sem CRUD) e as chaves `store:{id}:settings|theme|menu` ficam reservadas — servir o menu quando o CRUD existir.

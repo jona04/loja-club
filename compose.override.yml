@@ -1,7 +1,7 @@
 services:
 
   # Dev services are exposed on the Loja Club host ports below. With
-  # DOMAIN=loja.localhost and Traefik they are also reachable at
+  # DOMAIN=localhost and Traefik they are also reachable at
   # api./app./admin.<DOMAIN> (routing wired up in later phases).
   proxy:
     image: traefik:3.6
@@ -96,21 +96,32 @@ services:
       - "1090:1080"
       - "1035:1025"
 
-  frontend:
+  frontend-dashboard:
     restart: "no"
     ports:
       - "5180:80"
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: frontend-dashboard/Dockerfile
       args:
         - VITE_API_URL=http://localhost:8800
         - NODE_ENV=development
 
+  frontend-storefront:
+    restart: "no"
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: frontend-storefront/Dockerfile
+      args:
+        # SSR runs inside the container → reach the backend on the internal network.
+        - NEXT_PUBLIC_API_URL=http://backend:8000
+
   playwright:
     build:
       context: .
-      dockerfile: frontend/Dockerfile.playwright
+      dockerfile: frontend-dashboard/Dockerfile.playwright
       args:
         - VITE_API_URL=http://backend:8000
         - NODE_ENV=production
@@ -127,8 +138,8 @@ services:
       - PLAYWRIGHT_HTML_HOST=0.0.0.0
       - CI=${CI}
     volumes:
-      - ./frontend/blob-report:/app/frontend/blob-report
-      - ./frontend/test-results:/app/frontend/test-results
+      - ./frontend-dashboard/blob-report:/app/frontend-dashboard/blob-report
+      - ./frontend-dashboard/test-results:/app/frontend-dashboard/test-results
     ports:
       - 9323:9323
 

@@ -9,7 +9,7 @@ O código imita a lógica dos docs — **não inventar lógica de negócio nova*
 **Nunca** executar operações de git que alterem estado: sem `commit`, `push`, `branch`, `checkout`/`switch`, `merge`, `reset`, `rebase`, `stash`. **O usuário gerencia o git.** Implementar **sempre na branch atual** (a que estiver checada) — não criar nem trocar de branch. Rodar git (mesmo só-leitura, como `git status`/`git diff`) **apenas se o usuário pedir**.
 
 ## Como rodar e testar (dev)
-Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, painel `5180`) — código/testes no host precisam delas. Guias: [`backend/README.md`](backend/README.md) / [`frontend/README.md`](frontend/README.md).
+Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, painel `5180`) — código/testes no host precisam delas. Guias: [`backend/README.md`](backend/README.md) / [`frontend-dashboard/README.md`](frontend-dashboard/README.md).
 
 - **Infra:** `docker compose up -d --wait db redis` (antes de rodar testes no host).
 - **Lint (backend):** `uv run bash scripts/lint.sh` — sempre via `uv run` (o script chama `mypy`/`ruff` puros; precisa do venv). Gate = mypy + ty + ruff + format.

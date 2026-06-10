@@ -20,6 +20,7 @@ class ProductCreate(SQLModel):
     price_amount_minor: int = Field(ge=0)
     price_currency: str | None = Field(default=None, max_length=3)
     is_featured: bool = False
+    category_ids: list[uuid.UUID] = Field(min_length=1)
 
 
 class ProductUpdate(SQLModel):

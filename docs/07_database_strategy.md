@@ -100,7 +100,9 @@ Exemplos:
 | `discount_coupons` | Sim |
 | `content_pages` | Sim |
 | `content_menus` | Sim |
+| `content_menu_items` | Sim |
 | `content_store_theme_settings` | Sim |
+| `content_banners` | Sim |
 | `media_files` | Sim |
 
 ## Tabelas principais

@@ -186,7 +186,7 @@ Segredos devem ficar em:
 
 - AWS Secrets Manager;
 - SSM Parameter Store;
-- variáveis de ambiente seguras no ambiente local.
+- variáveis de ambiente seguras no ambiente de desenvolvimento.
 
 Não commitar:
 

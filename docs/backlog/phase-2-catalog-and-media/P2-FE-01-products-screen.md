@@ -30,7 +30,7 @@ Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) n
 - Personalização 3D no produto → **[Fase 5 — Produtos 3D](../phase-5-3d-products.md)**. Storefront → Fase 3.
 
 ## Arquivos a criar/alterar
-- `frontend/src/` — rota/tela de Produtos, componente de upload, hooks; `lib/menu.ts` (módulo Produtos).
+- `frontend-dashboard/src/` — rota/tela de Produtos, componente de upload, hooks; `lib/menu.ts` (módulo Produtos).
 
 ## Passos
 1. Rota + lista paginada + form de produto.

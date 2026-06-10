@@ -45,14 +45,14 @@ docker compose up -d          # build + start the whole stack
 
 | Service | URL |
 |---|---|
-| Dashboard (merchant panel) | http://localhost:5180 · http://app.loja.localhost:8088 |
-| API | http://localhost:8800 · http://api.loja.localhost:8088 |
+| Dashboard (merchant panel) | http://localhost:5180 · http://app.localhost:8088 |
+| API | http://localhost:8800 · http://api.localhost:8088 |
 | API docs (Swagger UI) | http://localhost:8800/docs |
 | Adminer (database UI) | http://localhost:8810 |
 | Mailcatcher (captured emails) | http://localhost:1090 |
 | Traefik dashboard | http://localhost:8091 |
 
-> `*.loja.localhost` resolves to `127.0.0.1` in browsers automatically. For CLI
+> `*.localhost` resolves to `127.0.0.1` in browsers automatically. For CLI
 > tools, add the hosts to `/etc/hosts`.
 
 Sign in with the superuser from your `.env` (`FIRST_SUPERUSER` /
