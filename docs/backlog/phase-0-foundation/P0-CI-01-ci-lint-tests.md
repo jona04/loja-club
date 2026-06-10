@@ -54,7 +54,7 @@ Depois do refactor modular (módulos, remoção de `items`, `account_users`), o 
 - [~] CI verde no GitHub Actions — workflows ajustados para a estrutura/portas novas; **não executado ao vivo** (o usuário gerencia o git; sem push nesta sessão).
 
 ## Notas / Reconciliações
-- Esta é a parte de **CI** (Etapa 1 do roadmap). O **CD** (deploy automatizado) é a Etapa 21, na Fase 9.
+- Esta é a parte de **CI** (Etapa 1 do roadmap). O **CD** (deploy automatizado) é a Fase 9 (CI/CD).
 - **Docstrings (DEC-13):** habilitado Ruff `D` + `convention = "google"` no `backend/pyproject.toml`; `tests/**` isento via `per-file-ignores` (testes documentam intenção pelos nomes/asserts). Docstrings Google adicionadas em todos os módulos/pacotes/funções/métodos do template em `app/` (deps, config, security, db, utils, routes/auth dos accounts, entry scripts). Gate `ruff check app` verde.
 - **Gate sobre `tests/` (estendido na `P1-TEST-01`):** o `scripts/lint.sh` passou a rodar `mypy app tests` + `ruff check/format app tests` (antes só `app`; um `F401` em teste tinha passado batido). O `ty` segue só em `app`. `boto3` (sem stubs) usa `# type: ignore[import-untyped]` na linha do import.
 - **Client OpenAPI:** regenerado com `@hey-api/openapi-ts` (via `npm run generate-client`; `generate-client.sh` usa `bun`, ausente local — saída idêntica, mesmo gerador). `frontend-dashboard/openapi.json` é gitignored (artefato). Removidos o componente órfão `PendingItems.tsx` e o E2E morto `tests/items.spec.ts` + helpers `randomItem*`.

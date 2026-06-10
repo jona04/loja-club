@@ -12,17 +12,6 @@ A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
 
-## Situação atual (2026-06-01)
-
-> Até aqui, os commits do projeto foram **somente de documentação**. O código ainda é o **Full Stack FastAPI Template** praticamente sem alterações:
->
-> - `backend/app/models.py` só tem `User` e `Item`;
-> - `PROJECT_NAME` ainda é `"Full Stack FastAPI Project"` (branding Loja Club pendente);
-> - o frontend ainda é o painel padrão do template (login/signup/items);
-> - não existe `Store`, `store_id`, módulos, storefront Next.js nem admin.
->
-> Ou seja: a **Etapa 1 está apenas parcialmente feita** (projeto gerado pelo template) e as demais ainda não começaram.
-
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
@@ -32,6 +21,7 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
 - **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 8–9.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
+- **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](./backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
 
 ---
 
@@ -81,7 +71,7 @@ Template transformado em monólito modular.
 
 ## Fase 1 — Núcleo multi-tenant e painel (dev local)
 
-### Etapa 3 — Multi-tenancy e lojas
+### Etapa 1 — Multi-tenancy e lojas
 
 Entregas:
 
@@ -102,7 +92,7 @@ Resultado:
 Usuário cria loja e os dados ficam isolados por store_id.
 ```
 
-### Etapa 4 — Painel do lojista base
+### Etapa 2 — Painel do lojista base
 
 Entregas:
 
@@ -125,7 +115,7 @@ Lojista consegue acessar e gerenciar sua loja básica.
 
 ## Fase 2 — Catálogo e mídia (dev local)
 
-### Etapa 5 — Catálogo e mídia
+### Etapa 1 — Catálogo e mídia
 
 > Mídia já usa **AWS S3 + CloudFront reais** a partir do dev local (bucket/distribuição de dev). Sem MinIO.
 
@@ -155,7 +145,7 @@ Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFron
 
 ## Fase 3 — Loja pública (dev local)
 
-### Etapa 7 — Storefront público (Next.js)
+### Etapa 1 — Storefront público (Next.js)
 
 > Decisão fechada (docs 05/10/18): o storefront usa **Next.js** desde a V1, com **Three.js** para o editor 3D.
 
@@ -179,7 +169,7 @@ Resultado:
 Loja pública abre em nomedaloja.loja.club (local: *.localhost).
 ```
 
-### Etapa 8 — Layouts/templates
+### Etapa 2 — Layouts/templates
 
 Entregas:
 
@@ -243,9 +233,9 @@ Lojista personaliza o template pelo painel; a vitrine reflete.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
 > (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 8.
 
-### Etapa 9 — Frete e cupons (base)
+### Etapa 1 — Frete e cupons (base)
 
-> Movido para antes do carrinho: carrinho (Etapa 10) e checkout (Etapa 11) dependem destas regras.
+> Movido para antes do carrinho: carrinho (Etapa 2) e checkout (Etapa 3) dependem destas regras.
 
 Entregas:
 
@@ -266,7 +256,7 @@ Resultado:
 Loja tem regras básicas de entrega e desconto disponíveis para o carrinho e o checkout.
 ```
 
-### Etapa 10 — Carrinho
+### Etapa 2 — Carrinho
 
 Entregas:
 
@@ -290,7 +280,7 @@ Resultado:
 Cliente final consegue montar carrinho.
 ```
 
-### Etapa 11 — Checkout sem pagamento online
+### Etapa 3 — Checkout sem pagamento online
 
 Entregas:
 
@@ -315,7 +305,7 @@ Resultado:
 Carrinho vira pedido pending_payment, com o cliente identificado por e-mail/telefone; o pagamento é combinado entre loja e cliente.
 ```
 
-### Etapa 12 — Pedidos
+### Etapa 4 — Pedidos
 
 Entregas:
 
@@ -339,7 +329,7 @@ Resultado:
 Lojista consegue operar vendas recebidas.
 ```
 
-### Etapa 13 — Clientes
+### Etapa 5 — Clientes
 
 Entregas:
 
@@ -357,7 +347,7 @@ Resultado:
 Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, mesmo sem cadastro.
 ```
 
-### Etapa 14 — Notificações essenciais + finalização local
+### Etapa 6 — Notificações essenciais + finalização local
 
 > Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 8.
 
@@ -403,7 +393,7 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 > O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](./backlog/phase-7-3d-products.md).
 
-### Etapa 6 — Produtos 3D e personalização
+### Etapa 1 — Produtos 3D e personalização
 
 Entregas:
 
@@ -431,7 +421,7 @@ Cliente personaliza, em 3D, um produto cujo modelo o próprio lojista gerou via 
 
 > Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
 
-### Etapa 15 — Deploy do ambiente dev na AWS (EC2)
+### Etapa 1 — Deploy do ambiente dev na AWS (EC2)
 
 Entregas:
 
@@ -451,7 +441,7 @@ Resultado:
 Sistema no ar (dev), em EC2, pronto para receber webhooks de pagamento.
 ```
 
-### Etapa 16 — Conta e login do cliente
+### Etapa 2 — Conta e login do cliente
 
 > Detalhes em `23_customer_identity_and_guest_checkout.md`. No MVP o cliente já é identificado por e-mail/telefone; aqui ele ganha login e área própria, sincronizando com o que comprou como convidado.
 
@@ -473,7 +463,7 @@ Resultado:
 Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
 ```
 
-### Etapa 17 — Pagamentos e split
+### Etapa 3 — Pagamentos e split
 
 Entregas:
 
@@ -495,7 +485,7 @@ Resultado:
 Cliente paga, gateway divide valores e pedido é atualizado por webhook.
 ```
 
-### Etapa 18 — Billing da Loja Club
+### Etapa 4 — Billing da Loja Club
 
 Entregas:
 
@@ -520,7 +510,7 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 > O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
 
-### Etapa 20 — Segurança e observabilidade
+### Etapa 1 — Segurança e observabilidade
 
 Entregas:
 
@@ -543,7 +533,7 @@ Resultado:
 Ambiente dev online pronto para uso controlado.
 ```
 
-### Etapa 21 — CI/CD
+### Etapa 2 — CI/CD
 
 Entregas:
 
@@ -560,7 +550,7 @@ Resultado:
 Deploy automatizado do ambiente dev na AWS a cada merge.
 ```
 
-### Etapa 22 — Beta com lojas reais
+### Etapa 3 — Beta com lojas reais
 
 Entregas:
 

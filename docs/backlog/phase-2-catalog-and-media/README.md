@@ -2,7 +2,7 @@
 
 > O **3D/personalização** é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md) (lojista gera os modelos via API de terceiros). Esta fase entrega só imagem.
 
-> Roadmap: Etapa 5. Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja.
+> Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [07](../../07_database_strategy.md), [09](../../09_merchant_dashboard.md), [12](../../12_aws_infrastructure_and_deployment.md), [13](../../13_performance_cache_and_cdn.md), [14](../../14_security_strategy.md), [16](../../16_testing_strategy.md), [20](../../20_api_contracts_todo.md).
 

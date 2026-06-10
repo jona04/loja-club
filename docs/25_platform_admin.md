@@ -26,7 +26,7 @@ O admin é a ferramenta interna da plataforma — separada do painel do lojista.
 
 ### Cadastro "inteligente" de templates — abordagem
 
-Um template tem **código** (componentes React no `frontend-storefront`) **e dados** (metadados, settings schema, assets). O admin cadastra/gerencia a **parte de dados**; o **código** de um template **genuinamente novo** ainda exige deploy do storefront. Logo, "cadastrar um template" no admin = criar/editar o **registro** (metadados + schema + URLs dos assets no CDN) de um template cujo código já existe na vitrine. O fluxo do admin cobre: subir assets, definir/versionar o schema, publicar o preview navegável (loja-demo) e ativar/desativar. (Um cadastro 100% dinâmico — código incluso — é evolução futura.)
+Um template tem **código** (componentes React + o **manifesto `settings_schema`** no `frontend-storefront`) **e dados** (metadados, assets, valores por loja). O **schema vem do código** (seedado no deploy) — o admin **não autora os campos**, o que evita divergência schema↔código. O admin gerencia a parte **operável**: subir **assets pro CDN**, ajustar **metadados**, publicar o **preview navegável** (loja-demo) e **ativar/desativar**. Um template **genuinamente novo** exige deploy do storefront (código + manifesto); cadastro 100% dinâmico é evolução futura.
 
 ## Fora do escopo da Fase 4 (fica para a Fase 9)
 

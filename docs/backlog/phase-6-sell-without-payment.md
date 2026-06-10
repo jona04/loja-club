@@ -1,6 +1,6 @@
 # Fase 6 — Venda sem pagamento online (dev local)
 
-> Roadmap: Etapas 9–14 + 🚀 Marco. Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela o preço, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 8.
+> Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela o preço, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 8.
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [10](../10_storefront_and_layouts.md), [11](../11_checkout_payments_and_split.md), [13](../13_performance_cache_and_cdn.md), [15](../15_observability_and_operations.md), [22](../22_product_customization_3d.md), [23](../23_customer_identity_and_guest_checkout.md), [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
 
@@ -16,7 +16,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 9 — Módulo `shipping` (frete) — antes do carrinho
+## Etapa 1 — Módulo `shipping` (frete) — antes do carrinho
 
 ### Modelos (com `store_id`)
 - [ ] `shipping_methods`: `type` (`fixed_shipping|free_shipping|local_pickup|private_delivery`), `is_active`, nome, descrição exibida no checkout. Doc [07](../07_database_strategy.md)/[11](../11_checkout_payments_and_split.md).
@@ -29,7 +29,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 9 — Módulo `discounts` (cupons) — antes do carrinho
+## Etapa 2 — Módulo `discounts` (cupons) — antes do carrinho
 
 - [ ] `discount_coupons` (`store_id`, `code` único quando ativo, `type` `percentual|fixo`, validade, limite de uso, pedido mínimo, status). `discount_coupon_redemptions`. Doc [07](../07_database_strategy.md)/[09](../09_merchant_dashboard.md).
 - [ ] CRUD + serviço de validação/aplicação (consumido pelo carrinho). Doc [20](../20_api_contracts_todo.md).
@@ -37,7 +37,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 11/13 — Módulo `customers` (identidade + dedup, escopo MVP)
+## Etapa 3 — Módulo `customers` (identidade + dedup, escopo MVP)
 
 > Apenas guest + dedup nesta fase. Login por código/senha/Google e área do cliente são **Fase 8**. Doc [23](../23_customer_identity_and_guest_checkout.md).
 
@@ -55,12 +55,12 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - [ ] Cookie HTTP-only `guest_session_id`; criar/recuperar/renovar; vincular ao customer no checkout; validade 30 dias. Doc [23](../23_customer_identity_and_guest_checkout.md).
 - [ ] Recuperação no **mesmo navegador** (cookie). (Recuperação por código fica na Fase 8.)
 
-### Frontend (painel) — Etapa 13
+### Frontend (painel) — Etapa 3
 - [ ] **Clientes**: listar, detalhe, histórico de pedidos, endereços, busca por nome/e-mail/telefone. Doc [09](../09_merchant_dashboard.md).
 
 ---
 
-## Etapa 10 — Módulo `cart` (carrinho)
+## Etapa 4 — Módulo `cart` (carrinho)
 
 ### Modelos (com `store_id`)
 - [ ] `cart_carts`: `guest_session_id`|`customer_id`, `status`; índices `store_id+guest_session_id+status`, `store_id+customer_id+status`. Doc [07](../07_database_strategy.md).
@@ -77,7 +77,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 11 — Módulo `checkout`
+## Etapa 5 — Módulo `checkout`
 
 ### Modelo
 - [ ] `checkout_sessions`: `store_id`, `cart_id`, `status`, `expires_at` (≈24h). Índices `store_id+cart_id+status`, `expires_at+status`. Doc [07](../07_database_strategy.md)/[23](../23_customer_identity_and_guest_checkout.md).
@@ -97,7 +97,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 12 — Módulo `orders` (pedidos)
+## Etapa 6 — Módulo `orders` (pedidos)
 
 ### Modelos (com `store_id`)
 - [ ] `order_orders`: status (`draft|pending_payment|paid|payment_failed|processing|shipped|delivered|canceled|refunded|chargeback`), total, frete, desconto, método de entrega, `customer_id`, `guest_session_id`. Doc [07](../07_database_strategy.md)/[11](../11_checkout_payments_and_split.md).
@@ -111,7 +111,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 14 — Notificações essenciais + finalização local
+## Etapa 7 — Notificações essenciais + finalização local
 
 > Reaproveitar a base de e-mail do template (`app/utils.py` `send_email` + MJML em `app/email-templates/`), **mas o envio roda no worker** (task `send_email` enfileirada via `enqueue()`, INV-F5) — nunca inline. No **dev local**, e-mails caem no **Mailcatcher**; SES/SMTP real entra na Fase 8. Doc [21](../21_design_system_todo.md)/[15](../15_observability_and_operations.md).
 
@@ -129,7 +129,7 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 
 ---
 
-## Etapa 9–14 — Testes (doc [16](../16_testing_strategy.md))
+## Testes (doc [16](../16_testing_strategy.md))
 - [ ] Compra sem login; carrinho recuperado no mesmo navegador; recuperação por token.
 - [ ] **Dedup**: mesmo e-mail/telefone cai no mesmo customer; primeiro-nome-vence; conflito resolve por e-mail.
 - [ ] Carrinho cria pedido `pending_payment`; **preço congelado**.

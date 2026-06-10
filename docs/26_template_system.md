@@ -36,13 +36,13 @@ cadastra template  ─┬─ assets → CDN    escolhe template (picker)    vê 
                        navegável (demo)  (outra aba)                   da loja
 ```
 
-- **Cadastro (admin, [Fase 4](./backlog/phase-4-platform-admin.md)):** metadados + **upload de assets pro CDN** + **settings schema** + **preview navegável** publicado.
+- **Cadastro (admin, [Fase 4](./backlog/phase-4-platform-admin.md)):** metadados + **upload de assets pro CDN** + **registro do schema** (vindo do código, seedado) + **preview navegável** publicado.
 - **Configuração (lojista, [Fase 5](./backlog/phase-5-store-configuration.md)):** escolhe o template + **personaliza via form gerado do schema** + abre o **preview navegável completo**.
 - **Render (storefront):** a vitrine resolve `active_template_id` → componentes React, lendo dados reais + `theme.settings[key] ?? default`.
 
 ## Personalização schema-driven (o "settings schema")
 
-Cada template **declara** os campos editáveis num **manifesto** (`settings_schema`), e o painel renderiza **um form genérico** a partir dele (um componente, N schemas — nem form hardcoded nem tela por template). Escala pro admin cadastrar templates novos (Fase 4) sem código de painel novo.
+Cada template **declara** os campos editáveis num **manifesto** (`settings_schema`) **no próprio código React**, que é **seedado** em `content_theme_templates.settings_schema` no deploy. O painel renderiza **um form genérico** a partir dele (um componente, N schemas — nem form hardcoded nem tela por template). O **admin não edita os campos** (evita divergência schema↔código): ele sobe assets + ativa. Um template **genuinamente novo** exige deploy do `frontend-storefront` (código + manifesto); cadastro 100% dinâmico é evolução futura.
 
 - **Campos:** `{ key, type, label, group, default, max_length? }`. Tipos V1: `text` · `textarea` · `image` · `boolean` · `select` (cor do tema = follow-up).
   - Bloco que **só existe num template** → só no schema dele; bloco **opcional** → campo `boolean`.

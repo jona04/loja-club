@@ -1,6 +1,6 @@
 # Fase 1 — Multi-tenancy e painel base
 
-> Roadmap: Etapas 3–4. Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.loja.club`, seleciona loja ativa e vê um menu controlado por permissões.
+> Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.loja.club`, seleciona loja ativa e vê um menu controlado por permissões.
 
 Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules_and_permissions.md), [09](../09_merchant_dashboard.md), [05](../05_frontend_architecture.md), [14](../14_security_strategy.md), [16](../16_testing_strategy.md).
 
@@ -18,13 +18,13 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 3 — Padrão de API (`P1-API-01`)
+## Etapa 1 — Padrão de API (`P1-API-01`)
 
 - [ ] Travar o padrão da **primeira API real** (Fundações §5; resolve **DEC-5**): URL/versão (`/api/v1`; painel `/stores/{store_id}/...`; storefront por `Host`), **paginação** (decidir offset vs cursor), envelope de response, formato de erro e headers de tenant. Reusar em todos os endpoints. Doc [20](../20_api_contracts_todo.md).
 
 ---
 
-## Etapa 3 — Retrofit `account_users` (`P1-ACCT-01`)
+## Etapa 2 — Retrofit `account_users` (`P1-ACCT-01`)
 
 - [ ] `account_users` (Fase 0) passa a usar `TimestampMixin` (+`updated_at`) e `SoftDeleteMixin`; remoção vira **soft delete** (template fazia hard delete). Alinha INV-D2/doc [07](../07_database_strategy.md). Leituras/auth ignoram soft-deletados.
 
@@ -44,7 +44,7 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 3 — Módulos `accounts` ↔ `stores` (membros, papéis, permissões)
+## Etapa 4 — Módulos `accounts` ↔ `stores` (membros, papéis, permissões)
 
 ### Modelos — membros/papéis (`P1-PERM-01`)
 - [ ] `store_members` (`app/modules/stores/models.py`): `store_id`, `user_id` (→ `account_users`), `role` (→ `store_roles`), `status`, `invited_at`, `removed_at`, timestamps, soft delete. Índice único `store_id + user_id` quando ativo + `store_id + status`. Doc [08](../08_modules_and_permissions.md)/[07](../07_database_strategy.md).
@@ -61,7 +61,7 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 3 — Módulo `tenancy` (`P1-TEN-01`)
+## Etapa 5 — Módulo `tenancy` (`P1-TEN-01`)
 
 - [ ] `app/modules/tenancy/deps.py`: `get_active_store(store_id)` resolve a loja do path `/stores/{store_id}` e valida membership (painel). Doc [08](../08_modules_and_permissions.md).
 - [ ] `resolve_store_by_host(host)` para storefront: busca em `domain_hosts`, retorna `store_id`; usa cache `domain:{host}` no Redis. (Interface aqui; consumo público na Fase 3.) Doc [06](../06_multitenancy_and_domains.md)/[13](../13_performance_cache_and_cdn.md).
@@ -69,7 +69,7 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 3 — Módulo `domains` (`P1-DOM-01`)
+## Etapa 6 — Módulo `domains` (`P1-DOM-01`)
 
 ### Modelo (`app/modules/domains/models.py`)
 - [ ] `domain_hosts`: `id`, `store_id`, `host` (único), `type` (`platform_subdomain|custom_domain`), `status` (`pending|active|failed|blocked`), `ssl_status` (`pending|issued|failed`), `verified_at`, timestamps, `deleted_at`. Doc [06](../06_multitenancy_and_domains.md)/[07](../07_database_strategy.md).
@@ -82,7 +82,7 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 4 — Painel do lojista (frontend-dashboard)
+## Etapa 7 — Painel do lojista (frontend-dashboard)
 
 > Reaproveitar o frontend do template como `frontend-dashboard`. Doc [05](../05_frontend_architecture.md)/[09](../09_merchant_dashboard.md).
 
@@ -103,7 +103,7 @@ Docs de referência: [06](../06_multitenancy_and_domains.md), [08](../08_modules
 
 ---
 
-## Etapa 3/4 — Testes (`P1-TEST-01`, doc [16](../16_testing_strategy.md))
+## Testes (`P1-TEST-01`, doc [16](../16_testing_strategy.md))
 
 - [ ] **Fixtures/factories multi-tenant**: duas lojas (A/B) com membros/papéis + headers de auth, reutilizáveis pelas próximas fases (Fundações §10).
 - [ ] **Isolamento multi-tenant**: usuário da Loja A não acessa dados da Loja B; recurso só é achado com `store_id` correto.

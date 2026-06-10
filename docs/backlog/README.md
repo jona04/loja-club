@@ -10,18 +10,18 @@ O **admin do SaaS** ([Fase 4](./phase-4-platform-admin.md)) e a **configuração
 
 ## Arquivos
 
-| Fase | Arquivo | Etapas do roadmap | Objetivo |
+| Fase | Arquivo | Etapas | Objetivo |
 |---|---|---|---|
 | 0 | [phase-0-foundation.md](./phase-0-foundation.md) · [tasks](./phase-0-foundation/README.md) | 1–2 | Branding, config, Redis, esqueleto modular — **decomposta em tasks** |
-| 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 3–4 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
-| 2 | [phase-2-catalog-and-media.md](./phase-2-catalog-and-media.md) · [tasks](./phase-2-catalog-and-media/README.md) | 5 | Catálogo (imagem) + mídia/S3 — **decomposta em tasks** |
-| 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) · [tasks](./phase-3-storefront-and-layouts/README.md) | 7–8 | Storefront Next.js, layouts (sem editor 3D) — **decomposta em tasks** |
-| 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) | (admin) | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **cadastrar templates** (CDN + preview navegável) — **antes do lançamento** |
-| 5 | [phase-5-store-configuration.md](./phase-5-store-configuration.md) | (config) | **Configuração da loja**: lojista personaliza o template (**schema-driven**) + preview navegável (task `P3-TPL-04`, schema-driven) |
-| 6 | [phase-6-sell-without-payment.md](./phase-6-sell-without-payment.md) | 9–14 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
-| 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 6 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
-| 8 | [phase-8-customer-account-and-payments.md](./phase-8-customer-account-and-payments.md) | 15–18 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
-| 9 | [phase-9-platform-ops-and-production.md](./phase-9-platform-ops-and-production.md) | 20–22 | Segurança/observabilidade, **CI/CD**, beta (o admin é a Fase 4) |
+| 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 1–7 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
+| 2 | [phase-2-catalog-and-media.md](./phase-2-catalog-and-media.md) · [tasks](./phase-2-catalog-and-media/README.md) | 1 | Catálogo (imagem) + mídia/S3 — **decomposta em tasks** |
+| 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) · [tasks](./phase-3-storefront-and-layouts/README.md) | 1–4 | Storefront Next.js, templates (Aurora/Bazar/Studio) — **decomposta; concluída** |
+| 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) | 1–3 | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **cadastrar templates** (CDN + preview navegável) — **antes do lançamento** |
+| 5 | [phase-5-store-configuration.md](./phase-5-store-configuration.md) | 1–4 | **Configuração da loja**: lojista personaliza o template (**schema-driven**) + preview navegável + conteúdo das páginas |
+| 6 | [phase-6-sell-without-payment.md](./phase-6-sell-without-payment.md) | 1–7 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
+| 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 1–7 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
+| 8 | [phase-8-customer-account-and-payments.md](./phase-8-customer-account-and-payments.md) | 1–4 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
+| 9 | [phase-9-platform-ops-and-production.md](./phase-9-platform-ops-and-production.md) | 1–3 | Segurança/observabilidade, **CI/CD**, beta (o admin é a Fase 4) |
 
 > **Fim do MVP (dev local):** Fase 6. **V1 completa (dev online na AWS):** Fase 9.
 
@@ -30,13 +30,16 @@ O **admin do SaaS** ([Fase 4](./phase-4-platform-admin.md)) e a **configuração
 ```text
 Fase     → arquivo .md genérico (visão geral / trilha) — sempre presente
            + pasta phase-N-*/ com README de índice, quando decomposta
- Etapa   → entregável do roadmap (## Etapa N)
+ Etapa   → módulo/entregável da fase (## Etapa N) — numeração LOCAL 1..N por fase, inteiros
   Task   → um arquivo por task na pasta, com ID estável P{fase}-{ÁREA}-{NN}
 ```
 
+- **Estrutura padrão do `.md` da fase:** segue o **[`_phase-template.md`](./_phase-template.md)** — `# Fase` + Objetivo + Docs + `## Definition of Done` + `## Etapa 1..N` (cada uma com `###` + tarefas `[ ]`) + `## Testes` + `## Reconciliações`. **Etapas têm numeração LOCAL** (1, 2, 3… **por fase**, inteiros — sem numeração global, sem decimais como `4.1`); `## Testes` **não** é etapa.
+  - **Canônico vs trilha:** a decomposição em etapas **canônica** é a daqui (`phase-N-*.md`); o **[roadmap 17](../17_v1_roadmap.md)** é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (a contagem por fase pode diferir).
 - Cada **task** é um arquivo com descrição, dependências (`depends_on`), docs de referência, **Escopo / Fora de escopo**, arquivos a alterar e **DoD**. Modelo em [`_task-template.md`](./_task-template.md).
 - O **status** de cada task fica no frontmatter (`todo|doing|blocked|done`) e é refletido na tabela do README da fase.
 - **Follow-ups / débitos técnicos:** cada README de fase tem uma seção **"Follow-ups / débitos técnicos"** (checkboxes). Toda nota de task que diga "fica para depois" **também** entra lá (ou vira task) — não fica só em prosa.
+  - **Apontar ≠ corrigir:** um follow-up endereçado a uma fase futura fica **`[ ]` (aberto)** com **`→ Fase N (Etapa X)`** — apenas aponta onde será resolvido. Vira **`[x]`** **só quando aquela fase o corrige**, marcando na **origem** (o README/task de origem) **e** na fase. Não marcar `[x]` por antecipação.
 - **Materialização just-in-time:** cada fase **sempre** tem seu **arquivo `.md` genérico** (visão geral / trilha). Ao começar uma fase, ela é **decomposta**: cria-se a **pasta `phase-N-*/`** com uma task por arquivo + README de índice, **mantendo o `.md` genérico** como consulta (a trilha de alto nível que levou às tasks). Até agora as **Fases 0, 1, 2 e 3** foram decompostas (`.md` genérico + pasta com tasks); as **Fases 4–9 seguem só com o `.md` genérico** (esboço) até entrarmos nelas.
 
 ## Fundações & Gargalos (leitura obrigatória)

@@ -1,6 +1,6 @@
 # Fase 2 — Catálogo e mídia
 
-> Roadmap: Etapa 5. Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja. O **3D** é a [Fase 7 — Produtos 3D](./phase-7-3d-products.md).
+> Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja. O **3D** é a [Fase 7 — Produtos 3D](./phase-7-3d-products.md).
 
 Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashboard.md), [12](../12_aws_infrastructure_and_deployment.md), [13](../13_performance_cache_and_cdn.md), [14](../14_security_strategy.md), [16](../16_testing_strategy.md), [20](../20_api_contracts_todo.md).
 
@@ -12,6 +12,36 @@ Docs de referência: [07](../07_database_strategy.md), [09](../09_merchant_dashb
 - Upload validado → **AWS S3** + **CloudFront**; thumbnails por **worker** (reais, inclusive do dev local).
 - Tela de **Produtos** no painel + componente de upload de imagem.
 - Testes de isolamento e regras (slug único por loja) passando.
+
+---
+
+## Etapa 1 — Mídia: storage + pipeline (S3/CloudFront)
+
+### Storage + pipeline (doc [12](../12_aws_infrastructure_and_deployment.md)/[13](../13_performance_cache_and_cdn.md))
+- [ ] Abstração fina de storage (`app/core/storage.py`; o domínio não conhece boto3) + AWS dev real (us-east-2). (`P2-MEDIA-01`.)
+- [ ] `media_files` + upload validado → **S3**; **worker** gera thumbnails (Pillow); servir por **CloudFront**. (`P2-MEDIA-02`.)
+
+---
+
+## Etapa 2 — Catálogo: modelos + rotas
+
+### Modelos (com `store_id`) (doc [07](../07_database_strategy.md))
+- [ ] `catalog_products` (só imagem; `type` 3D = [Fase 7](./phase-7-3d-products.md)), `catalog_categories`, variações, estoque, status publicado/rascunho; `slug` **único por loja** (índice parcial). (`P2-CAT-01`.)
+
+### Rotas/serviço (doc [20](../20_api_contracts_todo.md))
+- [ ] CRUD + publish/archive sob `/api/v1/stores/{id}/...`, gating `catalog.*`, `Page[T]`. (`P2-CAT-02`.)
+
+---
+
+## Etapa 3 — Frontend (painel)
+- [ ] Tela de **Produtos** + componente de **upload de imagem** (`ProductImageUpload`). Doc [09](../09_merchant_dashboard.md). (`P2-FE-01`.)
+
+---
+
+## Testes (doc [16](../16_testing_strategy.md))
+- [ ] Isolamento multi-tenant (produto/categoria por loja); `slug` único por loja; upload → S3 + thumbnail por worker.
+
+---
 
 ## Fora desta fase
 

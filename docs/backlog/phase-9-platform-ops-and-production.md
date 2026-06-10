@@ -1,6 +1,6 @@
 # Fase 9 — Operação da plataforma, CI/CD e beta
 
-> Roadmap: Etapas 20–22. Objetivo: o ambiente **dev online na AWS** fica seguro e observável, o deploy vira **CI/CD automatizado** e a V1 é validada em **beta** com lojas reais. (O **admin da plataforma** é a **[Fase 4](./phase-4-platform-admin.md)**; produção robusta com ECS/Fargate é **pós-V1** — ver o fim deste arquivo.)
+> Objetivo: o ambiente **dev online na AWS** fica seguro e observável, o deploy vira **CI/CD automatizado** e a V1 é validada em **beta** com lojas reais. (O **admin da plataforma** é a **[Fase 4](./phase-4-platform-admin.md)**; produção robusta com ECS/Fargate é **pós-V1** — ver o fim deste arquivo.)
 
 Docs de referência: [05](../05_frontend_architecture.md), [08](../08_modules_and_permissions.md), [09](../09_merchant_dashboard.md), [22](../22_product_customization_3d.md), [14](../14_security_strategy.md), [15](../15_observability_and_operations.md), [12](../12_aws_infrastructure_and_deployment.md), [13](../13_performance_cache_and_cdn.md), [19](../19_legal_and_compliance_todo.md), [16](../16_testing_strategy.md), [17](../17_v1_roadmap.md).
 
@@ -13,7 +13,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [08](../08_modules_an
 
 ---
 
-## Etapa 20 — Segurança e observabilidade (módulo `audit` + hardening)
+## Etapa 1 — Segurança e observabilidade (módulo `audit` + hardening)
 
 Doc [14](../14_security_strategy.md), [15](../15_observability_and_operations.md).
 
@@ -36,12 +36,9 @@ Doc [14](../14_security_strategy.md), [15](../15_observability_and_operations.md
 - [ ] **HTTPS + headers** (HSTS, X-Content-Type-Options, CSP/X-Frame-Options) + **CORS restrito** a `app.`, `admin.`, `*.`, `loja.club`. Doc [14](../14_security_strategy.md).
 - [ ] Política de **retenção de logs** (app 14–30 dias; auditoria por mais tempo). Doc [15](../15_observability_and_operations.md).
 
-### Testes (doc [16](../16_testing_strategy.md))
-- [ ] permissão validada no backend (não só no front); assinatura de webhook; rate limit; URL assinada para arquivo privado; entradas de auditoria geradas.
-
 ---
 
-## Etapa 21 — CI/CD
+## Etapa 2 — CI/CD
 
 Doc [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
 
@@ -51,18 +48,14 @@ Doc [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strateg
 - [ ] **Rollback** básico (versão anterior das imagens).
 - [ ] Secrets do pipeline fora do código (GitHub Secrets/SSM). Doc [14](../14_security_strategy.md).
 
-### Testes/validação
-- [ ] Um merge dispara o pipeline e atualiza o ambiente dev online sem passos manuais.
-
 ---
 
-## Etapa 22 — Beta com lojas reais
+## Etapa 3 — Beta com lojas reais
 
 Doc [17](../17_v1_roadmap.md), [02](../02_business_model_and_rules.md), [16](../16_testing_strategy.md), [19](../19_legal_and_compliance_todo.md).
 
 - [ ] Onboarding das primeiras lojas (brindes, gráficas, comunicação visual), seguindo o checklist do doc [09](../09_merchant_dashboard.md).
 - [ ] Testar vendas reais; personalização 3D real; **validar pagamento e split**; suporte; coletar feedback; corrigir bugs críticos. Doc [17](../17_v1_roadmap.md).
-- [ ] **Testes de carga** (doc [16](../16_testing_strategy.md)): listagem de produtos, home, página de produto, editor 3D, criação de carrinho/pedido, webhook.
 - [ ] **Jurídico/compliance mínimo** antes de clientes reais: termos de uso, termos do lojista, política de privacidade/LGPD, produtos proibidos, chargeback (doc [19](../19_legal_and_compliance_todo.md)).
 
 ### Critério de V1 completa
@@ -70,6 +63,13 @@ Doc [17](../17_v1_roadmap.md), [02](../02_business_model_and_rules.md), [16](../
 - [ ] Cliente entra na área do cliente (código/senha/Google) e edita perfil, com sync guest↔conta.
 - [ ] Pagamento processado pelo gateway; webhook confirma pedido; split aplicado; comissão registrada.
 - [ ] Billing/assinatura ativo (se definido na V1); admin monitora; segurança/observabilidade no ar; **CI/CD** ativo; beta validado. Doc [17](../17_v1_roadmap.md).
+
+---
+
+## Testes (doc [16](../16_testing_strategy.md))
+- [ ] **Segurança:** permissão validada no backend (não só no front); assinatura de webhook; rate limit; URL assinada para arquivo privado; entradas de auditoria geradas.
+- [ ] **CI/CD:** um merge dispara o pipeline e atualiza o ambiente dev online sem passos manuais.
+- [ ] **Carga** (beta): listagem de produtos, home, página de produto, editor 3D, criação de carrinho/pedido, webhook.
 
 ---
 

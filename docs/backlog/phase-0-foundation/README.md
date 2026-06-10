@@ -1,6 +1,6 @@
 # Fase 0 — Fundação (dev local)
 
-> Roadmap: Etapas 1–2. Objetivo: projeto com a cara da Loja Club, com Redis, esqueleto modular e o exemplo `items` removido, pronto para construir os domínios reais.
+> Objetivo: projeto com a cara da Loja Club, com Redis, esqueleto modular e o exemplo `items` removido, pronto para construir os domínios reais.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [03](../../03_system_architecture.md), [04](../../04_fastapi_template_adaptation.md), [07](../../07_database_strategy.md), [16](../../16_testing_strategy.md).
 
