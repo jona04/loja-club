@@ -4,7 +4,7 @@ title: Planos (seed/stub) — definições billing_plans gerenciadas pelo admin
 phase: 4
 etapa: "Etapa 2 — Operação: lojas, usuários, planos, suporte"
 area: PLAN
-status: todo
+status: done
 depends_on: [P4-PLAT-01]
 blocks: [P4-ADMIN-02]
 tests: [integration]
@@ -46,12 +46,15 @@ O admin gerencia as **definições** de planos — a tabela **`billing_plans`** 
 - **Cobrir:** seed cria Free/Pro; CRUD gated `platform.plans.*`; **nenhuma loja assina / nada é cobrado** (subscription/cobrança são Fase 8).
 
 ## Definition of Done
-- [ ] `billing_plans` seedado (Free/Pro) + CRUD admin gated `platform.plans.*`; `alembic check` vazio. Sem assinatura/cobrança (stub).
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `billing_plans` seedado (Free R$0/5% · Pro R$99,90/1,5%) + CRUD admin (`/platform/plans`) gated `platform.plans.view`/`update`; `alembic check` vazio. Sem assinatura/cobrança (stub).
+- [x] **Modos de falha mapeados** → tratados (chave duplicada → 409, não-encontrado → 404, soft-delete) ou Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** módulo `app/modules/billing/` (`models`/`schemas`/`repositories`/`services`) com `billing_plans` + seed + CRUD em `platform_admin/routes`; migration `9486ba430691`. Gate: **227 testes** (8 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
 - Usa a tabela **definida** `billing_plans` (doc [07](../../07_database_strategy.md)), não uma tabela nova. O **resto do `billing`** (assinatura/cobrança/comissão/enforcement) é a **Fase 8**; a Fase 4 introduz só as **definições** (consistente com doc [25](../../25_platform_admin.md): "consome billing quando existir; na V1 seed/stub").
+- **Decisões de impl:** mensalidade como `*_amount_minor` (int) + `*_currency` (padrão do projeto); **comissão em basis points** (int, `500` = 5%) — exata, sem float; **`key` única parcial** (entre não-deletados, padrão do `store_stores.slug`) — chave de plano deletado pode ser reusada.
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] — nenhum próprio (assinatura loja↔plano, cobrança e enforcement por plano são **Fase 8**, já em Fora de escopo).

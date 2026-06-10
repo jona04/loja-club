@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.modules.accounts import repositories
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserCreate
+from app.modules.billing.repositories import seed_billing_plans
 from app.modules.content.repositories import seed_content_templates
 from app.modules.platform_admin.enums import PlatformRole
 from app.modules.platform_admin.repositories import assign_platform_role
@@ -59,6 +60,7 @@ def init_db(session: Session) -> None:
     seed_store_roles(session=session)
     seed_store_permissions(session=session)
     seed_content_templates(session=session)
+    seed_billing_plans(session=session)
 
 
 def dispose_engine() -> None:

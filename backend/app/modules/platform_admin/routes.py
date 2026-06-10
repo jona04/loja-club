@@ -7,9 +7,16 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps import SessionDep
 from app.core.api import Page, PageParams, pagination_params
-from app.models import Token
+from app.models import Message, Token
 from app.modules.accounts.models import User
 from app.modules.accounts.schemas import UserPublic
+from app.modules.billing import services as billing_services
+from app.modules.billing.models import BillingPlan
+from app.modules.billing.schemas import (
+    BillingPlanCreate,
+    BillingPlanPublic,
+    BillingPlanUpdate,
+)
 from app.modules.platform_admin import services
 from app.modules.platform_admin.deps import require_platform_permission
 from app.modules.platform_admin.schemas import StoreAdminDetail, StoreAdminListItem
@@ -123,3 +130,65 @@ def impersonate_user(
     """Issue an access token to act on behalf of a user (recorded)."""
     token = services.impersonate(session=session, actor=actor, user_id=user_id)
     return Token(access_token=token)
+
+
+@router.get(
+    "/plans",
+    response_model=Page[BillingPlanPublic],
+    dependencies=[Depends(require_platform_permission("platform.plans.view"))],
+)
+def list_plans(
+    session: SessionDep,
+    params: Annotated[PageParams, Depends(pagination_params)],
+) -> Page[BillingPlanPublic]:
+    """List the subscription plan definitions."""
+    plans, count = billing_services.list_plans(
+        session=session, skip=params.skip, limit=params.limit
+    )
+    return Page(data=[BillingPlanPublic.model_validate(p) for p in plans], count=count)
+
+
+@router.get(
+    "/plans/{plan_id}",
+    response_model=BillingPlanPublic,
+    dependencies=[Depends(require_platform_permission("platform.plans.view"))],
+)
+def get_plan(plan_id: uuid.UUID, session: SessionDep) -> BillingPlan:
+    """Get a subscription plan definition by id."""
+    return billing_services.get_plan(session=session, plan_id=plan_id)
+
+
+@router.post(
+    "/plans",
+    response_model=BillingPlanPublic,
+    status_code=201,
+    dependencies=[Depends(require_platform_permission("platform.plans.update"))],
+)
+def create_plan(payload: BillingPlanCreate, session: SessionDep) -> BillingPlan:
+    """Create a subscription plan definition."""
+    return billing_services.create_plan(session=session, payload=payload)
+
+
+@router.patch(
+    "/plans/{plan_id}",
+    response_model=BillingPlanPublic,
+    dependencies=[Depends(require_platform_permission("platform.plans.update"))],
+)
+def update_plan(
+    plan_id: uuid.UUID, payload: BillingPlanUpdate, session: SessionDep
+) -> BillingPlan:
+    """Update a subscription plan definition."""
+    return billing_services.update_plan(
+        session=session, plan_id=plan_id, payload=payload
+    )
+
+
+@router.delete(
+    "/plans/{plan_id}",
+    response_model=Message,
+    dependencies=[Depends(require_platform_permission("platform.plans.update"))],
+)
+def delete_plan(plan_id: uuid.UUID, session: SessionDep) -> Message:
+    """Soft-delete a subscription plan definition."""
+    billing_services.delete_plan(session=session, plan_id=plan_id)
+    return Message(message="Plan deleted")

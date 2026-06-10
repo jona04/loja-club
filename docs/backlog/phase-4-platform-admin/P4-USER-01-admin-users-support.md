@@ -56,4 +56,5 @@ A gestão de `account_users` é do **admin**, não do painel do lojista. Inclui 
 - **Layering:** os checks inline de `is_superuser` (`read_user_by_id`/`delete_user_me`) **não** foram migrados para papel aqui — `accounts` é módulo mais baixo e não deve importar `platform_admin`. Ficam até o campo `is_superuser` ser removido (follow-up da `P4-PLAT-01`).
 
 ## Follow-ups
-- [ ] — nenhum próprio (a migração dos checks inline de `is_superuser` é follow-up da `P4-PLAT-01`).
+- [ ] **Hardening da impersonation** (→ Fase 9): o token emitido é **igual a um login normal do alvo** — não marca que é impersonation do admin. Só o **evento de acesso** é registrado em `audit_logs`; as **ações feitas durante a impersonation NÃO são auditadas** (aparecem como do próprio usuário). Faltam: **marca de impersonation no token** + **auditoria das ações** da sessão + **expiração curta** / "parar de impersonar". → README da fase.
+- A migração dos checks inline de `is_superuser` é follow-up da `P4-PLAT-01` (layering).
