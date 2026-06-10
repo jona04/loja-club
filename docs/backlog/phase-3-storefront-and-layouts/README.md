@@ -41,9 +41,10 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 7 | [P3-TPL-01](./P3-TPL-01-template-architecture-aurora.md) | **Arquitetura de templates + Aurora (POC):** resolver/registry + blocos compartilhados + Aurora (navegação) | ✅ done | P3-SF-02, P3-FE-02, P3-LOC-01 |
 | 8 | [P3-LOC-01](./P3-LOC-01-store-country-currency.md) | **Localização da loja:** país → moeda/locale/símbolo (deriva automático; `formatPrice` por loja) | ✅ done | — |
 | 9 | [P3-TPL-02](./P3-TPL-02-templates-bazar-studio.md) | **Bazar + Studio** — o **teste do contrato** (seções de categoria / sidebar; `category_sections`; `Shell` no contrato) | ✅ done | P3-TPL-01 |
-| 10 | [P3-TPL-03](./P3-TPL-03-dashboard-template-picker.md) | **Painel — Layout da loja:** seletor de template (nome + **thumb**) + **upload do banner** + corrigir **preview** | todo | P3-TPL-01 |
+| 10 | [P3-TPL-03](./P3-TPL-03-dashboard-template-picker.md) | **Painel — Layout da loja:** seletor de template (nome + **thumb**) + **upload do banner** + corrigir **preview** + defaults apresentáveis | todo | P3-TPL-01 |
+| 11 | [P3-TPL-04](./P3-TPL-04-template-settings-schema.md) | **Personalização por template** (theme settings **schema-driven**): manifesto por template → form genérico no painel; valores por loja×template; vitrine lê com defaults | todo | P3-TPL-02, P3-TPL-03 |
 
-> **Fase 3 quase completa.** Tasks 1–6 + `P3-LOC-01` + **`P3-TPL-01` (Aurora)** + **`P3-TPL-02` (Bazar + Studio)** `done` — o **contrato está VALIDADO**: 3 templates estruturalmente distintos (destaques / seções de categoria / sidebar) consomem os **mesmos dados + fluxo**. Falta só **`P3-TPL-03`** (painel: seletor + banner + preview). Checkout/confirmação funcionais = **[Fase 4](../phase-4-sell-without-payment.md)**.
+> **Fase 3 quase completa.** Tasks 1–6 + `P3-LOC-01` + **`P3-TPL-01` (Aurora)** + **`P3-TPL-02` (Bazar + Studio)** `done` — o **contrato está VALIDADO**: 3 templates estruturalmente distintos (destaques / seções de categoria / sidebar) consomem os **mesmos dados + fluxo**. Faltam **`P3-TPL-03`** (painel: seletor + banner + preview + defaults apresentáveis) e **`P3-TPL-04`** (personalização por template — **schema-driven**; pode ir pro pós-lançamento se pesar). Checkout/confirmação funcionais = **[Fase 4](../phase-4-sell-without-payment.md)**.
 
 ## Ordem sugerida de execução
 
@@ -51,7 +52,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 P3-FE-01  ∥  P3-CONTENT-01 → P3-CONTENT-02 → P3-FE-02
                          └→ P3-SF-01 → P3-SF-02   (SF-02 também depende de P3-FE-01)
 
-P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 (painel preview)
+P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 (painel preview) → P3-TPL-04 (settings por template)
                                   └ checkout/confirmação dos templates → Fase 4
 ```
 

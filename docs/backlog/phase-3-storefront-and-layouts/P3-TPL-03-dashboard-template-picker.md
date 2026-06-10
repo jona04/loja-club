@@ -27,13 +27,12 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 - **Indicar o ativo** (estado selecionado) e refletir na vitrine.
 - **Upload da imagem do banner/hero** da home: o lojista **sobe a imagem** pela tela "Layout da Loja" (S3 + CloudFront, como as imagens de produto/`media`), gravando em `banner_image_url`. Hoje o template tem hero/banner mas **não há como enviar a imagem**.
 - **Corrigir o botão "Preview"** da tela de Layout (hoje **não funciona**).
-- **Tornar editável o conteúdo hoje fixo/lorem** do template: subtítulo do hero, **barra de anúncio**, seção editorial, trust indicators, **páginas institucionais** (`/institucional/*` → `content_pages`), contato do footer e subtítulo do card. (Hoje hardcoded/lorem no Aurora — `P3-TPL-01`.)
-- **Aplicar o tema da loja** (cores/fonte: `theme.primary_color` etc.) nos templates — hoje o Aurora usa a **paleta fixa** do template.
+- **Defaults de chrome apresentáveis** (não-lorem): trocar os textos lorem/placeholder dos templates (ex.: faixa editorial do Aurora) por **defaults genéricos mas profissionais** — pra lançar nos defaults sem cara de quebrado. (Tornar esses textos **editáveis** pelo lojista = `P3-TPL-04`.)
 
 ## Fora de escopo (o que NÃO entra)
 - **Preview ao vivo** (render real da loja com o template) → futuro.
 - **Admin (loja.club) pra cadastrar/gerenciar templates** → Fase 7.
-- **Config de blocos por template** (ligar/desligar) → futuro.
+- **Personalização por template** (editar textos de chrome, ligar/desligar blocos, cores do tema) → **[`P3-TPL-04`](./P3-TPL-04-template-settings-schema.md)** (schema-driven).
 
 ## Arquivos a criar/alterar
 - `frontend-dashboard/src/routes/_layout/store-layout.tsx` (alterar) — grade de templates com imagem + seleção.
@@ -55,14 +54,14 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 ## Definition of Done
 - [ ] Painel lista os templates **com imagem de preview**; selecionar **grava** o `active_template_id`; o ativo fica indicado.
 - [ ] A **vitrine reflete** o template escolhido.
-- [ ] **Banner** enviável (S3) + **preview** funcionando; o conteúdo hoje fixo/lorem do template (anúncio, editorial, institucional, etc.) tem **campos no painel**; o **tema da loja** (cores) reflete no template.
+- [ ] **Banner** enviável (S3) + **preview** funcionando; os **defaults de chrome** dos templates são apresentáveis (não-lorem). (Editar esse conteúdo pelo lojista = `P3-TPL-04`.)
 - [ ] Gates verdes (dashboard `tsc`/biome/`vitest` + **e2e local**) + docs 09 reconciliado.
 - [ ] **Modos de falha mapeados** (`preview_image_url` ausente → placeholder; lista vazia; gravação falha) → tratados **ou** Follow-up.
 - [ ] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Reaproveita o endpoint de seleção de template do `P3-FE-02` quando existir; senão, cria um mínimo.
-- A task **cresceu** (picker + banner + preview + tornar todo o conteúdo editável + tema): ao fechar o spec, **provável dividir** — ex.: `P3-TPL-03a` (picker + banner + preview) e `P3-TPL-03b` (editor do conteúdo do template + tema).
+- **Dividida:** a personalização por template (editar anúncio/editorial/etc. + cores) saiu pra **[`P3-TPL-04`](./P3-TPL-04-template-settings-schema.md)** (schema-driven). Aqui fica o **picker + banner + preview** (+ defaults apresentáveis).
 
 ## Follow-ups
 - [ ] **Preview ao vivo no painel** — *Quando:* pós-V1 (hoje só a imagem). → README.
