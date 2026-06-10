@@ -2,7 +2,7 @@
 id: P1-PERM-01
 title: store_members + store_roles (membership)
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 4 — Módulos accounts ↔ stores"
 area: PERM
 status: done
 depends_on: [P1-ACCT-01, P1-STORE-01]

@@ -2,7 +2,7 @@
 id: P3-FE-02
 title: Painel — tela "Layout da Loja"
 phase: 3
-etapa: "Etapa 8 — Frontend (painel)"
+etapa: "Etapa 4 — Frontend (painel)"
 area: FE
 status: done
 depends_on: [P3-CONTENT-02]

@@ -2,7 +2,7 @@
 id: P2-CAT-02
 title: catalog — serviço/rotas (CRUD/publicar/categorias/variações/estoque/imagens)
 phase: 2
-etapa: "Etapa 5 — Módulo catalog"
+etapa: "Etapa 2 — Catálogo: modelos + rotas"
 area: CAT
 status: done
 depends_on: [P2-CAT-01, P2-MEDIA-02]

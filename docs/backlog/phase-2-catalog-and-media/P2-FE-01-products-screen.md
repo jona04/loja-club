@@ -2,7 +2,7 @@
 id: P2-FE-01
 title: Painel — tela de Produtos + componente de upload de imagem
 phase: 2
-etapa: "Etapa 5 — Frontend (painel)"
+etapa: "Etapa 3 — Frontend (painel)"
 area: FE
 status: done
 depends_on: [P2-CAT-02, P2-MEDIA-02]

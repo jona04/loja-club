@@ -2,7 +2,7 @@
 id: P2-MEDIA-01
 title: Abstração de storage (S3/boto3) + provisionamento AWS dev (guiado) + verificação
 phase: 2
-etapa: "Etapa 5 — Mídia e storage"
+etapa: "Etapa 1 — Mídia: storage + pipeline"
 area: MEDIA
 status: done
 depends_on: []

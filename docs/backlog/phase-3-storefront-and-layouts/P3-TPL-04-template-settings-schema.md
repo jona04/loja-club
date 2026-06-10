@@ -2,7 +2,7 @@
 id: P3-TPL-04
 title: Personalização por template (theme settings schema-driven)
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: TPL
 status: todo
 depends_on: [P3-TPL-02, P3-TPL-03]

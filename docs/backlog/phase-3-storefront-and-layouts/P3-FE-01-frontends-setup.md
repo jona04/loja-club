@@ -2,7 +2,7 @@
 id: P3-FE-01
 title: Renomear painel + scaffold do storefront (Next.js)
 phase: 3
-etapa: "Etapa 7 — Projeto frontend-storefront (Next.js)"
+etapa: "Etapa 1 — Projeto frontend-storefront"
 area: FE
 status: done
 depends_on: []

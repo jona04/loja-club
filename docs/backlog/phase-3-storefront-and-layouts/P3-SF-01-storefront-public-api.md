@@ -2,7 +2,7 @@
 id: P3-SF-01
 title: Módulo storefront — API pública de leitura
 phase: 3
-etapa: "Etapa 7 — Módulo storefront (API pública)"
+etapa: "Etapa 2 — Módulo storefront (API pública)"
 area: SF
 status: done
 depends_on: [P3-CONTENT-01]

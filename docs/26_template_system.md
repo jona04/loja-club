@@ -15,7 +15,7 @@ O **dado é o contrato** (loja, produtos, categorias, identidade) — **igual em
 
 ## Decisão: preview navegável = storefront + loja-demo
 
-O **preview navegável completo** **não** é HTML estático duplicado. É o **próprio storefront renderizando uma "loja-demo"** (produtos/categorias de exemplo) com o template **forçado** — ex.: `preview.loja.club/<template-id>` (ou `demo-<id>.loja.club`).
+O **preview navegável completo** **não** é HTML estático duplicado. É o **próprio storefront renderizando uma "loja-demo"** (produtos/categorias de exemplo) com o template **forçado** pela URL: **`preview.${DOMAIN}/<template-id>`** (host de preview dedicado; o `<template-id>` no path força o `active_template_id` da loja-demo).
 
 **Por quê:**
 - **Sempre fiel** — é o template real; nunca diverge de uma cópia HTML.
@@ -42,7 +42,7 @@ cadastra template  ─┬─ assets → CDN    escolhe template (picker)    vê 
 
 ## Personalização schema-driven (o "settings schema")
 
-Cada template **declara** os campos editáveis num **manifesto** (`settings_schema`) **no próprio código React**, que é **seedado** em `content_theme_templates.settings_schema` no deploy. O painel renderiza **um form genérico** a partir dele (um componente, N schemas — nem form hardcoded nem tela por template). O **admin não edita os campos** (evita divergência schema↔código): ele sobe assets + ativa. Um template **genuinamente novo** exige deploy do `frontend-storefront` (código + manifesto); cadastro 100% dinâmico é evolução futura.
+Cada template **declara** os campos editáveis num **manifesto** (`settings_schema`): um **`settings-schema.json` por template** (`frontend-storefront/templates/<id>/settings-schema.json`), **importado pelo próprio template React** (render) **e lido pelo seed do backend** — **fonte única, sem drift**. É **seedado** em `content_theme_templates.settings_schema` no deploy. O painel renderiza **um form genérico** a partir dele (um componente, N schemas — nem form hardcoded nem tela por template). O **admin não edita os campos** (evita divergência schema↔código): ele sobe assets + ativa. Um template **genuinamente novo** exige deploy do `frontend-storefront` (código + manifesto); cadastro 100% dinâmico é evolução futura.
 
 - **Campos:** `{ key, type, label, group, default, max_length? }`. Tipos V1: `text` · `textarea` · `image` · `boolean` · `select` (cor do tema = follow-up).
   - Bloco que **só existe num template** → só no schema dele; bloco **opcional** → campo `boolean`.

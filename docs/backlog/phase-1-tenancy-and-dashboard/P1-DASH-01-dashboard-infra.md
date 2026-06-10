@@ -2,7 +2,7 @@
 id: P1-DASH-01
 title: Infra do painel (frontend-dashboard, Traefik app.)
 phase: 1
-etapa: "Etapa 4 — Painel do lojista"
+etapa: "Etapa 7 — Painel do lojista"
 area: DASH
 status: done
 depends_on: []

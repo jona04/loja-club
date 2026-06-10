@@ -2,7 +2,7 @@
 id: P1-ACCT-01
 title: Retrofit account_users — soft delete + updated_at (mixins)
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 2 — Retrofit account_users"
 area: ACCT
 status: done
 depends_on: []

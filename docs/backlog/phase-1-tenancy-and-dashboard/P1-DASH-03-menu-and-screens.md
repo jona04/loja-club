@@ -2,7 +2,7 @@
 id: P1-DASH-03
 title: Menu dinâmico por permissão + telas (dashboard, configurações, equipe)
 phase: 1
-etapa: "Etapa 4 — Painel do lojista"
+etapa: "Etapa 7 — Painel do lojista"
 area: DASH
 status: done
 depends_on: [P1-DASH-02, P1-PERM-03, P1-STORE-02]

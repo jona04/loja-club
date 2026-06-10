@@ -2,7 +2,7 @@
 id: P1-TEN-01
 title: Módulo tenancy — guard central + resolução por Host
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 5 — Módulo tenancy"
 area: TEN
 status: todo
 depends_on: [P1-STORE-01, P1-PERM-01, P1-DOM-01]

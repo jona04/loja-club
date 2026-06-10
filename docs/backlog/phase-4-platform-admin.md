@@ -4,6 +4,8 @@
 
 Docs de referência: [25](../25_platform_admin.md) (admin), [26](../26_template_system.md) (templates), [05](../05_frontend_architecture.md), [08](../08_modules_and_permissions.md), [06](../06_multitenancy_and_domains.md)/[12](../12_aws_infrastructure_and_deployment.md) (Traefik/host), [13](../13_performance_cache_and_cdn.md) (CDN), [09](../09_merchant_dashboard.md), [07](../07_database_strategy.md), [14](../14_security_strategy.md), [15](../15_observability_and_operations.md).
 
+> **Decomposta em tasks** — ver [`phase-4-platform-admin/`](./phase-4-platform-admin/README.md) (**10 tasks**, 3 etapas). O detalhe e o status oficial estão no README da pasta.
+
 > **Nota:** o admin **opera** a plataforma; **segurança/observabilidade plenas, CI/CD e beta** ficam na [Fase 9](./phase-9-platform-ops-and-production.md). O **billing real** dos planos é a [Fase 8](./phase-8-customer-account-and-payments.md) — aqui planos são **seed/stub**. A integração da **API de geração 3D** no admin depende da [Fase 7](./phase-7-3d-products.md).
 
 ## Definition of Done da fase

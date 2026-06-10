@@ -2,7 +2,7 @@
 id: P3-SF-02
 title: Storefront Next.js — host, "não encontrada", templates
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 1 — Projeto frontend-storefront"
 area: SF
 status: done
 depends_on: [P3-FE-01, P3-SF-01]

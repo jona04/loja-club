@@ -2,7 +2,7 @@
 id: P3-TPL-01
 title: Arquitetura de templates + Aurora (POC)
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: TPL
 status: done
 depends_on: [P3-SF-02, P3-FE-02, P3-LOC-01]

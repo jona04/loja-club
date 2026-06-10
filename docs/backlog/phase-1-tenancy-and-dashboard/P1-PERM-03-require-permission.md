@@ -2,7 +2,7 @@
 id: P1-PERM-03
 title: Autorização — require_permission (deps)
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 4 — Módulos accounts ↔ stores"
 area: PERM
 status: done
 depends_on: [P1-PERM-02, P1-TEN-01]

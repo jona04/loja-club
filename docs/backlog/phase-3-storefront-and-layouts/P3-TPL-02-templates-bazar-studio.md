@@ -2,7 +2,7 @@
 id: P3-TPL-02
 title: Templates Bazar + Studio (navegação) — teste do contrato
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: TPL
 status: done
 depends_on: [P3-TPL-01]

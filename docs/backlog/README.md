@@ -16,7 +16,7 @@ O **admin do SaaS** ([Fase 4](./phase-4-platform-admin.md)) e a **configuração
 | 1 | [phase-1-tenancy-and-dashboard.md](./phase-1-tenancy-and-dashboard.md) · [tasks](./phase-1-tenancy-and-dashboard/README.md) | 1–7 | Multi-tenancy, lojas, permissões, painel base — **decomposta em tasks** |
 | 2 | [phase-2-catalog-and-media.md](./phase-2-catalog-and-media.md) · [tasks](./phase-2-catalog-and-media/README.md) | 1 | Catálogo (imagem) + mídia/S3 — **decomposta em tasks** |
 | 3 | [phase-3-storefront-and-layouts.md](./phase-3-storefront-and-layouts.md) · [tasks](./phase-3-storefront-and-layouts/README.md) | 1–4 | Storefront Next.js, templates (Aurora/Bazar/Studio) — **decomposta; concluída** |
-| 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) | 1–3 | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **cadastrar templates** (CDN + preview navegável) — **antes do lançamento** |
+| 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) · [tasks](./phase-4-platform-admin/README.md) | 1–3 | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **cadastrar templates** (CDN + preview navegável) — **antes do lançamento**; **decomposta em tasks** |
 | 5 | [phase-5-store-configuration.md](./phase-5-store-configuration.md) | 1–4 | **Configuração da loja**: lojista personaliza o template (**schema-driven**) + preview navegável + conteúdo das páginas |
 | 6 | [phase-6-sell-without-payment.md](./phase-6-sell-without-payment.md) | 1–7 + marco | Frete, cupons, carrinho, checkout, pedidos, clientes (guest), notificações — **tudo local** |
 | 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 1–7 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |

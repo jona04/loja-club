@@ -2,7 +2,7 @@
 id: P3-TPL-03
 title: Painel — Layout da loja (template + thumb, banner, preview)
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 4 — Frontend (painel)"
 area: TPL
 status: done
 depends_on: [P3-TPL-01]

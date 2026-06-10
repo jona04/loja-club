@@ -2,7 +2,7 @@
 id: P2-CAT-01
 title: Modelos do catálogo (produtos/variações/imagens/categorias/estoque/coleções)
 phase: 2
-etapa: "Etapa 5 — Módulo catalog"
+etapa: "Etapa 2 — Catálogo: modelos + rotas"
 area: CAT
 status: done
 depends_on: []

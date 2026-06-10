@@ -29,12 +29,10 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 
 ### Etapa 1 — Fundação do projeto
 
-> Parcialmente feito: o projeto já foi gerado a partir do template. Faltam o branding e a configuração descritos abaixo.
-
 Entregas:
 
-- criar projeto a partir do Full Stack FastAPI Template; *(feito)*
-- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend); *(pendente)*
+- criar projeto a partir do Full Stack FastAPI Template;
+- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend);
 - configurar variáveis de ambiente;
 - rodar Docker Compose local;
 - validar backend;

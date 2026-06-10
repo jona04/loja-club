@@ -2,7 +2,7 @@
 id: P2-MEDIA-02
 title: media_files + pipeline de upload + worker de thumbnails
 phase: 2
-etapa: "Etapa 5 — Mídia e storage"
+etapa: "Etapa 1 — Mídia: storage + pipeline"
 area: MEDIA
 status: done
 depends_on: [P2-MEDIA-01]
