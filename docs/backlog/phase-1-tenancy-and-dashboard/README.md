@@ -68,7 +68,7 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 - [ ] **Convite por e-mail novo** (cria `account_user` shell + e-mail de onboarding). Origem: `P1-STORE-02`. *Quando:* quando o onboarding de equipe for necessário.
 - [ ] **Fluxo de aceite de convite** (`invited`→`active`); hoje membro `invited` não opera. Origem: `P1-STORE-02`. *Quando:* junto do onboarding de equipe.
 - [ ] **Proteção do owner** (não alterar papel/remover o último `owner`). Origem: `P1-STORE-02`. *Quando:* antes de produção.
-- [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). Origem: `P1-ACCT-01`. **→ [Fase 4](../phase-4-platform-admin.md) (Etapa B)** — junto da gestão de usuários do admin.
+- [x] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user`/`delete_user`) — corrigido na `P4-USER-01` via `get_active_user()`. Origem: `P1-ACCT-01`.
 - [ ] **`frontend-admin` como projeto separado** (doc [05](../../05_frontend_architecture.md)) **→ [Fase 4](../phase-4-platform-admin.md) (Etapa A)**. (O rename `frontend/`→`frontend-dashboard/` + `frontend-storefront` da Fase 3 já foram.) Origem: `P1-DASH-01`.
 - [ ] **Rodar/validar a suíte Playwright ao vivo** no fluxo store-aware + escrever o E2E da jornada DASH-02 (login → sem-loja → criar → painel; várias → seletor). Os asserts de "Welcome back" viraram `user-menu`, mas a suíte não foi rodada ao vivo. Origem: `P1-DASH-02`. *Quando:* com o stack de pé.
 - [ ] **Onboarding de loja completo** (checklist) — hoje só o CTA mínimo de criar loja. Origem: `P1-DASH-02`. *Quando:* fase posterior.

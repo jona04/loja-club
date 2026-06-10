@@ -64,4 +64,4 @@ O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os m
 - Testes de delete da Fase 0 ajustados (a linha permanece com `deleted_at` setado, em vez de sumir).
 
 ## Follow-ups
-- [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). *Quando:* se virar problema, ou junto do admin de plataforma (Fase 4). → README da fase.
+- [x] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user`/`delete_user`) — corrigido na `P4-USER-01` via `get_active_user()`. → README da fase.

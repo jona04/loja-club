@@ -6,12 +6,16 @@ reads. Sensitive actions (block/unblock) are recorded in ``audit_logs``.
 """
 
 import uuid
+from datetime import timedelta
 
 from sqlalchemy import ColumnElement, func, or_
 from sqlmodel import Session, col, select
 
 from app.core.api import AppError
+from app.core.config import settings
+from app.core.security import create_access_token
 from app.modules.accounts.models import User
+from app.modules.accounts.repositories import get_active_user
 from app.modules.audit.services import record_audit
 from app.modules.platform_admin.schemas import StoreAdminDetail
 from app.modules.stores.enums import StoreStatus
@@ -153,3 +157,82 @@ def set_store_status(
     session.commit()
     session.refresh(store)
     return store
+
+
+def list_users(
+    *, session: Session, skip: int, limit: int, search: str | None = None
+) -> tuple[list[User], int]:
+    """List all account users, excluding soft-deleted ones.
+
+    Args:
+        session: Active database session.
+        skip: Pagination offset.
+        limit: Pagination page size.
+        search: Optional case-insensitive filter on email.
+
+    Returns:
+        A ``(users, total_count)`` tuple for the current page.
+    """
+    conditions: list[ColumnElement[bool]] = [col(User.deleted_at).is_(None)]
+    if search:
+        conditions.append(col(User.email).ilike(f"%{search}%"))
+    count = session.exec(
+        select(func.count()).select_from(User).where(*conditions)
+    ).one()
+    users = session.exec(
+        select(User)
+        .where(*conditions)
+        .order_by(col(User.created_at).desc())
+        .offset(skip)
+        .limit(limit)
+    ).all()
+    return list(users), count
+
+
+def get_user(*, session: Session, user_id: uuid.UUID) -> User:
+    """Return an account user by id, excluding soft-deleted ones.
+
+    Args:
+        session: Active database session.
+        user_id: The user id.
+
+    Returns:
+        The user.
+
+    Raises:
+        AppError: 404 if the user does not exist or is soft-deleted.
+    """
+    user = get_active_user(session=session, user_id=user_id)
+    if user is None:
+        raise AppError("user_not_found", "User not found", status_code=404)
+    return user
+
+
+def impersonate(*, session: Session, actor: User, user_id: uuid.UUID) -> str:
+    """Issue an access token to act on behalf of another user, recording it.
+
+    Args:
+        session: Active database session.
+        actor: The platform user performing the impersonation.
+        user_id: The user to impersonate.
+
+    Returns:
+        A signed access token whose subject is the impersonated user.
+
+    Raises:
+        AppError: 404 if the target user does not exist or is soft-deleted.
+    """
+    target = get_active_user(session=session, user_id=user_id)
+    if target is None:
+        raise AppError("user_not_found", "User not found", status_code=404)
+    record_audit(
+        session=session,
+        user_id=actor.id,
+        action="platform.support.impersonate",
+        target_type="user",
+        target_id=str(user_id),
+    )
+    session.commit()
+    return create_access_token(
+        target.id, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )

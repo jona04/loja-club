@@ -7,7 +7,9 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps import SessionDep
 from app.core.api import Page, PageParams, pagination_params
+from app.models import Token
 from app.modules.accounts.models import User
+from app.modules.accounts.schemas import UserPublic
 from app.modules.platform_admin import services
 from app.modules.platform_admin.deps import require_platform_permission
 from app.modules.platform_admin.schemas import StoreAdminDetail, StoreAdminListItem
@@ -81,3 +83,43 @@ def unblock_store(
         action="platform.stores.unblock",
     )
     return StoreAdminListItem.model_validate(store)
+
+
+@router.get(
+    "/users",
+    response_model=Page[UserPublic],
+    dependencies=[Depends(require_platform_permission("platform.users.view"))],
+)
+def list_users(
+    session: SessionDep,
+    params: Annotated[PageParams, Depends(pagination_params)],
+    search: str | None = None,
+) -> Page[UserPublic]:
+    """List all account users, excluding soft-deleted ones."""
+    users, count = services.list_users(
+        session=session, skip=params.skip, limit=params.limit, search=search
+    )
+    return Page(data=[UserPublic.model_validate(u) for u in users], count=count)
+
+
+@router.get(
+    "/users/{user_id}",
+    response_model=UserPublic,
+    dependencies=[Depends(require_platform_permission("platform.users.view"))],
+)
+def get_user(user_id: uuid.UUID, session: SessionDep) -> User:
+    """Get an account user by id."""
+    return services.get_user(session=session, user_id=user_id)
+
+
+@router.post("/users/{user_id}/impersonate", response_model=Token)
+def impersonate_user(
+    user_id: uuid.UUID,
+    session: SessionDep,
+    actor: Annotated[
+        User, Depends(require_platform_permission("platform.support.impersonate"))
+    ],
+) -> Token:
+    """Issue an access token to act on behalf of a user (recorded)."""
+    token = services.impersonate(session=session, actor=actor, user_id=user_id)
+    return Token(access_token=token)

@@ -4,7 +4,7 @@ title: Usuários + suporte no admin — listar/ver + impersonation auditada
 phase: 4
 etapa: "Etapa 2 — Operação: lojas, usuários, planos, suporte"
 area: USER
-status: todo
+status: done
 depends_on: [P4-PLAT-01]
 blocks: [P4-ADMIN-02]
 tests: [integration]
@@ -45,12 +45,15 @@ A gestão de `account_users` é do **admin**, não do painel do lojista. Inclui 
 - **Cobrir:** `read_user_by_id`/`update_user` não retornam soft-deletado; impersonation gera auditoria; gating `platform.*`.
 
 ## Definition of Done
-- [ ] Listar/ver usuários + impersonation **auditada**; guard de soft-delete em leitura por id corrigido.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Listar/ver usuários (gated `platform.users.view`) + **impersonation** (gated `platform.support.impersonate`) auditada em `audit_logs`; **guard de soft-delete** em leitura por id corrigido (`read_user_by_id`/`update_user`/`delete_user`).
+- [x] **Modos de falha / edge cases mapeados** → Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `get_active_user()` em `accounts/repositories` (usado nas 3 rotas que faziam `session.get`) + rotas `/platform/users*` (listar/detalhe/impersonate) no `platform_admin`. Gate: **219 testes** (8 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
-- Fecha o follow-up `P1-ACCT-01` ("Guard de soft-delete em leituras por id de admin") — marcar `[x]` na origem (README da Fase 1) ao concluir.
+- **Fecha o follow-up da Fase 1** ("Guard de soft-delete em leituras por id de admin") — corrigido em `read_user_by_id`/`update_user`/`delete_user` via `get_active_user()`; marcado `[x]` na origem (`P1-ACCT-01` + README da Fase 1).
+- **Layering:** os checks inline de `is_superuser` (`read_user_by_id`/`delete_user_me`) **não** foram migrados para papel aqui — `accounts` é módulo mais baixo e não deve importar `platform_admin`. Ficam até o campo `is_superuser` ser removido (follow-up da `P4-PLAT-01`).
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] — nenhum próprio (a migração dos checks inline de `is_superuser` é follow-up da `P4-PLAT-01`).

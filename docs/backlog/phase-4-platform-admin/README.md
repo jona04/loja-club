@@ -29,7 +29,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 1 | [P4-PLAT-01](./P4-PLAT-01-platform-admin-module-roles.md) | Módulo `platform_admin` + papéis globais `platform.*` + migrar `is_superuser` + audit mínimo | ✅ done | — |
 | 2 | [P4-ADMIN-01](./P4-ADMIN-01-frontend-admin-scaffold.md) | `frontend-admin` scaffold + Traefik `admin.` + login/shell | todo | P4-PLAT-01 |
 | 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | ✅ done | P4-PLAT-01 |
-| 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | todo | P4-PLAT-01 |
+| 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | ✅ done | P4-PLAT-01 |
 | 5 | [P4-PLAN-01](./P4-PLAN-01-plans-stub.md) | Planos (seed/stub; billing = Fase 8) | todo | P4-PLAT-01 |
 | 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) | todo | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
 | 7 | [P4-TPL-01](./P4-TPL-01-template-registry.md) | Registro de templates (CRUD + `settings_schema` do código) | todo | P4-PLAT-01 |
@@ -53,13 +53,13 @@ P4-PLAT-01 → P4-ADMIN-01
 > Item adiado vira checkbox aqui (origem + quando), e também na seção Follow-ups da task.
 
 **Esta fase fecha follow-ups de fases anteriores** (marcar `[x]` na **origem** ao concluir a task):
-- [ ] **Guard de soft-delete em leitura por id** (Fase 1, `P1-ACCT-01`) → `P4-USER-01`.
+- [x] **Guard de soft-delete em leitura por id** (Fase 1, `P1-ACCT-01`) → `P4-USER-01` ✅.
 - [ ] **Admin pra cadastrar templates** (Fase 3, `P3-TPL-03`) → `P4-ADMIN-03`/`P4-TPL-01`.
 - [ ] **Previews no CloudFront** (Fase 3, `P3-TPL-03`) → `P4-TPL-02`.
 - [ ] **Preview ao vivo / preview visual** (Fase 3, `P3-TPL-03`/`P3-FE-02`) → `P4-TPL-03`.
 
 **Da própria fase:**
-- [ ] **Checks inline de `is_superuser`** em `accounts/routes` (`delete_user_me`/`read_user_by_id`) → migrar na `P4-USER-01`. Origem: `P4-PLAT-01`.
+- [ ] **Checks inline de `is_superuser`** em `accounts/routes` (`delete_user_me`/`read_user_by_id`) → **não** migrados (layering: `accounts` não importa `platform_admin`); ficam até remover o campo `is_superuser`. Origem: `P4-PLAT-01`.
 - [ ] **Remover o campo `is_superuser`** (legado) quando `accounts/routes` não o usar mais. Origem: `P4-PLAT-01`.
 - [x] **Comentário stale do `StoreStatus`** (`stores/enums.py`, "(Fase 7)" → Fase 4) → corrigido na `P4-STORE-01`. Origem: `P4-PLAT-01`.
 - [ ] **Detalhe da loja: pedidos/volume** (Fase 6) e **webhooks/comissões** (Fase 8) — agregar quando esses módulos existirem. Origem: `P4-STORE-01`.

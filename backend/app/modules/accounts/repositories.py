@@ -1,5 +1,7 @@
 """Data access for account users."""
 
+import uuid
+
 from sqlmodel import Session, col, select
 
 from app.core.security import get_password_hash
@@ -62,3 +64,19 @@ def get_user_by_email(*, session: Session, email: str) -> User | None:
     return session.exec(
         select(User).where(User.email == email, col(User.deleted_at).is_(None))
     ).first()
+
+
+def get_active_user(*, session: Session, user_id: uuid.UUID) -> User | None:
+    """Return a non-soft-deleted account user by id, or None.
+
+    Args:
+        session: Active database session.
+        user_id: The user id to look up.
+
+    Returns:
+        The user if it exists and is not soft-deleted, otherwise None.
+    """
+    user = session.get(User, user_id)
+    if user is None or user.deleted_at is not None:
+        return None
+    return user
