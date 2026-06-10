@@ -32,6 +32,7 @@ O V1 (`P3-SF-02`) entrega **2 templates simples** (`classic`/`modern`) por rende
 
 ## Contrato (INVARIANTE — não negociável)
 - **Trocar de template NÃO pode quebrar nada pro cliente.** Todos os templates consomem o **mesmo contrato de dados** (loja/tema/produtos/categorias) e levam ao **mesmo fluxo de compra** (produto → carrinho/checkout, Fase 4). Template muda **só a apresentação**.
+- **Contrato = DADOS + FLUXO, não a composição da home.** Os **mesmos dados** ficam disponíveis (loja, banners, categorias, produtos — destaques **e** por categoria); a **composição da home** (quais blocos e quantos: destaques, **seções de categoria** com N produtos, banners…) é **por template e configurável pelo lojista**. Ex.: Aurora = só destaques; Bazar = seções de categoria. Não é o contrato que muda — é o que cada template/lojista **renderiza** dos mesmos dados.
 - **Todos os templates** devem reservar um **ponto de extensão pro editor 3D** na página de produto (compatibilidade com a personalização da **Fase 5** — só **reservar** o slot agora, integrar lá).
 
 ## Fora de escopo (o que NÃO entra — anotado como futuro)
@@ -49,10 +50,10 @@ O V1 (`P3-SF-02`) entrega **2 templates simples** (`classic`/`modern`) por rende
 - Local pra guardar as **referências** entregues pelo usuário (a decidir — ver §"Em definição").
 
 ## Decidido (até agora) ✅
-> Detalhes + os prompts em [`docs/design/templates/_uxpilot-prompts.md`](../../design/templates/_uxpilot-prompts.md).
-- **Geração:** designs no **uxpilot.ai** (HTML + Tailwind). **1 tela = 1 prompt**; **5 telas por template** (`home`/`category`/`product`/`checkout`/`confirmation`.html) → **10 prompts** pra 2 templates. Salvos em **`docs/design/templates/<nome>/`** + `print.png` (= `preview_image_url` por **seed/hardcoded**). Prompts em [`_uxpilot-prompts.md`](../../design/templates/_uxpilot-prompts.md).
+> **Guia canônico** (contrato/regras + overall context) em [`docs/design/templates/README.md`](../../design/templates/README.md); prompts por template em [`docs/design/templates/prompts/`](../../design/templates/prompts/).
+- **Geração:** designs no **uxpilot.ai** (HTML + Tailwind). **1 tela = 1 prompt**; **5 telas por template** (`home`/`category`/`product`/`checkout`/`confirmation`.html) → **15 prompts** pra 3 templates. Salvos em **`docs/design/templates/<nome>/`** + `print.png` (= `preview_image_url` por **seed/hardcoded**). Prompts por template em [`prompts/`](../../design/templates/prompts/).
 - **Code-based:** cada template = árvore de componentes em `frontend-storefront/templates/<nome>/`, atrás de um **resolver** por `active_template_id`.
-- **2 templates iniciais:** **"Aurora"** (premium minimalista) e **"Bazar"** (vibrante/marketplace) — **mesmo contrato de conteúdo**, layouts distintos (3º possível depois).
+- **3 templates iniciais:** **"Aurora"** (premium minimalista, home = destaques), **"Bazar"** (vibrante/marketplace, home = seções de categoria) e **"Studio"** (catálogo com **sidebar**, home = sidebar + grid). O **Studio é deliberadamente bem diferente em blocos/estrutura** — é o **teste** de que o storefront resolve composições distintas com o **mesmo contrato** (dados + fluxo).
 - **Carrossel:** banners ordenados (`content_banners`) → **1 imagem = banner, 2+ = carrossel**, configurado no painel do lojista.
 - **3D:** página de produto reserva o **placeholder "Personalizar em 3D"** (integra na Fase 5).
 - **Fluxo de compra (Fase 4, sem pagamento)** em **cada template** (único, não compartilhado): **checkout single-page** (itens + contato c/ **seletor de país** E.164 + endereço + **4 opções de entrega** incl. entrega combinada + resumo) + tela de **Confirmação**. O **carrinho é um drawer** (mini-carrinho no header), **não** página separada. Pagamento (gateway/split) = **Fase 6**.
@@ -87,6 +88,7 @@ O V1 (`P3-SF-02`) entrega **2 templates simples** (`classic`/`modern`) por rende
 ## Notas / Reconciliações
 - `content_banners`, `content_menus`, `content_pages` (`P3-CONTENT-01`) **já existem** e viram a base de **carrossel/navegação/páginas** dos templates ricos.
 - Esta task **reabre a Fase 3**: o storefront base + os 2 templates simples (`classic`/`modern`) estão `done`; aqui eleva pra **templates profissionais**.
+- **Teste do contrato:** os 3 templates iniciais (Aurora/Bazar/Studio) validam a hipótese "**composição ≠ contrato**". O **Studio** (sidebar/catálogo) é deliberadamente distinto em blocos/estrutura — se o storefront renderizar os 3 com o **mesmo contrato de dados + fluxo**, a hipótese se confirma. É o caso de stress da arquitetura de templates.
 - **Living spec** → ao fechar, deve **dividir** em sub-tasks (ex.: `P3-TPL-02` models, `P3-TPL-03` templates no storefront, `P3-TPL-04` painel).
 
 ## Follow-ups
@@ -94,3 +96,6 @@ O V1 (`P3-SF-02`) entrega **2 templates simples** (`classic`/`modern`) por rende
 - [ ] **Preview ao vivo no painel** — *Quando:* pós-V1 (hoje só a imagem cadastrada). → README.
 - [ ] **Compatibilidade 3D dos templates** — *Quando:* **Fase 5** (slot reservado agora; integração lá). → README.
 - [ ] **Definir entrega das referências + onde salvar** — *Quando:* na conversa do spec. → README.
+- [ ] **Dados "produtos por categoria" na home** (`P3-SF-01`/`P3-TPL-01`): pra templates com **seções de categoria** (ex.: Bazar), a home precisa dos primeiros N produtos por categoria (+ "ver todos"). Pequena adição na API pública.
+- [ ] **Home configurável (blocos)** (`P3-TPL-01`): lojista escolhe blocos/ordem/quais categorias na home. V1 = **defaults por template** + ordem das categorias; builder completo é follow-up.
+- [ ] **Overflow de categorias no nav** (`P3-TPL-01`): muitas categorias → **top N + "Todas as categorias"** (menu/página), não uma barra com 20.

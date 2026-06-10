@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Pedido - Lojaflex 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Inter', 'sans-serif'], /* Forcing Inter for consistent simple look, though context had serif class, we'll keep the class but use sans fallback if needed */
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f6f6f6',
+                            100: '#e7e7e7',
+                            200: '#d1d1d1',
+                            900: '#111111',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-[#f9f9f9] text-brand-900 antialiased selection:bg-brand-900 selection:text-white min-h-screen flex flex-col">
+
+    <!-- Simple Checkout Header -->
+    <header id="header" class="bg-white border-b border-gray-200 py-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+            <a href="#" class="text-3xl font-semibold tracking-tight text-brand-900 font-serif">
+                Lojaflex 2.
+            </a>
+        </div>
+    </header>
+
+    <main id="main-content" class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 flex flex-col items-center">
+        
+        <!-- Success Header Section -->
+        <section id="success-message" class="text-center w-full mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-50 border border-green-100 mb-6">
+                <i class="fa-solid fa-check text-2xl text-green-600"></i>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-medium text-brand-900 font-serif mb-3 tracking-tight">Pedido recebido!</h1>
+            <p class="text-gray-500 text-sm mb-6 uppercase tracking-wider font-medium">Pedido #1042</p>
+            <p class="text-brand-900 text-base md:text-lg max-w-lg mx-auto leading-relaxed bg-brand-50 p-4 rounded-sm border border-brand-100">
+                A loja entrará em contato via WhatsApp para combinar a entrega e o pagamento.
+            </p>
+        </section>
+
+        <!-- Order Summary Card -->
+        <section id="order-details" class="w-full bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-10">
+            
+            <div class="p-6 md:p-8 border-b border-gray-100">
+                <h2 class="text-lg font-medium text-brand-900 font-serif mb-6">Resumo do Pedido</h2>
+                
+                <div class="space-y-6">
+                    <!-- Item 1 -->
+                    <div class="flex gap-4">
+                        <div class="h-20 w-16 flex-shrink-0 overflow-hidden bg-gray-50 border border-gray-100 rounded-sm">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_fba0152989_676e0ef2f23036e4.png" alt="Vaso Orgânico Duna">
+                        </div>
+                        <div class="flex flex-1 flex-col justify-center">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-brand-900">Vaso Orgânico Duna</h3>
+                                    <p class="mt-0.5 text-xs text-gray-500">Bege Acinzentado • Qtd: 1</p>
+                                </div>
+                                <p class="text-sm font-medium text-brand-900">R$ 289,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="flex gap-4">
+                        <div class="h-20 w-16 flex-shrink-0 overflow-hidden bg-gray-50 border border-gray-100 rounded-sm">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_bfbf070fea_1f15e1417ab87699.png" alt="Aparador de Livros">
+                        </div>
+                        <div class="flex flex-1 flex-col justify-center">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-brand-900">Aparador de Livros Travertino</h3>
+                                    <p class="mt-0.5 text-xs text-gray-500">Pedra Natural • Qtd: 1</p>
+                                </div>
+                                <p class="text-sm font-medium text-brand-900">R$ 450,00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Totals -->
+            <div class="p-6 md:p-8 bg-gray-50 border-b border-gray-100">
+                <dl class="space-y-3 text-sm text-gray-600">
+                    <div class="flex justify-between">
+                        <dt>Subtotal</dt>
+                        <dd class="font-medium text-brand-900">R$ 739,00</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt>Frete</dt>
+                        <dd class="text-gray-500 italic">A combinar</dd>
+                    </div>
+                    <div class="flex justify-between border-t border-gray-200 pt-4 mt-4">
+                        <dt class="text-base font-medium text-brand-900">Total</dt>
+                        <dd class="text-base font-medium text-brand-900">R$ 739,00</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- Shipping & Contact Details -->
+            <div class="p-6 md:p-8">
+                <h3 class="text-base font-medium text-brand-900 font-serif mb-4">Dados de Entrega</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-xs text-gray-500 uppercase tracking-wider mb-2">Endereço</h4>
+                        <address class="text-sm text-brand-900 not-italic leading-relaxed">
+                            Rua Fictícia de Exemplo, 123<br>
+                            Apto 45 - Pinheiros<br>
+                            São Paulo, SP<br>
+                            05400-000
+                        </address>
+                    </div>
+                    <div>
+                        <h4 class="text-xs text-gray-500 uppercase tracking-wider mb-2">Método Selecionado</h4>
+                        <p class="text-sm text-brand-900 font-medium">Entrega Combinada</p>
+                        <p class="text-xs text-gray-500 mt-1">Contato pendente via WhatsApp</p>
+                        
+                        <h4 class="text-xs text-gray-500 uppercase tracking-wider mt-4 mb-2">Contato</h4>
+                        <p class="text-sm text-brand-900">cliente@exemplo.com</p>
+                        <p class="text-sm text-brand-900">+55 11 99999-9999</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Actions -->
+        <section id="actions" class="text-center w-full">
+            <p class="text-sm text-gray-500 mb-6">Enviamos os detalhes da sua confirmação para o seu e-mail e WhatsApp.</p>
+            <a href="#" class="inline-flex items-center justify-center bg-brand-900 text-white text-base font-medium px-8 py-4 rounded-sm hover:bg-black transition-colors shadow-sm">
+                Voltar à loja
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Footer Simple for Checkout/Confirmation -->
+    <footer id="footer" class="bg-white border-t border-gray-200 py-8 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2024 Lojaflex 2. Todos os direitos reservados.</p>
+            <div class="mt-4 md:mt-0 space-x-4">
+                <a href="#" class="hover:text-brand-900 transition-colors">Termos</a>
+                <a href="#" class="hover:text-brand-900 transition-colors">Privacidade</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
