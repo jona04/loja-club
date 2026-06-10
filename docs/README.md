@@ -32,6 +32,7 @@ A documentação está em português por enquanto. A estrutura de pastas e nomes
 24. [V2 Ideas](./24_v2_ideas.md)
 25. [Platform Admin](./25_platform_admin.md)
 26. [Template System](./26_template_system.md)
+27. [Template Authoring Guide](./27_template_authoring_guide.md)
 
 ## Backlog de implementação
 

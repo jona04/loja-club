@@ -26,7 +26,7 @@ Hoje o thumbnail do template é PNG hardcoded em `frontend-dashboard/public/` e 
 
 ## Fora de escopo (o que NÃO entra)
 - CRUD/registro + schema → `P4-TPL-01`.
-- Preview navegável → `P4-TPL-03`. Telas/upload-UI → `P4-ADMIN-03`.
+- Preview navegável + import de imagens (chrome/demo) → **Fase 5**. Telas/upload-UI → `P4-ADMIN-03`.
 - Defaults de imagem **consumidos** pelo lojista → **Fase 5**.
 
 ## Arquivos a criar/alterar

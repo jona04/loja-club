@@ -191,31 +191,32 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ## Fase 4 — Admin do SaaS (dev local)
 
-> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (assets no CDN + preview navegável). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
+> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
 
 Entregas:
 
 - `frontend-admin` em `admin.${DOMAIN}` (Traefik) + papéis globais `platform.*` (substitui `is_superuser`);
 - operar lojas (listar/detalhe/bloquear), planos, usuários; suporte com impersonation + auditoria mínima;
-- **cadastro de templates:** metadados + **upload de assets pro CDN** + **settings schema** + **preview navegável** publicado.
+- **registro de templates:** metadados + **thumbnail no CDN** + **settings schema** (do código). *(import de imagens, loja-demo e preview navegável = Fase 5)*
 
 Resultado:
 
 ```text
-Equipe opera a plataforma e cadastra templates (CDN + preview); a vitrine sai do hardcoded.
+Equipe opera a plataforma e registra templates (thumbnail + schema); a vitrine sai do hardcoded.
 ```
 
 ---
 
 ## Fase 5 — Configuração da loja pelo lojista (dev local)
 
-> Objetivo: com os templates cadastrados (Fase 4), o lojista **personaliza** o template da loja — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](./backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md).
+> Objetivo: com os templates **registrados** (Fase 4), esta fase entrega a **loja-demo** por template (import das imagens pro CDN) + o lojista **personaliza** o template — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](./backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md) e o passo-a-passo em [27](./27_template_authoring_guide.md).
 
 Entregas:
 
+- **loja-demo por template** (do `demo.json`) + **import das imagens** (uxpilot → CDN);
 - form gerado do `settings_schema` do template ativo (campos `text/textarea/image/boolean/select`);
 - valores por **loja × template** (não perde ao trocar; resetar = excluir); imagens com **default no CDN**;
-- vitrine lê `theme.settings[key] ?? default`; botão "ver preview completo" (outra aba).
+- vitrine lê `theme.settings[key] ?? default`; botão "ver preview completo" (outra aba) abre a loja-demo.
 
 Resultado:
 

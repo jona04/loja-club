@@ -6,7 +6,7 @@ etapa: "Etapa 3 — Cadastro/gestão de templates"
 area: TPL
 status: done
 depends_on: [P4-PLAT-01]
-blocks: [P4-TPL-02, P4-TPL-03, P4-ADMIN-03]
+blocks: [P4-TPL-02, P4-ADMIN-03]
 tests: [integration]
 ---
 
@@ -27,8 +27,8 @@ O admin gerencia o **registro** (dados) de um template; o **código** (component
 - **Seed do `settings_schema`** a partir do **`settings-schema.json` por template** (`frontend-storefront/templates/<id>/settings-schema.json` — fonte única, doc [26](../../26_template_system.md)) em `content_theme_templates.settings_schema`, **idempotente**.
 
 ## Fora de escopo (o que NÃO entra)
-- Upload de **assets pro CDN** → `P4-TPL-02`.
-- **Preview navegável** → `P4-TPL-03`.
+- Upload do **thumbnail pro CDN** → `P4-TPL-02`.
+- **Import de imagens (chrome/demo), loja-demo e preview navegável** → **Fase 5**.
 - Telas → `P4-ADMIN-03`.
 - Consumo do schema pelo lojista (form) → **Fase 5**.
 

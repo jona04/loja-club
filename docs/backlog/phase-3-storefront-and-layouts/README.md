@@ -87,8 +87,8 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [ ] **Home: contato + links sociais** (`P3-SF-02`): doc 10 §"Componentes da home" — além do WhatsApp, expor contato/links sociais (menu configurável já coberto pelos follow-ups de menu).
 - [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 6): a página de produto é **informativa** no V1 (sem botão de compra); o **carrinho** entra na Fase 6. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
 - [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../21_design_system_todo.md). (O salto pra **templates profissionais** é a `P3-TPL-01`.)
-- [ ] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-03`) **→ [Fase 4](../phase-4-platform-admin.md) (Etapa C)**: CRUD de templates + assets no CDN + preview navegável.
-- [ ] **Preview ao vivo no painel** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa C)**: preview navegável (loja-demo) em outra aba. (Render inline com os dados da própria loja segue futuro.)
+- [ ] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-03`) **→ [Fase 4](../phase-4-platform-admin.md) (Etapa 3)**: CRUD de templates + thumbnail no CDN + schema *(import de imagens / loja-demo / preview navegável = [Fase 5](../phase-5-store-configuration.md))*.
+- [ ] **Preview ao vivo no painel** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 4)**: preview navegável (loja-demo por template) em outra aba. (Render inline com os dados da própria loja segue futuro.)
 - [ ] **Compatibilidade 3D dos templates** (`P3-TPL-01`/`P3-TPL-02` → Fase 7): reservar o **slot** do editor 3D na página de produto de **todos** os templates.
 - [ ] **Checkout + confirmação dos templates** (`P3-TPL-01`/`P3-TPL-02` → **Fase 6**): as telas de **checkout single-page + confirmação** dos 3 templates **já estão desenhadas** (`docs/design/templates/<nome>/`); ficam **funcionais na Fase 6** (carrinho/pedido).
 - [ ] **Busca real na vitrine** (`P3-TPL-02`): a barra de busca da topbar do **Studio** é placeholder; busca real é pós-V1.
@@ -111,6 +111,6 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [ ] **Sidebar do Studio no mobile** (`P3-TPL-02`): hoje `lg:block`; no mobile o catálogo vem por `/products` — drawer mobile é follow-up.
 - [ ] **`CheckoutView` compartilhado** (`P3-TPL-02`): mora em `templates/aurora/` mas é usado pelos 3; mover pra local neutro.
 - [x] **Banner enviável + preview por imagem** (`P3-TPL-03`): upload do banner via `media` → `banner_image_url`; preview = Dialog com a imagem; thumbnails na lista de templates.
-- [ ] **`previewLayout` (backend) sem uso na UI** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa C)**: remover o endpoint (o preview navegável o substitui).
-- [ ] **Permissão do upload do banner** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa B)**: uploads de layout gated em `layout.update` (hoje `catalog.product.update`).
-- [ ] **Páginas institucionais via `content_pages`** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa D)**: `/pages/*` lê `content_pages` + CRUD no painel.
+- [ ] **`previewLayout` (backend) sem uso na UI** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 4)**: remover o endpoint (o preview navegável o substitui).
+- [ ] **Permissão do upload do banner** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 2)**: uploads de layout gated em `layout.update` (hoje `catalog.product.update`).
+- [ ] **Páginas institucionais via `content_pages`** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 5)**: `/pages/*` lê `content_pages` + CRUD no painel.
