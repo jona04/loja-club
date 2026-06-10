@@ -67,7 +67,7 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 ## Follow-ups
 - [ ] **Preview ao vivo no painel** — *Quando:* pós-V1 (hoje só a imagem). → README.
 - [ ] **Admin de cadastro de templates** — *Quando:* Fase 4. → README.
-- [ ] **Previews no CloudFront** — *Quando:* antes de produção (hoje os PNGs vêm do `public/` do dashboard; subir pro S3/CloudFront + `preview_image_url` com URL real). → README.
+- [x] **Previews no CloudFront** — feito na `P4-TPL-02` (upload de thumbnail → S3/CloudFront → `preview_image_url`). → README.
 - [ ] **`previewLayout` (backend) sem uso na UI** — o preview virou imagem (client); **remover** o endpoint/serviço ou **repurpose** pra live-preview. → README.
 - [ ] **Permissão do upload do banner** — reusa o endpoint de `media` (gated `catalog.product.update`); pra layout deveria aceitar `layout.update`. → README.
 - [ ] **Páginas institucionais via `content_pages`** — `/pages/*` mostram defaults apresentáveis; o conteúdo real (editável pelo lojista) sai de `content_pages` (feature à parte). → README.

@@ -7,10 +7,12 @@ reads. Sensitive actions (block/unblock) are recorded in ``audit_logs``.
 
 import uuid
 from datetime import timedelta
+from io import BytesIO
 
 from sqlalchemy import ColumnElement, func, or_
 from sqlmodel import Session, col, select
 
+from app.core import storage
 from app.core.api import AppError
 from app.core.config import settings
 from app.core.security import create_access_token
@@ -324,6 +326,72 @@ def update_template(
     """
     template = get_template(session=session, template_id=template_id)
     template.sqlmodel_update(payload.model_dump(exclude_unset=True))
+    session.add(template)
+    session.commit()
+    session.refresh(template)
+    return template
+
+
+_ALLOWED_IMAGE_TYPES = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
+    "image/svg+xml": "svg",
+}
+_MAX_ASSET_BYTES = 5 * 1024 * 1024
+
+
+def _upload_template_image(
+    *, template_id: str, kind: str, data: bytes, content_type: str
+) -> str:
+    """Upload a public template image to the CDN and return its URL.
+
+    Args:
+        template_id: The template the asset belongs to.
+        kind: A short asset label used in the object key (e.g. ``thumbnail``).
+        data: The raw image bytes.
+        content_type: The uploaded image's MIME type.
+
+    Returns:
+        The public CDN URL of the stored image.
+
+    Raises:
+        AppError: 422 for an unsupported image type, 413 when too large.
+    """
+    ext = _ALLOWED_IMAGE_TYPES.get(content_type)
+    if ext is None:
+        raise AppError("invalid_image", "Unsupported image type", status_code=422)
+    if len(data) > _MAX_ASSET_BYTES:
+        raise AppError("file_too_large", "Image is too large", status_code=413)
+    key = f"public/templates/{template_id}/{kind}-{uuid.uuid4().hex[:8]}.{ext}"
+    storage.upload_fileobj(key, BytesIO(data), content_type)
+    return storage.public_url(key)
+
+
+def set_template_thumbnail(
+    *, session: Session, template_id: str, data: bytes, content_type: str
+) -> ContentThemeTemplate:
+    """Upload a template's thumbnail to the CDN and link it.
+
+    Args:
+        session: Active database session.
+        template_id: The template id.
+        data: The raw image bytes.
+        content_type: The uploaded image's MIME type.
+
+    Returns:
+        The updated template, with ``preview_image_url`` set to the CDN URL.
+
+    Raises:
+        AppError: 404 if the template does not exist; 422/413 on a bad image.
+    """
+    template = get_template(session=session, template_id=template_id)
+    template.preview_image_url = _upload_template_image(
+        template_id=template_id,
+        kind="thumbnail",
+        data=data,
+        content_type=content_type,
+    )
     session.add(template)
     session.commit()
     session.refresh(template)

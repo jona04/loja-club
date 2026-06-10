@@ -3,7 +3,7 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 
 from app.api.deps import SessionDep
 from app.core.api import Page, PageParams, pagination_params
@@ -245,4 +245,22 @@ def update_template(
     """Update a theme template's metadata/status."""
     return services.update_template(
         session=session, template_id=template_id, payload=payload
+    )
+
+
+@router.post(
+    "/templates/{template_id}/thumbnail",
+    response_model=ThemeTemplateAdminPublic,
+    dependencies=[Depends(require_platform_permission("platform.templates.manage"))],
+)
+async def upload_template_thumbnail(
+    template_id: str, session: SessionDep, file: UploadFile
+) -> ContentThemeTemplate:
+    """Upload a template's thumbnail to the CDN and link it."""
+    data = await file.read()
+    return services.set_template_thumbnail(
+        session=session,
+        template_id=template_id,
+        data=data,
+        content_type=file.content_type or "application/octet-stream",
     )

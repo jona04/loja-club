@@ -33,7 +33,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 5 | [P4-PLAN-01](./P4-PLAN-01-plans-stub.md) | Planos (seed/stub; billing = Fase 8) | ✅ done | P4-PLAT-01 |
 | 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) | todo | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
 | 7 | [P4-TPL-01](./P4-TPL-01-template-registry.md) | Registro de templates (CRUD + `settings_schema` do código) | ✅ done | P4-PLAT-01 |
-| 8 | [P4-TPL-02](./P4-TPL-02-template-cdn-assets.md) | Assets de template no **CDN** (thumb + imagens-default) | todo | P4-TPL-01 |
+| 8 | [P4-TPL-02](./P4-TPL-02-template-cdn-assets.md) | Assets de template no **CDN** (thumb + imagens-default) | ✅ done | P4-TPL-01 |
 | 9 | [P4-TPL-03](./P4-TPL-03-navigable-preview.md) | **Preview navegável** (loja-demo + host de preview) | todo | P4-TPL-01 |
 | 10 | [P4-ADMIN-03](./P4-ADMIN-03-admin-template-screens.md) | Telas de templates (CRUD + assets + publicar preview) | todo | P4-ADMIN-01, P4-TPL-01, P4-TPL-02, P4-TPL-03 |
 
@@ -55,7 +55,7 @@ P4-PLAT-01 → P4-ADMIN-01
 **Esta fase fecha follow-ups de fases anteriores** (marcar `[x]` na **origem** ao concluir a task):
 - [x] **Guard de soft-delete em leitura por id** (Fase 1, `P1-ACCT-01`) → `P4-USER-01` ✅.
 - [ ] **Admin pra cadastrar templates** (Fase 3, `P3-TPL-03`) → `P4-ADMIN-03`/`P4-TPL-01`.
-- [ ] **Previews no CloudFront** (Fase 3, `P3-TPL-03`) → `P4-TPL-02`.
+- [x] **Previews no CloudFront** (Fase 3, `P3-TPL-03`) → `P4-TPL-02` ✅ (thumbnail no CDN).
 - [ ] **Preview ao vivo / preview visual** (Fase 3, `P3-TPL-03`/`P3-FE-02`) → `P4-TPL-03`.
 
 **Da própria fase:**
@@ -66,3 +66,4 @@ P4-PLAT-01 → P4-ADMIN-01
 - [ ] **`suspended` como ação distinta** (hoje só `blocked`/`active`) — se um estado intermediário for necessário. Origem: `P4-STORE-01`.
 - [ ] **Hardening da impersonation** (→ Fase 9): token emitido = login normal do alvo (sem marca de impersonation); só o **acesso** é auditado em `audit_logs`, **não as ações** da sessão (aparecem como do próprio usuário); faltam tag de impersonation no token + auditoria das ações + expiração curta / "parar de impersonar". Origem: `P4-USER-01`.
 - [ ] **Empacotar os `settings-schema.json` no deploy do backend:** o seed lê de `frontend-storefront/templates/<id>/settings-schema.json`; na imagem Docker do backend esse dir não existe → o build precisa copiar os JSONs, senão o schema fica `null` em deploy. Origem: `P4-TPL-01`.
+- [ ] **Imagens-default no CDN** (Fase 5, quando houver campos `image`; guardar **separado** do `settings_schema` p/ o seed não sobrescrever), **limpeza de asset antigo** no re-upload, e **remover os PNGs de `public/`** após uploads. Origem: `P4-TPL-02`.

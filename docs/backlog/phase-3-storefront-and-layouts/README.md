@@ -96,7 +96,7 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [ ] **Home 100% configurável (blocos)** (`P3-TPL-02`): o lojista liga/desliga blocos da home; V1 = defaults por template + ordem das categorias.
 - [ ] **Carrossel multi-banner na home** (`P3-TPL-01` → `P3-TPL-02`): o hero usa `theme.banner_image_url` único; carrossel (2+ banners) precisa a lista de banners na API pública.
 - [ ] **Imagens de categoria** (`P3-TPL-01`): a faixa de categorias usa a inicial do nome (o model `Category` não tem imagem ainda).
-- [x] **`preview_image_url` dos templates** (`P3-TPL-01`/`P3-TPL-03`): resolvido — previews **seedados** (`/templates/<id>_preview.png`) servidos do `public/` do dashboard (hardcoded). **CloudFront** → [Fase 4](../phase-4-platform-admin.md) (Etapa C: assets no CDN).
+- [x] **`preview_image_url` dos templates** (`P3-TPL-01`/`P3-TPL-03`): resolvido — previews **seedados** (`/templates/<id>_preview.png`) servidos do `public/` do dashboard (hardcoded). **CloudFront** feito na `P4-TPL-02` (thumbnail upload → CDN).
 - [x] **`formatPrice` por locale da loja** (`P3-LOC-01`): resolvido — a vitrine recebe o `locale` da loja e formata o preço com o símbolo certo por loja (R$ / $ / €).
 - [ ] **Multi-moeda / câmbio** (`P3-LOC-01`): uma loja vende em **uma** moeda no V1; multi-moeda + conversão é futuro.
 - [ ] **Editar categorias de um produto** (catálogo): criar produto **exige** `category_ids` (≥1, com criação inline de categoria no form); **editar** as categorias ainda não — falta `ProductUpdate` aceitar `category_ids` + expor as categorias atuais no `ProductPublic`/form de edição.
