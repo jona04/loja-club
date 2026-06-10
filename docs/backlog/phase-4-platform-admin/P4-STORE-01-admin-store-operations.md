@@ -4,7 +4,7 @@ title: Operação de lojas no admin — listar/detalhe/bloquear
 phase: 4
 etapa: "Etapa 2 — Operação: lojas, usuários, planos, suporte"
 area: STORE
-status: todo
+status: done
 depends_on: [P4-PLAT-01]
 blocks: [P4-ADMIN-02]
 tests: [integration]
@@ -46,13 +46,18 @@ A equipe precisa **operar todas as lojas** (visão cross-store, fora do tenant):
 - **Cobrir:** listagem cross-store sem vazar soft-deletada; bloquear → painel 403; ação auditada; gating `platform.*`.
 
 ## Definition of Done
-- [ ] Listar/detalhe/bloquear lojas (cross-store, gated `platform.stores.*`, auditado); loja bloqueada barra no painel.
-- [ ] Soft-delete respeitado nas leituras de admin.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Listar/detalhe/bloquear lojas (cross-store, gated `platform.stores.view|block|unblock`, auditado em `audit_logs`); loja bloqueada barra no painel (guard `P1-TEN-01`).
+- [x] Soft-delete respeitado nas leituras de admin.
+- [x] **Modos de falha / edge cases mapeados** → Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `platform_admin/{schemas,services,routes}.py` (rotas `/platform/stores*`) registradas em `app/api/router.py`; detalhe = **identidade + settings + membros** (pedidos/volume/webhooks/comissões dependem de Fase 6/8 → Follow-ups). Gate: **211 testes** (8 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
-- O guard `get_active_membership` (`P1-TEN-01`) já barra `suspended`/`blocked` (403 `store_unavailable`) — esta task entrega quem **seta** esse estado.
+- O guard `get_active_membership` (`P1-TEN-01`) já barra `suspended`/`blocked` (403 `store_unavailable`) — esta task entrega quem **seta** esse estado (`block` → `blocked`, `unblock` → `active`), auditado.
+- **Escopo do detalhe (decisão):** só **settings + membros + status** — `orders`/`billing` não existem (Fase 6/8), então pedidos/volume/webhooks/comissões ficam de fora **sem inventar** (Follow-ups).
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] **Detalhe: pedidos + volume transacionado** — agregar quando o módulo `orders` existir (**Fase 6**). → README da fase.
+- [ ] **Detalhe: webhooks com erro + comissões** — quando billing/webhooks existirem (**Fase 8**). → README da fase.
+- [ ] **`suspended` como ação distinta** (hoje só `blocked`/`active`): adicionar se um estado intermediário for necessário. → README da fase.

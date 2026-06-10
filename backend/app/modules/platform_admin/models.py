@@ -1,7 +1,7 @@
-"""Platform-admin role assignments (``platform_admin_roles``, doc 07).
+"""Platform-admin role assignments (``platform_admin_roles``).
 
-Maps an ``account_users`` user to a **global** platform role (doc 08); there is
-no per-store scope here. The permission catalog/map lives in ``permissions.py``
+Maps an ``account_users`` user to a **global** platform role; there is no
+per-store scope here. The permission catalog/map lives in ``permissions.py``
 (in code) — only this assignment table is persisted.
 """
 
@@ -14,7 +14,7 @@ from app.db.base import TimestampMixin, UUIDMixin
 
 
 class PlatformAdminRole(UUIDMixin, TimestampMixin, table=True):
-    """A global platform role granted to an account user (doc 07/08)."""
+    """A global platform role granted to an account user."""
 
     __tablename__ = "platform_admin_roles"
     __table_args__ = (

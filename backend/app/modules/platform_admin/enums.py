@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class PlatformRole(str, Enum):
-    """Global platform-admin roles (doc 08). Not scoped to a store.
+    """Global platform-admin roles. Not scoped to a store.
 
     - ``platform_owner``: holds the full ``platform.*`` catalog.
     - ``platform_ops``: store/user operation + support + plans/webhooks/audit (read).

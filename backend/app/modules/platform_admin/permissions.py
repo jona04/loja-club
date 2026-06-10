@@ -1,8 +1,7 @@
-"""Canonical platform permission catalog and role -> permission map (doc 08).
+"""Canonical platform permission catalog and role -> permission map.
 
-Single source of truth, transcribed exactly from doc 08. Unlike the store side,
-the platform map is **in code only** — there is no ``platform_permissions`` table
-in the schema (doc 07 defines only ``platform_admin_roles``). So
+Single source of truth for the global ``platform.*`` permissions. The map is
+kept **in code only** — there is no ``platform_permissions`` table — so
 ``require_platform_permission`` resolves the user's global roles from
 ``platform_admin_roles`` and checks this map. The map is **positive**: a role
 grants only the permissions listed for it.
@@ -25,7 +24,7 @@ PLATFORM_PERMISSIONS: list[str] = [
     "platform.templates.manage",
 ]
 
-# Positive role -> permission map (doc 08). Owner holds the full catalog.
+# Positive role -> permission map. Owner holds the full catalog.
 PLATFORM_ROLE_PERMISSIONS: dict[str, set[str]] = {
     "platform_owner": set(PLATFORM_PERMISSIONS),
     "platform_ops": {

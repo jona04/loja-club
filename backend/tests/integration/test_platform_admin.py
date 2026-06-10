@@ -1,9 +1,9 @@
-"""Integration tests for the platform_admin foundation (P4-PLAT-01).
+"""Integration tests for the platform_admin foundation.
 
-Covers the global ``platform.*`` role->permission map (doc 08), the
+Covers the global ``platform.*`` role->permission map, the
 ``require_platform_permission`` dependency, the bootstrap superuser becoming a
-platform owner (seed), the migrated ``get_current_active_superuser`` gate and the
-minimal ``audit_logs`` recording.
+platform owner, the ``get_current_active_superuser`` gate and the ``audit_logs``
+recording.
 """
 
 import pytest

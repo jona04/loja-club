@@ -50,8 +50,8 @@ def init_db(session: Session) -> None:
         )
         user = repositories.create_user(session=session, user_create=user_in)
 
-    # The bootstrap superuser is the platform owner (doc 08); is_superuser is no
-    # longer used for authorization (replaced by platform_admin_roles).
+    # The bootstrap superuser is the platform owner; is_superuser is no longer
+    # used for authorization (replaced by platform_admin_roles).
     assign_platform_role(
         session=session, user_id=user.id, role=PlatformRole.platform_owner.value
     )

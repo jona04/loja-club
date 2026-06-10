@@ -28,7 +28,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 |---|---|---|---|---|
 | 1 | [P4-PLAT-01](./P4-PLAT-01-platform-admin-module-roles.md) | Módulo `platform_admin` + papéis globais `platform.*` + migrar `is_superuser` + audit mínimo | ✅ done | — |
 | 2 | [P4-ADMIN-01](./P4-ADMIN-01-frontend-admin-scaffold.md) | `frontend-admin` scaffold + Traefik `admin.` + login/shell | todo | P4-PLAT-01 |
-| 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | todo | P4-PLAT-01 |
+| 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | ✅ done | P4-PLAT-01 |
 | 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | todo | P4-PLAT-01 |
 | 5 | [P4-PLAN-01](./P4-PLAN-01-plans-stub.md) | Planos (seed/stub; billing = Fase 8) | todo | P4-PLAT-01 |
 | 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) | todo | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
@@ -61,4 +61,6 @@ P4-PLAT-01 → P4-ADMIN-01
 **Da própria fase:**
 - [ ] **Checks inline de `is_superuser`** em `accounts/routes` (`delete_user_me`/`read_user_by_id`) → migrar na `P4-USER-01`. Origem: `P4-PLAT-01`.
 - [ ] **Remover o campo `is_superuser`** (legado) quando `accounts/routes` não o usar mais. Origem: `P4-PLAT-01`.
-- [ ] **Comentário stale do `StoreStatus`** (`stores/enums.py`, "(Fase 7)" → Fase 4) → corrigir na `P4-STORE-01`. Origem: `P4-PLAT-01`.
+- [x] **Comentário stale do `StoreStatus`** (`stores/enums.py`, "(Fase 7)" → Fase 4) → corrigido na `P4-STORE-01`. Origem: `P4-PLAT-01`.
+- [ ] **Detalhe da loja: pedidos/volume** (Fase 6) e **webhooks/comissões** (Fase 8) — agregar quando esses módulos existirem. Origem: `P4-STORE-01`.
+- [ ] **`suspended` como ação distinta** (hoje só `blocked`/`active`) — se um estado intermediário for necessário. Origem: `P4-STORE-01`.

@@ -1,9 +1,8 @@
-"""Audit log table (``audit_logs``, doc 07/15).
+"""Audit log table (``audit_logs``).
 
 Records sensitive actions (admin operations such as blocking a store or
-impersonating a user). Introduced **minimally** in Fase 4; Fase 9 extends
-auditing with ``account_login_events``, ``audit_security_events``, retention and
-hardening.
+impersonating a user). This is the minimal table; login/security events,
+retention and hardening are added later.
 """
 
 import uuid
@@ -16,7 +15,7 @@ from app.db.base import UUIDMixin, get_datetime_utc
 
 
 class AuditLog(UUIDMixin, table=True):
-    """A recorded sensitive action (doc 07/15). Append-only."""
+    """A recorded sensitive action. Append-only."""
 
     __tablename__ = "audit_logs"
     __table_args__ = (

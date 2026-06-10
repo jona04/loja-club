@@ -48,7 +48,7 @@ def upgrade():
     op.create_index(op.f('ix_platform_admin_roles_user_id'), 'platform_admin_roles', ['user_id'], unique=False)
     # ### end Alembic commands ###
 
-    # Data migration: existing superusers become platform owners (doc 08); the
+    # Data migration: existing superusers become platform owners; the
     # is_superuser flag is no longer used for authorization.
     op.execute(
         """

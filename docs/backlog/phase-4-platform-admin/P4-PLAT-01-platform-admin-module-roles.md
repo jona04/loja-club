@@ -69,4 +69,4 @@ O admin da plataforma precisa de autorização **global** (não por loja). Subst
 ## Follow-ups
 - [ ] **Checks inline de `is_superuser` em `accounts/routes`** (`delete_user_me`, `read_user_by_id`): ainda usam o campo — migrar para papel/permissão na **`P4-USER-01`** (gestão de usuários do admin). → README da fase.
 - [ ] **Remover o campo `is_superuser`** de `account_users` (legado): mantido por ora como dado; remoção depois que `accounts/routes` deixar de usá-lo. → README da fase.
-- [ ] **Comentário stale do `StoreStatus`** (`stores/enums.py`): diz "(Fase 7)" para `suspended`/`blocked`; o bloqueio é **Fase 4** — corrigir na **`P4-STORE-01`**. → README da fase.
+- [x] **Comentário stale do `StoreStatus`** (`stores/enums.py`): dizia "(Fase 7)" para `suspended`/`blocked` → corrigido para **Fase 4** na `P4-STORE-01`.

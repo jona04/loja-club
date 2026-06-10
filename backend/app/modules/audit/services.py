@@ -1,4 +1,4 @@
-"""Audit recording helper (doc 15).
+"""Audit recording helper.
 
 Adds the entry to the session; the caller commits it together with the audited
 operation (so the action and its audit trail are one unit of work).
@@ -20,7 +20,7 @@ def record_audit(
     target_type: str | None = None,
     target_id: str | None = None,
 ) -> AuditLog:
-    """Record a sensitive action in ``audit_logs`` (doc 15).
+    """Record a sensitive action in ``audit_logs``.
 
     Args:
         session: Active database session (the caller commits).
