@@ -71,19 +71,30 @@ def get_current_user(session: SessionDep, token: TokenDep) -> User:
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
-def get_current_active_superuser(current_user: CurrentUser) -> User:
-    """Authorize the current user as a platform superuser.
+def get_current_active_superuser(
+    current_user: CurrentUser, session: SessionDep
+) -> User:
+    """Authorize the current user as a platform owner (the platform superuser).
+
+    Backed by the global ``platform_owner`` role (doc 08); the legacy
+    ``is_superuser`` flag is no longer consulted for authorization.
 
     Args:
         current_user: The user resolved from the access token.
+        session: Active database session.
 
     Returns:
-        The same user when it has superuser privileges.
+        The same user when it holds the ``platform_owner`` role.
 
     Raises:
-        HTTPException: 403 if the user is not a superuser.
+        HTTPException: 403 if the user is not a platform owner.
     """
-    if not current_user.is_superuser:
+    from app.modules.platform_admin.enums import PlatformRole
+    from app.modules.platform_admin.repositories import user_platform_roles
+
+    if PlatformRole.platform_owner.value not in user_platform_roles(
+        session=session, user_id=current_user.id
+    ):
         raise HTTPException(
             status_code=403, detail="The user doesn't have enough privileges"
         )

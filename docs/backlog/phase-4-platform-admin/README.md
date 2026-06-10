@@ -26,7 +26,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P4-PLAT-01](./P4-PLAT-01-platform-admin-module-roles.md) | Módulo `platform_admin` + papéis globais `platform.*` + migrar `is_superuser` + audit mínimo | todo | — |
+| 1 | [P4-PLAT-01](./P4-PLAT-01-platform-admin-module-roles.md) | Módulo `platform_admin` + papéis globais `platform.*` + migrar `is_superuser` + audit mínimo | ✅ done | — |
 | 2 | [P4-ADMIN-01](./P4-ADMIN-01-frontend-admin-scaffold.md) | `frontend-admin` scaffold + Traefik `admin.` + login/shell | todo | P4-PLAT-01 |
 | 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | todo | P4-PLAT-01 |
 | 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | todo | P4-PLAT-01 |
@@ -58,4 +58,7 @@ P4-PLAT-01 → P4-ADMIN-01
 - [ ] **Previews no CloudFront** (Fase 3, `P3-TPL-03`) → `P4-TPL-02`.
 - [ ] **Preview ao vivo / preview visual** (Fase 3, `P3-TPL-03`/`P3-FE-02`) → `P4-TPL-03`.
 
-**Da própria fase:** _(preencher conforme as tasks forem implementadas)._
+**Da própria fase:**
+- [ ] **Checks inline de `is_superuser`** em `accounts/routes` (`delete_user_me`/`read_user_by_id`) → migrar na `P4-USER-01`. Origem: `P4-PLAT-01`.
+- [ ] **Remover o campo `is_superuser`** (legado) quando `accounts/routes` não o usar mais. Origem: `P4-PLAT-01`.
+- [ ] **Comentário stale do `StoreStatus`** (`stores/enums.py`, "(Fase 7)" → Fase 4) → corrigir na `P4-STORE-01`. Origem: `P4-PLAT-01`.

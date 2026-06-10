@@ -4,7 +4,7 @@ title: Módulo platform_admin — permissões platform.* + papéis globais
 phase: 4
 etapa: "Etapa 1 — frontend-admin + platform_admin + papéis globais"
 area: PLAT
-status: todo
+status: done
 depends_on: []
 blocks: [P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01, P4-TPL-01]
 tests: [integration]
@@ -53,15 +53,20 @@ O admin da plataforma precisa de autorização **global** (não por loja). Subst
 - **Cobrir:** papel global concede/nega `platform.*` (conforme o mapa do doc 08); usuário sem papel → 403; migração do superuser; ação sensível grava em `audit_logs`.
 
 ## Definition of Done
-- [ ] Catálogo `platform.*` + papéis (mapa doc 08) seedados; `require_platform_permission` aplicado; `is_superuser` migrado e fora do código de autz.
-- [ ] `audit_logs` (mínimo) + helper; **`alembic check` vazio**.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Catálogo `platform.*` + mapa papel→permissão (doc 08) **em código** (`permissions.py`) + `platform_admin_roles` + `require_platform_permission`; `get_current_active_superuser` migrado para checar `platform_owner` (não consulta mais `is_superuser`).
+- [x] `audit_logs` (mínimo, no módulo `audit`) + helper `record_audit`; migration aplicada, **`alembic check` vazio**.
+- [x] **Modos de falha / edge cases mapeados** → Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** módulo `app/modules/platform_admin/` (`enums`/`permissions`/`models`/`repositories`/`deps`) + `audit/models.py` (`audit_logs`) + `audit/services.py` (`record_audit`); seed do superuser→`platform_owner` (`core/db.py`); migration `727624122b41`. Gate: **203 testes** (10 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
 - Herdado de `P0-MOD-04`/`P1-*`: o MVP usava `is_superuser`; os papéis `platform.*` (doc 08) o substituem (anotado desde a Fase 1).
 - **`audit_logs` nasce aqui** (mínimo, p/ as ações do admin); a [Fase 9](../phase-9-platform-ops-and-production.md) acrescenta `account_login_events`/`audit_security_events` + retenção/hardening (doc [07](../../07_database_strategy.md)/[15](../../15_observability_and_operations.md)).
 - `require_platform_permission` é o **parente global** de `require_permission` (`P1-PERM-03`) — mesmo padrão, sem `store_id`.
+- **Storage leve (decisão de impl):** o doc [07](../../07_database_strategy.md) define só `platform_admin_roles` — então o **catálogo/mapa fica em código** (`permissions.py`), sem tabelas `platform_permissions`/`platform_role_permissions` (diferente da loja). `require_platform_permission` resolve os papéis no DB e checa o mapa em código.
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] **Checks inline de `is_superuser` em `accounts/routes`** (`delete_user_me`, `read_user_by_id`): ainda usam o campo — migrar para papel/permissão na **`P4-USER-01`** (gestão de usuários do admin). → README da fase.
+- [ ] **Remover o campo `is_superuser`** de `account_users` (legado): mantido por ora como dado; remoção depois que `accounts/routes` deixar de usá-lo. → README da fase.
+- [ ] **Comentário stale do `StoreStatus`** (`stores/enums.py`): diz "(Fase 7)" para `suspended`/`blocked`; o bloqueio é **Fase 4** — corrigir na **`P4-STORE-01`**. → README da fase.

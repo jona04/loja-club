@@ -9,10 +9,12 @@ from sqlmodel import SQLModel
 
 import app.models  # noqa: F401
 import app.modules.accounts.models  # noqa: F401
+import app.modules.audit.models  # noqa: F401
 import app.modules.catalog.models  # noqa: F401
 import app.modules.content.models  # noqa: F401
 import app.modules.domains.models  # noqa: F401
 import app.modules.media.models  # noqa: F401
+import app.modules.platform_admin.models  # noqa: F401
 import app.modules.stores.models  # noqa: F401
 
 __all__ = ["SQLModel"]
