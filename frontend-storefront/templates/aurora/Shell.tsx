@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 
-import type { Category, StorefrontStore } from "@/lib/api"
+import { type Category, getHome, type StorefrontStore } from "@/lib/api"
 import { CartProvider } from "@/lib/cart"
 import { whatsappLink } from "@/lib/format"
 
@@ -25,7 +25,7 @@ const FOOTER_PAGES = [
  * @param children - The page content.
  * @returns The wrapped Aurora page.
  */
-export function AuroraShell({
+export async function AuroraShell({
   store,
   categories,
   locale,
@@ -37,12 +37,20 @@ export function AuroraShell({
   children: ReactNode
 }) {
   const name = store.public_name || store.name
+  const { theme } = await getHome()
+  const settings = theme.settings ?? {}
+  const announcement =
+    (settings.announcement_text as string) ||
+    "Frete grátis em compras acima de R$ 500"
+  const footerContact =
+    (settings.footer_contact as string) ||
+    "Horário de atendimento: Seg a Sex, das 9h às 18h."
 
   return (
     <CartProvider>
       <div className="flex min-h-screen flex-col bg-white text-brand-900 antialiased">
         <div className="bg-brand-900 py-2 text-center text-xs font-medium uppercase tracking-widest text-white">
-          Frete grátis em compras acima de R$ 500
+          {announcement}
         </div>
 
         <AuroraHeader
@@ -152,11 +160,7 @@ export function AuroraShell({
                       <span>contato@{store.slug}.com.br</span>
                     </div>
                   </li>
-                  <li className="mt-4">
-                    Horário de atendimento:
-                    <br />
-                    Seg a Sex, das 9h às 18h.
-                  </li>
+                  <li className="mt-4 whitespace-pre-line">{footerContact}</li>
                 </ul>
               </div>
             </div>

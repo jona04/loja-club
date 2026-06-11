@@ -7,6 +7,7 @@
  */
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
+import { cache } from "react"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8800"
 
@@ -29,6 +30,7 @@ export interface StorefrontTheme {
   primary_color: string | null
   background_color: string | null
   font_family: string | null
+  settings: Record<string, unknown>
 }
 
 export interface ProductImage {
@@ -88,9 +90,15 @@ async function apiGet<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
-/** Fetch the host's storefront home (store identity, theme and highlights). */
-export const getHome = (): Promise<StorefrontHome> =>
-  apiGet<StorefrontHome>("/home")
+/**
+ * Fetch the host's storefront home (store identity, theme and highlights).
+ *
+ * Memoized per request (React `cache`) so the page and the template chrome
+ * (which reads `theme.settings`) share a single backend call.
+ */
+export const getHome = cache(
+  (): Promise<StorefrontHome> => apiGet<StorefrontHome>("/home"),
+)
 
 /** Fetch the host store's categories. */
 export const getCategories = (): Promise<Category[]> =>

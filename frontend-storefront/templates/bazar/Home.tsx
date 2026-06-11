@@ -27,6 +27,12 @@ const TILE_COLORS = [
 export function Home({ home, categories }: HomeProps) {
   const { store, theme, featured_products: featured, category_sections } = home
   const sections = category_sections
+  const settings = theme.settings ?? {}
+  const heroSubtitle =
+    (settings.hero_subtitle as string) ||
+    store.description ||
+    "Descubra milhares de produtos com preços imbatíveis. Renove sua casa, seu estilo e sua vida."
+  const showCategoryStrip = settings.show_category_strip !== false
 
   return (
     <BazarShell store={store} categories={categories} locale={store.locale}>
@@ -51,8 +57,7 @@ export function Home({ home, categories }: HomeProps) {
                   {theme.headline || "Festival de Ofertas"}
                 </h1>
                 <p className="mb-8 max-w-lg text-lg text-gray-100 opacity-90 md:text-xl">
-                  {store.description ||
-                    "Descubra milhares de produtos com preços imbatíveis. Renove sua casa, seu estilo e sua vida."}
+                  {heroSubtitle}
                 </p>
                 <Link
                   href="/products"
@@ -66,7 +71,7 @@ export function Home({ home, categories }: HomeProps) {
         </div>
       </section>
 
-      {categories.length ? (
+      {categories.length && showCategoryStrip ? (
         <section className="border-b border-gray-100 bg-white py-8">
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
             <h2 className="mb-4 text-lg font-bold text-gray-900">

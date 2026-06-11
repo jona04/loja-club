@@ -4,7 +4,7 @@ title: Vitrine lê theme.settings (defaults ⊕ overrides; image default no CDN)
 phase: 5
 etapa: "Etapa 5 — Vitrine lê settings + preview navegável"
 area: SF
-status: todo
+status: done
 depends_on: [P5-CFG-01]
 blocks: [P5-PREV-01]
 tests: [e2e]
@@ -43,15 +43,19 @@ Com a API pública devolvendo `theme.settings` (`P5-CFG-01`), os templates da vi
 - **Cobrir:** e2e — settar um campo no painel reflete na vitrine; campo vazio cai no default; imagem default no CDN.
 
 ## Definition of Done
-- [ ] Templates leem `theme.settings[key] ?? default` (chrome específico).
-- [ ] `image` com default no CDN; sem fundo vazio.
-- [ ] Lorem/estático substituído por settings.
-- [ ] Gates + e2e/smoke.
-- [ ] **Modos de falha mapeados** (settings ausente, chave nova sem default) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Os 3 templates (aurora/bazar/studio) leem `theme.settings[key] ?? default` no chrome específico: anúncio (`announcement_text`), subtítulo do hero / intro do catálogo (`hero_subtitle`/`catalog_intro`), seções toggle (`show_trust_badges`/`show_category_strip`/`show_filters`) e contato do rodapé (`footer_contact`).
+- [ ] `image` com default no CDN — **diferido** (nenhum schema V1 tem campo `image`; depende de `P5-DEMO-01`).
+- [x] Lorem/estático do chrome **editável** substituído por settings (o resto é design fixo do template).
+- [x] Gates (`biome` + `next build` + `tsc`); **e2e/smoke do storefront diferido** (storefront sem infra de e2e) — Follow-up.
+- [x] **Modos de falha mapeados** (settings ausente → `?? {}`; chave sem valor → `?? default`).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `StorefrontTheme.settings` (tipo); `getHome` memoizado (React `cache`); **Shell async** que busca os settings sozinho (sem prop-drilling) nos 3 templates; chrome lendo `settings[key] ?? default`. tsc/biome/`next build` verdes. O self-fetch dedupa via `cache()` → 1 call/request, anúncio/rodapé consistentes em toda página.
 
 ## Notas / Reconciliações
-- Funde o follow-up "conteúdo estático/lorem → dinâmico" da Fase 3.
+- **Fecha** o follow-up "conteúdo estático/lorem → dinâmico" da Fase 3 (o chrome editável agora vem de settings).
+- Cada template mapeia no seu chrome: bazar tem o anúncio no `BazarHeader`; studio mostra o anúncio só se preenchido (design minimalista) e os filtros via `StudioSidebar`.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **e2e/smoke do storefront** (vitrine reflete `theme.settings`) — o storefront não tem infra de e2e/Playwright; a API de `theme.settings` é coberta por teste de integração (backend) e o render é type-validado (`tsc`/`next build`). Montar a infra + um e2e real. Origem: `P5-SF-01`.
+- [ ] **Campos `image` com default no CDN** — quando um template tiver campo `image`, o default vem da imagem original no CDN (importada na `P5-DEMO-01`). Origem: `P5-SF-01`.

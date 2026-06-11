@@ -14,9 +14,11 @@ import type { Category } from "@/lib/api"
 export function StudioSidebar({
   categories,
   activeSlug = null,
+  showFilters = true,
 }: {
   categories: Category[]
   activeSlug?: string | null
+  showFilters?: boolean
 }) {
   return (
     <aside className="hidden w-64 flex-shrink-0 border-r border-gray-200 lg:block">
@@ -52,41 +54,45 @@ export function StudioSidebar({
           </ul>
         </div>
 
-        <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
-            Filtrar por Preço
-          </h3>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              placeholder="Min"
-              className="h-9 w-full rounded border border-gray-200 bg-gray-50 px-3 text-sm focus:border-black focus:outline-none"
-            />
-            <span className="text-gray-400">-</span>
-            <input
-              type="number"
-              placeholder="Max"
-              className="h-9 w-full rounded border border-gray-200 bg-gray-50 px-3 text-sm focus:border-black focus:outline-none"
-            />
-          </div>
-          <button
-            type="button"
-            className="mt-3 h-9 w-full rounded bg-gray-100 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
-          >
-            Aplicar filtro
-          </button>
-        </div>
+        {showFilters ? (
+          <>
+            <div>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Filtrar por Preço
+              </h3>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  className="h-9 w-full rounded border border-gray-200 bg-gray-50 px-3 text-sm focus:border-black focus:outline-none"
+                />
+                <span className="text-gray-400">-</span>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  className="h-9 w-full rounded border border-gray-200 bg-gray-50 px-3 text-sm focus:border-black focus:outline-none"
+                />
+              </div>
+              <button
+                type="button"
+                className="mt-3 h-9 w-full rounded bg-gray-100 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+              >
+                Aplicar filtro
+              </button>
+            </div>
 
-        <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
-            Ordenar
-          </h3>
-          <select className="h-9 w-full cursor-pointer rounded border border-gray-200 bg-gray-50 pl-3 pr-8 text-sm focus:border-black focus:outline-none">
-            <option>Mais recentes</option>
-            <option>Menor preço</option>
-            <option>Maior preço</option>
-          </select>
-        </div>
+            <div>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Ordenar
+              </h3>
+              <select className="h-9 w-full cursor-pointer rounded border border-gray-200 bg-gray-50 pl-3 pr-8 text-sm focus:border-black focus:outline-none">
+                <option>Mais recentes</option>
+                <option>Menor preço</option>
+                <option>Maior preço</option>
+              </select>
+            </div>
+          </>
+        ) : null}
       </div>
     </aside>
   )

@@ -31,7 +31,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 5 | [P5-DEMO-01](./P5-DEMO-01-import-assets.md) | `demo.json` + `import_assets` (uxpilot → CDN) | todo | P4-TPL-01, P4-TPL-02 |
 | 6 | [P5-DEMO-02](./P5-DEMO-02-template-demo-stores.md) | Loja-demo por template (`<id>-demo`) | todo | P5-DEMO-01 |
 | 7 | [P5-TPL-01](./P5-TPL-01-template-screens-refinements.md) | Refinos das telas de template (admin + dashboard, thumb CDN) | todo | P5-DEMO-01 |
-| 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | todo | P5-CFG-01 |
+| 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | ✅ done | P5-CFG-01 |
 | 9 | [P5-PREV-01](./P5-PREV-01-navigable-preview.md) | Preview navegável (painel abre a loja-demo) | todo | P5-DEMO-02, P5-SF-01 |
 | 10 | [P5-PAGE-01](./P5-PAGE-01-content-pages.md) | Conteúdo das páginas (`content_pages`/menus/banners no painel + vitrine) | todo | — |
 
@@ -58,7 +58,8 @@ P5-DEMO-01 → P5-DEMO-02 ─┼→ P5-PREV-01
 - [ ] **Imagens-default no CDN** + **thumb relativo do seed** + **remover PNGs de `public/`** (Fase 4, `P4-TPL-02`) → `P5-DEMO-01`.
 - [ ] **Telas de templates: thumb relativo (admin)** + **dashboard thumbnail do CDN** (Fase 4, `P4-ADMIN-03`) → `P5-TPL-01`.
 - [ ] **`previewLayout` sem uso** + **preview ao vivo / botão abrir preview** (Fases 3/4) → `P5-PREV-01`.
-- [ ] **Conteúdo estático/lorem → dinâmico** (Fase 3, `P3-TPL-03`) → `P5-SF-01`.
+- [x] **Conteúdo estático/lorem → dinâmico** (Fase 3) → `P5-SF-01` ✅ (chrome editável vem de settings nos 3 templates).
+- [ ] **e2e/smoke do storefront** (vitrine reflete `theme.settings`) — storefront sem infra de e2e/Playwright; a API é coberta por integração (backend) + render type-validado (`tsc`/`next build`). Montar infra + e2e real. Origem: `P5-SF-01`.
 - [ ] **Upload de imagem nos campos `image` + `layout.assets.update`** — diferido: nenhum template V1 tem campo `image` e `layout.assets.update` não está ligada a rota (o upload do banner universal já funciona via `layout.update`). Fazer quando um template tiver campo `image`. Origem: Fase 3 + `P5-CFG-02`.
 - [ ] **CRUD de páginas/menus/banners** + **páginas institucionais via `content_pages`** (Fase 3, `P3-TPL-03`) → `P5-PAGE-01`.
 
