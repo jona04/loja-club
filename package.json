@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": [
     "frontend-dashboard",
+    "frontend-admin",
     "frontend-storefront"
   ],
   "scripts": {

@@ -4,7 +4,7 @@ title: Projeto frontend-admin — scaffold + Traefik admin. + login
 phase: 4
 etapa: "Etapa 1 — frontend-admin + platform_admin + papéis globais"
 area: ADMIN
-status: todo
+status: done
 depends_on: [P4-PLAT-01]
 blocks: [P4-ADMIN-02, P4-ADMIN-03]
 tests: [e2e]
@@ -50,13 +50,19 @@ A equipe Loja Club precisa de um painel **separado** do painel do lojista, em `a
 - **Cobrir:** `admin.` roteia pro admin; login `platform.*` entra; usuário sem papel não acessa.
 
 ## Definition of Done
-- [ ] `frontend-admin` sobe em `admin.localhost` (Traefik), login `platform.*`, shell com aviso interno.
-- [ ] Gates (`tsc`/`biome`) verdes + smoke do host.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `frontend-admin` (Vite/React) com **login** `platform.*` + **shell** com banner de **ambiente interno** + guard via `GET /platform/me` (sem papel → "acesso negado").
+- [x] Gates verdes: `vite build` + `tsc` + `biome` + **e2e Playwright 3/3** (não-logado→login; admin→shell; sem papel→negado); backend `/platform/me` testado (3/3 + lint).
+- [x] **Smoke do host** validado (`docker compose up --build frontend-admin` → `admin.localhost` via Traefik + login OK) e **`bun.lock`** regenerado com o membro novo.
+- [x] **Modos de falha mapeados** → guard de não-admin; 401/403 → `/login`.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** projeto `frontend-admin/` espelhando o `frontend-dashboard` (cliente OpenAPI **regenerado** c/ `/platform/*`, UI Radix/shadcn, TanStack Router/Query); rotas `__root`/`login`/`_layout` (shell+guard+banner)/`index` + `useAuth`; backend **`GET /platform/me`** (+ teste); wiring `compose.yml`+`override` (`admin.${DOMAIN}` / porta **5181**), workspace na raiz, `DOCKER_IMAGE_ADMIN`, CORS (`localhost:5181` + `admin.localhost`). **Validado:** smoke real (docker, login OK) + **e2e Playwright 3/3** (`playwright-admin`); `bun.lock` regenerado com o membro novo.
 
 ## Notas / Reconciliações
 - Reusa o cliente OpenAPI/padrões do `frontend-dashboard` (não recriar) — decisão de frontends separados (doc [05](../../05_frontend_architecture.md)).
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [x] **Smoke real do host** (docker) — validado (login via `admin.localhost`).
+- [x] **`bun.lock`** regenerado com o membro `frontend-admin` (`npx bun@1.3.14 install`).
+- [x] **e2e (Playwright) do admin** — `playwright.config` + `Dockerfile.playwright` + service `playwright-admin` + specs (login + guard) → **3/3 verde**.
+- [ ] **Gate de CI** (e2e de **todos** os frontends bloqueia o deploy) → **Fase 9** (regra registrada na `P3-SF-03`). → README da fase.

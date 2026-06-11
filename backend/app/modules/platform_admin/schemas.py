@@ -58,3 +58,13 @@ class ThemeTemplateUpdate(SQLModel):
     description: str | None = None
     is_active: bool | None = None
     preview_image_url: str | None = Field(default=None, max_length=2048)
+
+
+class PlatformMe(SQLModel):
+    """The signed-in user and their platform roles (empty if not an admin)."""
+
+    id: uuid.UUID
+    email: str
+    full_name: str | None = None
+    is_platform_admin: bool
+    platform_roles: list[str] = []

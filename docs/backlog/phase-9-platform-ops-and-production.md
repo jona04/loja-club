@@ -43,6 +43,7 @@ Doc [14](../14_security_strategy.md), [15](../15_observability_and_operations.md
 Doc [12](../12_aws_infrastructure_and_deployment.md), [16](../16_testing_strategy.md).
 
 - [ ] **CI** (consolida o CI básico da Fase 0): GitHub Actions roda **lint + type check + testes** (backend e frontend) + build Docker.
+- [ ] **Gate de e2e (release):** o CI roda o **e2e (Playwright) de TODOS os frontends** (dashboard + admin + storefront) e **só faz deploy do que passa** — nenhum frontend sobe com e2e vermelho. (Storefront ganha e2e na [`P3-SF-03`](./phase-3-storefront-and-layouts/P3-SF-03-storefront-e2e.md); admin já tem na `P4-ADMIN-01`.)
 - [ ] **CD**: push das imagens para registry (ECR ou registry escolhido) e **deploy automatizado para o EC2 (dev online)** a cada merge na branch alvo.
 - [ ] **Migrations** com disciplina: rodar em dev antes; não alterar prod manualmente. Doc [07](../07_database_strategy.md)/[12](../12_aws_infrastructure_and_deployment.md).
 - [ ] **Rollback** básico (versão anterior das imagens).

@@ -16,6 +16,7 @@ O admin é a ferramenta interna da plataforma — separada do painel do lojista.
 - Papéis **globais** (não por loja): `platform_owner | platform_ops | platform_finance | platform_support | platform_catalog`. Doc [08](./08_modules_and_permissions.md).
 - `platform_admin_roles` no banco; o `is_superuser` do template (Fase 1) é **substituído** por esse modelo. Doc [07](./07_database_strategy.md).
 - Toda ação sensível do admin é **auditada** (mínimo na Fase 4; hardening na Fase 9). Doc [14](./14_security_strategy.md)/[15](./15_observability_and_operations.md).
+- O `frontend-admin` descobre o usuário logado + se é admin via **`GET /platform/me`** (devolve o usuário + `platform_roles`; vazio = não-admin → acesso negado).
 
 ## Escopo antes do lançamento (Fase 4)
 

@@ -43,6 +43,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 9 | [P3-TPL-02](./P3-TPL-02-templates-bazar-studio.md) | **Bazar + Studio** — o **teste do contrato** (seções de categoria / sidebar; `category_sections`; `Shell` no contrato) | ✅ done | P3-TPL-01 |
 | 10 | [P3-TPL-03](./P3-TPL-03-dashboard-template-picker.md) | **Painel — Layout da loja:** seletor de template (nome + **thumb**) + **upload do banner** + **preview** (Dialog) + defaults apresentáveis | ✅ done | P3-TPL-01 |
 | 11 | [P3-TPL-04](./P3-TPL-04-template-settings-schema.md) | **Personalização por template** (schema-driven) — é a **[Fase 5](../phase-5-store-configuration.md)** (config da loja) | → Fase 5 | P3-TPL-02, P3-TPL-03 |
+| 12 | [P3-SF-03](./P3-SF-03-storefront-e2e.md) | **E2E do storefront** (Playwright) + regra do gate de CI (e2e de todos os frontends → deploy) | todo | P3-SF-02 |
 
 > **Fase 3 concluída** (tasks 1–10 `done`): os 3 templates (Aurora/Bazar/Studio) + picker + banner + preview — o **contrato está VALIDADO** (3 templates distintos consomem os **mesmos dados + fluxo**). A **personalização por template** (`P3-TPL-04`, schema-driven) é a **[Fase 5](../phase-5-store-configuration.md)** — depende do admin cadastrar templates ([Fase 4](../phase-4-platform-admin.md)). Checkout/confirmação = **[Fase 6](../phase-6-sell-without-payment.md)**.
 
@@ -61,7 +62,7 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 > Item adiado vira checkbox aqui (origem + quando), e também na seção Follow-ups da task.
 
 - [ ] **Smoke do Traefik** (`P3-FE-01`): com o proxy rodando, confirmar `app.`→painel, `api.`→backend, `{loja}.${DOMAIN}`→storefront (o wildcard só foi validado por `compose config`, não no roteamento real).
-- [ ] **Lint/test do `frontend-storefront` nos gates** (`P3-FE-01`): pre-commit/CI só cobrem `frontend-dashboard` — plugar quando o storefront tiver código real (`P3-SF-02`).
+- [ ] **Lint/test/e2e do `frontend-storefront` nos gates** (`P3-FE-01`) **→ `P3-SF-03`**: pre-commit/CI só cobrem `frontend-dashboard`; a `P3-SF-03` adiciona o e2e do storefront + a regra de gate (e2e de todos os frontends bloqueia deploy — wiring na Fase 9).
 - [ ] **Pipeline da imagem do `frontend-storefront`** (`P3-FE-01`): `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 8/9.
 - [ ] **Dockerfile do storefront single-stage** (`P3-FE-01`): otimizar p/ Next standalone depois.
 - [ ] **`bun.lock`** (`P3-FE-01`): confirmar/regerar com o `bun` do usuário antes de commitar (regenerado via `oven/bun:1` 1.3.14).

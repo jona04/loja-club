@@ -26,7 +26,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
 | 1 | [P4-PLAT-01](./P4-PLAT-01-platform-admin-module-roles.md) | Módulo `platform_admin` + papéis globais `platform.*` + migrar `is_superuser` + audit mínimo | ✅ done | — |
-| 2 | [P4-ADMIN-01](./P4-ADMIN-01-frontend-admin-scaffold.md) | `frontend-admin` scaffold + Traefik `admin.` + login/shell | todo | P4-PLAT-01 |
+| 2 | [P4-ADMIN-01](./P4-ADMIN-01-frontend-admin-scaffold.md) | `frontend-admin` scaffold + Traefik `admin.` + login/shell (e2e 3/3) | ✅ done | P4-PLAT-01 |
 | 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | ✅ done | P4-PLAT-01 |
 | 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | ✅ done | P4-PLAT-01 |
 | 5 | [P4-PLAN-01](./P4-PLAN-01-plans-stub.md) | Planos (seed/stub; billing = Fase 8) | ✅ done | P4-PLAT-01 |
@@ -64,3 +64,4 @@ P4-PLAT-01 → P4-ADMIN-01
 - [ ] **Hardening da impersonation** (→ Fase 9): token emitido = login normal do alvo (sem marca de impersonation); só o **acesso** é auditado em `audit_logs`, **não as ações** da sessão (aparecem como do próprio usuário); faltam tag de impersonation no token + auditoria das ações + expiração curta / "parar de impersonar". Origem: `P4-USER-01`.
 - [ ] **Empacotar os `settings-schema.json` no deploy do backend:** o seed lê de `frontend-storefront/templates/<id>/settings-schema.json`; na imagem Docker do backend esse dir não existe → o build precisa copiar os JSONs, senão o schema fica `null` em deploy. Origem: `P4-TPL-01`.
 - [ ] **Imagens-default no CDN** (Fase 5, quando houver campos `image`; guardar **separado** do `settings_schema` p/ o seed não sobrescrever), **limpeza de asset antigo** no re-upload, e **remover os PNGs de `public/`** após uploads. Origem: `P4-TPL-02`.
+- [x] **`frontend-admin`: smoke (docker) + `bun.lock` + e2e Playwright 3/3** — validado. Resta o **gate de CI** (e2e de **todos** os frontends → deploy) na **Fase 9** (regra em `P3-SF-03`). Origem: `P4-ADMIN-01`.

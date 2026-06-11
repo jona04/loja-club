@@ -5,7 +5,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, UploadFile
 
-from app.api.deps import SessionDep
+from app.api.deps import CurrentUser, SessionDep
 from app.core.api import Page, PageParams, pagination_params
 from app.models import Message, Token
 from app.modules.accounts.models import User
@@ -20,7 +20,9 @@ from app.modules.billing.schemas import (
 from app.modules.content.models import ContentThemeTemplate
 from app.modules.platform_admin import services
 from app.modules.platform_admin.deps import require_platform_permission
+from app.modules.platform_admin.repositories import user_platform_roles
 from app.modules.platform_admin.schemas import (
+    PlatformMe,
     StoreAdminDetail,
     StoreAdminListItem,
     ThemeTemplateAdminPublic,
@@ -30,6 +32,19 @@ from app.modules.platform_admin.schemas import (
 from app.modules.stores.enums import StoreStatus
 
 router = APIRouter(prefix="/platform", tags=["platform-admin"])
+
+
+@router.get("/me", response_model=PlatformMe)
+def get_platform_me(current_user: CurrentUser, session: SessionDep) -> PlatformMe:
+    """Return the signed-in user and their platform roles (empty if not an admin)."""
+    roles = user_platform_roles(session=session, user_id=current_user.id)
+    return PlatformMe(
+        id=current_user.id,
+        email=current_user.email,
+        full_name=current_user.full_name,
+        is_platform_admin=bool(roles),
+        platform_roles=roles,
+    )
 
 
 @router.get(
