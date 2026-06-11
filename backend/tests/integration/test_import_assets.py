@@ -140,6 +140,20 @@ def test_import_demo_assets_no_demo_returns_empty() -> None:
     }
 
 
+def test_import_template_thumbnail(s3: Any) -> None:
+    """A template's preview.png is uploaded to the CDN under its key."""
+    url = import_assets.import_template_thumbnail("aurora")
+    assert url == "https://cdn.test/public/templates/aurora/preview.png"
+    body = s3.get_object(
+        Bucket="loja-club-test", Key="public/templates/aurora/preview.png"
+    )["Body"].read()
+    assert len(body) > 0
+
+
+def test_import_thumbnail_missing_returns_none() -> None:
+    assert import_assets.import_template_thumbnail("nonexistent-template-xyz") is None
+
+
 @pytest.mark.skipif(
     not settings.storage_enabled,
     reason="AWS storage not configured (set S3_BUCKET + credentials)",

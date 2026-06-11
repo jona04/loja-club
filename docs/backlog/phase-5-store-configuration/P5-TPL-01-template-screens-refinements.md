@@ -4,7 +4,7 @@ title: Refinos das telas de template (admin + dashboard, thumbnail no CDN)
 phase: 5
 etapa: "Etapa 4 — Loja-demo + import de assets"
 area: TPL
-status: todo
+status: done
 depends_on: [P5-DEMO-01]
 blocks: []
 tests: [e2e]
@@ -39,14 +39,16 @@ Com o **thumbnail no CDN** (absoluto, via `P5-DEMO-01`), as telas de template (a
 - **Cobrir:** e2e — admin mostra o thumb na lista/detalhe; picker do dashboard mostra o thumb do CDN.
 
 ## Definition of Done
-- [ ] Admin: thumb na lista/detalhe + detalhe com mais campos + thumb no editar.
-- [ ] Dashboard: picker usa `preview_image_url` (CDN).
-- [ ] Gates (`tsc`/`biome`) + e2e.
-- [ ] **Modos de falha mapeados** (sem thumb ainda, URL quebrada) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Admin: thumb na lista/detalhe + detalhe com mais campos + thumb no editar.
+- [x] Dashboard: picker usa `preview_image_url` (CDN).
+- [x] Gates (`tsc`/`biome`) + e2e (admin `templates.spec.ts` + dashboard `store-layout.spec.ts`).
+- [x] **Modos de falha mapeados** (sem thumb ainda, URL quebrada) → tratados ou Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Fecha os follow-ups "ADMIN-03 thumb relativo" e "dashboard thumbnail do CDN" da Fase 4.
+- O seed deriva `preview_image_url` do key do CDN (`storage.public_url("public/templates/<id>/preview.png")`), absoluto — não mais relativo; `import_assets.import_template_thumbnail` sobe o `preview.png` (movido para `frontend-storefront/templates/<id>/`). PNGs de `frontend-dashboard/public/templates/` removidos.
+- **Sem thumb / URL quebrada:** a UI cai no placeholder (`—` na lista, "sem thumb" no detalhe) — tratado, sem follow-up.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Detalhe do admin sem conteúdo-demo + defaults** — o escopo pedia mostrar "conteúdo demo + defaults" no detalhe, mas `ThemeTemplateAdminPublic` expõe só id/nome/descrição/ativo/thumb/`settings_schema`; falta o backend expor o `demo.json` resolvido e os defaults do schema. Expor + exibir.

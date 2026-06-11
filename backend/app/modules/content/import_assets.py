@@ -150,3 +150,21 @@ def import_demo_assets(template_id: str) -> dict[str, Any]:
     if changed:
         _write_demo(template_id, demo)
     return demo
+
+
+def import_template_thumbnail(template_id: str) -> str | None:
+    """Upload a template's ``preview.png`` thumbnail to the CDN, returning its URL.
+
+    Args:
+        template_id: The template whose thumbnail is uploaded.
+
+    Returns:
+        The thumbnail's CDN URL, or ``None`` when the template ships no
+        ``preview.png``.
+    """
+    path = _TEMPLATES_DIR / template_id / "preview.png"
+    if not path.is_file():
+        return None
+    key = f"public/templates/{template_id}/preview.png"
+    storage.upload_fileobj(key, io.BytesIO(path.read_bytes()), "image/png")
+    return storage.public_url(key)

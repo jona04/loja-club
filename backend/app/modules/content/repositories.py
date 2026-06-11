@@ -6,6 +6,7 @@ from pathlib import Path
 
 from sqlmodel import Session, col, select
 
+from app.core import storage
 from app.modules.content.models import (
     ContentStoreTemplateSettings,
     ContentStoreThemeSettings,
@@ -114,26 +115,25 @@ def list_store_template_settings(
     )
 
 
-# The storefront templates shipped in V1. Authoritative for the seed.
-# ``preview_image_url`` is served by the dashboard (hardcoded; CloudFront later).
+# The storefront templates shipped in V1. Authoritative for the seed. The
+# thumbnail (``preview.png`` per template) is served from the CDN; the seed
+# derives ``preview_image_url`` from its key (the file is uploaded by
+# ``import_assets.import_template_thumbnail``).
 CANONICAL_TEMPLATES: list[dict[str, str]] = [
     {
         "id": "aurora",
         "name": "Aurora",
         "description": "Premium minimalista: home curada com destaques.",
-        "preview_image_url": "/templates/aurora_preview.png",
     },
     {
         "id": "bazar",
         "name": "Bazar",
         "description": "Vibrante marketplace: home por seções de categoria.",
-        "preview_image_url": "/templates/bazar_preview.png",
     },
     {
         "id": "studio",
         "name": "Studio",
         "description": "Catálogo com sidebar de categorias e filtros.",
-        "preview_image_url": "/templates/studio_preview.png",
     },
 ]
 
@@ -152,6 +152,9 @@ def seed_content_templates(*, session: Session) -> None:
     changed = False
     for template in CANONICAL_TEMPLATES:
         schema = _load_settings_schema(template["id"])
+        preview_url = storage.public_url(
+            f"public/templates/{template['id']}/preview.png"
+        )
         row = existing.get(template["id"])
         if row is None:
             session.add(
@@ -159,13 +162,14 @@ def seed_content_templates(*, session: Session) -> None:
                     id=template["id"],
                     name=template["name"],
                     description=template["description"],
-                    preview_image_url=template["preview_image_url"],
+                    preview_image_url=preview_url,
                     settings_schema=schema,
                 )
             )
             changed = True
-        elif row.settings_schema != schema:
+        elif row.settings_schema != schema or row.preview_image_url != preview_url:
             row.settings_schema = schema
+            row.preview_image_url = preview_url
             session.add(row)
             changed = True
     if changed:
