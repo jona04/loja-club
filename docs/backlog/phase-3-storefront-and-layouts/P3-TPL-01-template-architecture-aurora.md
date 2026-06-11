@@ -2,7 +2,7 @@
 id: P3-TPL-01
 title: Arquitetura de templates + Aurora (POC)
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: TPL
 status: done
 depends_on: [P3-SF-02, P3-FE-02, P3-LOC-01]
@@ -22,7 +22,7 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 
 ## Escopo (o que ENTRA)
 - **Resolver/registry de template:** mapeia `active_template_id` da loja → **árvore de componentes** do template, em runtime. **Fallback** seguro se ausente/inválido (cai pro template base, não quebra).
-- **Seed `content_theme_templates`:** registra `aurora`/`bazar`/`studio` com `preview_image_url` (por ora **seed/hardcoded**; o admin de cadastro é Fase 7).
+- **Seed `content_theme_templates`:** registra `aurora`/`bazar`/`studio` com `preview_image_url` (por ora **seed/hardcoded**; o admin de cadastro é Fase 4).
 - **Blocos compartilhados** (base pros 3 templates): **CartDrawer** (mini-carrinho, estado client, sem lógica de carrinho ainda), **Carousel** de banners (1 = banner, 2+ = carrossel), **ProductCard** (evoluir o atual), shell (header/footer/WhatsApp).
 - **Aurora (navegação):** portar do HTML em `docs/design/templates/aurora/` pra componentes React + **Tailwind v4** do storefront: `home` (hero/carrossel + faixa de categorias + **destaques** + banner editorial), `category` (listagem), `product` (galeria + "Adicionar ao carrinho" + **slot "Personalizar em 3D"** reservado).
 - **Preço pelo locale da loja** (`P3-LOC-01`) em todos os cards/preços.
@@ -30,9 +30,9 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 ## Fora de escopo (o que NÃO entra)
 - **Bazar e Studio** (navegação) + dados de bloco específicos (produtos-por-categoria, sidebar/filtros): `P3-TPL-02`.
 - **Painel — seletor de template com preview:** `P3-TPL-03`.
-- **Checkout + confirmação** (funcionais, com carrinho/pedido): **Fase 4** (designs já existem em `docs/design/templates/aurora/`).
-- **Editor 3D:** Fase 5 (aqui só **reservar** o slot no produto).
-- **Admin pra cadastrar templates / preview ao vivo:** Fase 7 / futuro.
+- **Checkout + confirmação** (funcionais, com carrinho/pedido): **Fase 6** (designs já existem em `docs/design/templates/aurora/`).
+- **Editor 3D:** Fase 7 (aqui só **reservar** o slot no produto).
+- **Admin pra cadastrar templates / preview ao vivo:** Fase 4 / futuro.
 
 ## Arquivos a criar/alterar
 - `frontend-storefront/templates/aurora/{Home,Category,Product}.tsx` (criar) — árvore do Aurora.
@@ -60,7 +60,7 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 ## Definition of Done
 - [x] Resolver + seed: loja com `active_template_id=aurora` renderiza a **árvore do Aurora** (smoke real: `data-template="aurora"` + Destaques/Ver produtos/Todas as categorias/carrinho); ausente/inválido → **fallback base**.
 - [x] Aurora `home`/`category`/`product` portados (hero, faixa de categorias, destaques, galeria, **slot "Personalizar em 3D"**), **preço pelo locale da loja**.
-- [x] **CartDrawer** (botão no header + drawer) abre/fecha — estado client; **sem** lógica de carrinho (Fase 4).
+- [x] **CartDrawer** (botão no header + drawer) abre/fecha — estado client; **sem** lógica de carrinho (Fase 6).
 - [x] Gates verdes: storefront (`next build` + biome) + backend (lint/cobertura) + **smoke real** da home Aurora. *(e2e Playwright do storefront ainda não existe — follow-up de `P3-SF-02`.)* docs 10 reconciliado.
 - [x] **Modos de falha mapeados:** template ausente/inválido → **fallback base**; banner ausente → fundo `--primary`; sem categorias → strip some; sem destaques → estado vazio. (Carrossel multi-banner = follow-up.)
 - [x] **Itens adiados varridos** → Follow-ups + README.
@@ -71,7 +71,7 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 - **Implementação:** resolver em `frontend-storefront/lib/templates.ts` (fallback `base`); `templates/{base,aurora}/{Home,Category,Product}` (árvores); `components/CartDrawer.tsx` (client). As páginas (`app/**`) ficaram **finas** (fetch → `resolveTemplate` → render). `base` = render legado (classic/modern); **bazar/studio caem no base** até `P3-TPL-02`. Seed `aurora/bazar/studio` em `content_theme_templates`; tbrindes setada em `aurora` no dev.
 
 ## Follow-ups
-- [ ] **Checkout + confirmação do Aurora** (funcionais) — *Quando:* **Fase 4** (carrinho/pedido). Designs prontos em `docs/design/templates/aurora/`. → README.
+- [ ] **Checkout + confirmação do Aurora** (funcionais) — *Quando:* **Fase 6** (carrinho/pedido). Designs prontos em `docs/design/templates/aurora/`. → README.
 - [ ] **Bazar + Studio** (navegação) + dados de bloco — rastreado em `P3-TPL-02`. → README.
 - [ ] **Painel: seletor de template com preview** — rastreado em `P3-TPL-03`. → README.
 - [ ] **Carrossel multi-banner na home** — *Quando:* quando a API pública expor a lista de banners (hoje o hero usa `theme.banner_image_url` único). → README.

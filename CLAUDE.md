@@ -9,7 +9,7 @@ O código imita a lógica dos docs — **não inventar lógica de negócio nova*
 **Nunca** executar operações de git que alterem estado: sem `commit`, `push`, `branch`, `checkout`/`switch`, `merge`, `reset`, `rebase`, `stash`. **O usuário gerencia o git.** Implementar **sempre na branch atual** (a que estiver checada) — não criar nem trocar de branch. Rodar git (mesmo só-leitura, como `git status`/`git diff`) **apenas se o usuário pedir**.
 
 ## Como rodar e testar (dev)
-Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, painel `5180`) — código/testes no host precisam delas. Guias: [`backend/README.md`](backend/README.md) / [`frontend-dashboard/README.md`](frontend-dashboard/README.md).
+Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, painel `5180`, admin `5181`) — código/testes no host precisam delas. Guias: [`backend/README.md`](backend/README.md) / [`frontend-dashboard/README.md`](frontend-dashboard/README.md) / [`frontend-admin/README.md`](frontend-admin/README.md).
 
 - **Infra:** `docker compose up -d --wait db redis` (antes de rodar testes no host).
 - **Lint (backend):** `uv run bash scripts/lint.sh` — sempre via `uv run` (o script chama `mypy`/`ruff` puros; precisa do venv). Gate = mypy + ty + ruff + format.
@@ -17,9 +17,10 @@ Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, 
 - **Migrations:** `… uv run alembic upgrade head`; ao mudar modelos, `alembic revision --autogenerate` → **revisar** (ordem de FK, nomear FKs) e `alembic check` deve voltar **vazio**.
 - **Frontend:** bun **não** está instalado localmente → usar os binários da raiz `../node_modules/.bin/{vite,vitest,biome,tsc}` (workspace bun: `node_modules`/lockfile únicos na raiz).
 - **E2E (Playwright):** `docker compose run --rm playwright bunx playwright test` — sobe o Vite **dev** na porta **`5180`** (= painel, casando com `FRONTEND_HOST` + `BACKEND_CORS_ORIGINS`) contra o `backend`. **Rodar local antes de dar por pronto:** o que falha no CI tem que falhar aqui primeiro — `tsc`/`vitest` verdes **não** cobrem o e2e.
+- **Validar tudo de uma vez:** `bash scripts/ci-local.sh` roda os testes/lint/pre-commit do CI (backend + frontends + e2e + smoke) com **resumo PASS/FAIL** (`--quick` pula o docker pesado). Rodar **no momento certo** — ao fechar uma task/fase ou pra confirmar que está tudo passando — não a cada mudancinha.
 
 ## Roadmap
-8 fases sequenciais; **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
+10 fases sequenciais (0–9); **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
 
 ## Disciplina (sempre)
 - **Modos de falha / edge cases viram follow-up na hora** — ao escrever o caminho feliz, registrar o que acontece se falhar / for grande demais / chegar fora de ordem (na task **e** no README da fase). Nunca deixar uma falha sem rastro.

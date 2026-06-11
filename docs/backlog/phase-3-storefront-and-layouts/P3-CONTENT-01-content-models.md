@@ -2,7 +2,7 @@
 id: P3-CONTENT-01
 title: Módulo content — modelos de tema/layout
 phase: 3
-etapa: "Etapa 8 — Módulo de conteúdo/layout"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: CONTENT
 status: done
 depends_on: []
@@ -28,7 +28,7 @@ A aparência da loja (template ativo, banner, headline, destaque) e conteúdo ed
 ## Fora de escopo (o que NÃO entra)
 - Serviço/rotas (aplicar template, editar) → `P3-CONTENT-02`.
 - **`logo_url` e descrição da loja** ficam em `store_settings` (Fase 1) — **não** duplicar aqui (ver Reconciliações).
-- Editor 3D / produtos 3D → Fase 5.
+- Editor 3D / produtos 3D → Fase 7.
 
 ## Arquivos a criar/alterar
 - `app/modules/content/{models,enums,schemas}.py` (criar).

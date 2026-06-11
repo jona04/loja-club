@@ -25,11 +25,11 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
 - `backend/pyproject.toml`: dependência do cliente `redis` (async).
 - `backend/app/core/config.py`: `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD` (opcional), `REDIS_DB` e `@computed_field REDIS_URL`.
 - `backend/app/core/cache.py`: `get_redis()` + helpers de get/set com TTL e prefixo de chave.
-- Health checks **top-level** `/health` e `/health/redis` (este faz `PING`), seguindo o padrão do doc [15](../../15_observability_and_operations.md). `/health/db` e demais são completados na Fase 4.
+- Health checks **top-level** `/health` e `/health/redis` (este faz `PING`), seguindo o padrão do doc [15](../../15_observability_and_operations.md). `/health/db` e demais são completados na Fase 6.
 
 ## Fora de escopo (o que NÃO entra)
 - Chaves de cache de domínio/storefront e invalidação → Fases 1/3.
-- Rate limit → Fase 7 (`P6-SEC-*`).
+- Rate limit → Fase 9.
 - Fila/worker (usa Redis, mas é outra task) → `P0-CFG-04`.
 
 ## Arquivos a criar/alterar
@@ -62,6 +62,6 @@ Os docs preveem Redis para cache (domínio→loja, tema, home), locks de checkou
 - [x] `cache_set`/`cache_get` funcionam. *(teste automatizado, não só manual)*
 
 ## Notas / Reconciliações
-- Em dev local, Redis é container; em dev online (Fase 6) pode ser container no EC2 ou ElastiCache (doc [12](../../12_aws_infrastructure_and_deployment.md)).
+- Em dev local, Redis é container; em dev online (Fase 8) pode ser container no EC2 ou ElastiCache (doc [12](../../12_aws_infrastructure_and_deployment.md)).
 - **Reconciliação (feito):** padronizei para `/health*` (doc [15](../../15_observability_and_operations.md)); o `test:` do healthcheck do backend no `compose.yml` aponta para `/health`. O endpoint antigo `/api/v1/utils/health-check/` do template segue existindo (inofensivo) — remover depois se quiser.
 - **Implementado:** `redis:8` (host **6399**, interno 6379); `REDIS_HOST=redis` no container; pytest local usa `REDIS_PORT=6399` (o `.env` mantém `6379` interno). `cache.py` = redis-py **síncrono** (estilo do template); `Redis` não é genérico no redis-py 8 (sem `Redis[str]`). 67 testes passam; gate `app` verde.

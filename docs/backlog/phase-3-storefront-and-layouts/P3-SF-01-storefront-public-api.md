@@ -2,7 +2,7 @@
 id: P3-SF-01
 title: Módulo storefront — API pública de leitura
 phase: 3
-etapa: "Etapa 7 — Módulo storefront (API pública)"
+etapa: "Etapa 2 — Módulo storefront (API pública)"
 area: SF
 status: done
 depends_on: [P3-CONTENT-01]
@@ -30,7 +30,7 @@ Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura
 ## Fora de escopo (o que NÃO entra)
 - Render no Next.js → `P3-SF-02`.
 - Rotas do **painel** (aplicar template) → `P3-CONTENT-02`.
-- Carrinho/checkout → Fase 4.
+- Carrinho/checkout → Fase 6.
 
 ## Arquivos a criar/alterar
 - `app/modules/storefront/{routes,services,schemas}.py` (criar).

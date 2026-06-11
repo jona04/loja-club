@@ -83,9 +83,9 @@ A produção robusta vem **depois** da V1. A sugestão é:
 - Sentry para erros;
 - SES para e-mails (enviados pelo worker — INV-F5).
 
-## Dev na AWS (V1 — Fases 6–7)
+## Dev na AWS (V1 — Fases 8–9)
 
-A V1 inteira é ambiente de **dev**. As Fases 0–4 rodam **local**; as Fases 6–7 sobem o sistema na AWS com **EC2**:
+A V1 inteira é ambiente de **dev**. As Fases 0–7 rodam **local**; as Fases 8–9 sobem o sistema na AWS com **EC2**:
 
 - EC2;
 - Docker Compose;

@@ -2,7 +2,7 @@
 id: P3-SF-02
 title: Storefront Next.js — host, "não encontrada", templates
 phase: 3
-etapa: "Etapa 8 — Templates no storefront"
+etapa: "Etapa 1 — Projeto frontend-storefront"
 area: SF
 status: done
 depends_on: [P3-FE-01, P3-SF-01]
@@ -13,7 +13,7 @@ tests: [e2e]
 # P3-SF-02 — Render do storefront (Next.js)
 
 ## Contexto
-A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e renderiza com o template ativo da loja. Só **imagem** (o editor 3D é Fase 5).
+A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e renderiza com o template ativo da loja. Só **imagem** (o editor 3D é Fase 7).
 
 ## Docs de referência
 - [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
@@ -28,8 +28,8 @@ A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e 
 - **Botão flutuante de WhatsApp** quando a loja tiver número.
 
 ## Fora de escopo (o que NÃO entra)
-- **ProductCustomizer / editor 3D** → Fase 5.
-- **CartPage/CheckoutPage** completos → Fase 4 (placeholders aqui).
+- **ProductCustomizer / editor 3D** → Fase 7.
+- **CartPage/CheckoutPage** completos → Fase 6 (placeholders aqui).
 - Aplicar template (painel) → `P3-CONTENT-02`/`P3-FE-02`.
 
 ## Arquivos a criar/alterar
@@ -53,7 +53,7 @@ A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e 
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Carrinho/checkout = **Fase 4** (a página de produto é **informativa, sem CTA de compra**; o único WhatsApp da vitrine é o **botão flutuante** de contato → WhatsApp web); o `ProductCustomizer` entra na Fase 5.
+- Carrinho/checkout = **Fase 6** (a página de produto é **informativa, sem CTA de compra**; o único WhatsApp da vitrine é o **botão flutuante** de contato → WhatsApp web); o `ProductCustomizer` entra na Fase 7.
 - **SSR resolvido por Host:** o Next encaminha o host original como `X-Forwarded-Host`; **`P3-SF-01` foi estendida** — o dep lê `X-Forwarded-Host` (fallback `Host`) e `/products` ganhou `?category=` (para a CategoryPage).
 - **Cache:** fetch `no-store` (não cacheia no Next — a chave por URL vazaria entre lojas); o cache por-loja é do backend (Redis, doc 13). Trocar o template invalida `store:{id}:home` (`P3-CONTENT-02`) → a vitrine reflete.
 - **Templates:** `classic` (headline + grid simples) vs `modern` (hero com banner + cards maiores) + cores do tema; trocar o template ativo muda a home.
@@ -61,7 +61,7 @@ A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e 
 - **Verificação:** `next build` + smoke (home/produto renderizam, host desconhecido → 404), com cleanup.
 
 ## Follow-ups
-- [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 4): a página de produto é **informativa** no V1 (sem botão de compra); adicionar o **carrinho** na Fase 4. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
+- [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 6): a página de produto é **informativa** no V1 (sem botão de compra); adicionar o **carrinho** na Fase 6. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
 - [ ] **e2e Playwright do storefront** (`P3-SF-02`): a suíte é só painel (:5180); o render foi validado por smoke manual. Automatizar host→loja / 404 / home-produto-categoria / troca de template (a task permite e2e como follow-up).
 - [ ] **API fora → erro amigável** (`P3-SF-02`): `apiGet` joga em `!ok` (não-404) → 500 genérico; adicionar `app/error.tsx`.
 - [ ] **next/image** (`P3-SF-02`): trocar `<img>` por `next/image` + `remotePatterns` do CDN (perf/LCP).

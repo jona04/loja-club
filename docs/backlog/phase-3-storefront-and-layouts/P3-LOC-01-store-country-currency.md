@@ -2,7 +2,7 @@
 id: P3-LOC-01
 title: Localização da loja — país → moeda/locale/símbolo
 phase: 3
-etapa: "Etapa 7 — Localização da loja"
+etapa: "Etapa 1 — Projeto frontend-storefront"
 area: LOC
 status: done
 depends_on: []

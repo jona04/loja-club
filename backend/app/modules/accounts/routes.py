@@ -160,7 +160,7 @@ def read_user_by_id(
     user_id: uuid.UUID, session: SessionDep, current_user: CurrentUser
 ) -> Any:
     """Return a user by id (own profile, or any user for superusers)."""
-    user = session.get(User, user_id)
+    user = repositories.get_active_user(session=session, user_id=user_id)
     if user == current_user:
         return user
     if not current_user.is_superuser:
@@ -185,7 +185,7 @@ def update_user(
     user_in: UserUpdate,
 ) -> Any:
     """Update a user by id (superuser only)."""
-    db_user = session.get(User, user_id)
+    db_user = repositories.get_active_user(session=session, user_id=user_id)
     if not db_user:
         raise HTTPException(
             status_code=404,
@@ -211,7 +211,7 @@ def delete_user(
     session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID
 ) -> Message:
     """Delete a user by id (superuser only)."""
-    user = session.get(User, user_id)
+    user = repositories.get_active_user(session=session, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if user == current_user:

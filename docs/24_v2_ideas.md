@@ -43,7 +43,7 @@ Na V2, pode existir chat interno com:
 > Movido para a V1. A compra sem login continua sendo a prioridade, mas a V1 agora prevê uma conta opcional do cliente.
 > Detalhes em [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md).
 
-Já previsto para a V1 (após o MVP dev local — Fase 6):
+Já previsto para a V1 (após o MVP dev local — Fase 8):
 
 - login por código (e-mail/SMS/WhatsApp), senha ou Google;
 - área do cliente com histórico de pedidos;

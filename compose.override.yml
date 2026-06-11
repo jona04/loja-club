@@ -107,6 +107,17 @@ services:
         - VITE_API_URL=http://localhost:8800
         - NODE_ENV=development
 
+  frontend-admin:
+    restart: "no"
+    ports:
+      - "5181:80"
+    build:
+      context: .
+      dockerfile: frontend-admin/Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8800
+        - NODE_ENV=development
+
   frontend-storefront:
     restart: "no"
     ports:
@@ -142,6 +153,28 @@ services:
       - ./frontend-dashboard/test-results:/app/frontend-dashboard/test-results
     ports:
       - 9323:9323
+
+  playwright-admin:
+    build:
+      context: .
+      dockerfile: frontend-admin/Dockerfile.playwright
+      args:
+        - VITE_API_URL=http://backend:8000
+        - NODE_ENV=production
+    ipc: host
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    environment:
+      - VITE_API_URL=http://backend:8000
+      - PLAYWRIGHT_HTML_HOST=0.0.0.0
+      - CI=${CI}
+    volumes:
+      - ./frontend-admin/blob-report:/app/frontend-admin/blob-report
+      - ./frontend-admin/test-results:/app/frontend-admin/test-results
+    ports:
+      - 9324:9323
 
 networks:
   traefik-public:

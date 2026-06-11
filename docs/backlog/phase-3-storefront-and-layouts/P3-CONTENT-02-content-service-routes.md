@@ -2,7 +2,7 @@
 id: P3-CONTENT-02
 title: content — serviço/rotas do painel (tema/layout)
 phase: 3
-etapa: "Etapa 8 — Módulo de conteúdo/layout"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: CONTENT
 status: done
 depends_on: [P3-CONTENT-01]

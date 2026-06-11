@@ -2,7 +2,7 @@
 id: P2-MEDIA-01
 title: Abstração de storage (S3/boto3) + provisionamento AWS dev (guiado) + verificação
 phase: 2
-etapa: "Etapa 5 — Mídia e storage"
+etapa: "Etapa 1 — Mídia: storage + pipeline"
 area: MEDIA
 status: done
 depends_on: []
@@ -13,7 +13,7 @@ tests: [integration]
 # P2-MEDIA-01 — Storage (S3/boto3) + AWS dev funcionando
 
 ## Contexto
-A Fase 2 sobe imagens de produto e artes de cliente. Esta task entrega **(a)** a abstração fina de storage (INV-F2; domínio nunca conhece boto3) e **(b)** a AWS de **dev realmente provisionada e verificada** — não só código. S3 + CloudFront **reais** desde o dev local (DEC-8, sem MinIO). **Prod (bucket/credenciais de produção) é a 2ª etapa (Fase 7).**
+A Fase 2 sobe imagens de produto e artes de cliente. Esta task entrega **(a)** a abstração fina de storage (INV-F2; domínio nunca conhece boto3) e **(b)** a AWS de **dev realmente provisionada e verificada** — não só código. S3 + CloudFront **reais** desde o dev local (DEC-8, sem MinIO). **Prod (bucket/credenciais de produção) é a 2ª etapa (Fase 9).**
 
 ## Docs de referência
 - [Fundações](../_foundations-and-bottlenecks.md) (INV-F2, INV-S2/S3, DEC-8, DEC-11)
@@ -30,17 +30,17 @@ Criar e deixar **funcionando** (melhores práticas):
 - **Região:** **Ohio (`us-east-2`)** na 1ª etapa — todos os recursos (S3 + CloudFront + IAM) na mesma região.
 - **Bucket S3 (dev):** Block Public Access **ON**; prefixos separados (`public/` p/ imagens, `private/` p/ arte do cliente por `store_id`); **lifecycle** p/ expirar temporários (doc 07/22); CORS só se houver upload direto do browser.
 - **CloudFront:** distribuição com **Origin Access Control (OAC)** lendo o bucket **privado** (nada de ACL public-read); imagens públicas servidas pelo CDN; arte privada **não** vai pelo CDN público → `generate_presigned_url` (S3 GET direto).
-- **IAM:** usuário **least-privilege** (`s3:PutObject/GetObject/DeleteObject` só no ARN do bucket) — sem `*`. Em **prod (Fase 7)** usar **role** na compute (sem chave longa).
+- **IAM:** usuário **least-privilege** (`s3:PutObject/GetObject/DeleteObject` só no ARN do bucket) — sem `*`. Em **prod (Fase 9)** usar **role** na compute (sem chave longa).
 - **Eu forneço:** os passos (console/CLI) + a **policy IAM** + config de OAC/CORS/lifecycle. **Você executa na sua conta** e me devolve os valores.
 
 ### 3. Verificação de que está funcionando
 - **Smoke real** (com as credenciais dev): upload → get → presigned → delete no bucket; GET de um objeto público via **CloudFront**. Prova que provisionamento + credenciais funcionam **local/dev**.
 
 ## Inputs manuais que vou te pedir (na implementação)
-`S3_REGION` (= **`us-east-2` / Ohio**, 1ª etapa), `S3_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `CDN_BASE_URL` (domínio do CloudFront). *(São de DEV; prod fica para a Fase 7.)*
+`S3_REGION` (= **`us-east-2` / Ohio**, 1ª etapa), `S3_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `CDN_BASE_URL` (domínio do CloudFront). *(São de DEV; prod fica para a Fase 9.)*
 
 ## Fora de escopo (o que NÃO entra)
-- `media_files`/pipeline/thumbnails → `P2-MEDIA-02`. AWS de **produção** → Fase 7.
+- `media_files`/pipeline/thumbnails → `P2-MEDIA-02`. AWS de **produção** → Fase 9.
 
 ## Arquivos a criar/alterar
 - `backend/app/core/storage.py` (criar); `backend/app/core/config.py`, `.env`/`.env.example` (alterar).
@@ -64,8 +64,8 @@ Criar e deixar **funcionando** (melhores práticas):
 - **Públicas via CDN (OAC) / privadas via presigned** — bucket sempre privado (Block Public Access).
 - **Assinatura de `upload_fileobj`:** **sem** o param `public` da descrição original — com bucket privado + OAC não há ACL; público vs privado é decisão de **entrega** (`public_url`/CDN vs `generate_presigned_url`), e o chamador escolhe o prefixo (`public/...` vs `private/...`).
 - **Smoke real cobre o S3** (roundtrip); o **GET público via CloudFront** é exercitado na `P2-MEDIA-02` (quando há imagem pública servida).
-- **Secrets:** `.env` virou **gitignored** + `.env.example` committed; CI faz `cp .env.example .env`. `SECRET_KEY` rotacionado (repo público). Prod (Fase 7): GitHub Secrets/SSM + IAM role.
-- **Padrão "mock + smoke real env-gated"** registrado nas Fundações §10 (vale p/ o gateway na Fase 6).
+- **Secrets:** `.env` virou **gitignored** + `.env.example` committed; CI faz `cp .env.example .env`. `SECRET_KEY` rotacionado (repo público). Prod (Fase 9): GitHub Secrets/SSM + IAM role.
+- **Padrão "mock + smoke real env-gated"** registrado nas Fundações §10 (vale p/ o gateway na Fase 8).
 
 ## Follow-ups
 - [x] **`_s3_client()` cacheado** (reuso process-wide, INV-F6) + `reset_client()` chamado nos fixtures `s3`/smokes. *(feito)*

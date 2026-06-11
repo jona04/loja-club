@@ -1,9 +1,9 @@
 # Product Customization 3D
 
-> **Escopo (ver [Fase 5 — Produtos 3D](./backlog/phase-5-3d-products.md)):**
-> - **O 3D é a Fase 5.** A Fase 2 (catálogo) entrega **só imagem**; o 3D e o 3D personalizável vêm na **Fase 5 (Produtos 3D)**.
+> **Escopo (ver [Fase 7 — Produtos 3D](./backlog/phase-7-3d-products.md)):**
+> - **O 3D é a Fase 7.** A Fase 2 (catálogo) entrega **só imagem**; o 3D e o 3D personalizável vêm na **Fase 7 (Produtos 3D)**.
 > - **Os modelos 3D são gerados pelo lojista**, via **API de terceiros** (image/text → GLB): candidatos **Meshy / Tripo3D / Hyper3D** (decisão no doc [18](./18_open_decisions.md)). Os modelos são **por loja** (`store_id`); não há catálogo 3D da plataforma.
-> - **Personalização restrita a plano pago = Fase 6:** na Fase 5 qualquer lojista personaliza (livre); na **Fase 6** (planos/pagamentos) só lojista com **plano pago** personaliza (sem plano grátis).
+> - **Personalização restrita a plano pago = Fase 8:** na Fase 7 qualquer lojista personaliza (livre); na **Fase 8** (planos/pagamentos) só lojista com **plano pago** personaliza (sem plano grátis).
 >
 > Este doc descreve a experiência (sessão, aprovação, congelar no pedido), com o **modelo gerado pelo lojista via API**.
 
@@ -24,9 +24,9 @@ O diferencial da Loja Club será permitir que o cliente personalize o produto no
 
 ## Decisão principal
 
-A personalização 3D é um diferencial da Loja Club, mas entra na **Fase 5** (a Fase 2 de catálogo entrega só imagem). Ela **não substitui** o ecommerce comum: produtos com apenas foto/descrição/preço/variações continuam sendo o padrão.
+A personalização 3D é um diferencial da Loja Club, mas entra na **Fase 7** (a Fase 2 de catálogo entrega só imagem). Ela **não substitui** o ecommerce comum: produtos com apenas foto/descrição/preço/variações continuam sendo o padrão.
 
-Tipos de produto (a partir da Fase 5): **imagem**; **imagem + 3D** (foto opcional); **imagem + 3D personalizável** (foto opcional).
+Tipos de produto (a partir da Fase 7): **imagem**; **imagem + 3D** (foto opcional); **imagem + 3D personalizável** (foto opcional).
 
 Produtos personalizáveis terão uma experiência adicional:
 
@@ -70,7 +70,7 @@ O lojista gera o GLB a partir de uma imagem/descrição do seu produto e o vincu
 - banner;
 - adesivo.
 
-Os modelos são **por loja** (gerados pelo lojista via API). Na **Fase 5** qualquer lojista cria/personaliza; na **Fase 6** a personalização fica restrita a **planos pagos**.
+Os modelos são **por loja** (gerados pelo lojista via API). Na **Fase 7** qualquer lojista cria/personaliza; na **Fase 8** a personalização fica restrita a **planos pagos**.
 
 ## Produto personalizável
 
@@ -219,12 +219,12 @@ Fluxo:
 
 **Acesso à personalização — decisão em aberto.** Ver a personalização criada pelo lojista pode:
 
-- **(a) exigir login** do cliente (com o e-mail/telefone pré-cadastrado) — depende da **conta do cliente (Fase 6)**; ou
+- **(a) exigir login** do cliente (com o e-mail/telefone pré-cadastrado) — depende da **conta do cliente (Fase 8)**; ou
 - **(b) ser um link público compartilhável** (sem login) — permite o cliente **compartilhar com amigos**, que veem o produto personalizado sem conta.
 
 Pode-se **combinar** (link público para *ver/compartilhar* + confirmação de contato/login para *aprovar e comprar*). A escolha fica para decidir mais à frente — ver doc [18](18_open_decisions.md).
 
-> **Quando:** junto com a personalização 3D (**Fase 5**); a parte de **login do cliente** depende da conta do cliente (**Fase 6**).
+> **Quando:** junto com a personalização 3D (**Fase 7**); a parte de **login do cliente** depende da conta do cliente (**Fase 8**).
 
 ## Carrinho e pedido
 
@@ -270,13 +270,13 @@ Status de arte sugeridos:
 
 ## Admin da Loja Club
 
-**Não há mais biblioteca de modelos 3D da plataforma.** Quem gera e gerencia os modelos é o **lojista**, via API de terceiros (Fase 5).
+**Não há mais biblioteca de modelos 3D da plataforma.** Quem gera e gerencia os modelos é o **lojista**, via API de terceiros (Fase 7).
 
 O admin da plataforma, no que toca a 3D, cuida só da **integração**:
 
 - configurar a API de geração 3D (provedor/chaves, limites de uso);
 - moderar conteúdo/abuso, se necessário;
-- (Fase 6) amarrar a capacidade de personalizar ao **plano pago**.
+- (Fase 8) amarrar a capacidade de personalizar ao **plano pago**.
 
 A qualidade do modelo gerado é responsabilidade do lojista (a API + os limites do produto ajudam).
 
@@ -365,5 +365,5 @@ Não entram na V1:
 
 ## Decisão canônica
 
-A Loja Club nasce como **ecommerce comum** (catálogo só imagem) e ganha **personalização 3D na Fase 5**. O foco comercial inicial é brindes, gráficas e comunicação visual.
-Os modelos 3D são **gerados pelo lojista via API de terceiros** (não pela Loja Club) e ficam **por loja**; o cliente final aprova uma personalização salva no carrinho e **congelada no pedido**. Na **Fase 6**, a personalização fica restrita a **planos pagos** (sem plano grátis).
+A Loja Club nasce como **ecommerce comum** (catálogo só imagem) e ganha **personalização 3D na Fase 7**. O foco comercial inicial é brindes, gráficas e comunicação visual.
+Os modelos 3D são **gerados pelo lojista via API de terceiros** (não pela Loja Club) e ficam **por loja**; o cliente final aprova uma personalização salva no carrinho e **congelada no pedido**. Na **Fase 8**, a personalização fica restrita a **planos pagos** (sem plano grátis).

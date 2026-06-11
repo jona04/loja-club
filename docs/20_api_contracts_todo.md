@@ -191,7 +191,7 @@ Cliente final não precisa usar login na V1.
 - **Erro:** envelope estruturado `{ "error": { "code": "<slug>", "message": "<texto>", "details": <lista|null> } }`. `code` estável por status (`bad_request`, `unauthorized`, `forbidden`, `not_found`, `conflict`, `validation_error`, `rate_limited`) ou explícito via `AppError`.
 - **Autenticação:** Bearer JWT (`/api/v1/login/access-token`).
 - **Headers de tenant:** painel → `store_id` no path (não header); storefront → `Host`.
-- **Idempotency-Key:** reservado para operações sensíveis (criar pedido/pagamento) — implementação Fase 4/5.
+- **Idempotency-Key:** reservado para operações sensíveis (criar pedido/pagamento) — implementação Fase 6/7.
 
 ## TODO (restante)
 
@@ -199,4 +199,4 @@ Cliente final não precisa usar login na V1.
 - [ ] Filtros (por endpoint, conforme a feature).
 - [ ] Schemas por módulo (cada fase).
 - [ ] Contratos públicos do storefront (Fase 3).
-- [ ] Contratos de webhook (Fase 6).
+- [ ] Contratos de webhook (Fase 8).

@@ -2,7 +2,7 @@
 id: P3-FE-02
 title: Painel — tela "Layout da Loja"
 phase: 3
-etapa: "Etapa 8 — Frontend (painel)"
+etapa: "Etapa 4 — Frontend (painel)"
 area: FE
 status: done
 depends_on: [P3-CONTENT-02]
@@ -26,7 +26,7 @@ No `frontend-dashboard`, o lojista vê os 2 templates, faz preview com dados rea
 ## Fora de escopo (o que NÃO entra)
 - `logo_url`/descrição (ficam em **Configurações**, Fase 1).
 - CRUD de páginas/menus → Follow-up.
-- Editor 3D → Fase 5.
+- Editor 3D → Fase 7.
 
 ## Arquivos a criar/alterar
 - `frontend-dashboard/src/routes/_layout/store-layout.tsx` (criar) + entrada no menu (`lib/menu.ts`).

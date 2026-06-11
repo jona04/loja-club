@@ -1,6 +1,6 @@
 # Fase 0 — Fundação (dev local)
 
-> Roadmap: Etapas 1–2. Objetivo: projeto com a cara da Loja Club (branding, config, domínio de dev, Redis e fila), refatorado para a **convenção modular** (`app/modules/*` com mixins base e tipo `Money` global), com o exemplo `items` removido e o `User` migrado para o módulo `accounts` — pronto para construir os domínios reais.
+> Objetivo: projeto com a cara da Loja Club (branding, config, domínio de dev, Redis e fila), refatorado para a **convenção modular** (`app/modules/*` com mixins base e tipo `Money` global), com o exemplo `items` removido e o `User` migrado para o módulo `accounts` — pronto para construir os domínios reais.
 
 Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md), [03](../03_system_architecture.md), [04](../04_fastapi_template_adaptation.md), [07](../07_database_strategy.md), [16](../16_testing_strategy.md).
 
@@ -62,8 +62,8 @@ Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md)
 
 ## Reconciliações
 
-- `account_users.is_superuser` (template) ↔ admin de plataforma: no MVP o superuser cobre o acesso interno; `platform_admin_roles`/`platform.*` entram na Fase 7. Registrado em [P0-MOD-04](./phase-0-foundation/P0-MOD-04-accounts-user.md).
-- **Global desde a base** ([P0-MOD-05](./phase-0-foundation/P0-MOD-05-shared-money-locale.md)): dinheiro `(valor + ISO 4217)`; telefone/endereço/locale globais (telefone normalizado por `phonenumbers`; endereço país-aware na Fase 4 — doc [23](../23_customer_identity_and_guest_checkout.md)).
+- `account_users.is_superuser` (template) ↔ admin de plataforma: no MVP o superuser cobre o acesso interno; `platform_admin_roles`/`platform.*` entram na Fase 4. Registrado em [P0-MOD-04](./phase-0-foundation/P0-MOD-04-accounts-user.md).
+- **Global desde a base** ([P0-MOD-05](./phase-0-foundation/P0-MOD-05-shared-money-locale.md)): dinheiro `(valor + ISO 4217)`; telefone/endereço/locale globais (telefone normalizado por `phonenumbers`; endereço país-aware na Fase 6 — doc [23](../23_customer_identity_and_guest_checkout.md)).
 - **Testes** ([P0-TEST-01](./phase-0-foundation/P0-TEST-01-testing-foundation.md) + Fundações §10): unit p/ lógica pura, integração no seam, isolamento por rollback, S3 mockado, `vitest`+RTL. Fixtures multi-tenant ficam para a Fase 1.
 - **CI/portas/lockfile** ([P0-CI-01](./phase-0-foundation/P0-CI-01-ci-lint-tests.md)): CI roda no host nas portas publicadas (5442/6399); `bun.lock` único na raiz do workspace (regenerar ao mudar `frontend-dashboard/package.json`); automação do template (board/labels/release-notes) removida.
 

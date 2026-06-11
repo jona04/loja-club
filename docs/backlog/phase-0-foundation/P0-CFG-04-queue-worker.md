@@ -29,7 +29,7 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
 
 ## Fora de escopo (o que NÃO entra)
 - Geração de thumbnails → Fase 2 (`P2-MEDIA-*`).
-- E-mails de pedido → Fase 4 (`P4-NOTIF-*`).
+- E-mails de pedido → Fase 6.
 - Limpeza de sessões expiradas e processamento de webhook → fases respectivas.
 
 ## Arquivos a criar/alterar
@@ -64,6 +64,6 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
 - **Teste automatizado** (criado em `P0-CI-01`): `tests/integration/test_queue_sample.py` enfileira `dummy_task` e roda um `Worker(..., burst=True)` que processa e grava o marcador no Redis.
 
 ## Follow-ups
-- [ ] **Task `send_email` no worker** (INV-F5): renderiza o MJML e envia (SMTP/SES), com retry; chamada via `enqueue("send_email", ...)`. **Todo** e-mail passa por ela — inclusive o de **recuperação de senha** do template (hoje inline em `app/utils.py`), que deve ser **roteado pelo worker**. Origem: P0-CFG-04. *Quando:* ao construir as notificações (Fase 4) — ou antes, se algum e-mail transacional (recuperação/convite) for disparado antes.
+- [ ] **Task `send_email` no worker** (INV-F5): renderiza o MJML e envia (SMTP/SES), com retry; chamada via `enqueue("send_email", ...)`. **Todo** e-mail passa por ela — inclusive o de **recuperação de senha** do template (hoje inline em `app/utils.py`), que deve ser **roteado pelo worker**. Origem: P0-CFG-04. *Quando:* ao construir as notificações (Fase 6) — ou antes, se algum e-mail transacional (recuperação/convite) for disparado antes.
 - [x] **`enqueue()` reusa um pool único** (`_get_pool` lazy, INV-F6), fechado no shutdown (lifespan em `app/main.py`). *(feito)*
 - [ ] **`_get_pool()` lazy-init sem lock + `close_pool` engole `RuntimeError`:** na 1ª chamada concorrente dois coroutines podem criar dois pools (um vaza — **benigno**); o `except RuntimeError: pass` é artefato de **loops diferentes só em teste** (em prod fecha limpo). Eliminável com lock / criar o pool no startup + um setup de teste que feche no mesmo loop. Origem: refactor INV-F6.

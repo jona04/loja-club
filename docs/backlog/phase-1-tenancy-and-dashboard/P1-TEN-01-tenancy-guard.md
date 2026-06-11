@@ -2,7 +2,7 @@
 id: P1-TEN-01
 title: Módulo tenancy — guard central + resolução por Host
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 5 — Módulo tenancy"
 area: TEN
 status: todo
 depends_on: [P1-STORE-01, P1-PERM-01, P1-DOM-01]
@@ -60,6 +60,6 @@ O isolamento entre lojas é o invariante mais crítico (INV-T1..T4; GARGALO §2)
 ## Notas / Reconciliações
 - **Desenho do guard:** `get_active_store` é uma **dependency FastAPI** (`app/modules/tenancy/deps.py`) + alias `ActiveStore`; as rotas do painel sob `/stores/{store_id}/...` dependem dela para obter a loja ativa e validar acesso (porta única, INV-T2/T3). Erros via `AppError` (envelope `{error:{code,message}}`).
 - **404 vs 403:** loja inexistente/arquivada → **404** `store_not_found`; autenticado mas não-membro → **403** `forbidden` (mensagem genérica, sem dados). (O "sem vazar dado" do storefront aplica-se em `resolve_store_by_host`, que retorna só `None`.)
-- **Status da loja no guard (pós-vistoria):** `get_active_membership` barra `archived` → 404 `store_not_found` e `suspended`/`blocked` → 403 `store_unavailable` (após confirmar o membership, p/ não vazar a não-membros), além de `deleted_at`. `draft`/`active`/`paused` seguem operáveis. Fecha a lacuna antes da Fase 7 (suspender/bloquear). Com teste.
+- **Status da loja no guard (pós-vistoria):** `get_active_membership` barra `archived` → 404 `store_not_found` e `suspended`/`blocked` → 403 `store_unavailable` (após confirmar o membership, p/ não vazar a não-membros), além de `deleted_at`. `draft`/`active`/`paused` seguem operáveis. Fecha a lacuna antes da Fase 4 (suspender/bloquear). Com teste.
 - **`resolve_store_by_host`** é a **interface** (storefront a consome na Fase 3); cache-aside com TTL + invalidação eager via `domains.invalidate_domain_cache` (`P1-DOM-01`). Resolução tolera cache stale (re-resolve se o id cacheado não existir mais).
 - **`get_store_scoped`**: helper genérico (`model` + `store_id` + `id`); acesso às colunas via `cast(Any, model)` para satisfazer mypy **e** `ty` (o `ty` não honra `# type: ignore`). Filtro de status da loja (publicada) na resolução pública fica para a Fase 3.

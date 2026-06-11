@@ -2,7 +2,7 @@
 id: P1-DOM-01
 title: Módulo domains — domain_hosts + subdomínio automático + cache
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 6 — Módulo domains"
 area: DOM
 status: done
 depends_on: [P1-STORE-01]
