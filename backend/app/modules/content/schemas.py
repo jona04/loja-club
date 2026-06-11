@@ -26,9 +26,23 @@ class ThemeUpdate(SQLModel):
 
 
 class ThemeTemplatePublic(ContentThemeTemplateBase):
-    """Public representation of a global theme template."""
+    """Public representation of a global theme template (with its editable schema)."""
 
     id: str
+    settings_schema: list[dict[str, object]] | None = None
+
+
+class TemplateSettingsPublic(SQLModel):
+    """A store's saved chrome overrides for a template (keyed by schema ``key``)."""
+
+    template_id: str
+    settings: dict[str, object] = {}
+
+
+class TemplateSettingsUpdate(SQLModel):
+    """Patch the store's chrome overrides for the active template."""
+
+    settings: dict[str, object]
 
 
 class StoreThemeSettingsPublic(ContentStoreThemeSettingsBase):

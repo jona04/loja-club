@@ -6,7 +6,11 @@ from pathlib import Path
 
 from sqlmodel import Session, col, select
 
-from app.modules.content.models import ContentStoreThemeSettings, ContentThemeTemplate
+from app.modules.content.models import (
+    ContentStoreTemplateSettings,
+    ContentStoreThemeSettings,
+    ContentThemeTemplate,
+)
 
 _TEMPLATES_DIR = (
     Path(__file__).resolve().parents[4] / "frontend-storefront" / "templates"
@@ -62,6 +66,28 @@ def get_store_theme_settings(
     return session.exec(
         select(ContentStoreThemeSettings).where(
             ContentStoreThemeSettings.store_id == store_id
+        )
+    ).first()
+
+
+def get_store_template_settings(
+    *, session: Session, store_id: uuid.UUID, template_id: str
+) -> ContentStoreTemplateSettings | None:
+    """Return a store's active overrides row for a template, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose overrides are fetched.
+        template_id: The template the overrides belong to.
+
+    Returns:
+        The active :class:`ContentStoreTemplateSettings` row, or ``None``.
+    """
+    return session.exec(
+        select(ContentStoreTemplateSettings).where(
+            ContentStoreTemplateSettings.store_id == store_id,
+            ContentStoreTemplateSettings.template_id == template_id,
+            col(ContentStoreTemplateSettings.deleted_at).is_(None),
         )
     ).first()
 

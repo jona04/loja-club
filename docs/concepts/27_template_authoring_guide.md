@@ -79,7 +79,7 @@ Dois arquivos em **`frontend-storefront/templates/<id>/`** (**fonte única**: o 
 ## Passo 4 — Dev: deploy do `frontend-storefront`
 
 1. Faz o **deploy** — código + manifestos vão pro ar. **Sem deploy o template não renderiza** (a vitrine é React).
-2. No deploy/prestart, o **backend seeda** o `content_theme_templates.settings_schema` a partir do `settings-schema.json` (as imagens ainda apontam pro uxpilot — o passo 6 as move pro CDN).
+2. No deploy/prestart, o **backend seeda** o `content_theme_templates.settings_schema` a partir do `settings-schema.json`. A `frontend-storefront` é deployada separada, então **a imagem do backend embarca os manifestos**: o `backend/Dockerfile` copia `frontend-storefront/templates/` pra dentro da imagem, pro seed conseguir lê-los. As imagens ainda apontam pro uxpilot — o passo 6 as move pro CDN.
 
 **Saída:** o código do template está no ar; o schema, no banco.
 

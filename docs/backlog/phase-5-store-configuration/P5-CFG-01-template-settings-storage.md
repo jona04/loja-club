@@ -4,7 +4,7 @@ title: content_store_template_settings + API (storage dos settings)
 phase: 5
 etapa: "Etapa 2 — Settings: storage + API"
 area: CFG
-status: todo
+status: done
 depends_on: [P4-TPL-01]
 blocks: [P5-CFG-02, P5-SF-01]
 tests: [integration]
@@ -48,15 +48,18 @@ O `settings_schema` vem do **código** (seedado em `content_theme_templates` na 
 - **Cobrir:** integração — merge (default quando vazio, override quando preenchido), validação (chave fora do schema rejeitada), reset (soft-delete → volta ao default), único por par, cache invalidado, gating `layout.update`.
 
 ## Definition of Done
-- [ ] Tabela + índice parcial; `alembic check` vazio.
-- [ ] Pública devolve `theme.settings` (defaults ⊕ overrides) do template ativo.
-- [ ] Painel GET/PATCH/DELETE gated `layout.update`; PATCH validado vs schema; DELETE reseta.
-- [ ] Cache invalidado ao salvar/resetar.
-- [ ] **Modos de falha mapeados** (chave fora do schema, par duplicado, template sem schema seedado) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Tabela `content_store_template_settings` + índice parcial único; `alembic check` **vazio**.
+- [x] Pública devolve `theme.settings` (defaults ⊕ overrides) do template ativo.
+- [x] Painel `GET` (gated `layout.view`) + `PATCH`/`DELETE` (gated `layout.update`); PATCH **validado vs schema** (chave/tipo/`max_length`/`options`); DELETE **reseta** (soft-delete).
+- [x] Cache invalidado (`store:{id}:theme|home|settings`) ao salvar/resetar.
+- [x] **Modos de falha mapeados** (chave fora do schema → 422; par duplicado → índice parcial; **template sem schema seedado** → Follow-up crítico abaixo).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** model `ContentStoreTemplateSettings` + migration `f7fbb7746388`; serviço (`resolve_template_settings` merge, `_validate_settings`, get/update/reset do template ativo, `resolve_active_settings` p/ a vitrine); rotas `GET/PATCH/DELETE /stores/{id}/layout/settings`; `settings_schema` em `ThemeTemplatePublic`; `StorefrontTheme.settings`. **250 testes verdes**, coverage 94%.
 
 ## Notas / Reconciliações
-- —
+- Doc 09 (§Personalização) e doc 10 (`content_store_template_settings` + `settings_schema` + `theme.settings`; exemplo de `id` corrigido p/ `aurora/bazar/studio`) atualizados; doc 07 já tinha tabela/índice (`P5-DOC-01`).
+- Validação do PATCH: chave ∈ schema; `boolean`→bool; `text/textarea/image/select`→str + `max_length`; `select`→valor ∈ `options`.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [x] **`settings_schema` na imagem Docker do backend** ✅ resolvido: `backend/Dockerfile` copia `frontend-storefront/templates/` pra dentro da imagem → o seed (docker dev/deploy) grava o schema **real** (validado: aurora/bazar/studio = 4 campos). Doc 27 (Passo 4) atualizado. Origem: `P5-CFG-01`.

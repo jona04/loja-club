@@ -98,3 +98,108 @@ def test_view_role_cannot_update(
     assert client.get(f"{BASE}/{a.id}/layout", headers=vh).status_code == 200
     blocked = client.patch(f"{BASE}/{a.id}/layout", headers=vh, json={"headline": "x"})
     assert blocked.status_code == 403
+
+
+def test_template_settings_default_empty(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """A store with no overrides reads its active template + empty settings."""
+    a = two_stores.store_a
+    resp = client.get(
+        f"{BASE}/{a.id}/layout/settings", headers=two_stores.owner_a_headers
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["template_id"] == "aurora"
+    assert body["settings"] == {}
+
+
+def test_template_settings_save_and_read_back(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """PATCH saves the overrides (validated), drops the cache, and GET reflects."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/settings"
+
+    cache_set(f"{a.id}:theme", "stale", prefix="store")
+    saved = client.patch(
+        base,
+        headers=h,
+        json={
+            "settings": {
+                "announcement_text": "Frete grátis",
+                "show_trust_badges": False,
+            }
+        },
+    )
+    assert saved.status_code == 200
+    assert saved.json()["settings"] == {
+        "announcement_text": "Frete grátis",
+        "show_trust_badges": False,
+    }
+    assert cache_get(f"{a.id}:theme", prefix="store") is None
+    got = client.get(base, headers=h)
+    assert got.json()["settings"]["announcement_text"] == "Frete grátis"
+
+
+def test_template_settings_unknown_key_is_422(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    resp = client.patch(
+        f"{BASE}/{a.id}/layout/settings",
+        headers=two_stores.owner_a_headers,
+        json={"settings": {"nope": "x"}},
+    )
+    assert resp.status_code == 422
+    assert resp.json()["error"]["code"] == "invalid_setting"
+
+
+def test_template_settings_type_and_length_are_422(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/settings"
+    bad_type = client.patch(
+        base, headers=h, json={"settings": {"show_trust_badges": "yes"}}
+    )
+    assert bad_type.status_code == 422
+    over = client.patch(
+        base, headers=h, json={"settings": {"announcement_text": "x" * 121}}
+    )
+    assert over.status_code == 422
+
+
+def test_template_settings_reset_soft_deletes(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """DELETE resets to defaults; a later save re-creates the row (unique holds)."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/settings"
+
+    client.patch(base, headers=h, json={"settings": {"announcement_text": "hi"}})
+    reset = client.delete(base, headers=h)
+    assert reset.status_code == 200
+    assert reset.json()["settings"] == {}
+    assert client.get(base, headers=h).json()["settings"] == {}
+    again = client.patch(
+        base, headers=h, json={"settings": {"announcement_text": "again"}}
+    )
+    assert again.status_code == 200
+    assert again.json()["settings"]["announcement_text"] == "again"
+
+
+def test_template_settings_viewer_cannot_write(
+    client: TestClient, db: Session, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    viewer = create_user(db)
+    create_member(db, store=a, user=viewer, role_key="catalog")
+    vh = member_headers(client, db, viewer)
+    base = f"{BASE}/{a.id}/layout/settings"
+    assert client.get(base, headers=vh).status_code == 200
+    assert client.patch(base, headers=vh, json={"settings": {}}).status_code == 403
+    assert client.delete(base, headers=vh).status_code == 403

@@ -13,6 +13,8 @@ from app.modules.content import services
 from app.modules.content.models import ContentStoreThemeSettings, ContentThemeTemplate
 from app.modules.content.schemas import (
     StoreThemeSettingsPublic,
+    TemplateSettingsPublic,
+    TemplateSettingsUpdate,
     ThemeTemplatePublic,
     ThemeUpdate,
 )
@@ -69,3 +71,41 @@ def update_layout(
 ) -> ContentStoreThemeSettings:
     """Apply a template and/or edit appearance; invalidates the read caches."""
     return services.update_theme_settings(session=session, store_id=store_id, data=data)
+
+
+@router.get(
+    "/settings",
+    response_model=TemplateSettingsPublic,
+    dependencies=[Depends(require_permission("layout.view"))],
+)
+def get_layout_settings(
+    store_id: uuid.UUID, session: SessionDep
+) -> TemplateSettingsPublic:
+    """Return the store's saved chrome overrides for its active template."""
+    return services.get_active_template_settings(session=session, store_id=store_id)
+
+
+@router.patch(
+    "/settings",
+    response_model=TemplateSettingsPublic,
+    dependencies=[Depends(require_permission("layout.update"))],
+)
+def update_layout_settings(
+    store_id: uuid.UUID, data: TemplateSettingsUpdate, session: SessionDep
+) -> TemplateSettingsPublic:
+    """Validate + save the active template's chrome overrides; drops the caches."""
+    return services.update_active_template_settings(
+        session=session, store_id=store_id, settings=data.settings
+    )
+
+
+@router.delete(
+    "/settings",
+    response_model=TemplateSettingsPublic,
+    dependencies=[Depends(require_permission("layout.update"))],
+)
+def reset_layout_settings(
+    store_id: uuid.UUID, session: SessionDep
+) -> TemplateSettingsPublic:
+    """Reset (soft-delete) the active template's overrides to the schema defaults."""
+    return services.reset_active_template_settings(session=session, store_id=store_id)

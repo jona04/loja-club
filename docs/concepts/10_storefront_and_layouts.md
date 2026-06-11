@@ -113,6 +113,7 @@ Tabelas:
 ```text
 content_theme_templates
 content_store_theme_settings
+content_store_template_settings
 ```
 
 ### content_theme_templates
@@ -123,11 +124,12 @@ Campos sugeridos:
 
 | Campo | Descrição |
 |---|---|
-| `id` | `classic`, `modern` |
+| `id` | `aurora`, `bazar`, `studio` |
 | `name` | Nome exibido |
 | `description` | Descrição |
 | `is_active` | Se está disponível |
 | `preview_image_url` | Imagem de preview |
+| `settings_schema` | Manifesto dos campos editáveis do chrome (vem do código; seedado no deploy) |
 
 ### content_store_theme_settings
 
@@ -145,6 +147,18 @@ Campos sugeridos:
 | `primary_color` | Preparado para futuro |
 | `background_color` | Preparado para futuro |
 | `font_family` | Preparado para futuro |
+
+### content_store_template_settings
+
+Overrides do chrome **específico de cada template**, por **loja × template** (os defaults vêm do `settings_schema` do template).
+
+| Campo | Descrição |
+|---|---|
+| `store_id` | Loja |
+| `template_id` | Template a que os valores pertencem |
+| `settings` | Objeto JSON `{chave: valor}` (chaves do `settings_schema`) |
+
+`store_id + template_id` é único entre linhas ativas (soft delete); **resetar = excluir** (re-selecionar volta aos defaults). A vitrine expõe `theme.settings` = defaults do schema **⊕** overrides do template ativo.
 
 > **`logo_url` e a descrição da loja vêm de `store_settings` (Fase 1)** — o theme cuida só de aparência/layout, sem duplicar contato/negócio.
 
