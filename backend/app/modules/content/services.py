@@ -20,7 +20,6 @@ from app.modules.content.models import (
     ContentThemeTemplate,
 )
 from app.modules.content.schemas import (
-    StoreThemeSettingsPublic,
     TemplateSettingsPublic,
     ThemeUpdate,
 )
@@ -124,40 +123,6 @@ def update_theme_settings(
     session.refresh(settings)
     invalidate_layout_cache(store_id)
     return settings
-
-
-def preview_theme_settings(
-    *, session: Session, store_id: uuid.UUID, template_id: str
-) -> StoreThemeSettingsPublic:
-    """Return the store's settings as they would look with ``template_id`` active.
-
-    Does not persist the change — only the response carries the previewed
-    template, so the panel can render it before applying.
-
-    Args:
-        session: Active database session.
-        store_id: The store to preview.
-        template_id: The template to preview.
-
-    Returns:
-        The store's settings with ``active_template_id`` overridden.
-
-    Raises:
-        AppError: 400 if ``template_id`` is not an available template.
-    """
-    _require_active_template(session, template_id)
-    settings = get_or_create_theme_settings(session=session, store_id=store_id)
-    return StoreThemeSettingsPublic(
-        id=settings.id,
-        store_id=settings.store_id,
-        active_template_id=template_id,
-        banner_image_url=settings.banner_image_url,
-        headline=settings.headline,
-        featured_collection_id=settings.featured_collection_id,
-        primary_color=settings.primary_color,
-        background_color=settings.background_color,
-        font_family=settings.font_family,
-    )
 
 
 def _schema_fields(template: ContentThemeTemplate) -> dict[str, dict[str, object]]:

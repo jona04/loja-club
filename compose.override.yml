@@ -105,6 +105,7 @@ services:
       dockerfile: frontend-dashboard/Dockerfile
       args:
         - VITE_API_URL=http://localhost:8800
+        - VITE_STOREFRONT_URL=http://localhost:3000
         - NODE_ENV=development
 
   frontend-admin:

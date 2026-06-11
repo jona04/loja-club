@@ -62,21 +62,6 @@ def test_edit_appearance(client: TestClient, two_stores: TenantContext) -> None:
     assert resp.json()["headline"] == "Bem-vindo"
 
 
-def test_preview_does_not_persist(
-    client: TestClient, two_stores: TenantContext
-) -> None:
-    a = two_stores.store_a
-    h = two_stores.owner_a_headers
-    preview = client.get(f"{BASE}/{a.id}/layout/preview/bazar", headers=h)
-    assert preview.status_code == 200
-    assert preview.json()["active_template_id"] == "bazar"
-    # The active template stays the default after a preview.
-    assert (
-        client.get(f"{BASE}/{a.id}/layout", headers=h).json()["active_template_id"]
-        == "aurora"
-    )
-
-
 def test_layout_isolated_from_other_store(
     client: TestClient, two_stores: TenantContext
 ) -> None:

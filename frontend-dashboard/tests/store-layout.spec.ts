@@ -26,6 +26,11 @@ test.describe("Store layout — schema-driven personalization", () => {
   test("edits a template setting, saves and persists it", async ({ page }) => {
     await openStoreLayout(page)
 
+    // Each template links to its navigable preview (the demo store on the storefront).
+    await expect(
+      page.getByRole("link", { name: "Ver preview" }).first(),
+    ).toHaveAttribute("href", /-demo\./)
+
     const field = page.getByLabel(ANNOUNCEMENT_LABEL)
     await field.fill("Frete grátis acima de R$99")
     await page.getByRole("button", { name: "Salvar personalização" }).click()

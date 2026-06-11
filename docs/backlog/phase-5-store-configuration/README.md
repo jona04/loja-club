@@ -32,7 +32,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 6 | [P5-DEMO-02](./P5-DEMO-02-template-demo-stores.md) | Loja-demo por template (`<id>-demo`) | ✅ done | P5-DEMO-01 |
 | 7 | [P5-TPL-01](./P5-TPL-01-template-screens-refinements.md) | Refinos das telas de template (admin + dashboard, thumb CDN) | todo | P5-DEMO-01 |
 | 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | ✅ done | P5-CFG-01 |
-| 9 | [P5-PREV-01](./P5-PREV-01-navigable-preview.md) | Preview navegável (painel abre a loja-demo) | todo | P5-DEMO-02, P5-SF-01 |
+| 9 | [P5-PREV-01](./P5-PREV-01-navigable-preview.md) | Preview navegável (painel abre a loja-demo) | ✅ done | P5-DEMO-02, P5-SF-01 |
 | 10 | [P5-PAGE-01](./P5-PAGE-01-content-pages.md) | Conteúdo das páginas (`content_pages`/menus/banners no painel + vitrine) | todo | — |
 
 ## Ordem sugerida de execução
@@ -58,7 +58,7 @@ P5-DEMO-01 → P5-DEMO-02 ─┼→ P5-PREV-01
 - [x] **Imagens-default (demo) no CDN** (Fase 4) → `P5-DEMO-01` ✅ (import_assets baixa→S3→CDN). **Thumb relativo do seed** + **remover PNGs de `public/`** → `P5-TPL-01` (lado do dashboard, reusa import_assets).
 - [ ] **`import_assets`: erro por-imagem** (URL 4xx/5xx ou S3 falho aborta o template — decidir continuar+reportar) + **download em memória sem limite** (streaming p/ imagens grandes). Origem: `P5-DEMO-01`.
 - [ ] **Telas de templates: thumb relativo (admin)** + **dashboard thumbnail do CDN** (Fase 4, `P4-ADMIN-03`) → `P5-TPL-01`.
-- [ ] **`previewLayout` sem uso** + **preview ao vivo / botão abrir preview** (Fases 3/4) → `P5-PREV-01`.
+- [x] **`previewLayout` sem uso** + **preview ao vivo / botão abrir preview** (Fases 3/4) → `P5-PREV-01` ✅ (painel abre `<id>-demo` no storefront; previewLayout removido). Sobra: permissão `layout.preview` órfã → follow-up.
 - [x] **Conteúdo estático/lorem → dinâmico** (Fase 3) → `P5-SF-01` ✅ (chrome editável vem de settings nos 3 templates).
 - [ ] **e2e/smoke do storefront** (vitrine reflete `theme.settings`) — storefront sem infra de e2e/Playwright; a API é coberta por integração (backend) + render type-validado (`tsc`/`next build`). Montar infra + e2e real. Origem: `P5-SF-01`.
 - [ ] **Upload de imagem nos campos `image` + `layout.assets.update`** — diferido: nenhum template V1 tem campo `image` e `layout.assets.update` não está ligada a rota (o upload do banner universal já funciona via `layout.update`). Fazer quando um template tiver campo `image`. Origem: Fase 3 + `P5-CFG-02`.

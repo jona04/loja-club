@@ -4,7 +4,7 @@ title: Preview navegável (painel abre a loja-demo do template)
 phase: 5
 etapa: "Etapa 5 — Vitrine lê settings + preview navegável"
 area: PREV
-status: todo
+status: done
 depends_on: [P5-DEMO-02, P5-SF-01]
 blocks: []
 tests: [e2e]
@@ -41,14 +41,16 @@ O preview navegável = o storefront servindo a **loja-demo** do template (cada c
 - **Cobrir:** e2e — abrir o preview navega na loja-demo (home → categoria → produto).
 
 ## Definition of Done
-- [ ] Painel abre o preview navegável (loja-demo do template).
-- [ ] `previewLayout` removido (backend + painel).
-- [ ] Gates + e2e.
-- [ ] **Modos de falha mapeados** (loja-demo ausente, template sem demo) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Painel abre o **preview navegável** — cada template linka pra `{id}-demo.{storefront}` (imagem do card + botão "Ver preview", nova aba). URL via `VITE_STOREFRONT_URL` (.env + compose).
+- [x] `previewLayout` removido (rota `/preview/{id}` + `preview_theme_settings` + Dialog do painel + regen do client).
+- [x] Gates (tsc/biome/vitest) + **e2e** (`store-layout.spec`: o link "Ver preview" aponta pra `*-demo.*`).
+- [x] **Modos de falha mapeados** (loja-demo ausente / template sem demo → o storefront responde 404 "loja não encontrada"; abre em nova aba, não bloqueia o painel).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** painel: `demoStoreUrl(templateId)` + links pro `<id>-demo` (removido o preview-Dialog/`previewId`); backend: removidos a rota `/preview/{id}` + `preview_theme_settings` + o teste; client regenerado (`previewLayout` sumiu); `VITE_STOREFRONT_URL` no `.env`+compose. tsc/biome/vitest + e2e verdes.
 
 ## Notas / Reconciliações
-- Funde os follow-ups "previewLayout sem uso" e "preview ao vivo / botão abrir preview" das Fases 3/4.
+- **Fecha** os follow-ups "previewLayout sem uso" (P3-TPL-03) e "preview ao vivo / botão abrir preview" (Fases 3/4).
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Permissão `layout.preview` órfã** — sem rota desde a remoção do `previewLayout`; remover do catálogo + seed de permissões (CLAUDE.md: permissão sem leitor = lixo). Origem: `P5-PREV-01`.

@@ -950,13 +950,6 @@ export type ContentUpdateLayoutData = {
 
 export type ContentUpdateLayoutResponse = (StoreThemeSettingsPublic);
 
-export type ContentPreviewLayoutData = {
-    storeId: string;
-    templateId: string;
-};
-
-export type ContentPreviewLayoutResponse = (StoreThemeSettingsPublic);
-
 export type ContentGetLayoutSettingsData = {
     storeId: string;
 };

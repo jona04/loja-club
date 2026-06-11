@@ -47,20 +47,6 @@ def get_layout(store_id: uuid.UUID, session: SessionDep) -> ContentStoreThemeSet
     return services.get_or_create_theme_settings(session=session, store_id=store_id)
 
 
-@router.get(
-    "/preview/{template_id}",
-    response_model=StoreThemeSettingsPublic,
-    dependencies=[Depends(require_permission("layout.preview"))],
-)
-def preview_layout(
-    store_id: uuid.UUID, template_id: str, session: SessionDep
-) -> StoreThemeSettingsPublic:
-    """Return the store's settings as they would look with ``template_id`` active."""
-    return services.preview_theme_settings(
-        session=session, store_id=store_id, template_id=template_id
-    )
-
-
 @router.patch(
     "",
     response_model=StoreThemeSettingsPublic,
