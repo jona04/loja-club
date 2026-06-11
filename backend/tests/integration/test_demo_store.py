@@ -17,8 +17,12 @@ from app.modules.stores.models import Store
 _TID = "demotest"
 
 
+_BANNER = "https://cdn.x/public/templates/demotest/hero.png"
+
+
 def _demo() -> dict[str, Any]:
     return {
+        "banner": _BANNER,
         "categories": [
             {"name": "Canecas", "slug": "canecas"},
             {"name": "Camisetas", "slug": "camisetas"},
@@ -63,6 +67,7 @@ def test_seed_builds_demo_store(db: Session, monkeypatch: pytest.MonkeyPatch) ->
         )
     ).one()
     assert theme.active_template_id == _TID
+    assert theme.banner_image_url == _BANNER
 
     host = db.exec(select(DomainHost).where(DomainHost.store_id == store.id)).one()
     assert host.host == "demotest-demo.localhost"
@@ -116,6 +121,7 @@ def test_demo_store_served_by_storefront(
     body = resp.json()
     assert body["store"]["slug"] == "demotest-demo"
     assert body["theme"]["active_template_id"] == _TID
+    assert body["theme"]["banner_image_url"] == _BANNER
     assert body["featured_products"]
 
 

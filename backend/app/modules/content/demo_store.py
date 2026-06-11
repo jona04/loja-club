@@ -64,8 +64,17 @@ def _ensure_host(session: Session, store: Store, slug: str) -> None:
         )
 
 
-def _ensure_theme(session: Session, store: Store, template_id: str) -> None:
-    """Ensure the demo store has the template active."""
+def _ensure_theme(
+    session: Session, store: Store, template_id: str, banner: str | None
+) -> None:
+    """Ensure the demo store has the template active and the hero banner set.
+
+    Args:
+        session: Active database session.
+        store: The demo store.
+        template_id: The template to activate.
+        banner: The demo's hero image URL (CDN), or ``None`` to leave it unset.
+    """
     theme = session.exec(
         select(ContentStoreThemeSettings).where(
             ContentStoreThemeSettings.store_id == store.id
@@ -73,10 +82,21 @@ def _ensure_theme(session: Session, store: Store, template_id: str) -> None:
     ).first()
     if theme is None:
         session.add(
-            ContentStoreThemeSettings(store_id=store.id, active_template_id=template_id)
+            ContentStoreThemeSettings(
+                store_id=store.id,
+                active_template_id=template_id,
+                banner_image_url=banner,
+            )
         )
-    elif theme.active_template_id != template_id:
+        return
+    changed = False
+    if theme.active_template_id != template_id:
         theme.active_template_id = template_id
+        changed = True
+    if banner and theme.banner_image_url != banner:
+        theme.banner_image_url = banner
+        changed = True
+    if changed:
         session.add(theme)
 
 
@@ -201,7 +221,10 @@ def seed_template_demo_store(*, session: Session, template_id: str) -> Store | N
     slug = f"{template_id}-demo"
     store = _get_or_create_store(session, template_id, slug)
     _ensure_host(session, store, slug)
-    _ensure_theme(session, store, template_id)
+    banner = demo.get("banner")
+    _ensure_theme(
+        session, store, template_id, banner if isinstance(banner, str) else None
+    )
     categories = _seed_categories(session, store, demo.get("categories", []))
     _seed_products(session, store, demo.get("products", []), categories)
     session.commit()

@@ -53,6 +53,7 @@ Cada template tem uma **loja-demo própria** (`aurora-demo`/`bazar-demo`/`studio
 ## Notas / Reconciliações
 - O seed é **prestart** (`initial_data.init`), não `init_db`: assim o conftest não pré-seeda (testes cobrem os ramos de criação).
 - Reusa **tudo** (store/catalog/media/domain/content) — zero render especial; a loja-demo é servida como qualquer vitrine.
+- **Hero/banner da loja-demo:** o `demo.json` ganhou um campo `banner` (hero do design uxpilot, baixado→CDN pelo `import_assets`); `_ensure_theme` seta `theme.banner_image_url` a partir dele, senão o hero dos 3 templates caía no fundo sólido. (Os templates já renderizavam `theme.banner_image_url`.)
 
 ## Follow-ups
 - [ ] **Update do catálogo da loja-demo** — o re-seed **adiciona** itens novos do `demo.json` mas **não atualiza** os existentes (preço/nome mudados não refletem; `get_or_create` por slug reusa). Decidir se atualiza no re-seed. Origem: `P5-DEMO-02`.

@@ -124,10 +124,10 @@ def _ensure_cdn(client: httpx.Client, template_id: str, url: str) -> str:
 def import_demo_assets(template_id: str) -> dict[str, Any]:
     """Import a template's demo images into the CDN and persist the manifest.
 
-    Downloads each product image that is not yet on the CDN, stores it, rewrites
-    the manifest's image URLs to the CDN, and — when anything changed — writes
-    the rewritten ``demo.json`` back, so the committed manifest stops depending
-    on the source (uxpilot) URLs.
+    Downloads the hero ``banner`` and each product image that is not yet on the
+    CDN, stores them, rewrites the manifest's image URLs to the CDN, and — when
+    anything changed — writes the rewritten ``demo.json`` back, so the committed
+    manifest stops depending on the source (uxpilot) URLs.
 
     Args:
         template_id: The template whose demo assets are imported.
@@ -142,6 +142,10 @@ def import_demo_assets(template_id: str) -> dict[str, Any]:
     products: list[dict[str, Any]] = demo.get("products", [])
     changed = False
     with httpx.Client(timeout=30.0) as client:
+        banner = demo.get("banner")
+        if isinstance(banner, str) and banner and not _is_cdn_url(banner):
+            demo["banner"] = _ensure_cdn(client, template_id, banner)
+            changed = True
         for product in products:
             image = product.get("image")
             if isinstance(image, str) and image and not _is_cdn_url(image):

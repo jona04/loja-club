@@ -115,11 +115,35 @@ def test_import_skips_already_cdn_urls(
     assert writes == []
 
 
+def test_import_bakes_banner(
+    s3: Any,
+    writes: list[tuple[str, dict[str, Any]]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The hero banner is downloaded, stored on the CDN and persisted."""
+    demo = {"banner": "https://ux.example/hero.png", "categories": [], "products": []}
+    monkeypatch.setattr(import_assets, "load_demo", lambda _id: demo)
+    monkeypatch.setattr(
+        httpx.Client, "get", lambda _self, _url, **_kwargs: _FakeResponse(b"HERO")
+    )
+
+    result = import_assets.import_demo_assets("aurora")
+
+    cdn = "https://cdn.test/public/templates/aurora/hero.png"
+    assert result["banner"] == cdn
+    body = s3.get_object(
+        Bucket="loja-club-test", Key="public/templates/aurora/hero.png"
+    )["Body"].read()
+    assert body == b"HERO"
+    assert writes[0][1]["banner"] == cdn
+
+
 @pytest.mark.parametrize("template_id", ["aurora", "bazar", "studio"])
 def test_shipped_demo_is_valid(template_id: str) -> None:
-    """Each shipped demo.json loads with coherent categories and products."""
+    """Each shipped demo.json loads with a banner + coherent categories/products."""
     demo = import_assets.load_demo(template_id)
     assert demo is not None
+    assert str(demo["banner"]).startswith("https://")
     assert demo["categories"]
     assert demo["products"]
     for product in demo["products"]:
