@@ -22,6 +22,7 @@ from app.modules.catalog.models import Category, Product, ProductCategory
 from app.modules.catalog.schemas import CategoryPublic
 from app.modules.content.models import ContentPage
 from app.modules.content.repositories import get_store_theme_settings
+from app.modules.content.services import resolve_active_settings
 from app.modules.storefront.schemas import (
     StorefrontCategorySection,
     StorefrontHome,
@@ -73,11 +74,22 @@ def _store_public(store: Store, settings: StoreSettings | None) -> StorefrontSto
 
 
 def _theme(*, session: Session, store_id: uuid.UUID) -> StorefrontTheme:
-    """Return the store's public theme, defaulting to ``classic`` if unset."""
+    """Return the store's public theme (active template + appearance + chrome settings).
+
+    Falls back to ``DEFAULT_TEMPLATE_ID`` if the store has no settings yet (no row
+    created). ``settings`` are the active template's schema defaults merged with
+    the store's overrides.
+    """
     row = get_store_theme_settings(session=session, store_id=store_id)
+    template_id = row.active_template_id if row is not None else DEFAULT_TEMPLATE_ID
+    settings = resolve_active_settings(
+        session=session, store_id=store_id, active_template_id=template_id
+    )
     if row is None:
-        return StorefrontTheme(active_template_id=DEFAULT_TEMPLATE_ID)
-    return StorefrontTheme.model_validate(row)
+        return StorefrontTheme(active_template_id=template_id, settings=settings)
+    theme = StorefrontTheme.model_validate(row)
+    theme.settings = settings
+    return theme
 
 
 def _category_sections(

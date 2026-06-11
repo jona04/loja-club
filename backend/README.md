@@ -22,7 +22,7 @@ scripts/           lint.sh · test.sh · tests-start.sh · prestart.sh · format
 
 Convention: `models.py` holds only `table=True` tables + their `*Base`;
 `schemas.py` holds API DTOs; `enums.py` holds enums. See [`CLAUDE.md`](../CLAUDE.md)
-and [`docs/04`](../docs/04_fastapi_template_adaptation.md).
+and [`docs/04`](../docs/concepts/04_fastapi_template_adaptation.md).
 
 ## Prerequisites
 

@@ -16,7 +16,7 @@ tests: [e2e]
 A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates com imagem de preview**: o lojista escolhe o template ativo **pela imagem** (sem preview ao vivo ainda) e a vitrine passa a renderizar o escolhido. Depende do registro `content_theme_templates` (com `preview_image_url`) criado em `P3-TPL-01`.
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (§"Layout da loja")
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) (§"Layout da loja")
 - [`P3-FE-02`](./P3-FE-02-layout-screen.md) (tela atual) · [`P3-TPL-01`](./P3-TPL-01-template-architecture-aurora.md) (registry/`active_template_id`)
 
 > **Princípio:** todo recurso que o template usa (banner/hero, destaques, …) precisa ter **como o lojista usar/editar** no painel. Hoje há funcionalidades no template **sem UI** pra alimentá-las.
@@ -37,7 +37,7 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 ## Arquivos a criar/alterar
 - `frontend-dashboard/src/routes/_layout/store-layout.tsx` (alterar) — grade de templates com imagem + seleção.
 - `backend` (alterar, se preciso) — endpoint que lista templates com `preview_image_url` / grava `active_template_id`.
-- `docs/09_merchant_dashboard.md` (alterar) — reconciliar a tela.
+- `docs/concepts/09_merchant_dashboard.md` (alterar) — reconciliar a tela.
 
 ## Passos
 1. Endpoint/where: listar templates (com `preview_image_url`) + gravar o ativo.

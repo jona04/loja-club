@@ -15,10 +15,10 @@ tests: [e2e]
 As telas do `frontend-admin` que consomem o registro de templates: a equipe cria/edita um template (metadados/status), **sobe o thumbnail pro CDN** e **vê o schema** (read-only). Alimenta a Fase 5 (onde entram o import de imagens, a loja-demo por template e o preview navegável).
 
 ## Docs de referência
-- [26 — Template System](../../26_template_system.md)
-- [27 — Guia de autoria de template](../../27_template_authoring_guide.md)
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
+- [26 — Template System](../../concepts/26_template_system.md)
+- [27 — Guia de autoria de template](../../concepts/27_template_authoring_guide.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
 
 ## Escopo (o que ENTRA)
 - Lista + CRUD de templates (metadados/status) — consome `P4-TPL-01`.

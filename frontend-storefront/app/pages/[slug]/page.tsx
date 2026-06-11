@@ -1,4 +1,4 @@
-import { getCategories, getHome } from "@/lib/api"
+import { getCategories, getHome, getPage } from "@/lib/api"
 import { resolveTemplate } from "@/lib/templates"
 
 const PAGES: Record<string, { title: string; body: string[] }> = {
@@ -40,9 +40,10 @@ const FALLBACK = {
 }
 
 /**
- * Institutional page: presentable default copy inside the active template's
- * shell. The merchant's own content arrives with editable `content_pages` in a
- * later task.
+ * Institutional page inside the active template's shell.
+ *
+ * Reads the merchant's own `content_pages` entry for the slug; when the store
+ * has no (published) page for it, falls back to presentable default copy.
  *
  * @param params - Route params carrying the page `slug`.
  * @returns The institutional page.
@@ -53,9 +54,19 @@ export default async function InstitutionalPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [home, categories] = await Promise.all([getHome(), getCategories()])
+  const [home, categories, content] = await Promise.all([
+    getHome(),
+    getCategories(),
+    getPage(slug),
+  ])
   const Template = resolveTemplate(home.theme.active_template_id)
-  const page = PAGES[slug] ?? FALLBACK
+  const fallback = PAGES[slug] ?? FALLBACK
+  const title = content?.title ?? fallback.title
+  const paragraphs = content
+    ? (content.body ?? "")
+        .split(/\n{2,}/)
+        .filter((block) => block.trim() !== "")
+    : fallback.body
 
   return (
     <Template.Shell
@@ -65,10 +76,10 @@ export default async function InstitutionalPage({
     >
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-3xl font-semibold tracking-tight text-gray-900">
-          {page.title}
+          {title}
         </h1>
-        <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-          {page.body.map((paragraph) => (
+        <div className="space-y-4 whitespace-pre-line text-sm leading-relaxed text-gray-600">
+          {paragraphs.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>

@@ -65,7 +65,7 @@ function TemplatesScreen() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Templates</h1>
           <p className="text-muted-foreground">
-            Registro de templates (schema vem do código). Demo/preview = Fase 5.
+            Registro de templates (schema vem do código; thumbnail no CDN).
           </p>
         </div>
         <Button onClick={() => setForm({ template: null })}>
@@ -208,6 +208,13 @@ function TemplateFormDialog({
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
+          {template?.preview_image_url && (
+            <img
+              src={template.preview_image_url}
+              alt={template.name}
+              className="h-20 w-32 rounded border object-cover"
+            />
+          )}
           {!template && (
             <div className="space-y-1.5">
               <Label>ID (o código já deve existir na vitrine)</Label>
@@ -332,6 +339,17 @@ function TemplateDetailDialog({
                   {uploadMutation.isPending ? "Enviando…" : "Enviar thumbnail"}
                 </span>
               </label>
+            </div>
+
+            <div className="space-y-1">
+              <div>
+                <span className="font-medium">Descrição:</span>{" "}
+                {template.description || "—"}
+              </div>
+              <div>
+                <span className="font-medium">Ativo:</span>{" "}
+                {template.is_active ? "sim" : "não"}
+              </div>
             </div>
 
             <div>

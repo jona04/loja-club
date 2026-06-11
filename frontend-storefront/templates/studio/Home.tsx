@@ -13,11 +13,17 @@ import { StudioSidebar } from "./StudioSidebar"
  */
 export function Home({ home, categories }: HomeProps) {
   const { store, theme, featured_products: featured } = home
+  const settings = theme.settings ?? {}
+  const catalogIntro =
+    (settings.catalog_intro as string) ||
+    store.description ||
+    "Peças utilitárias desenhadas para o conforto do dia a dia."
+  const showFilters = settings.show_filters !== false
 
   return (
     <StudioShell store={store} categories={categories} locale={store.locale}>
       <div className="mx-auto flex w-full max-w-[1600px] flex-1">
-        <StudioSidebar categories={categories} />
+        <StudioSidebar categories={categories} showFilters={showFilters} />
         <main className="flex min-w-0 flex-1 flex-col pb-16">
           <div className="w-full p-4 pb-0 lg:p-6">
             <div className="relative h-32 w-full overflow-hidden rounded-lg bg-gray-100 md:h-48">
@@ -37,8 +43,7 @@ export function Home({ home, categories }: HomeProps) {
                     {theme.headline || "Catálogo Completo"}
                   </h2>
                   <p className="hidden text-sm text-gray-700 md:block">
-                    {store.description ||
-                      "Peças utilitárias desenhadas para o conforto do dia a dia."}
+                    {catalogIntro}
                   </p>
                 </div>
               </div>

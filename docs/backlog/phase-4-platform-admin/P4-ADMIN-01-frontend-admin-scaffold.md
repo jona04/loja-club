@@ -16,10 +16,10 @@ tests: [e2e]
 A equipe Loja Club precisa de um painel **separado** do painel do lojista, em `admin.${DOMAIN}`, autenticado pelos papéis `platform.*` (`P4-PLAT-01`).
 
 ## Docs de referência
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
-- [12 — AWS Infra & Deployment](../../12_aws_infrastructure_and_deployment.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
+- [12 — AWS Infra & Deployment](../../concepts/12_aws_infrastructure_and_deployment.md)
 
 ## Escopo (o que ENTRA)
 - Projeto `frontend-admin/` (React/Vite, no workspace bun) — **reusa** o cliente OpenAPI + componentes/padrões do `frontend-dashboard`.
@@ -59,7 +59,7 @@ A equipe Loja Club precisa de um painel **separado** do painel do lojista, em `a
 > **Entregue:** projeto `frontend-admin/` espelhando o `frontend-dashboard` (cliente OpenAPI **regenerado** c/ `/platform/*`, UI Radix/shadcn, TanStack Router/Query); rotas `__root`/`login`/`_layout` (shell+guard+banner)/`index` + `useAuth`; backend **`GET /platform/me`** (+ teste); wiring `compose.yml`+`override` (`admin.${DOMAIN}` / porta **5181**), workspace na raiz, `DOCKER_IMAGE_ADMIN`, CORS (`localhost:5181` + `admin.localhost`). **Validado:** smoke real (docker, login OK) + **e2e Playwright 3/3** (`playwright-admin`); `bun.lock` regenerado com o membro novo.
 
 ## Notas / Reconciliações
-- Reusa o cliente OpenAPI/padrões do `frontend-dashboard` (não recriar) — decisão de frontends separados (doc [05](../../05_frontend_architecture.md)).
+- Reusa o cliente OpenAPI/padrões do `frontend-dashboard` (não recriar) — decisão de frontends separados (doc [05](../../concepts/05_frontend_architecture.md)).
 
 ## Follow-ups
 - [x] **Smoke real do host** (docker) — validado (login via `admin.localhost`).

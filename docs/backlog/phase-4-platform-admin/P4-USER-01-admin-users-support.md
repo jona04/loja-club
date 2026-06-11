@@ -16,9 +16,9 @@ tests: [integration]
 A gestão de `account_users` é do **admin**, não do painel do lojista. Inclui o **suporte com impersonation** (auditado) e fecha o follow-up da Fase 1 (guard de soft-delete em leitura por id).
 
 ## Docs de referência
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md)
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 
 ## Escopo (o que ENTRA)
 - Rotas `platform_admin` (gated `platform.users.view`): listar/ver `account_users` (paginado, busca por e-mail).

@@ -16,13 +16,13 @@ tests: [integration]
 O backend será um monólito **modular**: cada domínio em `app/modules/<nome>/` com a convenção de arquivos do doc 04. Esta task cria a estrutura e o agregador de routers — sem implementar lógica.
 
 ## Docs de referência
-- [03 — System Architecture](../../03_system_architecture.md)
-- [04 — FastAPI Template Adaptation](../../04_fastapi_template_adaptation.md)
+- [03 — System Architecture](../../concepts/03_system_architecture.md)
+- [04 — FastAPI Template Adaptation](../../concepts/04_fastapi_template_adaptation.md)
 
 ## Escopo (o que ENTRA)
 - Criar `app/modules/__init__.py` e os subpacotes que vamos usar até a Fase 6: `accounts`, `stores`, `tenancy`, `domains`, `catalog`, `media`, `product_customization`, `storefront`, `cart`, `checkout`, `orders`, `customers`, `shipping`, `discounts`, `notifications`, `audit`.
 - Convenção por módulo (criar conforme uso, não arquivos vazios à toa): `models.py`, `schemas.py`, `routes.py`, `services.py`, `repositories.py`, `permissions.py`, `exceptions.py`.
-- Registrar a convenção de **nome de tabela com prefixo de domínio** (INV-D3 / doc [07](../../07_database_strategy.md)): cada modelo define `__tablename__` explícito (ex.: `store_stores`, `catalog_products`), nunca o default do template.
+- Registrar a convenção de **nome de tabela com prefixo de domínio** (INV-D3 / doc [07](../../concepts/07_database_strategy.md)): cada modelo define `__tablename__` explícito (ex.: `store_stores`, `catalog_products`), nunca o default do template.
 - `app/api/main.py` agregando os routers dos módulos (substitui os includes do template).
 - Garantir o import de todos os models antes do `init_db` (registry em `app/modules/__init__.py` ou `app/models_registry.py`).
 

@@ -29,10 +29,11 @@ class StorefrontStore(SQLModel):
 
 
 class StorefrontTheme(SQLModel):
-    """Public appearance for rendering (active template + theme fields).
+    """Public appearance for rendering (active template + theme fields + chrome).
 
     Read-only: a store with no settings yet falls back to the default template
-    (``classic``) without creating a row.
+    without creating a row. ``settings`` are the active template's schema-driven
+    chrome values (defaults merged with the store's overrides).
     """
 
     active_template_id: str
@@ -42,6 +43,7 @@ class StorefrontTheme(SQLModel):
     primary_color: str | None = None
     background_color: str | None = None
     font_family: str | None = None
+    settings: dict[str, object] = {}
 
 
 class StorefrontProduct(ProductPublic):

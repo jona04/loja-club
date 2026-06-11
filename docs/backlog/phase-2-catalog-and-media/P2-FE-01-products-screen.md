@@ -16,9 +16,9 @@ tests: [unit, e2e]
 Tela de Produtos no `frontend-dashboard`, consumindo o `catalog` (`P2-CAT-02`) no contexto da loja ativa (`useActiveStore`), com gating por `catalog.*` (esconder/desabilitar = UX; segurança é backend).
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (Produtos)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
-- [21 — Design System](../../21_design_system_todo.md) (estado de upload)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) (Produtos)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
+- [21 — Design System](../../concepts/21_design_system_todo.md) (estado de upload)
 
 ## Escopo (o que ENTRA)
 - Item de menu **Produtos** (via `buildMenu`/permissão `catalog.product.view`).

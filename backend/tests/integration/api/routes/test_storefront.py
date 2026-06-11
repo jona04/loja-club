@@ -8,6 +8,11 @@ from sqlmodel import Session
 from app.core.cache import cache_get
 from app.modules.catalog.enums import ProductStatus
 from app.modules.catalog.models import Category, Product, ProductCategory
+from app.modules.content.models import (
+    ContentPage,
+    ContentStoreTemplateSettings,
+    ContentStoreThemeSettings,
+)
 from app.modules.domains.enums import DomainStatus
 from app.modules.domains.models import DomainHost
 from app.modules.stores.enums import StoreStatus
@@ -72,6 +77,40 @@ def test_home_for_published_store(client: TestClient, db: Session) -> None:
     )
 
 
+def test_published_page_is_served(client: TestClient, db: Session) -> None:
+    """A published content page is served by slug; the storefront renders it."""
+    store, host = _published_store(db, slug="sf-page")
+    db.add(
+        ContentPage(
+            store_id=store.id,
+            slug="sobre",
+            title="Sobre nós",
+            body="Olá",
+            is_published=True,
+        )
+    )
+    db.flush()
+    resp = client.get(f"{BASE}/pages/sobre", headers={"host": host})
+    assert resp.status_code == 200
+    assert resp.json()["title"] == "Sobre nós"
+    assert resp.json()["body"] == "Olá"
+
+
+def test_unpublished_or_missing_page_is_404(client: TestClient, db: Session) -> None:
+    """A draft or absent page 404s, so the storefront falls back to defaults."""
+    store, host = _published_store(db, slug="sf-page-404")
+    db.add(
+        ContentPage(
+            store_id=store.id, slug="rascunho", title="Draft", is_published=False
+        )
+    )
+    db.flush()
+    draft = client.get(f"{BASE}/pages/rascunho", headers={"host": host})
+    assert draft.status_code == 404
+    absent = client.get(f"{BASE}/pages/inexistente", headers={"host": host})
+    assert absent.status_code == 404
+
+
 def test_unknown_host_is_not_found(client: TestClient) -> None:
     resp = client.get(f"{BASE}/home", headers={"host": "nope.localhost"})
     assert resp.status_code == 404
@@ -131,3 +170,28 @@ def test_products_filtered_by_category(client: TestClient, db: Session) -> None:
     resp = client.get(f"{BASE}/products?category=canecas", headers={"host": host})
     assert resp.status_code == 200
     assert {p["slug"] for p in resp.json()["data"]} == {"in-cat"}
+
+
+def test_home_theme_settings_merges_defaults_and_overrides(
+    client: TestClient, db: Session
+) -> None:
+    """The public theme exposes the active template's schema defaults ⊕ overrides."""
+    store, host = _published_store(db, slug="sf-theme")
+    db.add(ContentStoreThemeSettings(store_id=store.id, active_template_id="aurora"))
+    db.add(
+        ContentStoreTemplateSettings(
+            store_id=store.id,
+            template_id="aurora",
+            settings={"announcement_text": "Promo!", "show_trust_badges": False},
+        )
+    )
+    db.flush()
+    resp = client.get(f"{BASE}/home", headers={"host": host})
+    assert resp.status_code == 200
+    settings = resp.json()["theme"]["settings"]
+    # Overrides win...
+    assert settings["announcement_text"] == "Promo!"
+    assert settings["show_trust_badges"] is False
+    # ...and unset fields fall back to the schema defaults.
+    assert settings["hero_subtitle"] == ""
+    assert settings["footer_contact"] == ""

@@ -171,6 +171,13 @@ Fluxos principais:
 12. Simular webhook de pagamento aprovado.
 13. Ver pedido e personalização no painel.
 
+## Banco dos testes (isolamento)
+
+Testes **não** podem poluir o banco principal de **dev**:
+
+- **Backend (pytest):** cada teste roda numa transação com **rollback** no teardown (não persiste nada) — `backend/tests/integration/conftest.py`.
+- **E2E (Playwright/docker):** roda contra um **banco descartável próprio** (`db-test` efêmero + `backend-e2e`), **não** o banco de dev — porque o e2e **commita** dados reais (ex.: signup pelo guard) e não tem rollback. `docker compose down -v` reseta só o `db-test`.
+
 ## Mocks
 
 Mockar integrações externas em testes:

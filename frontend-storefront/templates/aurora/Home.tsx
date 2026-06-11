@@ -16,7 +16,13 @@ import { AuroraShell } from "./Shell"
  */
 export function Home({ home, categories }: HomeProps) {
   const { store, theme, featured_products: featured } = home
+  const settings = theme.settings ?? {}
   const headline = theme.headline || "A Essência do Minimalismo"
+  const heroSubtitle =
+    (settings.hero_subtitle as string) ||
+    store.description ||
+    "Descubra nossa nova coleção de peças atemporais desenhadas para trazer calma e sofisticação ao seu espaço."
+  const showTrustBadges = settings.show_trust_badges !== false
 
   return (
     <AuroraShell store={store} categories={categories} locale={store.locale}>
@@ -36,8 +42,7 @@ export function Home({ home, categories }: HomeProps) {
             {headline}
           </h1>
           <p className="mb-8 max-w-2xl text-lg font-light text-white/90 drop-shadow-sm md:text-xl">
-            {store.description ||
-              "Descubra nossa nova coleção de peças atemporais desenhadas para trazer calma e sofisticação ao seu espaço."}
+            {heroSubtitle}
           </p>
           <Link
             href="/products"
@@ -156,44 +161,46 @@ export function Home({ home, categories }: HomeProps) {
         </div>
       </section>
 
-      <section className="border-t border-gray-100 py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-y-8 text-center sm:grid-cols-3 sm:gap-x-8 sm:text-left">
-            {[
-              {
-                icon: "fa-truck-fast",
-                title: "Entrega para todo o Brasil",
-                text: "Enviamos com opções de entrega rápida e segura.",
-              },
-              {
-                icon: "fa-shield-halved",
-                title: "Compra Segura",
-                text: "Ambiente protegido e seus dados sempre seguros.",
-              },
-              {
-                icon: "fa-rotate-left",
-                title: "Troca Facilitada",
-                text: "Até 30 dias para devolução ou troca sem complicações.",
-              },
-            ].map((item) => (
-              <div
-                key={item.icon}
-                className="flex flex-col items-center gap-4 sm:flex-row sm:items-start"
-              >
-                <div className="text-2xl text-gray-400">
-                  <i className={`fa-solid ${item.icon}`} />
+      {showTrustBadges ? (
+        <section className="border-t border-gray-100 py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-y-8 text-center sm:grid-cols-3 sm:gap-x-8 sm:text-left">
+              {[
+                {
+                  icon: "fa-truck-fast",
+                  title: "Entrega para todo o Brasil",
+                  text: "Enviamos com opções de entrega rápida e segura.",
+                },
+                {
+                  icon: "fa-shield-halved",
+                  title: "Compra Segura",
+                  text: "Ambiente protegido e seus dados sempre seguros.",
+                },
+                {
+                  icon: "fa-rotate-left",
+                  title: "Troca Facilitada",
+                  text: "Até 30 dias para devolução ou troca sem complicações.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.icon}
+                  className="flex flex-col items-center gap-4 sm:flex-row sm:items-start"
+                >
+                  <div className="text-2xl text-gray-400">
+                    <i className={`fa-solid ${item.icon}`} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-brand-900">
+                      {item.title}
+                    </h4>
+                    <p className="mt-1 text-sm text-gray-500">{item.text}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-brand-900">
-                    {item.title}
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-500">{item.text}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </AuroraShell>
   )
 }

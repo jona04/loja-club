@@ -16,9 +16,9 @@ tests: [integration]
 Hoje o thumbnail do template é PNG hardcoded em `frontend-dashboard/public/` e as imagens-default apontam pra URLs temporárias. Esta task move os assets pro **S3 + CloudFront** (via `media`/`storage`, Fase 2), vinculados ao registro do template.
 
 ## Docs de referência
-- [26 — Template System](../../26_template_system.md)
-- [13 — Performance, Cache and CDN](../../13_performance_cache_and_cdn.md)
-- [25 — Platform Admin](../../25_platform_admin.md)
+- [26 — Template System](../../concepts/26_template_system.md)
+- [13 — Performance, Cache and CDN](../../concepts/13_performance_cache_and_cdn.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
 
 ## Escopo (o que ENTRA)
 - Upload (gated `platform.templates.manage`) de **thumbnail** + **imagens-default** do template → S3/CloudFront, reusando `app/core/storage.py` + `media` (Fase 2).

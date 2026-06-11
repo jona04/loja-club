@@ -31,6 +31,7 @@ export function Category({
         <StudioSidebar
           categories={categories}
           activeSlug={category?.slug ?? null}
+          showFilters={home.theme.settings.show_filters !== false}
         />
         <main className="flex min-w-0 flex-1 flex-col pb-16">
           <div className="border-b border-gray-100 px-4 py-5 lg:px-6">

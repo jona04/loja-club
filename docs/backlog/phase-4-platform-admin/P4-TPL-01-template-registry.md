@@ -16,15 +16,15 @@ tests: [integration]
 O admin gerencia o **registro** (dados) de um template; o **código** (componentes React + manifesto) vive no `frontend-storefront`. O **`settings_schema` vem do código** (manifesto), seedado no DB — o admin **não autora** os campos. Estende `content_theme_templates` (`P3-CONTENT-01`).
 
 ## Docs de referência
-- [26 — Template System](../../26_template_system.md)
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md) (`platform.templates.*`)
-- [07 — Database Strategy](../../07_database_strategy.md)
+- [26 — Template System](../../concepts/26_template_system.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md) (`platform.templates.*`)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md)
 
 ## Escopo (o que ENTRA)
 - Estender `content_theme_templates`: `settings_schema` (jsonb) + status (ativo/inativo) + descrição (campos que faltarem).
 - **CRUD admin** (gated `platform.templates.manage`): criar/editar/ativar/desativar o registro de um template cujo código já existe na vitrine.
-- **Seed do `settings_schema`** a partir do **`settings-schema.json` por template** (`frontend-storefront/templates/<id>/settings-schema.json` — fonte única, doc [26](../../26_template_system.md)) em `content_theme_templates.settings_schema`, **idempotente**.
+- **Seed do `settings_schema`** a partir do **`settings-schema.json` por template** (`frontend-storefront/templates/<id>/settings-schema.json` — fonte única, doc [26](../../concepts/26_template_system.md)) em `content_theme_templates.settings_schema`, **idempotente**.
 
 ## Fora de escopo (o que NÃO entra)
 - Upload do **thumbnail pro CDN** → `P4-TPL-02`.
@@ -57,8 +57,8 @@ O admin gerencia o **registro** (dados) de um template; o **código** (component
 > **Entregue:** coluna `settings_schema` em `content_theme_templates` (migration `18847c0960d7`); `settings-schema.json` por template (aurora/bazar/studio) em `frontend-storefront/templates/<id>/`; o seed lê + sincroniza o schema; CRUD em `platform_admin`. Gate: **235 testes** (8 novos), cobertura **94%**, lint verde.
 
 ## Notas / Reconciliações
-- **Schema vem do código** (manifesto `settings-schema.json` por template), não autorado no admin — evita divergência schema↔código (doc [26](../../26_template_system.md)). Reusa `content_theme_templates` (`P3-CONTENT-01`).
-- **`platform.templates.*`** foi acrescentado ao catálogo do doc [08](../../08_modules_and_permissions.md) (sob `platform_catalog`/`platform_owner`) — não existia.
+- **Schema vem do código** (manifesto `settings-schema.json` por template), não autorado no admin — evita divergência schema↔código (doc [26](../../concepts/26_template_system.md)). Reusa `content_theme_templates` (`P3-CONTENT-01`).
+- **`platform.templates.*`** foi acrescentado ao catálogo do doc [08](../../concepts/08_modules_and_permissions.md) (sob `platform_catalog`/`platform_owner`) — não existia.
 - **Mecanismo do seed:** o seed do `content` lê cada `settings-schema.json` (do `frontend-storefront`) e **sincroniza** `content_theme_templates.settings_schema` (insere o que falta; atualiza quando o JSON muda) — o JSON é a fonte única.
 
 ## Follow-ups

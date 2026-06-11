@@ -74,6 +74,33 @@ class ContentStoreThemeSettings(
     store_id: uuid.UUID = Field(foreign_key="store_stores.id", unique=True, index=True)
 
 
+class ContentStoreTemplateSettings(
+    UUIDMixin, TimestampMixin, SoftDeleteMixin, StoreScopedMixin, table=True
+):
+    """Per-store x per-template chrome values (schema-driven settings).
+
+    Holds a store's overrides for a template's ``settings_schema`` fields, as a
+    JSON object keyed by the schema ``key``. Unique per (store, template) among
+    non-deleted rows; resetting = soft-delete (re-selecting falls back to the
+    schema defaults). The universal appearance (banner/headline/colors) stays in
+    :class:`ContentStoreThemeSettings`; this covers each template's own chrome.
+    """
+
+    __tablename__ = "content_store_template_settings"
+    __table_args__ = (
+        Index(
+            "ix_content_store_template_settings_store_template_active",
+            "store_id",
+            "template_id",
+            unique=True,
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
+    template_id: str = Field(foreign_key="content_theme_templates.id", index=True)
+    settings: dict[str, object] = Field(default_factory=dict, sa_column=Column(JSON))
+
+
 class ContentPageBase(SQLModel):
     """Shared editorial page fields (doc 10)."""
 

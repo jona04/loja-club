@@ -17,7 +17,7 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 
 ## Docs de referência
 - [Guia dos templates](../../design/templates/README.md) (contrato/regras/blocos) + designs em `docs/design/templates/aurora/`
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md) (§"Sistema de templates")
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md) (§"Sistema de templates")
 - [`P3-SF-01`](./P3-SF-01-storefront-public-api.md) / [`P3-SF-02`](./P3-SF-02-storefront-rendering.md) (API pública + render base)
 
 ## Escopo (o que ENTRA)
@@ -40,7 +40,7 @@ O spec dos templates fechou: o **contrato e as regras** vivem no guia [`docs/des
 - `frontend-storefront/components/{CartDrawer,Carousel,ProductCard}.tsx` (criar/alterar) — blocos compartilhados.
 - `frontend-storefront/app/**` (alterar) — páginas renderizam a árvore do template ativo via resolver.
 - `backend/app/modules/content/{models,services}.py` + seed (alterar) — `content_theme_templates` (3 + `preview_image_url`); garantir `active_template_id` na loja (+ **migration** se faltar campo).
-- `docs/10_storefront_and_layouts.md` (alterar) — reconciliar o sistema implementado.
+- `docs/concepts/10_storefront_and_layouts.md` (alterar) — reconciliar o sistema implementado.
 
 ## Passos
 1. Resolver/registry + seed dos 3 templates (`preview_image_url`).

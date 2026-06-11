@@ -16,10 +16,10 @@ tests: [integration]
 Endpoints **públicos, sem login**, com a loja resolvida pelo `Host` — leitura otimizada e cacheada para a vitrine. Só serve loja **publicada/`active`**.
 
 ## Docs de referência
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
-- [13 — Performance, Cache & CDN](../../13_performance_cache_and_cdn.md)
-- [06 — Multitenancy & Domains](../../06_multitenancy_and_domains.md)
-- [20 — API Contracts](../../20_api_contracts_todo.md)
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md)
+- [13 — Performance, Cache & CDN](../../concepts/13_performance_cache_and_cdn.md)
+- [06 — Multitenancy & Domains](../../concepts/06_multitenancy_and_domains.md)
+- [20 — API Contracts](../../concepts/20_api_contracts_todo.md)
 
 ## Escopo (o que ENTRA)
 - **Resolução + publicação:** reusar `resolve_store_by_host` (`P1-TEN-01`); servir **apenas loja com `status == active`** (qualquer outro status → "loja não encontrada", sem vazar).

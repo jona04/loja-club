@@ -8,7 +8,7 @@ A proposta é entregar uma solução com a base operacional de uma plataforma co
 
 O lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Loja Club, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
 
-Além do ecommerce comum, a Loja Club permitirá produtos personalizáveis em 3D **(Fase 7 — ver [Produtos 3D](./backlog/phase-7-3d-products.md); a Fase 2 de catálogo entrega só imagem)**. O cliente escolhe um produto, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho. **Os modelos 3D são gerados pelo lojista via API de terceiros** — não há biblioteca da plataforma.
+Além do ecommerce comum, a Loja Club permitirá produtos personalizáveis em 3D **(Fase 7 — ver [Produtos 3D](../backlog/phase-7-3d-products.md); a Fase 2 de catálogo entrega só imagem)**. O cliente escolhe um produto, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho. **Os modelos 3D são gerados pelo lojista via API de terceiros** — não há biblioteca da plataforma.
 
 ## Posicionamento
 

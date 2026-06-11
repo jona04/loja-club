@@ -4,7 +4,7 @@
 
 > Objetivo: o lojista cadastra **produtos com imagem** (S3/CloudFront), com categorias, variações e estoque, isolado por loja.
 
-Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [07](../../07_database_strategy.md), [09](../../09_merchant_dashboard.md), [12](../../12_aws_infrastructure_and_deployment.md), [13](../../13_performance_cache_and_cdn.md), [14](../../14_security_strategy.md), [16](../../16_testing_strategy.md), [20](../../20_api_contracts_todo.md).
+Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [07](../../concepts/07_database_strategy.md), [09](../../concepts/09_merchant_dashboard.md), [12](../../concepts/12_aws_infrastructure_and_deployment.md), [13](../../concepts/13_performance_cache_and_cdn.md), [14](../../concepts/14_security_strategy.md), [16](../../concepts/16_testing_strategy.md), [20](../../concepts/20_api_contracts_todo.md).
 
 > Visão geral / trilha de alto nível: [`../phase-2-catalog-and-media.md`](../phase-2-catalog-and-media.md). Este README é o **índice detalhado** das tasks.
 

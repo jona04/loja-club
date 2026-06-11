@@ -21,7 +21,7 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
 - **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 8–9.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
-- **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](./backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
+- **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](../backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
 
 ---
 
@@ -191,7 +191,7 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ## Fase 4 — Admin do SaaS (dev local)
 
-> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
+> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](../backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
 
 Entregas:
 
@@ -209,7 +209,7 @@ Equipe opera a plataforma e registra templates (thumbnail + schema); a vitrine s
 
 ## Fase 5 — Configuração da loja pelo lojista (dev local)
 
-> Objetivo: com os templates **registrados** (Fase 4), esta fase entrega a **loja-demo** por template (import das imagens pro CDN) + o lojista **personaliza** o template — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](./backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md) e o passo-a-passo em [27](./27_template_authoring_guide.md).
+> Objetivo: com os templates **registrados** (Fase 4), esta fase entrega a **loja-demo** por template (import das imagens pro CDN) + o lojista **personaliza** o template — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](../backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md) e o passo-a-passo em [27](./27_template_authoring_guide.md).
 
 Entregas:
 
@@ -390,7 +390,7 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 ## Fase 7 — Produtos 3D (dev local)
 
-> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](./backlog/phase-7-3d-products.md).
+> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](../backlog/phase-7-3d-products.md).
 
 ### Etapa 1 — Produtos 3D e personalização
 
@@ -507,7 +507,7 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ## Fase 9 — Operação da plataforma, CI/CD e beta
 
-> O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
+> O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](../backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
 
 ### Etapa 1 — Segurança e observabilidade
 

@@ -13,12 +13,12 @@ tests: [integration]
 # P2-MEDIA-02 — `media_files` + pipeline de upload
 
 ## Contexto
-Pipeline de imagem do doc [13](../../13_performance_cache_and_cdn.md): valida → S3 (original) → worker gera versões → S3 → CloudFront. **Nunca** servir imagem pelo backend nem salvar binário no banco.
+Pipeline de imagem do doc [13](../../concepts/13_performance_cache_and_cdn.md): valida → S3 (original) → worker gera versões → S3 → CloudFront. **Nunca** servir imagem pelo backend nem salvar binário no banco.
 
 ## Docs de referência
-- [13 — Performance/Cache/CDN](../../13_performance_cache_and_cdn.md) (fluxo + versões)
-- [14 — Security](../../14_security_strategy.md) (validar tipo/MIME/tamanho)
-- [07 — Database Strategy](../../07_database_strategy.md) (`media_files` + índices)
+- [13 — Performance/Cache/CDN](../../concepts/13_performance_cache_and_cdn.md) (fluxo + versões)
+- [14 — Security](../../concepts/14_security_strategy.md) (validar tipo/MIME/tamanho)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md) (`media_files` + índices)
 
 ## Escopo (o que ENTRA)
 - Modelo `media_files`: `store_id`, `owner_type`, `owner_id`, `key` (S3), `url`, `variants` (json: `thumbnail/card/product/zoom`), `content_type`, `size`, `status` (`processing|ready|failed`), timestamps. Índices `store_id+id`, `store_id+owner_type+owner_id`.

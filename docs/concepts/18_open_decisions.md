@@ -20,7 +20,7 @@ Candidatos a avaliar:
 - [Tripo3D](https://www.tripo3d.ai/api)
 - [Hyper3D](https://hyper3d.ai/api-dashboard)
 
-Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 7. Ver [Fase 7](backlog/phase-7-3d-products.md).
+Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 7. Ver [Fase 7](../backlog/phase-7-3d-products.md).
 
 ## Gateway principal
 

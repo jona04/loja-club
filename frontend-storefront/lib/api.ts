@@ -7,6 +7,7 @@
  */
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
+import { cache } from "react"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8800"
 
@@ -29,6 +30,7 @@ export interface StorefrontTheme {
   primary_color: string | null
   background_color: string | null
   font_family: string | null
+  settings: Record<string, unknown>
 }
 
 export interface ProductImage {
@@ -65,6 +67,14 @@ export interface Category {
   description: string | null
 }
 
+export interface ContentPage {
+  id: string
+  slug: string
+  title: string
+  body: string | null
+  is_published: boolean
+}
+
 export interface Paginated<T> {
   data: T[]
   count: number
@@ -88,9 +98,15 @@ async function apiGet<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
-/** Fetch the host's storefront home (store identity, theme and highlights). */
-export const getHome = (): Promise<StorefrontHome> =>
-  apiGet<StorefrontHome>("/home")
+/**
+ * Fetch the host's storefront home (store identity, theme and highlights).
+ *
+ * Memoized per request (React `cache`) so the page and the template chrome
+ * (which reads `theme.settings`) share a single backend call.
+ */
+export const getHome = cache(
+  (): Promise<StorefrontHome> => apiGet<StorefrontHome>("/home"),
+)
 
 /** Fetch the host store's categories. */
 export const getCategories = (): Promise<Category[]> =>
@@ -99,6 +115,29 @@ export const getCategories = (): Promise<Category[]> =>
 /** Fetch a published product by slug. */
 export const getProduct = (slug: string): Promise<StorefrontProduct> =>
   apiGet<StorefrontProduct>(`/products/${encodeURIComponent(slug)}`)
+
+/**
+ * Fetch a published editorial page by slug, or `null` when the store has none.
+ *
+ * Unlike the other reads, a 404 here is expected (the merchant may not have
+ * written this page), so it returns `null` to let the caller fall back to the
+ * default copy instead of triggering `notFound()`.
+ */
+export const getPage = async (slug: string): Promise<ContentPage | null> => {
+  const incoming = await headers()
+  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? ""
+  const res = await fetch(
+    `${API_URL}/api/v1/storefront/pages/${encodeURIComponent(slug)}`,
+    { headers: { "x-forwarded-host": host }, cache: "no-store" },
+  )
+  if (res.status === 404) {
+    return null
+  }
+  if (!res.ok) {
+    throw new Error(`Storefront API ${res.status} for /pages/${slug}`)
+  }
+  return (await res.json()) as ContentPage
+}
 
 /** List published products, optionally filtered by a category slug. */
 export const listProducts = (

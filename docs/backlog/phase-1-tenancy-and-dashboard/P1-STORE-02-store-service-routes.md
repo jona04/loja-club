@@ -13,13 +13,13 @@ tests: [integration]
 # P1-STORE-02 — `stores`: serviço e rotas (criar loja, settings, publish) + equipe
 
 ## Contexto
-Com modelos, membership, domínios, tenancy e autorização prontos, esta task entrega os **endpoints do painel** para o ciclo de vida da loja e da equipe (doc [09](../../09_merchant_dashboard.md)/[20](../../20_api_contracts_todo.md)), seguindo o padrão de API (`P1-API-01`). O fluxo central é **criar loja → membership owner + subdomínio automático**, de forma atômica.
+Com modelos, membership, domínios, tenancy e autorização prontos, esta task entrega os **endpoints do painel** para o ciclo de vida da loja e da equipe (doc [09](../../concepts/09_merchant_dashboard.md)/[20](../../concepts/20_api_contracts_todo.md)), seguindo o padrão de API (`P1-API-01`). O fluxo central é **criar loja → membership owner + subdomínio automático**, de forma atômica.
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md)
-- [20 — API Contracts TODO](../../20_api_contracts_todo.md) (grupos Stores e Store Members)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md) (criação de subdomínio)
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md) (gating por permissão)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md)
+- [20 — API Contracts TODO](../../concepts/20_api_contracts_todo.md) (grupos Stores e Store Members)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md) (criação de subdomínio)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md) (gating por permissão)
 
 ## Escopo (o que ENTRA)
 - **Stores** (`/api/v1/stores`): `POST /` criar loja; `GET /` minhas lojas (do usuário logado); `GET /{store_id}` obter; `PATCH /{store_id}/settings`; `POST /{store_id}/publish`; `POST /{store_id}/pause`.

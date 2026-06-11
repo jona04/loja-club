@@ -13,11 +13,11 @@ tests: [integration]
 # P1-ACCT-01 — Retrofit `account_users`: soft delete + `updated_at` (mixins)
 
 ## Contexto
-O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os mixins**: define `id`/`created_at` na mão, **sem `updated_at` e sem soft delete**, e a rota de remoção faz **hard delete** (`session.delete`). Isso contraria **INV-D2** e o doc [07](../../07_database_strategy.md) ("não deve existir hard delete em registros de negócio"). Como `store_members` vai referenciar `account_users`, este é o momento de alinhar antes que mais modelos dependam disso.
+O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os mixins**: define `id`/`created_at` na mão, **sem `updated_at` e sem soft delete**, e a rota de remoção faz **hard delete** (`session.delete`). Isso contraria **INV-D2** e o doc [07](../../concepts/07_database_strategy.md) ("não deve existir hard delete em registros de negócio"). Como `store_members` vai referenciar `account_users`, este é o momento de alinhar antes que mais modelos dependam disso.
 
 ## Docs de referência
-- [07 — Database Strategy](../../07_database_strategy.md) (soft delete; sem hard delete)
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md) (soft delete; sem hard delete)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 - [Fundações INV-D2](../_foundations-and-bottlenecks.md)
 
 ## Escopo (o que ENTRA)

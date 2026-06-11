@@ -16,7 +16,7 @@ presentescriativos.loja.club
 www.minhaloja.com.br
 ```
 
-> **Estado da Fase 3 (V1) — o que o código entrega vs. esta visão.** A Fase 3 entrega o **storefront base (imagem)**: resolução por `Host`, templates `classic`/`modern` (realizados por **renderização condicional** nas páginas do App Router — a home difere por template; produto/categoria compartilham com o estilo do tema —, sem árvores `classic/`+`modern/` separadas), **home** (logo, banner, headline, destaques por `is_featured`, categorias, rodapé e **botão flutuante de WhatsApp** de contato), **produto** (imagem/nome/preço/descrição, **sem CTA de compra**) e **categoria** (nome + produtos), com cache por-loja no backend. **Deferido** (follow-ups no [README da Fase 3](backlog/phase-3-storefront-and-layouts/README.md)): carrinho/checkout/entrega → **Fase 6**; editor 3D/`Personalizar` → **Fase 7**; e, como follow-up dentro da Fase 3: variações/disponibilidade/relacionados (produto), paginação-UI/filtros/ordenação (categoria), menu configurável + links sociais (home), destaque por **coleção** (hoje `is_featured`) e **i18n-readiness** (o V1 sai em pt-BR; ver `INV-G7`).
+> **Estado da Fase 3 (V1) — o que o código entrega vs. esta visão.** A Fase 3 entrega o **storefront base (imagem)**: resolução por `Host`, templates `classic`/`modern` (realizados por **renderização condicional** nas páginas do App Router — a home difere por template; produto/categoria compartilham com o estilo do tema —, sem árvores `classic/`+`modern/` separadas), **home** (logo, banner, headline, destaques por `is_featured`, categorias, rodapé e **botão flutuante de WhatsApp** de contato), **produto** (imagem/nome/preço/descrição, **sem CTA de compra**) e **categoria** (nome + produtos), com cache por-loja no backend. **Deferido** (follow-ups no [README da Fase 3](../backlog/phase-3-storefront-and-layouts/README.md)): carrinho/checkout/entrega → **Fase 6**; editor 3D/`Personalizar` → **Fase 7**; e, como follow-up dentro da Fase 3: variações/disponibilidade/relacionados (produto), paginação-UI/filtros/ordenação (categoria), menu configurável + links sociais (home), destaque por **coleção** (hoje `is_featured`) e **i18n-readiness** (o V1 sai em pt-BR; ver `INV-G7`).
 
 ## Tecnologia recomendada
 
@@ -96,7 +96,7 @@ frontend-storefront/
 
 ## Sistema de templates (evolução — `P3-TPL-01`)
 
-> O V1 entrega **2 templates simples** (`classic`/`modern`) por renderização condicional. A [`P3-TPL-01`](backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md) eleva isso a um **sistema de templates profissionais** (spec em definição). Direção:
+> O V1 entrega **2 templates simples** (`classic`/`modern`) por renderização condicional. A [`P3-TPL-01`](../backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md) eleva isso a um **sistema de templates profissionais** (spec em definição). Direção:
 
 - **Cada template = uma árvore de componentes própria** no `frontend-storefront` (`templates/<nome>/{Home,Category,Product,blocos}`), não só estilo condicional; um **resolver** mapeia `active_template_id` → a árvore.
 - **2–3 templates** bem distintos (carrossel no topo, hero, seções ricas), adaptados de **referências de design** fornecidas.
@@ -113,6 +113,7 @@ Tabelas:
 ```text
 content_theme_templates
 content_store_theme_settings
+content_store_template_settings
 ```
 
 ### content_theme_templates
@@ -123,11 +124,12 @@ Campos sugeridos:
 
 | Campo | Descrição |
 |---|---|
-| `id` | `classic`, `modern` |
+| `id` | `aurora`, `bazar`, `studio` |
 | `name` | Nome exibido |
 | `description` | Descrição |
 | `is_active` | Se está disponível |
 | `preview_image_url` | Imagem de preview |
+| `settings_schema` | Manifesto dos campos editáveis do chrome (vem do código; seedado no deploy) |
 
 ### content_store_theme_settings
 
@@ -145,6 +147,18 @@ Campos sugeridos:
 | `primary_color` | Preparado para futuro |
 | `background_color` | Preparado para futuro |
 | `font_family` | Preparado para futuro |
+
+### content_store_template_settings
+
+Overrides do chrome **específico de cada template**, por **loja × template** (os defaults vêm do `settings_schema` do template).
+
+| Campo | Descrição |
+|---|---|
+| `store_id` | Loja |
+| `template_id` | Template a que os valores pertencem |
+| `settings` | Objeto JSON `{chave: valor}` (chaves do `settings_schema`) |
+
+`store_id + template_id` é único entre linhas ativas (soft delete); **resetar = excluir** (re-selecionar volta aos defaults). A vitrine expõe `theme.settings` = defaults do schema **⊕** overrides do template ativo.
 
 > **`logo_url` e a descrição da loja vêm de `store_settings` (Fase 1)** — o theme cuida só de aparência/layout, sem duplicar contato/negócio.
 

@@ -40,6 +40,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --package app
 
+# Storefront template manifests (settings-schema.json/demo.json). The backend
+# seeds content_theme_templates.settings_schema from these at prestart (doc 27);
+# their single source is frontend-storefront/templates/, copied in so the
+# deployed backend image can read them.
+COPY ./frontend-storefront/templates /app/frontend-storefront/templates
+
 WORKDIR /app/backend/
 
 CMD ["fastapi", "run", "--workers", "4", "app/main.py"]

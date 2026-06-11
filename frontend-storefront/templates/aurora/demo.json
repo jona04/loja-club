@@ -1,0 +1,75 @@
+{
+  "banner": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_efe8d04031_b53815b242de198c.png",
+  "categories": [
+    {
+      "name": "Vasos & Cerâmica",
+      "slug": "vasos"
+    },
+    {
+      "name": "Decoração",
+      "slug": "decoracao"
+    },
+    {
+      "name": "Têxteis & Arte",
+      "slug": "texteis"
+    }
+  ],
+  "products": [
+    {
+      "name": "Vaso de Cerâmica Minimalista",
+      "slug": "vaso-ceramica-minimalista",
+      "price": 24900,
+      "category": "vasos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_289e817856_90ee14502f72b987.png"
+    },
+    {
+      "name": "Vaso Orgânico Duna",
+      "slug": "vaso-organico-duna",
+      "price": 28900,
+      "category": "vasos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_fba0152989_676e0ef2f23036e4.png"
+    },
+    {
+      "name": "Vaso de Vidro com Galho",
+      "slug": "vaso-vidro-galho",
+      "price": 21000,
+      "category": "vasos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_ac190b4b0d_a40236d049e903ce.png"
+    },
+    {
+      "name": "Aparador de Livros em Mármore",
+      "slug": "aparador-livros-marmore",
+      "price": 45000,
+      "category": "decoracao",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_bfbf070fea_1f15e1417ab87699.png"
+    },
+    {
+      "name": "Espelho Oval Minimalista",
+      "slug": "espelho-oval-minimalista",
+      "price": 89000,
+      "category": "decoracao",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_61a28e1508_f6694476160269ab.png"
+    },
+    {
+      "name": "Castiçais de Latão",
+      "slug": "casticais-latao",
+      "price": 18000,
+      "category": "decoracao",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_bd6a432955_d42680574d5a071e.png"
+    },
+    {
+      "name": "Capa de Almofada de Linho",
+      "slug": "capa-almofada-linho",
+      "price": 12900,
+      "category": "texteis",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_e64193baea_757c0e0e93424ad3.png"
+    },
+    {
+      "name": "Arte em Tela Abstrata",
+      "slug": "arte-tela-abstrata",
+      "price": 120000,
+      "category": "texteis",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/aurora/gen_b5b34fa059_85938b6c13e15b47.png"
+    }
+  ]
+}

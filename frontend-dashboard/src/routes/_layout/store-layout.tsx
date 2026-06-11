@@ -4,15 +4,15 @@ import { type ChangeEvent, useEffect, useRef, useState } from "react"
 
 import { ContentService, MediaService } from "@/client"
 import { StoreGate } from "@/components/Store/StoreGate"
+import { TemplateSettingsForm } from "@/components/Store/TemplateSettingsForm"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useActiveStore } from "@/hooks/useActiveStore"
@@ -48,12 +48,26 @@ const EMPTY_FORM: FormState = {
   featured_collection_id: "",
 }
 
+const STOREFRONT_URL =
+  import.meta.env.VITE_STOREFRONT_URL ?? "http://localhost:3000"
+
+/**
+ * Build the navigable-preview URL: the template's demo store on the storefront.
+ *
+ * @param templateId - The template whose demo store (`<id>-demo`) to open.
+ * @returns The storefront URL for the template's demo store.
+ */
+function demoStoreUrl(templateId: string): string {
+  const url = new URL(STOREFRONT_URL)
+  url.hostname = `${templateId}-demo.${url.hostname}`
+  return url.toString()
+}
+
 export function StoreLayoutScreen() {
   const { activeStore, permissions } = useActiveStore()
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
-  const [previewId, setPreviewId] = useState<string | null>(null)
   const bannerRef = useRef<HTMLInputElement>(null)
 
   const canEdit = permissions.includes("layout.update")
@@ -68,6 +82,12 @@ export function StoreLayoutScreen() {
   const layoutQuery = useQuery({
     queryKey: ["layout", storeId],
     queryFn: () => ContentService.getLayout({ storeId }),
+    enabled: storeId !== "",
+  })
+
+  const myTemplatesQuery = useQuery({
+    queryKey: ["layout-my-templates", storeId],
+    queryFn: () => ContentService.listMyTemplates({ storeId }),
     enabled: storeId !== "",
   })
 
@@ -98,6 +118,12 @@ export function StoreLayoutScreen() {
     onSuccess: () => {
       showSuccessToast("Layout salvo")
       queryClient.invalidateQueries({ queryKey: ["layout", storeId] })
+      // The active template may have changed → refresh the personalization
+      // form (its schema) and the "Personalizado" badges below.
+      queryClient.invalidateQueries({ queryKey: ["layout-settings", storeId] })
+      queryClient.invalidateQueries({
+        queryKey: ["layout-my-templates", storeId],
+      })
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -120,7 +146,7 @@ export function StoreLayoutScreen() {
   }
 
   const templates = templatesQuery.data ?? []
-  const previewTemplate = templates.find((t) => t.id === previewId) ?? null
+  const customized = myTemplatesQuery.data ?? []
 
   const onPickBanner = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -141,7 +167,11 @@ export function StoreLayoutScreen() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Template</CardTitle>
+          <CardTitle>Template e aparência</CardTitle>
+          <CardDescription>
+            Escolha o template e ajuste a aparência; tudo é aplicado ao clicar
+            em <strong>Salvar template e aparência</strong>.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -152,11 +182,12 @@ export function StoreLayoutScreen() {
                   key={template.id}
                   className={`overflow-hidden rounded-lg border ${selected ? "border-primary ring-2 ring-primary" : "border-border"}`}
                 >
-                  <button
-                    type="button"
+                  <a
+                    href={demoStoreUrl(template.id)}
+                    target="_blank"
+                    rel="noreferrer"
                     className="block aspect-[4/3] w-full bg-muted"
-                    onClick={() => setPreviewId(template.id)}
-                    title="Pré-visualizar"
+                    title="Abrir preview navegável"
                   >
                     {template.preview_image_url ? (
                       <img
@@ -165,15 +196,22 @@ export function StoreLayoutScreen() {
                         className="h-full w-full object-cover object-top"
                       />
                     ) : null}
-                  </button>
+                  </a>
                   <div className="p-3">
                     <div className="flex items-center justify-between gap-2">
                       <h3 className="font-medium">{template.name}</h3>
-                      {selected ? (
-                        <span className="text-xs font-medium text-primary">
-                          Ativo
-                        </span>
-                      ) : null}
+                      <div className="flex items-center gap-1.5">
+                        {customized.includes(template.id) ? (
+                          <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                            Personalizado
+                          </span>
+                        ) : null}
+                        {selected ? (
+                          <span className="text-xs font-medium text-primary">
+                            Ativo
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                     {template.description ? (
                       <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
@@ -194,12 +232,14 @@ export function StoreLayoutScreen() {
                       >
                         {selected ? "Selecionado" : "Selecionar"}
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setPreviewId(template.id)}
-                      >
-                        Pré-visualizar
+                      <Button asChild size="sm" variant="ghost">
+                        <a
+                          href={demoStoreUrl(template.id)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Ver preview
+                        </a>
                       </Button>
                     </div>
                   </div>
@@ -207,18 +247,9 @@ export function StoreLayoutScreen() {
               )
             })}
           </div>
-          <p className="text-sm text-muted-foreground">
-            Selecione um template e clique em <strong>Salvar</strong> para
-            aplicar na vitrine.
-          </p>
         </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Aparência</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 border-t pt-6">
+          <h3 className="text-base font-semibold">Aparência</h3>
           <div className="space-y-1.5">
             <Label>Banner / imagem de destaque</Label>
             <div className="flex items-start gap-4">
@@ -308,7 +339,7 @@ export function StoreLayoutScreen() {
               onClick={() => saveMutation.mutate()}
               disabled={!canEdit || saveMutation.isPending}
             >
-              Salvar
+              Salvar template e aparência
             </Button>
           </div>
 
@@ -320,37 +351,11 @@ export function StoreLayoutScreen() {
         </CardContent>
       </Card>
 
-      <Dialog
-        open={previewId !== null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setPreviewId(null)
-          }
-        }}
-      >
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>
-              {previewTemplate?.name ?? "Pré-visualização"}
-            </DialogTitle>
-            <DialogDescription>
-              Prévia do design do template. Selecione e salve para aplicar na
-              vitrine.
-            </DialogDescription>
-          </DialogHeader>
-          {previewTemplate?.preview_image_url ? (
-            <img
-              src={previewTemplate.preview_image_url}
-              alt={previewTemplate.name}
-              className="max-h-[70vh] w-full rounded-md border object-contain"
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Sem prévia disponível.
-            </p>
-          )}
-        </DialogContent>
-      </Dialog>
+      <TemplateSettingsForm
+        storeId={storeId}
+        templates={templates}
+        canEdit={canEdit}
+      />
     </div>
   )
 }
