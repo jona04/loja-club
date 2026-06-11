@@ -4,7 +4,7 @@ title: Telas de templates no admin — CRUD + thumbnail + schema
 phase: 4
 etapa: "Etapa 3 — Cadastro/gestão de templates"
 area: ADMIN
-status: todo
+status: done
 depends_on: [P4-ADMIN-01, P4-TPL-01, P4-TPL-02]
 tests: [e2e]
 ---
@@ -46,14 +46,17 @@ As telas do `frontend-admin` que consomem o registro de templates: a equipe cria
 - **Cobrir:** criar/ativar template; upload de thumbnail reflete a URL de CDN; schema só leitura.
 
 ## Definition of Done
-- [ ] Telas de CRUD de template + upload de thumbnail (CDN) + schema read-only.
-- [ ] Gates (`tsc`/`biome`) + smoke.
-- [ ] **Modos de falha / edge cases mapeados** → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Telas de **CRUD de template** (lista + criar/editar + ativar/desativar) + **upload de thumbnail** (→ CDN) + **`settings_schema` read-only**.
+- [x] Gates: `tsc`/`biome` + **e2e Playwright 8/8** (lista os templates seedados; detalhe abre o schema read-only; dialog de criar).
+- [x] **Modos de falha mapeados** (403→login; lista vazia; thumb relativo seedado não resolve no admin) → tratados ou Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `frontend-admin/src/routes/_layout/templates.tsx` (lista + `TemplateFormDialog` + `TemplateDetailDialog` com upload + schema read-only) + nav. Specs `templates.spec.ts` (2) → gate **8/8**.
 
 ## Notas / Reconciliações
 - Fecha o follow-up `P3-TPL-03` ("Admin pra cadastrar templates") — marcar `[x]` na origem (README da Fase 3) ao concluir.
 - **Preview navegável** saiu pra **Fase 5** (depende da loja-demo por template + import de imagens + a vitrine lendo `theme.settings`) — aqui o admin só **registra + thumbnail + schema**.
 
 ## Follow-ups
-- [ ] — (preencher ao implementar) → README da fase.
+- [ ] **Thumb seedado é caminho relativo** (`/templates/<id>_preview.png`, servido só pelo dashboard) → quebra na lista do admin até subir um thumbnail (URL de CDN absoluta). Resolve junto do `import_assets` (Fase 5) ou ao subir thumbnails. → README da fase.
+- [ ] **Botão "abrir preview navegável"** entra quando a **Fase 5** entregar o preview (loja-demo por template). → README da fase.

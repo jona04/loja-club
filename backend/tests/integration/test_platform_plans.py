@@ -26,12 +26,15 @@ def _create(db: Session, **kwargs: object) -> BillingPlan:
 
 def test_seed_creates_free_and_pro(db: Session) -> None:
     plans = {p.key: p for p in db.exec(select(BillingPlan)).all()}
-    assert "free" in plans
-    assert "pro" in plans
+    assert {"free", "starter", "pro", "business"} <= set(plans)
     assert plans["free"].monthly_price_amount_minor == 0
     assert plans["free"].commission_bps == 500
+    assert plans["starter"].monthly_price_amount_minor == 4990
+    assert plans["starter"].commission_bps == 300
     assert plans["pro"].monthly_price_amount_minor == 9990
     assert plans["pro"].commission_bps == 150
+    assert plans["business"].monthly_price_amount_minor == 19990
+    assert plans["business"].commission_bps == 50
 
 
 def test_list_plans_excludes_soft_deleted(db: Session) -> None:

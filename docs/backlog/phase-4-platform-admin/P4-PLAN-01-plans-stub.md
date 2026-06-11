@@ -22,7 +22,7 @@ O admin gerencia as **definições** de planos — a tabela **`billing_plans`** 
 - [25 — Platform Admin](../../25_platform_admin.md)
 
 ## Escopo (o que ENTRA)
-- **`billing_plans`** (definições: nome, mensalidade, comissão %, observação) — **seed** dos planos do doc [02](../../02_business_model_and_rules.md) (**Free** R$0/5%, **Pro** R$99,90/1,5%).
+- **`billing_plans`** (definições: nome, mensalidade, comissão %, observação) — **seed** dos **4 planos** do doc [02](../../02_business_model_and_rules.md): Free R$0/5% · Starter R$49,90/3% · Pro R$99,90/1,5% · Business R$199,90/0,5%.
 - Rotas `platform_admin` (gated `platform.plans.view|update`): **CRUD das definições** de plano.
 
 ## Fora de escopo (o que NÃO entra)
@@ -36,17 +36,17 @@ O admin gerencia as **definições** de planos — a tabela **`billing_plans`** 
 - `app/alembic/versions/*` (criar) — `billing_plans` + seed Free/Pro.
 
 ## Passos
-1. `billing_plans` (definições) + seed Free/Pro (doc 02), idempotente.
+1. `billing_plans` (definições) + seed dos 4 planos do doc 02, idempotente.
 2. CRUD das definições, gated `platform.plans.view|update` (doc 08).
 3. Migration → `alembic check` vazio.
 
 ## Testes
 > Regra em [`_foundations-and-bottlenecks.md`](../_foundations-and-bottlenecks.md) §10.
 - **Níveis:** integração.
-- **Cobrir:** seed cria Free/Pro; CRUD gated `platform.plans.*`; **nenhuma loja assina / nada é cobrado** (subscription/cobrança são Fase 8).
+- **Cobrir:** seed cria os 4 planos (doc 02); CRUD gated `platform.plans.*`; **nenhuma loja assina / nada é cobrado** (subscription/cobrança são Fase 8).
 
 ## Definition of Done
-- [x] `billing_plans` seedado (Free R$0/5% · Pro R$99,90/1,5%) + CRUD admin (`/platform/plans`) gated `platform.plans.view`/`update`; `alembic check` vazio. Sem assinatura/cobrança (stub).
+- [x] `billing_plans` seedado (**os 4 do doc 02**: Free/Starter/Pro/Business) + CRUD admin (`/platform/plans`) gated `platform.plans.view`/`update`; `alembic check` vazio. Sem assinatura/cobrança (stub).
 - [x] **Modos de falha mapeados** → tratados (chave duplicada → 409, não-encontrado → 404, soft-delete) ou Follow-ups.
 - [x] **Itens adiados varridos** → Follow-ups + README.
 

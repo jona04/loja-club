@@ -33,7 +33,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) — e2e 6/6 | ✅ done | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
 | 7 | [P4-TPL-01](./P4-TPL-01-template-registry.md) | Registro de templates (CRUD + `settings_schema` do código) | ✅ done | P4-PLAT-01 |
 | 8 | [P4-TPL-02](./P4-TPL-02-template-cdn-assets.md) | Thumbnail de template no **CDN** (imagens chrome/demo = Fase 5) | ✅ done | P4-TPL-01 |
-| 9 | [P4-ADMIN-03](./P4-ADMIN-03-admin-template-screens.md) | Telas de templates (CRUD + thumbnail + schema read-only) | todo | P4-ADMIN-01, P4-TPL-01, P4-TPL-02 |
+| 9 | [P4-ADMIN-03](./P4-ADMIN-03-admin-template-screens.md) | Telas de templates (CRUD + thumbnail + schema read-only) — e2e 8/8 | ✅ done | P4-ADMIN-01, P4-TPL-01, P4-TPL-02 |
 
 ## Ordem sugerida de execução
 
@@ -51,7 +51,7 @@ P4-PLAT-01 → P4-ADMIN-01
 
 **Esta fase fecha follow-ups de fases anteriores** (marcar `[x]` na **origem** ao concluir a task):
 - [x] **Guard de soft-delete em leitura por id** (Fase 1, `P1-ACCT-01`) → `P4-USER-01` ✅.
-- [ ] **Admin pra cadastrar templates** (Fase 3, `P3-TPL-03`) → `P4-ADMIN-03`/`P4-TPL-01`.
+- [x] **Admin pra cadastrar templates** (Fase 3, `P3-TPL-03`) → `P4-ADMIN-03`/`P4-TPL-01` ✅.
 - [x] **Previews no CloudFront** (Fase 3, `P3-TPL-03`) → `P4-TPL-02` ✅ (thumbnail no CDN).
 - [ ] **Preview ao vivo / preview visual** (Fase 3, `P3-TPL-03`/`P3-FE-02`) → **Fase 5** (preview navegável = loja-demo por template).
 
@@ -66,3 +66,4 @@ P4-PLAT-01 → P4-ADMIN-01
 - [ ] **Imagens-default no CDN** (Fase 5, quando houver campos `image`; guardar **separado** do `settings_schema` p/ o seed não sobrescrever), **limpeza de asset antigo** no re-upload, e **remover os PNGs de `public/`** após uploads. Origem: `P4-TPL-02`.
 - [x] **`frontend-admin`: smoke (docker) + `bun.lock` + e2e Playwright 3/3** — validado. Resta o **gate de CI** (e2e de **todos** os frontends → deploy) na **Fase 9** (regra em `P3-SF-03`). Origem: `P4-ADMIN-01`.
 - [ ] **Telas admin (ADMIN-02):** atribuir plano à loja (Fase 8); detalhe da loja com pedidos/volume (Fase 6) + webhooks/comissões (Fase 8); **handoff da impersonation** (abrir o painel como o usuário) → Fase 9. Origem: `P4-ADMIN-02`.
+- [ ] **Telas de templates (ADMIN-03):** thumb seedado é caminho relativo (quebra na lista até subir um thumbnail/CDN — resolve com o `import_assets` da Fase 5); botão "abrir preview" entra na Fase 5. Origem: `P4-ADMIN-03`.

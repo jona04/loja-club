@@ -43,11 +43,15 @@ Docs de referência: [26](../26_template_system.md) (sistema de templates), [27]
 
 ### Manifesto + import (doc [26](../26_template_system.md)/[13](../13_performance_cache_and_cdn.md))
 - [ ] **`demo.json` por template** (`frontend-storefront/templates/<id>/`): categorias, produtos (nome/preço/categoria) e **URLs de imagem** (uxpilot). Para Aurora/Bazar/Studio, **transcrito** do `docs/design/`.
-- [ ] **`import_assets`** (backend): pra cada URL (uxpilot), **baixa → S3/CloudFront → reescreve** a referência pra URL do CDN (defaults `image` do schema **e** catálogo do demo). Acaba a dependência do uxpilot + de `public/`. *(funde follow-up "imagens-default no CDN" da Fase 4)*
+- [ ] **`import_assets`** (backend): pra cada URL (uxpilot), **baixa → S3/CloudFront → reescreve** a referência pra URL do CDN (defaults `image` do schema, catálogo do demo **e o thumbnail do template**). Acaba a dependência do uxpilot + de `public/` — **hoje o thumb seedado é caminho relativo** (`/templates/<id>_preview.png`, só o dashboard serve) → vira URL absoluta de CDN. *(funde follow-up "imagens-default no CDN" da Fase 4)*
 
 ### Loja-demo por template (doc [26](../26_template_system.md))
 - [ ] **Monta a loja-demo** de cada template (`<id>-demo`): um `store` real com `active_template_id = <id>` + catálogo do `demo.json` (imagens já no CDN). **Idempotente**; é o **modelo** que o lojista copia.
 - [ ] **Aurora/Bazar/Studio** ganham sua loja-demo (carga artificial do `docs/design/`, pelo **mesmo caminho** de um template futuro — doc [27](../27_template_authoring_guide.md)).
+
+### Refinos das telas de template (admin + dashboard, com o thumbnail no CDN)
+- [ ] **Admin:** com o **thumbnail no CDN** (absoluto), a **lista/detalhe** passam a **mostrar o thumb** (hoje o seedado é caminho relativo → quebra no admin); o **detalhe** mostra mais coisas (além do thumb + `settings_schema`: **descrição, ativo, conteúdo demo**, os **defaults**); o **dialog de editar** mostra o **thumb atual**.
+- [ ] **Dashboard (`P3-TPL-03`):** o **picker do lojista** também passa a usar o **thumbnail do CDN** (`preview_image_url`) em vez do PNG hardcoded de `public/templates/`.
 
 ---
 

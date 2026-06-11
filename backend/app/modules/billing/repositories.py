@@ -13,7 +13,9 @@ def seed_billing_plans(*, session: Session) -> None:
     """
     plans = [
         ("free", "Free", 0, "BRL", 500, "Bom para aquisição inicial"),
+        ("starter", "Starter", 4990, "BRL", 300, "Entrada para lojistas pequenos"),
         ("pro", "Pro", 9990, "BRL", 150, "Plano principal"),
+        ("business", "Business", 19990, "BRL", 50, "Para lojistas com maior volume"),
     ]
     for key, name, price, currency, bps, description in plans:
         existing = session.exec(
