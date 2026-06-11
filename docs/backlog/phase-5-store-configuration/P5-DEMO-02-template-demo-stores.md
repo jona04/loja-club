@@ -4,7 +4,7 @@ title: Loja-demo por template (<id>-demo do demo.json)
 phase: 5
 etapa: "Etapa 4 — Loja-demo + import de assets"
 area: DEMO
-status: todo
+status: done
 depends_on: [P5-DEMO-01]
 blocks: [P5-PREV-01]
 tests: [integration]
@@ -42,14 +42,17 @@ Cada template tem uma **loja-demo própria** (`aurora-demo`/`bazar-demo`/`studio
 - **Cobrir:** integração — monta a loja-demo (catálogo do demo, template ativo), idempotente; a vitrine serve a loja-demo como qualquer loja.
 
 ## Definition of Done
-- [ ] `<id>-demo` montada pros 3 templates (catálogo do demo, imgs no CDN, template ativo).
-- [ ] Idempotente.
-- [ ] Servida pela vitrine como loja normal (smoke).
-- [ ] **Modos de falha mapeados** (`demo.json` inválido, slug colidindo, re-seed) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `<id>-demo` montada pros 3 templates (`aurora-demo`/`bazar-demo`/`studio-demo` no db de dev): `store` ativa + `active_template_id` + catálogo do `demo.json` (categorias/produtos **publicados** + imagens no CDN via `media_files`) + host `{slug}.localhost`.
+- [x] **Idempotente** (todo registro casado por chave natural antes de inserir; re-rodar não duplica).
+- [x] **Servida pela vitrine** como loja normal (teste: `GET /storefront/home` com `host=<id>-demo.localhost` → loja + template + destaques).
+- [x] **Modos de falha mapeados** (sem `demo.json` → `None`; slug colidindo → `get_or_create`; re-seed → idempotente; **`active_template_id` é FK** → o template tem que existir).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `app/modules/content/demo_store.py` (`seed_template_demo_store` + helpers + `seed_demo_stores`); ligado no **prestart** (`initial_data.init`, **não** no `init_db` — pra o conftest não pré-seedar); 3 lojas-demo no db de dev; `tests/integration/test_demo_store.py` (5 testes, demo_store **98% cov**).
 
 ## Notas / Reconciliações
-- —
+- O seed é **prestart** (`initial_data.init`), não `init_db`: assim o conftest não pré-seeda (testes cobrem os ramos de criação).
+- Reusa **tudo** (store/catalog/media/domain/content) — zero render especial; a loja-demo é servida como qualquer vitrine.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Update do catálogo da loja-demo** — o re-seed **adiciona** itens novos do `demo.json` mas **não atualiza** os existentes (preço/nome mudados não refletem; `get_or_create` por slug reusa). Decidir se atualiza no re-seed. Origem: `P5-DEMO-02`.

@@ -29,7 +29,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 3 | [P5-CFG-01](./P5-CFG-01-template-settings-storage.md) | `content_store_template_settings` + API (storage dos settings) | ✅ done | P4-TPL-01 |
 | 4 | [P5-CFG-02](./P5-CFG-02-template-settings-form.md) | Form genérico no painel (1 componente, N schemas) | ✅ done | P5-CFG-01 |
 | 5 | [P5-DEMO-01](./P5-DEMO-01-import-assets.md) | `demo.json` + `import_assets` (uxpilot → CDN) | ✅ done | P4-TPL-01, P4-TPL-02 |
-| 6 | [P5-DEMO-02](./P5-DEMO-02-template-demo-stores.md) | Loja-demo por template (`<id>-demo`) | todo | P5-DEMO-01 |
+| 6 | [P5-DEMO-02](./P5-DEMO-02-template-demo-stores.md) | Loja-demo por template (`<id>-demo`) | ✅ done | P5-DEMO-01 |
 | 7 | [P5-TPL-01](./P5-TPL-01-template-screens-refinements.md) | Refinos das telas de template (admin + dashboard, thumb CDN) | todo | P5-DEMO-01 |
 | 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | ✅ done | P5-CFG-01 |
 | 9 | [P5-PREV-01](./P5-PREV-01-navigable-preview.md) | Preview navegável (painel abre a loja-demo) | todo | P5-DEMO-02, P5-SF-01 |
