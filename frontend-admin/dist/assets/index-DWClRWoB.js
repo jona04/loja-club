@@ -1,1 +1,0 @@
-import{j as s}from"./index-D00zEZhM.js";function a(){return s.jsxs("div",{className:"flex flex-col gap-2",children:[s.jsx("h1",{className:"text-2xl font-bold",children:"Admin da plataforma"}),s.jsx("p",{className:"text-muted-foreground",children:"Operação de lojas, usuários, planos e templates. As telas entram nas próximas tasks (P4-ADMIN-02/03)."})]})}export{a as component};

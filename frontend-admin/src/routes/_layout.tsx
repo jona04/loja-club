@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router"
 
 import { PlatformAdminService } from "@/client"
 import { Button } from "@/components/ui/button"
@@ -52,11 +52,25 @@ function Layout() {
       </div>
       <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background px-4">
         <span className="font-bold">Loja Club · Admin</span>
-        <nav className="ml-4 hidden gap-4 text-sm text-muted-foreground sm:flex">
-          <span>Lojas</span>
-          <span>Usuários</span>
-          <span>Planos</span>
-          <span>Templates</span>
+        <nav className="ml-4 hidden gap-4 text-sm sm:flex">
+          <Link
+            to="/stores"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Lojas
+          </Link>
+          <Link
+            to="/users"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Usuários
+          </Link>
+          <Link
+            to="/plans"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Planos
+          </Link>
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm">
           <span className="text-muted-foreground">{user?.email}</span>
