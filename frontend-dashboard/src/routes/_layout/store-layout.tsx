@@ -6,7 +6,13 @@ import { ContentService, MediaService } from "@/client"
 import { StoreGate } from "@/components/Store/StoreGate"
 import { TemplateSettingsForm } from "@/components/Store/TemplateSettingsForm"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useActiveStore } from "@/hooks/useActiveStore"
@@ -112,6 +118,12 @@ export function StoreLayoutScreen() {
     onSuccess: () => {
       showSuccessToast("Layout salvo")
       queryClient.invalidateQueries({ queryKey: ["layout", storeId] })
+      // The active template may have changed → refresh the personalization
+      // form (its schema) and the "Personalizado" badges below.
+      queryClient.invalidateQueries({ queryKey: ["layout-settings", storeId] })
+      queryClient.invalidateQueries({
+        queryKey: ["layout-my-templates", storeId],
+      })
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -155,7 +167,11 @@ export function StoreLayoutScreen() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Template</CardTitle>
+          <CardTitle>Template e aparência</CardTitle>
+          <CardDescription>
+            Escolha o template e ajuste a aparência; tudo é aplicado ao clicar
+            em <strong>Salvar template e aparência</strong>.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,18 +247,9 @@ export function StoreLayoutScreen() {
               )
             })}
           </div>
-          <p className="text-sm text-muted-foreground">
-            Selecione um template e clique em <strong>Salvar</strong> para
-            aplicar na vitrine.
-          </p>
         </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Aparência</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 border-t pt-6">
+          <h3 className="text-base font-semibold">Aparência</h3>
           <div className="space-y-1.5">
             <Label>Banner / imagem de destaque</Label>
             <div className="flex items-start gap-4">
@@ -332,7 +339,7 @@ export function StoreLayoutScreen() {
               onClick={() => saveMutation.mutate()}
               disabled={!canEdit || saveMutation.isPending}
             >
-              Salvar
+              Salvar template e aparência
             </Button>
           </div>
 
