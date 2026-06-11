@@ -111,6 +111,107 @@ export type CategoryUpdate = {
 };
 
 /**
+ * Payload to create a storefront banner.
+ */
+export type ContentBannerCreate = {
+    image_url: string;
+    link_url?: (string | null);
+    title?: (string | null);
+    is_active?: boolean;
+    position?: number;
+};
+
+/**
+ * Public representation of a storefront banner.
+ */
+export type ContentBannerPublic = {
+    id: string;
+    store_id: string;
+    image_url: string;
+    link_url?: (string | null);
+    title?: (string | null);
+    is_active: boolean;
+    position: number;
+};
+
+/**
+ * Partial update of a storefront banner (only set fields apply).
+ */
+export type ContentBannerUpdate = {
+    image_url?: (string | null);
+    link_url?: (string | null);
+    title?: (string | null);
+    is_active?: (boolean | null);
+    position?: (number | null);
+};
+
+/**
+ * Payload to create a navigation menu.
+ */
+export type ContentMenuCreate = {
+    name: string;
+    location?: MenuLocation;
+};
+
+/**
+ * Payload to add an item to a navigation menu.
+ */
+export type ContentMenuItemCreate = {
+    label: string;
+    url: string;
+    position?: number;
+};
+
+/**
+ * Public representation of a single menu item.
+ */
+export type ContentMenuItemPublic = {
+    id: string;
+    menu_id: string;
+    label: string;
+    url: string;
+    position: number;
+};
+
+/**
+ * Partial update of a menu item (only set fields apply).
+ */
+export type ContentMenuItemUpdate = {
+    label?: (string | null);
+    url?: (string | null);
+    position?: (number | null);
+};
+
+/**
+ * Public representation of a navigation menu and its ordered items.
+ */
+export type ContentMenuPublic = {
+    id: string;
+    store_id: string;
+    name: string;
+    location: MenuLocation;
+    items?: Array<ContentMenuItemPublic>;
+};
+
+/**
+ * Partial update of a navigation menu (only set fields apply).
+ */
+export type ContentMenuUpdate = {
+    name?: (string | null);
+    location?: (MenuLocation | null);
+};
+
+/**
+ * Payload to create an editorial page.
+ */
+export type ContentPageCreate = {
+    slug: string;
+    title: string;
+    body?: (string | null);
+    is_published?: boolean;
+};
+
+/**
  * Public representation of an editorial page.
  */
 export type ContentPagePublic = {
@@ -120,6 +221,16 @@ export type ContentPagePublic = {
     is_published?: boolean;
     id: string;
     store_id: string;
+};
+
+/**
+ * Partial update of an editorial page (only set fields apply).
+ */
+export type ContentPageUpdate = {
+    slug?: (string | null);
+    title?: (string | null);
+    body?: (string | null);
+    is_published?: (boolean | null);
 };
 
 export type HTTPValidationError = {
@@ -196,6 +307,13 @@ export type MediaStatus = 'processing' | 'ready' | 'failed';
  * Lifecycle status of a store membership.
  */
 export type MembershipStatus = 'invited' | 'active' | 'removed';
+
+/**
+ * Where a store navigation menu renders on the storefront (doc 10).
+ *
+ * Read by the storefront API (``P3-SF-01``) to select the header/footer menu.
+ */
+export type MenuLocation = 'header' | 'footer';
 
 /**
  * Generic message response.
@@ -974,6 +1092,113 @@ export type ContentListMyTemplatesData = {
 };
 
 export type ContentListMyTemplatesResponse = (Array<(string)>);
+
+export type ContentListPagesData = {
+    storeId: string;
+};
+
+export type ContentListPagesResponse = (Array<ContentPagePublic>);
+
+export type ContentCreatePageData = {
+    requestBody: ContentPageCreate;
+    storeId: string;
+};
+
+export type ContentCreatePageResponse = (ContentPagePublic);
+
+export type ContentUpdatePageData = {
+    pageId: string;
+    requestBody: ContentPageUpdate;
+    storeId: string;
+};
+
+export type ContentUpdatePageResponse = (ContentPagePublic);
+
+export type ContentDeletePageData = {
+    pageId: string;
+    storeId: string;
+};
+
+export type ContentDeletePageResponse = (void);
+
+export type ContentListBannersData = {
+    storeId: string;
+};
+
+export type ContentListBannersResponse = (Array<ContentBannerPublic>);
+
+export type ContentCreateBannerData = {
+    requestBody: ContentBannerCreate;
+    storeId: string;
+};
+
+export type ContentCreateBannerResponse = (ContentBannerPublic);
+
+export type ContentUpdateBannerData = {
+    bannerId: string;
+    requestBody: ContentBannerUpdate;
+    storeId: string;
+};
+
+export type ContentUpdateBannerResponse = (ContentBannerPublic);
+
+export type ContentDeleteBannerData = {
+    bannerId: string;
+    storeId: string;
+};
+
+export type ContentDeleteBannerResponse = (void);
+
+export type ContentListMenusData = {
+    storeId: string;
+};
+
+export type ContentListMenusResponse = (Array<ContentMenuPublic>);
+
+export type ContentCreateMenuData = {
+    requestBody: ContentMenuCreate;
+    storeId: string;
+};
+
+export type ContentCreateMenuResponse = (ContentMenuPublic);
+
+export type ContentUpdateMenuData = {
+    menuId: string;
+    requestBody: ContentMenuUpdate;
+    storeId: string;
+};
+
+export type ContentUpdateMenuResponse = (ContentMenuPublic);
+
+export type ContentDeleteMenuData = {
+    menuId: string;
+    storeId: string;
+};
+
+export type ContentDeleteMenuResponse = (void);
+
+export type ContentAddMenuItemData = {
+    menuId: string;
+    requestBody: ContentMenuItemCreate;
+    storeId: string;
+};
+
+export type ContentAddMenuItemResponse = (ContentMenuItemPublic);
+
+export type ContentUpdateMenuItemData = {
+    itemId: string;
+    requestBody: ContentMenuItemUpdate;
+    storeId: string;
+};
+
+export type ContentUpdateMenuItemResponse = (ContentMenuItemPublic);
+
+export type ContentDeleteMenuItemData = {
+    itemId: string;
+    storeId: string;
+};
+
+export type ContentDeleteMenuItemResponse = (void);
 
 export type HealthHealthResponse = ({
     [key: string]: (string);

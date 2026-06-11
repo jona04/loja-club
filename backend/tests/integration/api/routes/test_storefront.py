@@ -9,6 +9,7 @@ from app.core.cache import cache_get
 from app.modules.catalog.enums import ProductStatus
 from app.modules.catalog.models import Category, Product, ProductCategory
 from app.modules.content.models import (
+    ContentPage,
     ContentStoreTemplateSettings,
     ContentStoreThemeSettings,
 )
@@ -74,6 +75,40 @@ def test_home_for_published_store(client: TestClient, db: Session) -> None:
     assert any(
         p["slug"] == "mug" for s in body["category_sections"] for p in s["products"]
     )
+
+
+def test_published_page_is_served(client: TestClient, db: Session) -> None:
+    """A published content page is served by slug; the storefront renders it."""
+    store, host = _published_store(db, slug="sf-page")
+    db.add(
+        ContentPage(
+            store_id=store.id,
+            slug="sobre",
+            title="Sobre nós",
+            body="Olá",
+            is_published=True,
+        )
+    )
+    db.flush()
+    resp = client.get(f"{BASE}/pages/sobre", headers={"host": host})
+    assert resp.status_code == 200
+    assert resp.json()["title"] == "Sobre nós"
+    assert resp.json()["body"] == "Olá"
+
+
+def test_unpublished_or_missing_page_is_404(client: TestClient, db: Session) -> None:
+    """A draft or absent page 404s, so the storefront falls back to defaults."""
+    store, host = _published_store(db, slug="sf-page-404")
+    db.add(
+        ContentPage(
+            store_id=store.id, slug="rascunho", title="Draft", is_published=False
+        )
+    )
+    db.flush()
+    draft = client.get(f"{BASE}/pages/rascunho", headers={"host": host})
+    assert draft.status_code == 404
+    absent = client.get(f"{BASE}/pages/inexistente", headers={"host": host})
+    assert absent.status_code == 404
 
 
 def test_unknown_host_is_not_found(client: TestClient) -> None:

@@ -402,6 +402,388 @@ export const CategoryUpdateSchema = {
     description: 'Partial update for a category.'
 } as const;
 
+export const ContentBannerCreateSchema = {
+    properties: {
+        image_url: {
+            type: 'string',
+            maxLength: 2048,
+            title: 'Image Url'
+        },
+        link_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Link Url'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active',
+            default: true
+        },
+        position: {
+            type: 'integer',
+            title: 'Position',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['image_url'],
+    title: 'ContentBannerCreate',
+    description: 'Payload to create a storefront banner.'
+} as const;
+
+export const ContentBannerPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        image_url: {
+            type: 'string',
+            title: 'Image Url'
+        },
+        link_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Link Url'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        },
+        position: {
+            type: 'integer',
+            title: 'Position'
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'image_url', 'is_active', 'position'],
+    title: 'ContentBannerPublic',
+    description: 'Public representation of a storefront banner.'
+} as const;
+
+export const ContentBannerUpdateSchema = {
+    properties: {
+        image_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Image Url'
+        },
+        link_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Link Url'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        },
+        position: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Position'
+        }
+    },
+    type: 'object',
+    title: 'ContentBannerUpdate',
+    description: 'Partial update of a storefront banner (only set fields apply).'
+} as const;
+
+export const ContentMenuCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        location: {
+            '$ref': '#/components/schemas/MenuLocation',
+            default: 'header'
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'ContentMenuCreate',
+    description: 'Payload to create a navigation menu.'
+} as const;
+
+export const ContentMenuItemCreateSchema = {
+    properties: {
+        label: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Label'
+        },
+        url: {
+            type: 'string',
+            maxLength: 2048,
+            title: 'Url'
+        },
+        position: {
+            type: 'integer',
+            title: 'Position',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['label', 'url'],
+    title: 'ContentMenuItemCreate',
+    description: 'Payload to add an item to a navigation menu.'
+} as const;
+
+export const ContentMenuItemPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        menu_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Menu Id'
+        },
+        label: {
+            type: 'string',
+            title: 'Label'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        position: {
+            type: 'integer',
+            title: 'Position'
+        }
+    },
+    type: 'object',
+    required: ['id', 'menu_id', 'label', 'url', 'position'],
+    title: 'ContentMenuItemPublic',
+    description: 'Public representation of a single menu item.'
+} as const;
+
+export const ContentMenuItemUpdateSchema = {
+    properties: {
+        label: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Label'
+        },
+        url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Url'
+        },
+        position: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Position'
+        }
+    },
+    type: 'object',
+    title: 'ContentMenuItemUpdate',
+    description: 'Partial update of a menu item (only set fields apply).'
+} as const;
+
+export const ContentMenuPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        location: {
+            '$ref': '#/components/schemas/MenuLocation'
+        },
+        items: {
+            items: {
+                '$ref': '#/components/schemas/ContentMenuItemPublic'
+            },
+            type: 'array',
+            title: 'Items',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['id', 'store_id', 'name', 'location'],
+    title: 'ContentMenuPublic',
+    description: 'Public representation of a navigation menu and its ordered items.'
+} as const;
+
+export const ContentMenuUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        location: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/MenuLocation'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    title: 'ContentMenuUpdate',
+    description: 'Partial update of a navigation menu (only set fields apply).'
+} as const;
+
+export const ContentPageCreateSchema = {
+    properties: {
+        slug: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Slug'
+        },
+        title: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Title'
+        },
+        body: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Body'
+        },
+        is_published: {
+            type: 'boolean',
+            title: 'Is Published',
+            default: false
+        }
+    },
+    type: 'object',
+    required: ['slug', 'title'],
+    title: 'ContentPageCreate',
+    description: 'Payload to create an editorial page.'
+} as const;
+
 export const ContentPagePublicSchema = {
     properties: {
         slug: {
@@ -445,6 +827,60 @@ export const ContentPagePublicSchema = {
     required: ['slug', 'title', 'id', 'store_id'],
     title: 'ContentPagePublic',
     description: 'Public representation of an editorial page.'
+} as const;
+
+export const ContentPageUpdateSchema = {
+    properties: {
+        slug: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Slug'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title'
+        },
+        body: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Body'
+        },
+        is_published: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Published'
+        }
+    },
+    type: 'object',
+    title: 'ContentPageUpdate',
+    description: 'Partial update of an editorial page (only set fields apply).'
 } as const;
 
 export const HTTPValidationErrorSchema = {
@@ -681,6 +1117,15 @@ export const MembershipStatusSchema = {
     enum: ['invited', 'active', 'removed'],
     title: 'MembershipStatus',
     description: 'Lifecycle status of a store membership.'
+} as const;
+
+export const MenuLocationSchema = {
+    type: 'string',
+    enum: ['header', 'footer'],
+    title: 'MenuLocation',
+    description: `Where a store navigation menu renders on the storefront (doc 10).
+
+Read by the storefront API (\`\`P3-SF-01\`\`) to select the header/footer menu.`
 } as const;
 
 export const MessageSchema = {

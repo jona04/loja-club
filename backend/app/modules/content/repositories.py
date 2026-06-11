@@ -8,6 +8,10 @@ from sqlmodel import Session, col, select
 
 from app.core import storage
 from app.modules.content.models import (
+    ContentBanner,
+    ContentMenu,
+    ContentMenuItem,
+    ContentPage,
     ContentStoreTemplateSettings,
     ContentStoreThemeSettings,
     ContentThemeTemplate,
@@ -113,6 +117,206 @@ def list_store_template_settings(
             )
         ).all()
     )
+
+
+def list_pages(*, session: Session, store_id: uuid.UUID) -> list[ContentPage]:
+    """Return a store's active editorial pages, newest first.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose pages are listed.
+
+    Returns:
+        The store's non-deleted :class:`ContentPage` rows.
+    """
+    return list(
+        session.exec(
+            select(ContentPage)
+            .where(
+                ContentPage.store_id == store_id,
+                col(ContentPage.deleted_at).is_(None),
+            )
+            .order_by(col(ContentPage.created_at).desc())
+        ).all()
+    )
+
+
+def get_page(
+    *, session: Session, store_id: uuid.UUID, page_id: uuid.UUID
+) -> ContentPage | None:
+    """Return a store's active page by id, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        page_id: The page id.
+
+    Returns:
+        The :class:`ContentPage`, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(ContentPage).where(
+            ContentPage.id == page_id,
+            ContentPage.store_id == store_id,
+            col(ContentPage.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def get_page_by_slug(
+    *, session: Session, store_id: uuid.UUID, slug: str
+) -> ContentPage | None:
+    """Return a store's active page by slug, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        slug: The page slug (unique among active pages of the store).
+
+    Returns:
+        The :class:`ContentPage`, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(ContentPage).where(
+            ContentPage.store_id == store_id,
+            ContentPage.slug == slug,
+            col(ContentPage.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_banners(*, session: Session, store_id: uuid.UUID) -> list[ContentBanner]:
+    """Return a store's active banners, ordered by ``position``.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose banners are listed.
+
+    Returns:
+        The store's non-deleted :class:`ContentBanner` rows.
+    """
+    return list(
+        session.exec(
+            select(ContentBanner)
+            .where(
+                ContentBanner.store_id == store_id,
+                col(ContentBanner.deleted_at).is_(None),
+            )
+            .order_by(col(ContentBanner.position))
+        ).all()
+    )
+
+
+def get_banner(
+    *, session: Session, store_id: uuid.UUID, banner_id: uuid.UUID
+) -> ContentBanner | None:
+    """Return a store's active banner by id, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        banner_id: The banner id.
+
+    Returns:
+        The :class:`ContentBanner`, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(ContentBanner).where(
+            ContentBanner.id == banner_id,
+            ContentBanner.store_id == store_id,
+            col(ContentBanner.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_menus(*, session: Session, store_id: uuid.UUID) -> list[ContentMenu]:
+    """Return a store's active navigation menus.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose menus are listed.
+
+    Returns:
+        The store's non-deleted :class:`ContentMenu` rows.
+    """
+    return list(
+        session.exec(
+            select(ContentMenu).where(
+                ContentMenu.store_id == store_id,
+                col(ContentMenu.deleted_at).is_(None),
+            )
+        ).all()
+    )
+
+
+def get_menu(
+    *, session: Session, store_id: uuid.UUID, menu_id: uuid.UUID
+) -> ContentMenu | None:
+    """Return a store's active menu by id, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        menu_id: The menu id.
+
+    Returns:
+        The :class:`ContentMenu`, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(ContentMenu).where(
+            ContentMenu.id == menu_id,
+            ContentMenu.store_id == store_id,
+            col(ContentMenu.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_menu_items(
+    *, session: Session, store_id: uuid.UUID, menu_id: uuid.UUID
+) -> list[ContentMenuItem]:
+    """Return a menu's active items, ordered by ``position``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        menu_id: The menu whose items are listed.
+
+    Returns:
+        The menu's non-deleted :class:`ContentMenuItem` rows.
+    """
+    return list(
+        session.exec(
+            select(ContentMenuItem)
+            .where(
+                ContentMenuItem.store_id == store_id,
+                ContentMenuItem.menu_id == menu_id,
+                col(ContentMenuItem.deleted_at).is_(None),
+            )
+            .order_by(col(ContentMenuItem.position))
+        ).all()
+    )
+
+
+def get_menu_item(
+    *, session: Session, store_id: uuid.UUID, item_id: uuid.UUID
+) -> ContentMenuItem | None:
+    """Return a store's active menu item by id, or ``None``.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store.
+        item_id: The menu item id.
+
+    Returns:
+        The :class:`ContentMenuItem`, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(ContentMenuItem).where(
+            ContentMenuItem.id == item_id,
+            ContentMenuItem.store_id == store_id,
+            col(ContentMenuItem.deleted_at).is_(None),
+        )
+    ).first()
 
 
 # The storefront templates shipped in V1. Authoritative for the seed. The

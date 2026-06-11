@@ -1,9 +1,10 @@
 """Integration tests for the content (layout) panel routes."""
 
 from fastapi.testclient import TestClient
-from sqlmodel import Session
+from sqlmodel import Session, col, select
 
 from app.core.cache import cache_get, cache_set
+from app.modules.content.models import ContentMenuItem
 from tests.utils.store import (
     TenantContext,
     create_member,
@@ -206,3 +207,235 @@ def test_my_templates_lists_customized(
     assert client.get(f"{base}/settings/mine", headers=h).json() == ["aurora"]
     client.delete(f"{base}/settings", headers=h)
     assert client.get(f"{base}/settings/mine", headers=h).json() == []
+
+
+# --- Editorial pages -------------------------------------------------------
+
+
+def test_pages_crud(client: TestClient, two_stores: TenantContext) -> None:
+    """Create, list, update and delete a page; create drops the read cache."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/pages"
+
+    cache_set(f"{a.id}:home", "stale", prefix="store")
+    created = client.post(
+        base, headers=h, json={"slug": "sobre", "title": "Sobre", "body": "Olá"}
+    )
+    assert created.status_code == 200
+    page_id = created.json()["id"]
+    assert created.json()["is_published"] is False
+    assert cache_get(f"{a.id}:home", prefix="store") is None
+
+    listed = client.get(base, headers=h)
+    assert [p["slug"] for p in listed.json()] == ["sobre"]
+
+    updated = client.patch(
+        f"{base}/{page_id}",
+        headers=h,
+        json={"slug": "about", "body": "Hi", "is_published": True},
+    )
+    assert updated.status_code == 200
+    assert updated.json()["slug"] == "about"
+    assert updated.json()["is_published"] is True
+
+    assert client.delete(f"{base}/{page_id}", headers=h).status_code == 204
+    assert client.get(base, headers=h).json() == []
+
+
+def test_page_duplicate_slug_is_409(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """Two active pages cannot share a slug (on create or rename)."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/pages"
+
+    client.post(base, headers=h, json={"slug": "sobre", "title": "A"})
+    dup = client.post(base, headers=h, json={"slug": "sobre", "title": "B"})
+    assert dup.status_code == 409
+    assert dup.json()["error"]["code"] == "duplicate_slug"
+
+    other = client.post(base, headers=h, json={"slug": "termos", "title": "C"})
+    rename = client.patch(
+        f"{base}/{other.json()['id']}", headers=h, json={"slug": "sobre"}
+    )
+    assert rename.status_code == 409
+
+
+def test_page_update_delete_not_found_is_404(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    missing = "00000000-0000-0000-0000-000000000000"
+    assert (
+        client.patch(
+            f"{BASE}/{a.id}/layout/pages/{missing}", headers=h, json={"title": "x"}
+        ).status_code
+        == 404
+    )
+    assert (
+        client.delete(f"{BASE}/{a.id}/layout/pages/{missing}", headers=h).status_code
+        == 404
+    )
+
+
+def test_pages_viewer_cannot_write(
+    client: TestClient, db: Session, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    viewer = create_user(db)
+    create_member(db, store=a, user=viewer, role_key="catalog")
+    vh = member_headers(client, db, viewer)
+    base = f"{BASE}/{a.id}/layout/pages"
+    assert client.get(base, headers=vh).status_code == 200
+    assert (
+        client.post(base, headers=vh, json={"slug": "s", "title": "t"}).status_code
+        == 403
+    )
+
+
+# --- Banners ---------------------------------------------------------------
+
+
+def test_banners_crud(client: TestClient, two_stores: TenantContext) -> None:
+    """Banners are created, listed by position, updated and deleted."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/banners"
+
+    client.post(
+        base, headers=h, json={"image_url": "https://cdn/b2.png", "position": 2}
+    )
+    first = client.post(
+        base, headers=h, json={"image_url": "https://cdn/b1.png", "position": 1}
+    )
+    listed = client.get(base, headers=h).json()
+    assert [b["position"] for b in listed] == [1, 2]
+
+    updated = client.patch(
+        f"{base}/{first.json()['id']}", headers=h, json={"is_active": False}
+    )
+    assert updated.json()["is_active"] is False
+    assert client.delete(f"{base}/{first.json()['id']}", headers=h).status_code == 204
+    assert [b["image_url"] for b in client.get(base, headers=h).json()] == [
+        "https://cdn/b2.png"
+    ]
+
+
+# --- Menus & items ---------------------------------------------------------
+
+
+def test_menus_crud_with_items(
+    client: TestClient, db: Session, two_stores: TenantContext
+) -> None:
+    """Menus carry ordered items; deleting a menu soft-deletes its items."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/menus"
+
+    menu = client.post(base, headers=h, json={"name": "Rodapé", "location": "footer"})
+    assert menu.status_code == 200
+    menu_id = menu.json()["id"]
+    assert menu.json()["items"] == []
+
+    client.post(
+        f"{base}/{menu_id}/items",
+        headers=h,
+        json={"label": "Sobre", "url": "/pages/sobre", "position": 0},
+    )
+    item_b = client.post(
+        f"{base}/{menu_id}/items",
+        headers=h,
+        json={"label": "Termos", "url": "/pages/termos", "position": 1},
+    )
+    listed = client.get(base, headers=h).json()
+    assert [i["label"] for i in listed[0]["items"]] == ["Sobre", "Termos"]
+
+    assert (
+        client.delete(
+            f"{BASE}/{a.id}/layout/menu-items/{item_b.json()['id']}", headers=h
+        ).status_code
+        == 204
+    )
+    assert len(client.get(base, headers=h).json()[0]["items"]) == 1
+
+    # Deleting the menu cascades to (soft-deletes) its remaining items.
+    assert client.delete(f"{base}/{menu_id}", headers=h).status_code == 204
+    assert client.get(base, headers=h).json() == []
+    active_items = db.exec(
+        select(ContentMenuItem).where(
+            ContentMenuItem.menu_id == menu_id,
+            col(ContentMenuItem.deleted_at).is_(None),
+        )
+    ).all()
+    assert active_items == []
+
+
+def test_add_item_to_missing_menu_is_404(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """An item cannot be added to a non-existent menu (no orphan items)."""
+    a = two_stores.store_a
+    missing = "00000000-0000-0000-0000-000000000000"
+    resp = client.post(
+        f"{BASE}/{a.id}/layout/menus/{missing}/items",
+        headers=two_stores.owner_a_headers,
+        json={"label": "x", "url": "/"},
+    )
+    assert resp.status_code == 404
+    assert resp.json()["error"]["code"] == "menu_not_found"
+
+
+def test_menu_and_item_update(client: TestClient, two_stores: TenantContext) -> None:
+    """A menu can be renamed/relocated and its items edited."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout/menus"
+
+    menu_id = client.post(base, headers=h, json={"name": "Topo"}).json()["id"]
+    renamed = client.patch(
+        f"{base}/{menu_id}", headers=h, json={"name": "Rodapé", "location": "footer"}
+    )
+    assert renamed.json()["name"] == "Rodapé"
+    assert renamed.json()["location"] == "footer"
+
+    item_id = client.post(
+        f"{base}/{menu_id}/items", headers=h, json={"label": "A", "url": "/a"}
+    ).json()["id"]
+    edited = client.patch(
+        f"{BASE}/{a.id}/layout/menu-items/{item_id}", headers=h, json={"label": "B"}
+    )
+    assert edited.json()["label"] == "B"
+
+
+def test_content_not_found_is_404(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """Updating/deleting a missing banner, menu or item all 404."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    missing = "00000000-0000-0000-0000-000000000000"
+    layout = f"{BASE}/{a.id}/layout"
+    assert (
+        client.patch(
+            f"{layout}/banners/{missing}", headers=h, json={"title": "x"}
+        ).status_code
+        == 404
+    )
+    assert client.delete(f"{layout}/banners/{missing}", headers=h).status_code == 404
+    assert (
+        client.patch(
+            f"{layout}/menus/{missing}", headers=h, json={"name": "x"}
+        ).status_code
+        == 404
+    )
+    assert client.delete(f"{layout}/menus/{missing}", headers=h).status_code == 404
+    assert (
+        client.patch(
+            f"{layout}/menu-items/{missing}", headers=h, json={"label": "x"}
+        ).status_code
+        == 404
+    )
+    assert client.delete(f"{layout}/menu-items/{missing}", headers=h).status_code == 404

@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PrivateCreateUserData, PrivateCreateUserResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, ContentListPagesData, ContentListPagesResponse, ContentCreatePageData, ContentCreatePageResponse, ContentUpdatePageData, ContentUpdatePageResponse, ContentDeletePageData, ContentDeletePageResponse, ContentListBannersData, ContentListBannersResponse, ContentCreateBannerData, ContentCreateBannerResponse, ContentUpdateBannerData, ContentUpdateBannerResponse, ContentDeleteBannerData, ContentDeleteBannerResponse, ContentListMenusData, ContentListMenusResponse, ContentCreateMenuData, ContentCreateMenuResponse, ContentUpdateMenuData, ContentUpdateMenuResponse, ContentDeleteMenuData, ContentDeleteMenuResponse, ContentAddMenuItemData, ContentAddMenuItemResponse, ContentUpdateMenuItemData, ContentUpdateMenuItemResponse, ContentDeleteMenuItemData, ContentDeleteMenuItemResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PrivateCreateUserData, PrivateCreateUserResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CatalogService {
     /**
@@ -657,6 +657,363 @@ export class ContentService {
             url: '/api/v1/stores/{store_id}/layout/settings/mine',
             path: {
                 store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Pages
+     * List the store's editorial pages.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns ContentPagePublic Successful Response
+     * @throws ApiError
+     */
+    public static listPages(data: ContentListPagesData): CancelablePromise<ContentListPagesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/layout/pages',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Page
+     * Create an editorial page; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns ContentPagePublic Successful Response
+     * @throws ApiError
+     */
+    public static createPage(data: ContentCreatePageData): CancelablePromise<ContentCreatePageResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/layout/pages',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Page
+     * Update an editorial page; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.pageId
+     * @param data.requestBody
+     * @returns ContentPagePublic Successful Response
+     * @throws ApiError
+     */
+    public static updatePage(data: ContentUpdatePageData): CancelablePromise<ContentUpdatePageResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/layout/pages/{page_id}',
+            path: {
+                store_id: data.storeId,
+                page_id: data.pageId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Page
+     * Soft-delete an editorial page; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.pageId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static deletePage(data: ContentDeletePageData): CancelablePromise<ContentDeletePageResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/layout/pages/{page_id}',
+            path: {
+                store_id: data.storeId,
+                page_id: data.pageId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Banners
+     * List the store's banners (ordered by position).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns ContentBannerPublic Successful Response
+     * @throws ApiError
+     */
+    public static listBanners(data: ContentListBannersData): CancelablePromise<ContentListBannersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/layout/banners',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Banner
+     * Create a storefront banner; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns ContentBannerPublic Successful Response
+     * @throws ApiError
+     */
+    public static createBanner(data: ContentCreateBannerData): CancelablePromise<ContentCreateBannerResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/layout/banners',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Banner
+     * Update a storefront banner; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.bannerId
+     * @param data.requestBody
+     * @returns ContentBannerPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateBanner(data: ContentUpdateBannerData): CancelablePromise<ContentUpdateBannerResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/layout/banners/{banner_id}',
+            path: {
+                store_id: data.storeId,
+                banner_id: data.bannerId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Banner
+     * Soft-delete a storefront banner; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.bannerId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static deleteBanner(data: ContentDeleteBannerData): CancelablePromise<ContentDeleteBannerResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/layout/banners/{banner_id}',
+            path: {
+                store_id: data.storeId,
+                banner_id: data.bannerId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Menus
+     * List the store's navigation menus with their items.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns ContentMenuPublic Successful Response
+     * @throws ApiError
+     */
+    public static listMenus(data: ContentListMenusData): CancelablePromise<ContentListMenusResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/layout/menus',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Menu
+     * Create a navigation menu; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns ContentMenuPublic Successful Response
+     * @throws ApiError
+     */
+    public static createMenu(data: ContentCreateMenuData): CancelablePromise<ContentCreateMenuResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/layout/menus',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Menu
+     * Update a navigation menu; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.menuId
+     * @param data.requestBody
+     * @returns ContentMenuPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateMenu(data: ContentUpdateMenuData): CancelablePromise<ContentUpdateMenuResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/layout/menus/{menu_id}',
+            path: {
+                store_id: data.storeId,
+                menu_id: data.menuId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Menu
+     * Soft-delete a menu and its items; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.menuId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static deleteMenu(data: ContentDeleteMenuData): CancelablePromise<ContentDeleteMenuResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/layout/menus/{menu_id}',
+            path: {
+                store_id: data.storeId,
+                menu_id: data.menuId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Add Menu Item
+     * Add an item to a menu; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.menuId
+     * @param data.requestBody
+     * @returns ContentMenuItemPublic Successful Response
+     * @throws ApiError
+     */
+    public static addMenuItem(data: ContentAddMenuItemData): CancelablePromise<ContentAddMenuItemResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/layout/menus/{menu_id}/items',
+            path: {
+                store_id: data.storeId,
+                menu_id: data.menuId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Menu Item
+     * Update a menu item; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.itemId
+     * @param data.requestBody
+     * @returns ContentMenuItemPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateMenuItem(data: ContentUpdateMenuItemData): CancelablePromise<ContentUpdateMenuItemResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/layout/menu-items/{item_id}',
+            path: {
+                store_id: data.storeId,
+                item_id: data.itemId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Menu Item
+     * Soft-delete a menu item; invalidates the read caches.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.itemId
+     * @returns void Successful Response
+     * @throws ApiError
+     */
+    public static deleteMenuItem(data: ContentDeleteMenuItemData): CancelablePromise<ContentDeleteMenuItemResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/stores/{store_id}/layout/menu-items/{item_id}',
+            path: {
+                store_id: data.storeId,
+                item_id: data.itemId
             },
             errors: {
                 422: 'Validation Error'

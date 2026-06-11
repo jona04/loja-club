@@ -67,6 +67,14 @@ export interface Category {
   description: string | null
 }
 
+export interface ContentPage {
+  id: string
+  slug: string
+  title: string
+  body: string | null
+  is_published: boolean
+}
+
 export interface Paginated<T> {
   data: T[]
   count: number
@@ -107,6 +115,29 @@ export const getCategories = (): Promise<Category[]> =>
 /** Fetch a published product by slug. */
 export const getProduct = (slug: string): Promise<StorefrontProduct> =>
   apiGet<StorefrontProduct>(`/products/${encodeURIComponent(slug)}`)
+
+/**
+ * Fetch a published editorial page by slug, or `null` when the store has none.
+ *
+ * Unlike the other reads, a 404 here is expected (the merchant may not have
+ * written this page), so it returns `null` to let the caller fall back to the
+ * default copy instead of triggering `notFound()`.
+ */
+export const getPage = async (slug: string): Promise<ContentPage | null> => {
+  const incoming = await headers()
+  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? ""
+  const res = await fetch(
+    `${API_URL}/api/v1/storefront/pages/${encodeURIComponent(slug)}`,
+    { headers: { "x-forwarded-host": host }, cache: "no-store" },
+  )
+  if (res.status === 404) {
+    return null
+  }
+  if (!res.ok) {
+    throw new Error(`Storefront API ${res.status} for /pages/${slug}`)
+  }
+  return (await res.json()) as ContentPage
+}
 
 /** List published products, optionally filtered by a category slug. */
 export const listProducts = (

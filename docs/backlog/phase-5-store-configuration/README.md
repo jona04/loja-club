@@ -33,7 +33,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 7 | [P5-TPL-01](./P5-TPL-01-template-screens-refinements.md) | Refinos das telas de template (admin + dashboard, thumb CDN) | ✅ done | P5-DEMO-01 |
 | 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | ✅ done | P5-CFG-01 |
 | 9 | [P5-PREV-01](./P5-PREV-01-navigable-preview.md) | Preview navegável (painel abre a loja-demo) | ✅ done | P5-DEMO-02, P5-SF-01 |
-| 10 | [P5-PAGE-01](./P5-PAGE-01-content-pages.md) | Conteúdo das páginas (`content_pages`/menus/banners no painel + vitrine) | todo | — |
+| 10 | [P5-PAGE-01](./P5-PAGE-01-content-pages.md) | Conteúdo das páginas (`content_pages`/menus/banners no painel + vitrine) | ✅ done | — |
 
 ## Ordem sugerida de execução
 
@@ -62,7 +62,10 @@ P5-DEMO-01 → P5-DEMO-02 ─┼→ P5-PREV-01
 - [x] **Conteúdo estático/lorem → dinâmico** (Fase 3) → `P5-SF-01` ✅ (chrome editável vem de settings nos 3 templates).
 - [ ] **e2e/smoke do storefront** (vitrine reflete `theme.settings`) — storefront sem infra de e2e/Playwright; a API é coberta por integração (backend) + render type-validado (`tsc`/`next build`). Montar infra + e2e real. Origem: `P5-SF-01`.
 - [ ] **Upload de imagem nos campos `image` + `layout.assets.update`** — diferido: nenhum template V1 tem campo `image` e `layout.assets.update` não está ligada a rota (o upload do banner universal já funciona via `layout.update`). Fazer quando um template tiver campo `image`. Origem: Fase 3 + `P5-CFG-02`.
-- [ ] **CRUD de páginas/menus/banners** + **páginas institucionais via `content_pages`** (Fase 3, `P3-TPL-03`) → `P5-PAGE-01`.
+- [x] **CRUD de páginas/menus/banners** + **páginas institucionais via `content_pages`** (Fase 3, `P3-TPL-03`) → `P5-PAGE-01` ✅ (CRUD gated `layout.*` no painel; vitrine `/pages/[slug]` lê `content_pages` com fallback). Sobra: vitrine ainda não renderiza banners/menus → follow-up abaixo.
 
 **Da própria fase:**
 - [ ] **Detalhe do admin sem conteúdo-demo + defaults** — o escopo do `P5-TPL-01` pedia mostrar "conteúdo demo + defaults" no detalhe, mas `ThemeTemplateAdminPublic` expõe só id/nome/descrição/ativo/thumb/`settings_schema`; falta o backend expor o `demo.json` resolvido e os defaults do schema. Origem: `P5-TPL-01`.
+- [ ] **Vitrine não renderiza banners nem menus** — o painel autora `content_banners`/`content_menus` (`P5-PAGE-01`), mas o hero usa `theme.banner_image_url` (único) e a nav dos Shells é fixa. Expor no `/storefront/home` + renderizar nos 3 templates. Origem: `P5-PAGE-01`.
+- [ ] **e2e da vitrine para `content_pages`** — bloqueado pela falta de infra de Playwright no storefront (mesmo bloqueio do `P5-SF-01`); por ora coberto por integração no backend. Origem: `P5-PAGE-01`.
+- [ ] **Edição de item de menu não exposta na UI** — `update_menu_item` existe/testada, mas o painel só add/remove item (+ renomeia menu). Expor edição inline. Origem: `P5-PAGE-01`.
