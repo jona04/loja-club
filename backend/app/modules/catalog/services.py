@@ -10,6 +10,7 @@ from collections.abc import Sequence
 from sqlmodel import Session
 
 from app.core.api import AppError
+from app.core.cache import cache_delete
 from app.db.base import get_datetime_utc
 from app.modules.catalog import repositories as repo
 from app.modules.catalog.enums import ProductStatus
@@ -17,6 +18,7 @@ from app.modules.catalog.models import (
     Category,
     InventoryItem,
     Product,
+    ProductCategory,
     ProductImage,
     ProductVariant,
 )
@@ -133,6 +135,32 @@ def list_products(
     return repo.list_scoped(session, Product, store_id, skip=skip, limit=limit)
 
 
+def _invalidate_storefront_cache(
+    store_id: uuid.UUID,
+    *,
+    home: bool = False,
+    product_slug: str | None = None,
+    categories: bool = False,
+) -> None:
+    """Drop the storefront read caches a catalog write makes stale (doc 13).
+
+    The storefront reads are cache-aside (``P3-SF-01``); without this, a featured
+    flag / publish / edit would only show after the 5-min TTL.
+
+    Args:
+        store_id: The store whose public caches to invalidate.
+        home: If True, drop ``store:{id}:home`` (featured products).
+        product_slug: If given, drop that product's ``store:{id}:product:{slug}``.
+        categories: If True, drop ``store:{id}:categories``.
+    """
+    if home:
+        cache_delete(f"{store_id}:home", prefix="store")
+    if product_slug is not None:
+        cache_delete(f"{store_id}:product:{product_slug}", prefix="store")
+    if categories:
+        cache_delete(f"{store_id}:categories", prefix="store")
+
+
 def create_product(
     *, session: Session, store_id: uuid.UUID, payload: ProductCreate
 ) -> Product:
@@ -147,10 +175,14 @@ def create_product(
         The created product.
 
     Raises:
-        AppError: 422 invalid slug; 409 slug already in use.
+        AppError: 404 if a category is invalid; 422 invalid slug; 409 slug in use.
     """
     store = session.get(Store, store_id)
     assert store is not None  # validated by the route dependency
+    # At least one category is required; validate each belongs to the store.
+    category_ids = list(dict.fromkeys(payload.category_ids))
+    for category_id in category_ids:
+        _get_category(session=session, store_id=store_id, category_id=category_id)
     slug = _resolve_slug(
         session, Product, store_id, name=payload.name, slug=payload.slug
     )
@@ -165,8 +197,18 @@ def create_product(
         is_featured=payload.is_featured,
     )
     session.add(product)
+    session.flush()
+    for category_id in category_ids:
+        session.add(
+            ProductCategory(
+                store_id=store_id,
+                product_id=product.id,
+                category_id=category_id,
+            )
+        )
     session.commit()
     session.refresh(product)
+    _invalidate_storefront_cache(store_id, home=True, product_slug=product.slug)
     return product
 
 
@@ -220,6 +262,7 @@ def update_product(
     session.add(product)
     session.commit()
     session.refresh(product)
+    _invalidate_storefront_cache(store_id, home=True, product_slug=product.slug)
     return product
 
 
@@ -244,6 +287,7 @@ def publish_product(
     session.add(product)
     session.commit()
     session.refresh(product)
+    _invalidate_storefront_cache(store_id, home=True, product_slug=product.slug)
     return product
 
 
@@ -272,6 +316,7 @@ def archive_product(
     session.add(product)
     session.commit()
     session.refresh(product)
+    _invalidate_storefront_cache(store_id, home=True, product_slug=product.slug)
     return product
 
 
@@ -301,6 +346,7 @@ def delete_product(
     product.deleted_by_user_id = deleted_by
     session.add(product)
     session.commit()
+    _invalidate_storefront_cache(store_id, home=True, product_slug=product.slug)
 
 
 # --- Categories ---
@@ -351,6 +397,7 @@ def create_category(
     session.add(category)
     session.commit()
     session.refresh(category)
+    _invalidate_storefront_cache(store_id, categories=True)
     return category
 
 
@@ -404,6 +451,7 @@ def update_category(
     session.add(category)
     session.commit()
     session.refresh(category)
+    _invalidate_storefront_cache(store_id, categories=True)
     return category
 
 
@@ -432,6 +480,7 @@ def delete_category(
     category.deleted_by_user_id = deleted_by
     session.add(category)
     session.commit()
+    _invalidate_storefront_cache(store_id, categories=True)
 
 
 # --- Variants ---

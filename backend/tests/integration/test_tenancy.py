@@ -80,7 +80,7 @@ def test_resolve_store_by_host(db: Session) -> None:
 
 
 def test_resolve_unknown_host_returns_none(db: Session) -> None:
-    assert resolve_store_by_host(session=db, host="nope.loja.localhost") is None
+    assert resolve_store_by_host(session=db, host="nope.localhost") is None
 
 
 def test_resolve_uses_cache(db: Session) -> None:

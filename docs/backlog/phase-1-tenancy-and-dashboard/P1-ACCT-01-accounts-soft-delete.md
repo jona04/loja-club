@@ -2,7 +2,7 @@
 id: P1-ACCT-01
 title: Retrofit account_users — soft delete + updated_at (mixins)
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 2 — Retrofit account_users"
 area: ACCT
 status: done
 depends_on: []
@@ -27,8 +27,8 @@ O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os m
 - Leituras de usuário (`get_user_by_email`, `authenticate`, `read_users`, `get_current_user`) passam a **excluir** registros soft-deletados.
 
 ## Fora de escopo (o que NÃO entra)
-- Papéis globais de plataforma (`platform_admin_roles`/`platform.*`) → Fase 7.
-- Tela de gestão de usuários (admin) → Fase 7 (`frontend-admin`).
+- Papéis globais de plataforma (`platform_admin_roles`/`platform.*`) → Fase 4.
+- Tela de gestão de usuários (admin) → Fase 4 (`frontend-admin`).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/accounts/models.py` (alterar) — `User` herda `TimestampMixin`/`SoftDeleteMixin`.
@@ -64,4 +64,4 @@ O `account_users` (criado no `P0-MOD-04` com migração mínima) **não usa os m
 - Testes de delete da Fase 0 ajustados (a linha permanece com `deleted_at` setado, em vez de sumir).
 
 ## Follow-ups
-- [ ] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user` via `session.get`, que ainda retornam soft-deletados). *Quando:* se virar problema, ou junto do admin de plataforma (Fase 7). → README da fase.
+- [x] **Guard de soft-delete em leituras por id de admin** (`read_user_by_id`/`update_user`/`delete_user`) — corrigido na `P4-USER-01` via `get_active_user()`. → README da fase.

@@ -86,16 +86,16 @@ Funcionalidades:
 - definir preço;
 - definir slug;
 - marcar produto como personalizável;
-- *(Fase 5)* vincular um modelo 3D gerado pelo lojista (via API);
+- *(Fase 7)* vincular um modelo 3D gerado pelo lojista (via API);
 - marcar produto como destaque.
 
-### Produtos personalizáveis (Fase 5)
+### Produtos personalizáveis (Fase 7)
 
-> **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 5 (Produtos 3D)**; na **Fase 6** fica restrita a planos pagos. Ver [Fase 5](./backlog/phase-5-3d-products.md).
+> **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 7 (Produtos 3D)**; na **Fase 8** fica restrita a planos pagos. Ver [Fase 7](./backlog/phase-7-3d-products.md).
 
-Na Fase 5, o lojista **gera o próprio modelo 3D via API de terceiros** (Meshy/Tripo3D/Hyper3D) a partir de uma imagem/descrição do produto — **não há catálogo da plataforma**. O modelo é **por loja**.
+Na Fase 7, o lojista **gera o próprio modelo 3D via API de terceiros** (Meshy/Tripo3D/Hyper3D) a partir de uma imagem/descrição do produto — **não há catálogo da plataforma**. O modelo é **por loja**.
 
-Funcionalidades (Fase 5):
+Funcionalidades (Fase 7):
 
 - habilitar/desabilitar personalização;
 - **gerar o modelo 3D via API** (a partir de imagem/descrição);
@@ -209,13 +209,16 @@ Ela deve deixar claro no checkout e no pedido que a entrega será combinada com 
 
 Funcionalidades da V1:
 
-- escolher entre 2 templates prontos;
-- visualizar preview;
+- escolher entre os templates prontos (Aurora, Bazar, Studio) pela **lista com thumbnail**;
+- ver o **preview** (imagem em tamanho real);
 - aplicar template;
-- atualizar logo;
-- atualizar banner principal;
+- **enviar a imagem** do banner principal;
 - atualizar texto principal;
-- escolher produtos em destaque.
+- definir a coleção em destaque (`featured_collection_id`).
+
+> **`logo_url` e a descrição ficam em Configurações** (Fase 1, `store_settings`), não nesta tela — o tema cuida só de aparência/layout (doc 10, §"Configuração no banco"). O destaque da home no V1 usa produtos `is_featured` (atributo do produto, Fase 2); `featured_collection_id` é forward-looking (ver follow-up "Destaque por coleção" no README da Fase 3).
+
+> A evolução pra **templates ricos** (carrossel/seções) é a [`P3-TPL-01`](../backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md): o lojista escolhe o template por uma **lista com imagem de preview** (sem preview ao vivo ainda); o **cadastro** de templates é via admin da plataforma (futuro). Trocar de template **não quebra** o fluxo de compra.
 
 Quando salvar, a loja pública deve refletir a alteração.
 
@@ -312,14 +315,14 @@ A loja pode ter estados:
 | `draft` | Criada, **ainda não publicada** (estado inicial do `create_store`) | vitrine **não** serve |
 | `active` | **Publicada / no ar** (`publish`) | **único status servido na vitrine** |
 | `paused` | Tirada do ar pelo lojista (`pause`); reversível via publicar | vitrine **não** serve |
-| `suspended` | Suspensa pela plataforma (Fase 7) | guard do painel **bloqueia** (403) |
-| `blocked` | Bloqueada por regra crítica (Fase 7) | guard do painel **bloqueia** (403) |
+| `suspended` | Suspensa pela plataforma (Fase 4) | guard do painel **bloqueia** (403) |
+| `blocked` | Bloqueada por regra crítica (Fase 4) | guard do painel **bloqueia** (403) |
 
 > **Excluir loja = soft delete (`deleted_at`)** — fica no banco, não é status. O offline reversível é `paused`.
 
 ## Onboarding do lojista
 
-A V1 deve ter checklist inicial — **construído incrementalmente** conforme os módulos chegam (passo 1 na Fase 1; produto/3D na Fase 2; layout na Fase 3; pagamento na Fase 6). O MVP da Fase 1 entrega apenas o **passo 1 (criar loja)** via CTA; o checklist completo é incremento posterior:
+A V1 deve ter checklist inicial — **construído incrementalmente** conforme os módulos chegam (passo 1 na Fase 1; produto/3D na Fase 2; layout na Fase 3; pagamento na Fase 8). O MVP da Fase 1 entrega apenas o **passo 1 (criar loja)** via CTA; o checklist completo é incremento posterior:
 
 ```text
 1. Criar loja

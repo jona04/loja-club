@@ -25,7 +25,9 @@ def _headers(client: TestClient, db: Session, email: str) -> dict[str, str]:
 def _create_store(
     client: TestClient, headers: dict[str, str], name: str
 ) -> dict[str, Any]:
-    r = client.post(f"{API}/stores/", headers=headers, json={"name": name})
+    r = client.post(
+        f"{API}/stores/", headers=headers, json={"name": name, "country": "BR"}
+    )
     assert r.status_code == 201, r.text
     data: dict[str, Any] = r.json()
     return data
@@ -52,6 +54,10 @@ def test_create_store_is_atomic(client: TestClient, db: Session) -> None:
     store_id = uuid.UUID(body["id"])
     assert body["slug"] == "brindes-fortaleza"
     assert body["status"] == "draft"
+    # country derives currency/locale (P3-LOC-01).
+    assert body["country"] == "BR"
+    assert body["currency"] == "BRL"
+    assert body["locale"] == "pt-BR"
 
     members = db.exec(select(StoreMember).where(StoreMember.store_id == store_id)).all()
     assert len(members) == 1
@@ -87,13 +93,26 @@ def test_get_store_non_member_forbidden(client: TestClient, db: Session) -> None
 def test_duplicate_slug_rejected(client: TestClient, db: Session) -> None:
     headers = _headers(client, db, random_email())
     r1 = client.post(
-        f"{API}/stores/", headers=headers, json={"name": "Dup", "slug": "dup-slug"}
+        f"{API}/stores/",
+        headers=headers,
+        json={"name": "Dup", "slug": "dup-slug", "country": "BR"},
     )
     assert r1.status_code == 201
     r2 = client.post(
-        f"{API}/stores/", headers=headers, json={"name": "Other", "slug": "dup-slug"}
+        f"{API}/stores/",
+        headers=headers,
+        json={"name": "Other", "slug": "dup-slug", "country": "BR"},
     )
     assert r2.status_code == 409
+
+
+def test_create_store_invalid_country_rejected(client: TestClient, db: Session) -> None:
+    headers = _headers(client, db, random_email())
+    r = client.post(
+        f"{API}/stores/", headers=headers, json={"name": "Bad", "country": "ZZ"}
+    )
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "country_not_supported"
 
 
 def test_owner_updates_settings(client: TestClient, db: Session) -> None:

@@ -2,7 +2,7 @@
 id: P1-TEST-01
 title: Fixtures/factories multi-tenant + testes de isolamento
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Testes"
 area: TEST
 status: done
 depends_on: [P1-STORE-01, P1-PERM-01]

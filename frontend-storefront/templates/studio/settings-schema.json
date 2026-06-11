@@ -1,0 +1,6 @@
+[
+  { "key": "announcement_text", "type": "text", "label": "Texto da barra de anúncio", "group": "Topo", "default": "", "max_length": 120 },
+  { "key": "catalog_intro", "type": "textarea", "label": "Introdução do catálogo", "group": "Catálogo", "default": "" },
+  { "key": "show_filters", "type": "boolean", "label": "Mostrar filtros na sidebar", "group": "Catálogo", "default": true },
+  { "key": "footer_contact", "type": "text", "label": "Contato do rodapé", "group": "Rodapé", "default": "", "max_length": 160 }
+]

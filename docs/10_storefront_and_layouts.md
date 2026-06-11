@@ -16,6 +16,8 @@ presentescriativos.loja.club
 www.minhaloja.com.br
 ```
 
+> **Estado da Fase 3 (V1) — o que o código entrega vs. esta visão.** A Fase 3 entrega o **storefront base (imagem)**: resolução por `Host`, templates `classic`/`modern` (realizados por **renderização condicional** nas páginas do App Router — a home difere por template; produto/categoria compartilham com o estilo do tema —, sem árvores `classic/`+`modern/` separadas), **home** (logo, banner, headline, destaques por `is_featured`, categorias, rodapé e **botão flutuante de WhatsApp** de contato), **produto** (imagem/nome/preço/descrição, **sem CTA de compra**) e **categoria** (nome + produtos), com cache por-loja no backend. **Deferido** (follow-ups no [README da Fase 3](backlog/phase-3-storefront-and-layouts/README.md)): carrinho/checkout/entrega → **Fase 6**; editor 3D/`Personalizar` → **Fase 7**; e, como follow-up dentro da Fase 3: variações/disponibilidade/relacionados (produto), paginação-UI/filtros/ordenação (categoria), menu configurável + links sociais (home), destaque por **coleção** (hoje `is_featured`) e **i18n-readiness** (o V1 sai em pt-BR; ver `INV-G7`).
+
 ## Tecnologia recomendada
 
 A recomendação para o storefront é Next.js.
@@ -90,7 +92,19 @@ frontend-storefront/
         CheckoutPage
 ```
 
-> **`ProductCustomizer` (editor 3D) é da Fase 5.** Na Fase 3 os templates trazem Home/Product/Category (produtos de **imagem**); Cart/Checkout completam na Fase 4.
+> **`ProductCustomizer` (editor 3D) é da Fase 7.** Na Fase 3 os templates trazem Home/Product/Category (produtos de **imagem**); Cart/Checkout completam na Fase 6.
+
+## Sistema de templates (evolução — `P3-TPL-01`)
+
+> O V1 entrega **2 templates simples** (`classic`/`modern`) por renderização condicional. A [`P3-TPL-01`](backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md) eleva isso a um **sistema de templates profissionais** (spec em definição). Direção:
+
+- **Cada template = uma árvore de componentes própria** no `frontend-storefront` (`templates/<nome>/{Home,Category,Product,blocos}`), não só estilo condicional; um **resolver** mapeia `active_template_id` → a árvore.
+- **2–3 templates** bem distintos (carrossel no topo, hero, seções ricas), adaptados de **referências de design** fornecidas.
+- **Registro:** `content_theme_templates` lista os disponíveis, cada um com **`preview_image_url`**. O painel mostra **lista + imagem** (o lojista escolhe pela imagem; **não há preview ao vivo** ainda). Por ora os templates entram via **seed/código** — a **tela de admin** (loja.club) pra cadastrá-los é **futura** (Fase 4 — admin).
+- **Models mais ricos:** carrossel (vários banners ordenados → `content_banners`), seções configuráveis, etc. — reaproveita `content_banners`/`content_menus`/`content_pages`; campos/tabelas novos **a definir** no spec.
+- **Contrato (invariante):** trocar de template **não quebra** o fluxo do cliente — todos consomem o mesmo contrato de dados e levam ao mesmo **fluxo de compra** (Fase 6); e **todos reservam um slot pro editor 3D** (Fase 7).
+- **Telas por template (V1 + Fase 6):** Home · Categoria · Produto · **Checkout single-page** · Confirmação. O **carrinho é um drawer** (mini-carrinho no header), não página separada. Editor 3D (Fase 7) e área do cliente/login/acompanhar pedido (Fase 8) entram depois; **página institucional** reusa o *shell* do template.
+- **Estado (implementado em `P3-TPL-01`):** o storefront tem um **resolver** (`lib/templates.ts`) que mapeia `active_template_id` → árvore de componentes (`templates/<nome>/{Home,Category,Product}`), com **fallback** pro `base` (render legado `classic`/`modern`). **Aurora** portado (navegação: home/categoria/produto + drawer + slot 3D); **Bazar/Studio** caem no `base` até `P3-TPL-02`; checkout/confirmação dos templates = Fase 6.
 
 ## Configuração no banco
 
@@ -215,6 +229,8 @@ Deve mostrar:
 - botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
 
+> **Fase 3 V1:** a página é **informativa** (imagem/nome/preço/descrição), **sem ação de compra** — carrinho/checkout/entrega chegam na **Fase 6**. O único elemento de WhatsApp na vitrine é um **botão flutuante** de contato (em toda a loja) que redireciona pro WhatsApp web; usa `whatsapp_number` de `store_settings`. Variações, disponibilidade e relacionados = follow-up; `Personalizar` = Fase 7.
+
 Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
 O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
 
@@ -222,7 +238,7 @@ O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
 
 O editor deve permitir personalização do produto usando modelo 3D.
 
-Recursos (Fase 5 — editor 3D do storefront):
+Recursos (Fase 7 — editor 3D do storefront):
 
 - carregar o modelo 3D do lojista (gerado via API);
 - upload de imagem/arte pelo cliente;

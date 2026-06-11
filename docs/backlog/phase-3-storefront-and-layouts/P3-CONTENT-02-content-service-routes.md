@@ -2,9 +2,9 @@
 id: P3-CONTENT-02
 title: content — serviço/rotas do painel (tema/layout)
 phase: 3
-etapa: "Etapa 8 — Módulo de conteúdo/layout"
+etapa: "Etapa 3 — Módulo de conteúdo/layout"
 area: CONTENT
-status: todo
+status: done
 depends_on: [P3-CONTENT-01]
 blocks: [P3-FE-02]
 tests: [integration]
@@ -45,13 +45,19 @@ Endpoints do **painel** para o lojista escolher o template e editar a aparência
 - **Cobrir:** aplicar template muda `active_template_id` **e invalida** as chaves; template inválido → 4xx; gating; isolamento por loja.
 
 ## Definition of Done
-- [ ] Aplicar/editar persiste + **invalida** `store:{id}:theme|home|settings`.
-- [ ] Gating + isolamento por loja testados; cliente OpenAPI regenerado.
-- [ ] **Modos de falha mapeados** (template inexistente, invalidação parcial, race de aplicar) → tratados ou Follow-up.
-- [ ] Itens adiados varridos → Follow-ups + README, ou "nenhum".
+- [x] Aplicar/editar persiste + **invalida** `store:{id}:theme|home|settings` (teste com `cache_set`/`cache_get`).
+- [x] Gating (`layout.*`) + isolamento por loja testados; **cliente OpenAPI regenerado** (`ContentService`).
+- [x] **Modos de falha mapeados** (template inexistente → 400; invalidação stale; race de aplicar) → Follow-ups.
+- [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
 - As chaves de cache são definidas junto com a `P3-SF-01` (quem as lê); manter os nomes em sincronia.
+- **Aplicar + editar unificados** em `PATCH /stores/{id}/layout` (um write, `exclude_unset`; `active_template_id` valida template ativo). Leitura: `GET /layout`, `/layout/templates`, `/layout/preview/{template_id}`.
+- **`get_or_create`:** loja sem row → cria default (`classic`) no 1º acesso (lazy init em GET/preview/PATCH) — atende ao "loja sem theme settings → default".
+- **Gating** por `layout.view`/`preview`/`update` (já no catálogo de permissões da Fase 1); **sem `permissions.py`** no módulo, usando as strings (= padrão do `catalog`).
+- **Preview não persiste** (só o response carrega o template previsto).
 
 ## Follow-ups
-- (preencher ao executar)
+- [ ] **Invalidação de cache falha → stale** (`P3-CONTENT-02`): `cache_delete` roda **após o commit**; se o Redis cair, a escrita persiste mas o cache fica stale (e a request pode 500). Tratar (best-effort/log) quando o cache de leitura da vitrine entrar (`P3-SF-01`).
+- [ ] **Race de aplicar** (`P3-CONTENT-02`): PATCH concorrente = last-write-wins (sem lock). Aceitável no V1.
+- [ ] **CRUD de páginas/menus/banners no painel** (`P3-CONTENT-02`): modelos existem (CONTENT-01), mas sem rotas/UI — adicionar quando a UI precisar.

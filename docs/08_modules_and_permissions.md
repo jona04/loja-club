@@ -495,6 +495,8 @@ platform.audit.view
 platform.support.impersonate
 platform.3d_models.view
 platform.3d_models.manage
+platform.templates.view
+platform.templates.manage
 ```
 
 Papéis globais iniciais:
@@ -505,7 +507,7 @@ Papéis globais iniciais:
 | `platform_ops` | `platform.stores.view`, `platform.stores.block`, `platform.stores.unblock`, `platform.users.view`, `platform.plans.view`, `platform.webhooks.view`, `platform.audit.view`, `platform.support.impersonate`, `platform.3d_models.view` |
 | `platform_finance` | `platform.stores.view`, `platform.plans.view`, `platform.plans.update`, `platform.audit.view` |
 | `platform_support` | `platform.stores.view`, `platform.users.view`, `platform.webhooks.view`, `platform.audit.view`, `platform.support.impersonate`, `platform.3d_models.view` |
-| `platform_catalog` | `platform.3d_models.view`, `platform.3d_models.manage` |
+| `platform_catalog` | `platform.3d_models.view`, `platform.3d_models.manage`, `platform.templates.view`, `platform.templates.manage` |
 
 Todas as permissões globais estão contempladas em pelo menos um papel global.
 

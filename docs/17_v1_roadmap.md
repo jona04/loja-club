@@ -6,32 +6,22 @@ Construir uma primeira versão da Loja Club capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–4 rodam **local** (na máquina do desenvolvedor) e as Fases 6–7 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–7 rodam **local** (na máquina do desenvolvedor) e as Fases 8–9 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
 
-A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 4), deixando a **integração de pagamento/split para o final** (Fase 6).
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração de pagamento/split para o final** (Fase 8).
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
-
-## Situação atual (2026-06-01)
-
-> Até aqui, os commits do projeto foram **somente de documentação**. O código ainda é o **Full Stack FastAPI Template** praticamente sem alterações:
->
-> - `backend/app/models.py` só tem `User` e `Item`;
-> - `PROJECT_NAME` ainda é `"Full Stack FastAPI Project"` (branding Loja Club pendente);
-> - o frontend ainda é o painel padrão do template (login/signup/items);
-> - não existe `Store`, `store_id`, módulos, storefront Next.js nem admin.
->
-> Ou seja: a **Etapa 1 está apenas parcialmente feita** (projeto gerado pelo template) e as demais ainda não começaram.
 
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
-- **Toda a V1 é dev:** Fases 0–4 **local**; Fases 6–7 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
+- **Toda a V1 é dev:** Fases 0–7 **local**; Fases 8–9 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
 - Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
-- O **marco do MVP (dev local)** acontece ao fim da Fase 4, **antes** de subir para a AWS e de pagamentos.
+- O **marco do MVP (dev local)** acontece ao fim da Fase 6, **antes** de subir para a AWS e de pagamentos.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 6–7.
+- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 8–9.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
+- **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](./backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
 
 ---
 
@@ -39,12 +29,10 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 
 ### Etapa 1 — Fundação do projeto
 
-> Parcialmente feito: o projeto já foi gerado a partir do template. Faltam o branding e a configuração descritos abaixo.
-
 Entregas:
 
-- criar projeto a partir do Full Stack FastAPI Template; *(feito)*
-- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend); *(pendente)*
+- criar projeto a partir do Full Stack FastAPI Template;
+- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend);
 - configurar variáveis de ambiente;
 - rodar Docker Compose local;
 - validar backend;
@@ -81,7 +69,7 @@ Template transformado em monólito modular.
 
 ## Fase 1 — Núcleo multi-tenant e painel (dev local)
 
-### Etapa 3 — Multi-tenancy e lojas
+### Etapa 1 — Multi-tenancy e lojas
 
 Entregas:
 
@@ -102,11 +90,11 @@ Resultado:
 Usuário cria loja e os dados ficam isolados por store_id.
 ```
 
-### Etapa 4 — Painel do lojista base
+### Etapa 2 — Painel do lojista base
 
 Entregas:
 
-- painel em `app.loja.club` (local: `app.loja.localhost`);
+- painel em `app.loja.club` (local: `app.localhost`);
 - login;
 - seleção de loja ativa;
 - menu modular;
@@ -125,7 +113,7 @@ Lojista consegue acessar e gerenciar sua loja básica.
 
 ## Fase 2 — Catálogo e mídia (dev local)
 
-### Etapa 5 — Catálogo e mídia
+### Etapa 1 — Catálogo e mídia
 
 > Mídia já usa **AWS S3 + CloudFront reais** a partir do dev local (bucket/distribuição de dev). Sem MinIO.
 
@@ -137,7 +125,7 @@ Entregas:
 - estoque;
 - status publicado/rascunho;
 - upload de imagens;
-- produto com imagem; 3D / 3D-personalizável → Fase 5;
+- produto com imagem; 3D / 3D-personalizável → Fase 7;
 - S3 (AWS real, ambiente dev);
 - worker para thumbnails;
 - CloudFront para imagens;
@@ -149,13 +137,13 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFront).
 ```
 
-> A personalização 3D é a **Fase 5 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
+> A personalização 3D é a **Fase 7 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
 
 ---
 
 ## Fase 3 — Loja pública (dev local)
 
-### Etapa 7 — Storefront público (Next.js)
+### Etapa 1 — Storefront público (Next.js)
 
 > Decisão fechada (docs 05/10/18): o storefront usa **Next.js** desde a V1, com **Three.js** para o editor 3D.
 
@@ -176,10 +164,10 @@ Entregas:
 Resultado:
 
 ```text
-Loja pública abre em nomedaloja.loja.club (local: *.loja.localhost).
+Loja pública abre em nomedaloja.loja.club (local: *.localhost).
 ```
 
-### Etapa 8 — Layouts/templates
+### Etapa 2 — Layouts/templates
 
 Entregas:
 
@@ -201,15 +189,52 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ---
 
-## Fase 4 — Venda sem pagamento online (dev local)
+## Fase 4 — Admin do SaaS (dev local)
+
+> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
+
+Entregas:
+
+- `frontend-admin` em `admin.${DOMAIN}` (Traefik) + papéis globais `platform.*` (substitui `is_superuser`);
+- operar lojas (listar/detalhe/bloquear), planos, usuários; suporte com impersonation + auditoria mínima;
+- **registro de templates:** metadados + **thumbnail no CDN** + **settings schema** (do código). *(import de imagens, loja-demo e preview navegável = Fase 5)*
+
+Resultado:
+
+```text
+Equipe opera a plataforma e registra templates (thumbnail + schema); a vitrine sai do hardcoded.
+```
+
+---
+
+## Fase 5 — Configuração da loja pelo lojista (dev local)
+
+> Objetivo: com os templates **registrados** (Fase 4), esta fase entrega a **loja-demo** por template (import das imagens pro CDN) + o lojista **personaliza** o template — **schema-driven** (`P3-TPL-04`) + **preview navegável completo**. Detalhe em [`backlog/phase-5-store-configuration.md`](./backlog/phase-5-store-configuration.md); decisões em [26](./26_template_system.md) e o passo-a-passo em [27](./27_template_authoring_guide.md).
+
+Entregas:
+
+- **loja-demo por template** (do `demo.json`) + **import das imagens** (uxpilot → CDN);
+- form gerado do `settings_schema` do template ativo (campos `text/textarea/image/boolean/select`);
+- valores por **loja × template** (não perde ao trocar; resetar = excluir); imagens com **default no CDN**;
+- vitrine lê `theme.settings[key] ?? default`; botão "ver preview completo" (outra aba) abre a loja-demo.
+
+Resultado:
+
+```text
+Lojista personaliza o template pelo painel; a vitrine reflete.
+```
+
+---
+
+## Fase 6 — Venda sem pagamento online (dev local)
 
 > Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem o gateway**.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
-> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 6.
+> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 8.
 
-### Etapa 9 — Frete e cupons (base)
+### Etapa 1 — Frete e cupons (base)
 
-> Movido para antes do carrinho: carrinho (Etapa 10) e checkout (Etapa 11) dependem destas regras.
+> Movido para antes do carrinho: carrinho (Etapa 2) e checkout (Etapa 3) dependem destas regras.
 
 Entregas:
 
@@ -230,7 +255,7 @@ Resultado:
 Loja tem regras básicas de entrega e desconto disponíveis para o carrinho e o checkout.
 ```
 
-### Etapa 10 — Carrinho
+### Etapa 2 — Carrinho
 
 Entregas:
 
@@ -254,7 +279,7 @@ Resultado:
 Cliente final consegue montar carrinho.
 ```
 
-### Etapa 11 — Checkout sem pagamento online
+### Etapa 3 — Checkout sem pagamento online
 
 Entregas:
 
@@ -271,7 +296,7 @@ Entregas:
 - congelamento da personalização aprovada;
 - sessão de checkout;
 - **pagamento combinado fora da plataforma** (Pix manual/transferência/WhatsApp), com mensagem pós-compra explicando como o pagamento será combinado;
-- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 6).
+- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 8).
 
 Resultado:
 
@@ -279,7 +304,7 @@ Resultado:
 Carrinho vira pedido pending_payment, com o cliente identificado por e-mail/telefone; o pagamento é combinado entre loja e cliente.
 ```
 
-### Etapa 12 — Pedidos
+### Etapa 4 — Pedidos
 
 Entregas:
 
@@ -303,7 +328,7 @@ Resultado:
 Lojista consegue operar vendas recebidas.
 ```
 
-### Etapa 13 — Clientes
+### Etapa 5 — Clientes
 
 Entregas:
 
@@ -321,15 +346,15 @@ Resultado:
 Lojista visualiza clientes da própria loja e sabe quem é quem pelo contato, mesmo sem cadastro.
 ```
 
-### Etapa 14 — Notificações essenciais + finalização local
+### Etapa 6 — Notificações essenciais + finalização local
 
-> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 6.
+> Fecha o MVP rodando de ponta a ponta no Docker Compose local. E-mails locais via Mailcatcher; SES/SMTP real entra na Fase 8.
 
 Entregas:
 
 - e-mail de **pedido criado** para o cliente (Mailcatcher no dev local);
 - e-mail de **novo pedido** para o lojista (Mailcatcher no dev local);
-- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente local;
+- health checks básicos (`/health`, `/health/db`, `/health/redis`) no ambiente de desenvolvimento;
 - fluxo completo validado de ponta a ponta no Docker Compose local.
 
 Resultado:
@@ -363,11 +388,11 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 ---
 
-## Fase 5 — Produtos 3D (dev local)
+## Fase 7 — Produtos 3D (dev local)
 
-> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-5-3d-products.md`](./backlog/phase-5-3d-products.md).
+> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](./backlog/phase-7-3d-products.md).
 
-### Etapa 6 — Produtos 3D e personalização
+### Etapa 1 — Produtos 3D e personalização
 
 Entregas:
 
@@ -391,11 +416,11 @@ Cliente personaliza, em 3D, um produto cujo modelo o próprio lojista gerou via 
 
 ---
 
-## Fase 6 — Dev online na AWS (EC2)
+## Fase 8 — Dev online na AWS (EC2)
 
 > Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
 
-### Etapa 15 — Deploy do ambiente dev na AWS (EC2)
+### Etapa 1 — Deploy do ambiente dev na AWS (EC2)
 
 Entregas:
 
@@ -415,7 +440,7 @@ Resultado:
 Sistema no ar (dev), em EC2, pronto para receber webhooks de pagamento.
 ```
 
-### Etapa 16 — Conta e login do cliente
+### Etapa 2 — Conta e login do cliente
 
 > Detalhes em `23_customer_identity_and_guest_checkout.md`. No MVP o cliente já é identificado por e-mail/telefone; aqui ele ganha login e área própria, sincronizando com o que comprou como convidado.
 
@@ -437,7 +462,7 @@ Resultado:
 Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
 ```
 
-### Etapa 17 — Pagamentos e split
+### Etapa 3 — Pagamentos e split
 
 Entregas:
 
@@ -459,7 +484,7 @@ Resultado:
 Cliente paga, gateway divide valores e pedido é atualizado por webhook.
 ```
 
-### Etapa 18 — Billing da Loja Club
+### Etapa 4 — Billing da Loja Club
 
 Entregas:
 
@@ -480,32 +505,11 @@ Loja Club começa a monetizar por mensalidade e/ou comissão.
 
 ---
 
-## Fase 7 — Operação da plataforma, CI/CD e beta
+## Fase 9 — Operação da plataforma, CI/CD e beta
 
-### Etapa 19 — Admin da plataforma
+> O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](./backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
 
-Entregas:
-
-- projeto `frontend-admin`;
-- `admin.loja.club`;
-- listar lojas;
-- ver detalhes de loja;
-- bloquear/desbloquear loja;
-- ver usuários;
-- ver pedidos por loja;
-- ver webhooks com erro;
-- configurar a integração da API de geração 3D (Fase 5);
-- gerenciar planos;
-- ver comissões;
-- auditoria.
-
-Resultado:
-
-```text
-Equipe Loja Club consegue operar a plataforma.
-```
-
-### Etapa 20 — Segurança e observabilidade
+### Etapa 1 — Segurança e observabilidade
 
 Entregas:
 
@@ -528,7 +532,7 @@ Resultado:
 Ambiente dev online pronto para uso controlado.
 ```
 
-### Etapa 21 — CI/CD
+### Etapa 2 — CI/CD
 
 Entregas:
 
@@ -545,7 +549,7 @@ Resultado:
 Deploy automatizado do ambiente dev na AWS a cada merge.
 ```
 
-### Etapa 22 — Beta com lojas reais
+### Etapa 3 — Beta com lojas reais
 
 Entregas:
 

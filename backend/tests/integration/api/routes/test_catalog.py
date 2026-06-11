@@ -5,10 +5,27 @@ import uuid
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
+from app.core.cache import cache_get, cache_set
 from app.modules.media.models import MediaFile
 from tests.utils.store import TenantContext, create_member, create_user, member_headers
 
 BASE = "/api/v1/stores"
+
+
+def _create_category(
+    client: TestClient,
+    store_id: uuid.UUID,
+    headers: dict[str, str],
+    *,
+    name: str | None = None,
+) -> str:
+    name = name or f"Cat {uuid.uuid4().hex[:8]}"
+    resp = client.post(
+        f"{BASE}/{store_id}/categories", headers=headers, json={"name": name}
+    )
+    assert resp.status_code == 201, resp.text
+    cid: str = resp.json()["id"]
+    return cid
 
 
 def _create_product(
@@ -18,8 +35,16 @@ def _create_product(
     *,
     name: str = "Mug",
     slug: str = "mug",
+    category_ids: list[str] | None = None,
 ) -> dict[str, object]:
-    body = {"name": name, "slug": slug, "price_amount_minor": 1500}
+    if category_ids is None:
+        category_ids = [_create_category(client, store_id, headers)]
+    body = {
+        "name": name,
+        "slug": slug,
+        "price_amount_minor": 1500,
+        "category_ids": category_ids,
+    }
     resp = client.post(f"{BASE}/{store_id}/products", headers=headers, json=body)
     data: dict[str, object] = resp.json()
     data["_status"] = resp.status_code
@@ -84,11 +109,16 @@ def test_slug_auto_disambiguates_and_follows_draft_name(
     url = f"{BASE}/{a.id}/products"
 
     # same name, no explicit slug → auto-suffix (camiseta, camiseta-2, …)
+    cat = _create_category(client, a.id, h)
     p1 = client.post(
-        url, headers=h, json={"name": "Camiseta", "price_amount_minor": 1000}
+        url,
+        headers=h,
+        json={"name": "Camiseta", "price_amount_minor": 1000, "category_ids": [cat]},
     ).json()
     p2 = client.post(
-        url, headers=h, json={"name": "Camiseta", "price_amount_minor": 1000}
+        url,
+        headers=h,
+        json={"name": "Camiseta", "price_amount_minor": 1000, "category_ids": [cat]},
     ).json()
     assert p1["slug"] == "camiseta"
     assert p2["slug"] == "camiseta-2"
@@ -138,9 +168,48 @@ def test_gating_support_cannot_create(
     resp = client.post(
         f"{BASE}/{two_stores.store_a.id}/products",
         headers=headers,
-        json={"name": "X", "slug": "x", "price_amount_minor": 100},
+        json={
+            "name": "X",
+            "slug": "x",
+            "price_amount_minor": 100,
+            "category_ids": [str(uuid.uuid4())],
+        },
     )
     assert resp.status_code == 403
+
+
+def test_product_requires_category(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    no_cat = client.post(
+        f"{BASE}/{a.id}/products",
+        headers=h,
+        json={"name": "NoCat", "price_amount_minor": 100},
+    )
+    assert no_cat.status_code == 422  # category_ids is required
+    bad_cat = client.post(
+        f"{BASE}/{a.id}/products",
+        headers=h,
+        json={
+            "name": "BadCat",
+            "price_amount_minor": 100,
+            "category_ids": [str(uuid.uuid4())],
+        },
+    )
+    assert bad_cat.status_code == 404  # category not in this store
+
+
+def test_publish_invalidates_storefront_home_cache(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    pid = _create_product(client, a.id, h)["id"]
+    cache_set(f"{a.id}:home", "stale", prefix="store")
+    client.post(f"{BASE}/{a.id}/products/{pid}/publish", headers=h)
+    assert cache_get(f"{a.id}:home", prefix="store") is None
 
 
 def test_inventory_set_upserts(client: TestClient, two_stores: TenantContext) -> None:

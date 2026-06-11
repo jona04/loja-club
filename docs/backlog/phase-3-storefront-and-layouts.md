@@ -1,10 +1,10 @@
 # Fase 3 — Storefront público e layouts
 
-> Roadmap: Etapas 7–8. Objetivo: loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (de imagem) e categorias renderizam; lojista troca o template e a loja pública muda. O **editor 3D + personalização** é a **[Fase 5](./phase-5-3d-products.md)**.
+> Objetivo: loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (de imagem) e categorias renderizam; lojista troca o template e a loja pública muda. O **editor 3D + personalização** é a **[Fase 7](./phase-7-3d-products.md)**.
 
 Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront_and_layouts.md), [22](../22_product_customization_3d.md), [13](../13_performance_cache_and_cdn.md), [21](../21_design_system_todo.md), [16](../16_testing_strategy.md).
 
-> **Nota:** o storefront base (home/categoria/produto, templates) é desta fase; o **editor 3D + personalização** é a **[Fase 5 — Produtos 3D](./phase-5-3d-products.md)** (modelos gerados pelo lojista via API).
+> **Nota:** o storefront base (home/categoria/produto, templates) é desta fase; o **editor 3D + personalização** é a **[Fase 7 — Produtos 3D](./phase-7-3d-products.md)** (modelos gerados pelo lojista via API).
 
 ## Definition of Done da fase
 
@@ -14,7 +14,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 ---
 
-## Etapa 7 — Projeto `frontend-storefront` (Next.js) — NOVO
+## Etapa 1 — Projeto `frontend-storefront` (Next.js) — NOVO
 
 > Decisão fechada (doc [05](../05_frontend_architecture.md)/[10](../10_storefront_and_layouts.md)/[18](../18_open_decisions.md)): Next.js no storefront, Three.js no editor. É um projeto **separado** do `frontend-dashboard`.
 
@@ -30,7 +30,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 ---
 
-## Etapa 7 — Módulo `storefront` (API pública)
+## Etapa 2 — Módulo `storefront` (API pública)
 
 > Endpoints públicos, **sem login**, loja resolvida pelo `Host`. Leitura otimizada e cacheada. Doc [10](../10_storefront_and_layouts.md)/[13](../13_performance_cache_and_cdn.md)/[20](../20_api_contracts_todo.md).
 
@@ -41,7 +41,7 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 
 ---
 
-## Etapa 8 — Módulo de conteúdo/layout
+## Etapa 3 — Módulo de conteúdo/layout
 
 ### Modelos (com `store_id`, exceto templates globais)
 - [ ] `content_theme_templates` (global): `id` (`classic`/`modern`), `name`, `description`, `is_active`, `preview_image_url`. Doc [10](../10_storefront_and_layouts.md)/[07](../07_database_strategy.md).
@@ -53,16 +53,16 @@ Docs de referência: [05](../05_frontend_architecture.md), [10](../10_storefront
 - [ ] Índice `content_store_theme_settings.store_id` único; `content_menus.store_id+location`. Doc [07](../07_database_strategy.md).
 
 ### Templates no storefront
-- [ ] Implementar `classic` e `modern` com HomePage, ProductPage, CategoryPage, CartPage, CheckoutPage (carrinho/checkout completados na Fase 4; o **ProductCustomizer/editor 3D** é a Fase 5). Doc [10](../10_storefront_and_layouts.md).
+- [ ] Implementar `classic` e `modern` com HomePage, ProductPage, CategoryPage, CartPage, CheckoutPage (carrinho/checkout completados na Fase 6; o **ProductCustomizer/editor 3D** é a Fase 7). Doc [10](../10_storefront_and_layouts.md).
 
 ---
 
-## Etapa 8 — Frontend (painel)
+## Etapa 4 — Frontend (painel)
 - [ ] Tela **"Layout da Loja"**: ver 2 templates, visualizar preview com dados reais, aplicar; editar logo, banner, headline, descrição e produtos em destaque. Doc [09](../09_merchant_dashboard.md)/[10](../10_storefront_and_layouts.md).
 
 ---
 
-## Etapa 7/8 — Testes (doc [16](../16_testing_strategy.md))
+## Testes (doc [16](../16_testing_strategy.md))
 - [ ] Domínio resolve a loja; host inexistente → "loja não encontrada".
 - [ ] Home, produto e categoria carregam (produtos de imagem).
 - [ ] Loja inicia com template padrão; aplicar `classic`/`modern` invalida cache e o storefront retorna o template ativo correto.

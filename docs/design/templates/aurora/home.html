@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Lojaflex 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f6f6f6',
+                            100: '#e7e7e7',
+                            200: '#d1d1d1',
+                            900: '#111111',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-white text-brand-900 antialiased selection:bg-brand-900 selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-brand-900 text-white text-xs text-center py-2 uppercase tracking-widest font-medium">
+        Frete grátis em compras acima de R$ 500
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Mobile Menu Button (Left) -->
+                <button class="md:hidden p-2 -ml-2 text-gray-500 hover:text-brand-900">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+
+                <!-- Logo (Center Mobile, Left Desktop) -->
+                <div class="flex-shrink-0 flex items-center justify-center absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0">
+                    <a href="#" class="text-2xl font-semibold tracking-tight text-brand-900">
+                        Lojaflex 2.
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation (Center) -->
+                <nav class="hidden md:flex space-x-8 absolute left-1/2 -translate-x-1/2">
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Novidades</a>
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Decoração</a>
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Móveis</a>
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Iluminação</a>
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Têxtil</a>
+                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">Todas as categorias</a>
+                </nav>
+
+                <!-- Icons (Right) -->
+                <div class="flex items-center space-x-4 md:space-x-6">
+                    <button class="text-gray-500 hover:text-brand-900 transition-colors hidden sm:block">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-brand-900 transition-colors">
+                        <i class="fa-regular fa-user text-lg"></i>
+                    </button>
+                    <button onclick="toggleCart()" class="text-gray-500 hover:text-brand-900 transition-colors relative">
+                        <i class="fa-solid fa-bag-shopping text-lg"></i>
+                        <span class="absolute -top-1.5 -right-2 bg-brand-900 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mini-cart Drawer Overlay -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/30 z-50 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCart()"></div>
+
+    <!-- Mini-cart Drawer -->
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-brand-900">Seu Carrinho</h2>
+            <button onclick="toggleCart()" class="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Content (Items) -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- Item 1 -->
+            <div class="flex gap-4">
+                <div class="h-24 w-20 flex-shrink-0 overflow-hidden bg-gray-50 rounded-sm">
+                    <img class="h-full w-full object-cover object-center" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_289e817856_90ee14502f72b987.png" alt="minimalist ceramic vase, soft beige, natural lighting, product photography white background" />
+                </div>
+                <div class="flex flex-1 flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between text-sm font-medium text-brand-900">
+                            <h3><a href="#">Vaso Cerâmico Nórdico</a></h3>
+                            <p class="ml-4">R$ 249,00</p>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Bege Acinzentado</p>
+                    </div>
+                    <div class="flex flex-1 items-end justify-between text-sm">
+                        <div class="flex items-center border border-gray-200 rounded-sm">
+                            <button class="px-2 py-1 text-gray-500 hover:text-brand-900">-</button>
+                            <span class="px-2 py-1 text-gray-700">1</span>
+                            <button class="px-2 py-1 text-gray-500 hover:text-brand-900">+</button>
+                        </div>
+                        <button type="button" class="font-medium text-gray-400 hover:text-red-500 underline text-xs">Remover</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="flex gap-4">
+                <div class="h-24 w-20 flex-shrink-0 overflow-hidden bg-gray-50 rounded-sm">
+                    <img class="h-full w-full object-cover object-center" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_e64193baea_757c0e0e93424ad3.png" alt="linen throw pillow cover minimalist neutral color, product photography white background" />
+                </div>
+                <div class="flex flex-1 flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between text-sm font-medium text-brand-900">
+                            <h3><a href="#">Capa de Almofada Linho Puro</a></h3>
+                            <p class="ml-4">R$ 129,00</p>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Areia</p>
+                    </div>
+                    <div class="flex flex-1 items-end justify-between text-sm">
+                        <div class="flex items-center border border-gray-200 rounded-sm">
+                            <button class="px-2 py-1 text-gray-500 hover:text-brand-900">-</button>
+                            <span class="px-2 py-1 text-gray-700">2</span>
+                            <button class="px-2 py-1 text-gray-500 hover:text-brand-900">+</button>
+                        </div>
+                        <button type="button" class="font-medium text-gray-400 hover:text-red-500 underline text-xs">Remover</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="border-t border-gray-100 p-6 bg-gray-50">
+            <div class="flex justify-between text-base font-medium text-brand-900 mb-4">
+                <p>Subtotal</p>
+                <p>R$ 507,00</p>
+            </div>
+            <p class="text-sm text-gray-500 mb-6">Frete calculado na próxima etapa.</p>
+            <div class="mt-6">
+                <a href="#" class="flex items-center justify-center rounded-sm border border-transparent bg-brand-900 px-6 py-4 text-base font-medium text-white shadow-sm hover:bg-black transition-colors w-full">
+                    Finalizar compra
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero-section" class="relative w-full h-[600px] md:h-[700px] lg:h-[800px] bg-gray-100 overflow-hidden group">
+            <img class="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_efe8d04031_b53815b242de198c.png" alt="modern minimalist living room interior with neutral tones, elegant furniture, soft natural morning s" />
+            <div class="absolute inset-0 bg-black/20"></div>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight mb-4 drop-shadow-sm">
+                    A Essência do Minimalismo
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 font-light max-w-2xl mb-8 drop-shadow-sm">
+                    Descubra nossa nova coleção de peças atemporais desenhadas para trazer calma e sofisticação ao seu espaço.
+                </p>
+                <a href="#" class="inline-block bg-white text-brand-900 px-8 py-4 text-sm font-medium tracking-wide hover:bg-gray-100 transition-colors shadow-lg">
+                    Explorar Coleção
+                </a>
+            </div>
+
+            <!-- Minimalist Pagination Dots -->
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2">
+                <div class="w-12 h-1 bg-white rounded-full"></div>
+                <div class="w-2 h-1 bg-white/50 rounded-full cursor-pointer hover:bg-white/80 transition-colors"></div>
+                <div class="w-2 h-1 bg-white/50 rounded-full cursor-pointer hover:bg-white/80 transition-colors"></div>
+            </div>
+        </section>
+
+        <!-- Categories Strip -->
+        <section id="categories-strip" class="py-16 bg-white border-b border-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex overflow-x-auto no-scrollbar space-x-8 md:space-x-12 lg:justify-center pb-4">
+                    <!-- Category 1 -->
+                    <a href="#" class="group flex flex-col items-center flex-shrink-0 w-24 md:w-32">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-50 mb-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_decf311d1a_002647435165fe2b.png" alt="minimalist modern sofa chair cutout on white background" />
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-700 text-center group-hover:text-brand-900">Móveis</span>
+                    </a>
+
+                    <!-- Category 2 -->
+                    <a href="#" class="group flex flex-col items-center flex-shrink-0 w-24 md:w-32">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-50 mb-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_1beae6f6df_e9b1d0f6f403629c.png" alt="elegant modern table lamp cutout on white background" />
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-700 text-center group-hover:text-brand-900">Iluminação</span>
+                    </a>
+
+                    <!-- Category 3 -->
+                    <a href="#" class="group flex flex-col items-center flex-shrink-0 w-24 md:w-32">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-50 mb-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
+                            <img class="w-full h-full object-cover p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_ace34fbba2_1d4197c335843ed0.png" alt="minimalist ceramic decor objects vase cutout on white background" />
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-700 text-center group-hover:text-brand-900">Decoração</span>
+                    </a>
+
+                    <!-- Category 4 -->
+                    <a href="#" class="group flex flex-col items-center flex-shrink-0 w-24 md:w-32">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-50 mb-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
+                            <img class="w-full h-full object-cover p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_8a7c50f367_3550b67617c7923f.png" alt="folded linen textiles soft beige and gray cutout on white background" />
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-700 text-center group-hover:text-brand-900">Têxtil</span>
+                    </a>
+
+                    <!-- Category 5 -->
+                    <a href="#" class="group flex flex-col items-center flex-shrink-0 w-24 md:w-32">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-50 mb-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md">
+                            <img class="w-full h-full object-cover p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_4021ab54fe_a074cd52ada55197.png" alt="minimalist modern dining ware plates cutout on white background" />
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-700 text-center group-hover:text-brand-900">Mesa Posta</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Highlights Section -->
+        <section id="highlights-section" class="py-20 md:py-28 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-12">
+                    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-brand-900">Novidades Selecionadas</h2>
+                    <a href="#" class="hidden md:inline-flex items-center text-sm font-medium text-gray-600 hover:text-brand-900 transition-colors">
+                        Ver todos <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-y-16">
+                    <!-- Product Card 1 -->
+                    <div class="group relative">
+                        <div class="aspect-square w-full overflow-hidden rounded-sm bg-gray-100 mb-4 relative">
+                            <img class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_bfdcb43010_7e5bc088f5090f5d.png" alt="minimalist table lamp, matte black metal, soft lighting, styled on a wooden side table, editorial ph" />
+                            <div class="absolute top-3 left-3 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-900 rounded-sm">Novo</div>
+                            <!-- Quick add hover overlay -->
+                            <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hidden md:block">
+                                <button class="w-full bg-white/95 backdrop-blur-sm text-brand-900 text-sm font-medium py-3 rounded-sm shadow-sm hover:bg-brand-900 hover:text-white transition-colors">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-medium text-brand-900 leading-tight mb-1">
+                            <a href="#">
+                                <span aria-hidden="true" class="absolute inset-0 md:hidden"></span>
+                                Luminária de Mesa Orix
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2">Preto Fosco</p>
+                        <p class="text-sm font-medium text-brand-900">R$ 589,00</p>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="group relative">
+                        <div class="aspect-square w-full overflow-hidden rounded-sm bg-gray-100 mb-4 relative">
+                            <img class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_a1b2eef7d4_699526a5dcdb1eae.png" alt="minimalist lounge chair, solid oak wood frame, boucle fabric seating cream color, editorial photogra" />
+                            <!-- Quick add hover overlay -->
+                            <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hidden md:block">
+                                <button class="w-full bg-white/95 backdrop-blur-sm text-brand-900 text-sm font-medium py-3 rounded-sm shadow-sm hover:bg-brand-900 hover:text-white transition-colors">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-medium text-brand-900 leading-tight mb-1">
+                            <a href="#">
+                                <span aria-hidden="true" class="absolute inset-0 md:hidden"></span>
+                                Poltrona Bouclé Alva
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2">Madeira Maciça & Algodão</p>
+                        <p class="text-sm font-medium text-brand-900">R$ 2.450,00</p>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="group relative">
+                        <div class="aspect-square w-full overflow-hidden rounded-sm bg-gray-100 mb-4 relative">
+                            <img class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_75ee1aa669_522260dbf9667914.png" alt="set of textured ceramic vases minimalist wabi-sabi style, neutral tones, styled softly, high-end pho" />
+                            <!-- Quick add hover overlay -->
+                            <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hidden md:block">
+                                <button class="w-full bg-white/95 backdrop-blur-sm text-brand-900 text-sm font-medium py-3 rounded-sm shadow-sm hover:bg-brand-900 hover:text-white transition-colors">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-medium text-brand-900 leading-tight mb-1">
+                            <a href="#">
+                                <span aria-hidden="true" class="absolute inset-0 md:hidden"></span>
+                                Conjunto de Vasos Terra
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2">Cerâmica Artesanal</p>
+                        <p class="text-sm font-medium text-brand-900">R$ 320,00</p>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="group relative">
+                        <div class="aspect-square w-full overflow-hidden rounded-sm bg-gray-100 mb-4 relative">
+                            <img class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_da81a72f14_2b6a1fcc3c3c3250.png" alt="minimalist round wall mirror with thin brass frame, reflection of a bright modern room, editorial st" />
+                            <!-- Quick add hover overlay -->
+                            <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hidden md:block">
+                                <button class="w-full bg-white/95 backdrop-blur-sm text-brand-900 text-sm font-medium py-3 rounded-sm shadow-sm hover:bg-brand-900 hover:text-white transition-colors">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-medium text-brand-900 leading-tight mb-1">
+                            <a href="#">
+                                <span aria-hidden="true" class="absolute inset-0 md:hidden"></span>
+                                Espelho Redondo Aura
+                            </a>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2">Moldura Latão 60cm</p>
+                        <p class="text-sm font-medium text-brand-900">R$ 690,00</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center md:hidden">
+                    <a href="#" class="inline-flex w-full items-center justify-center border border-gray-300 px-6 py-3 text-sm font-medium text-brand-900 hover:bg-gray-50 rounded-sm">
+                        Ver todos os produtos
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secondary Editorial Banner -->
+        <section id="editorial-banner" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+            <div class="relative overflow-hidden bg-brand-50 rounded-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 items-center">
+                    <div class="p-10 md:p-16 lg:p-24 flex flex-col justify-center order-2 md:order-1">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4 block">Coleção Outono</span>
+                        <h2 class="text-3xl md:text-4xl font-light text-brand-900 mb-6 leading-tight">
+                            Tons Terrosos & <br>Texturas Naturais
+                        </h2>
+                        <p class="text-gray-600 mb-8 max-w-md">
+                            Traga o aconchego da natureza para dentro de casa com nossa nova curadoria de tecidos em linho cru, algodão orgânico e cerâmicas rústicas.
+                        </p>
+                        <div>
+                            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-900 border-b border-brand-900 pb-1 hover:text-gray-600 hover:border-gray-600 transition-colors">
+                                Explorar a coleção completa
+                            </a>
+                        </div>
+                    </div>
+                    <div class="h-[400px] md:h-full w-full order-1 md:order-2">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_1296853d3d_1243ec22eb94c422.png" alt="close up of textured interior fabrics, linen pillows, warm earthy tones, aesthetic sunlight shadows," />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Indicators -->
+        <section class="border-t border-gray-100 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-y-8 sm:grid-cols-3 sm:gap-x-8 text-center sm:text-left">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                        <div class="text-2xl text-gray-400">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-brand-900">Entrega Expressa</h4>
+                            <p class="mt-1 text-sm text-gray-500">Envio para todo o Brasil com opções de entrega rápida.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                        <div class="text-2xl text-gray-400">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-brand-900">Compra Segura</h4>
+                            <p class="mt-1 text-sm text-gray-500">Ambiente blindado e dados totalmente protegidos.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                        <div class="text-2xl text-gray-400">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-brand-900">Troca Facilitada</h4>
+                            <p class="mt-1 text-sm text-gray-500">Até 30 dias para devolução ou troca sem complicações.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-brand-900 text-white pt-16 pb-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 border-b border-gray-800 pb-12">
+
+                <!-- Brand Column -->
+                <div class="col-span-1 md:col-span-1">
+                    <a href="#" class="text-2xl font-semibold tracking-tight text-white inline-block mb-6">
+                        Lojaflex 2.
+                    </a>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                        Curadoria de peças minimalistas e atemporais para transformar sua casa em um refúgio de calma e elegância.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-pinterest text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-tiktok text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Links Column 1 -->
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-gray-100">Navegue</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Novidades</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Móveis</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Decoração</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Iluminação</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links Column 2 -->
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-gray-100">Institucional</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Sobre a Lojaflex 2</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Termos de Uso</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Trocas e Devoluções</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-gray-100">Atendimento</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start text-sm text-gray-400">
+                            <i class="fa-brands fa-whatsapp mt-1 mr-3 text-white"></i>
+                            <div>
+                                <span class="block">WhatsApp</span>
+                                <a href="#" class="hover:text-white transition-colors">+55 11 99999-9999</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start text-sm text-gray-400">
+                            <i class="fa-regular fa-envelope mt-1 mr-3 text-white"></i>
+                            <div>
+                                <span class="block">E-mail</span>
+                                <a href="mailto:contato@lojaflex2.com.br" class="hover:text-white transition-colors">contato@lojaflex2.com.br</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start text-sm text-gray-400 mt-4">
+                            Horário de atendimento:<br>Seg a Sex, das 9h às 18h.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2024 Lojaflex 2. Todos os direitos reservados.</p>
+                <div class="mt-4 md:mt-0 flex space-x-6">
+                    <span>Plataforma Loja Club</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="#" id="floating-whatsapp" class="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 group">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <!-- Tooltip -->
+        <span class="absolute right-16 bg-white text-gray-800 text-xs font-medium px-3 py-2 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Fale conosco
+        </span>
+    </a>
+
+    <!-- Simple Script for Drawer Toggle -->
+    <script>
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+
+            // Toggle translate classes for sliding effect
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when open
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+</body>
+</html>

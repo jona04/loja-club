@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojaflex 4 - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#000000', // Black accent for utility/catalog vibe
+                        surface: '#f9fafb',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+        /* Drawer transition utilities */
+        .drawer-open { transform: translateX(0%); }
+        .drawer-closed { transform: translateX(100%); }
+        .backdrop-visible { opacity: 1; pointer-events: auto; }
+        .backdrop-hidden { opacity: 0; pointer-events: none; }
+        .mobile-menu-open { transform: translateX(0%); }
+        .mobile-menu-closed { transform: translateX(-100%); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans m-0 p-0 min-h-screen flex flex-col antialiased">
+
+    <!-- Topbar -->
+    <header id="header" class="sticky top-0 z-40 bg-white border-b border-gray-200 h-16 w-full flex items-center justify-between px-4 lg:px-8">
+        <!-- Left: Mobile Menu Toggle & Logo -->
+        <div class="flex items-center gap-4">
+            <button id="mobile-menu-btn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight text-brand">
+                <i class="fa-solid fa-shapes"></i>
+                Lojaflex 4
+            </a>
+        </div>
+
+        <!-- Center: Search Bar (Hidden on very small screens, expands on md) -->
+        <div class="hidden md:flex flex-1 max-w-xl mx-8 relative">
+            <input type="text" placeholder="Buscar produtos, categorias..." class="w-full h-10 pl-10 pr-4 bg-surface border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="flex items-center gap-5">
+            <button class="md:hidden text-gray-600 hover:text-brand">
+                <i class="fa-solid fa-magnifying-glass text-lg"></i>
+            </button>
+            <button id="cart-btn" class="relative text-gray-600 hover:text-brand flex items-center gap-2 group transition-colors">
+                <i class="fa-solid fa-bag-shopping text-xl"></i>
+                <span class="absolute -top-1.5 -right-2 bg-brand text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">3</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout Wrapper -->
+    <div class="flex flex-1 w-full max-w-[1600px] mx-auto relative">
+
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="mobile-sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-hidden transition-opacity duration-300"></div>
+
+        <!-- Left Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 transform mobile-menu-closed lg:relative lg:transform-none lg:w-64 flex-shrink-0 transition-transform duration-300 ease-in-out flex flex-col h-[calc(100vh)] lg:h-[calc(100vh-4rem)] overflow-y-auto">
+            <!-- Mobile Header inside Sidebar -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200 lg:hidden shrink-0">
+                <span class="font-bold text-lg">Menu</span>
+                <button id="close-menu-btn" class="text-gray-500 hover:text-gray-900">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 flex flex-col gap-8">
+                <!-- Categories -->
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Categorias</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="flex items-center justify-between text-brand font-medium hover:text-brand/80 transition-colors">Novidades <span class="text-gray-400 text-xs font-normal">42</span></a></li>
+                        <li><a href="#" class="flex items-center justify-between text-gray-600 hover:text-brand transition-colors">Vestuário <span class="text-gray-400 text-xs font-normal">156</span></a></li>
+                        <li><a href="#" class="flex items-center justify-between text-gray-600 hover:text-brand transition-colors">Calçados <span class="text-gray-400 text-xs font-normal">89</span></a></li>
+                        <li><a href="#" class="flex items-center justify-between text-gray-600 hover:text-brand transition-colors">Acessórios <span class="text-gray-400 text-xs font-normal">214</span></a></li>
+                        <li><a href="#" class="flex items-center justify-between text-gray-600 hover:text-brand transition-colors">Casa & Decoração <span class="text-gray-400 text-xs font-normal">67</span></a></li>
+                        <li><a href="#" class="flex items-center justify-between text-gray-600 hover:text-brand transition-colors">Esporte <span class="text-gray-400 text-xs font-normal">34</span></a></li>
+                        <li class="pt-3 mt-1 border-t border-gray-100">
+                            <a href="#" class="flex items-center gap-2 text-gray-900 hover:text-brand font-medium transition-colors">
+                                Todas as categorias <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Simple Filters -->
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Filtrar por Preço</h3>
+                    <div class="flex items-center gap-2">
+                        <input type="number" placeholder="Min" class="w-full h-9 px-3 bg-surface border border-gray-200 rounded text-sm focus:outline-none focus:border-brand">
+                        <span class="text-gray-400">-</span>
+                        <input type="number" placeholder="Max" class="w-full h-9 px-3 bg-surface border border-gray-200 rounded text-sm focus:outline-none focus:border-brand">
+                    </div>
+                    <button class="w-full mt-3 h-9 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded text-sm font-medium transition-colors">Aplicar filtro</button>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Ordenar</h3>
+                    <select class="w-full h-9 pl-3 pr-8 bg-surface border border-gray-200 rounded text-sm focus:outline-none focus:border-brand appearance-none cursor-pointer">
+                        <option>Mais recentes</option>
+                        <option>Menor preço</option>
+                        <option>Maior preço</option>
+                        <option>Mais vendidos</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col min-w-0 pb-16">
+
+            <!-- Slim Banner -->
+            <div class="w-full p-4 lg:p-6 pb-0">
+                <div class="w-full h-32 md:h-48 rounded-lg overflow-hidden relative bg-gray-100 group">
+                    <div class="h-full w-full">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_21f8acecdb_07a1e6149932c5f9.png" alt="minimalist e-commerce hero banner, abstract soft geometric shapes, light gray and beige tones, clean" />
+                    </div>
+                    <div class="absolute inset-0 bg-black/10 flex items-center p-8 md:p-12">
+                        <div class="max-w-md">
+                            <span class="text-xs font-bold tracking-widest text-brand uppercase mb-2 block">Nova Coleção</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Essenciais de Inverno</h2>
+                            <p class="text-sm text-gray-700 hidden md:block">Descubra peças utilitárias desenhadas para o conforto urbano.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filters / Results Info -->
+            <div class="px-4 lg:px-6 py-5 flex items-center justify-between border-b border-gray-100 mt-2">
+                <h1 class="text-lg font-bold text-gray-900">Catálogo Completo</h1>
+                <span class="text-sm text-gray-500">Mostrando 24 de 514 produtos</span>
+            </div>
+
+            <!-- Dense Product Grid -->
+            <div id="product-grid" class="p-4 lg:p-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+
+                <!-- Product Card 1 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_fbeb0afd63_66d39410058cc24b.png" alt="minimalist black nylon backpack, high fashion photography, white background" />
+                        <span class="absolute top-2 left-2 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-900 border border-gray-200 rounded-sm">Novo</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Mochila Utility Nylon</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Acessórios</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 450,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 2 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_b5bf76b7a3_d04fa147f05b9493.png" alt="minimalist white leather sneaker, clean lines, side profile view, white background" />
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Tênis Couro Minimal</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Calçados</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 389,90</span>
+                            <span class="text-xs text-gray-400 line-through">R$ 450,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 3 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_30594fa33e_14735f2b4a05fc91.png" alt="black ceramic coffee mug, matte finish, sleek design, white background" />
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Caneca Cerâmica Matte</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Casa & Decoração</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 85,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 4 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_033376daa5_1d61ef1e69f03238.png" alt="gray heavy cotton hoodie, flat lay, fashion photography, white background" />
+                        <span class="absolute top-2 left-2 bg-black text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-sm">-20%</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Hoodie Algodão Pesado</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Vestuário</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 279,90</span>
+                            <span class="text-xs text-gray-400 line-through">R$ 350,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 5 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_343a9bd385_567ac0de72a0233d.png" alt="stainless steel minimal water bottle, insulated, white background" />
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Garrafa Térmica Inox 500ml</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Acessórios</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 120,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 6 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_0fe0501589_76205b6b3eed0cb4.png" alt="classic black acetate sunglasses, minimal design, white background" />
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Óculos de Sol Acetato</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Acessórios</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 315,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 7 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_92e85c0b32_e0b8556523a44488.png" alt="beige cargo pants, straight fit, fashion flat lay, white background" />
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1 group-hover:underline decoration-1 underline-offset-2">Calça Cargo Reta</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Vestuário</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 289,00</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Product Card 8 -->
+                <a href="#" class="group block">
+                    <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
+                        <img class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_5c065a381d_025c7ef8f49cebe4.png" alt="minimalist digital watch, black silicone strap, white background" />
+                        <span class="absolute top-2 left-2 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-900 border border-gray-200 rounded-sm">Esgotado</span>
+                        <div class="absolute inset-0 bg-white/40"></div>
+                    </div>
+                    <div class="flex flex-col opacity-60">
+                        <h3 class="text-sm font-medium text-gray-900 line-clamp-1">Relógio Digital Stealth</h3>
+                        <span class="text-xs text-gray-500 mb-1 mt-0.5">Acessórios</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-brand">R$ 410,00</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Pagination (Simple) -->
+            <div class="flex justify-center mt-8 mb-12">
+                <button class="px-6 py-2 border border-gray-300 text-sm font-medium text-gray-700 rounded hover:bg-surface transition-colors">Carregar mais produtos</button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-surface border-t border-gray-200 pt-12 pb-8 mt-auto w-full">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand Info -->
+                <div class="col-span-1 md:col-span-1">
+                    <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight text-brand mb-4">
+                        <i class="fa-solid fa-shapes"></i>
+                        Lojaflex 4
+                    </a>
+                    <p class="text-sm text-gray-500 mb-4 pr-4">Curadoria de produtos essenciais, minimalistas e utilitários para o seu dia a dia.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Institucional</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Sobre a Lojaflex 4</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Termos de Serviço</a></li>
+                    </ul>
+                </div>
+
+                <!-- Atendimento -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Atendimento</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Dúvidas Frequentes</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Trocas e Devoluções</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Rastrear Pedido</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contato -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contato</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-brands fa-whatsapp text-lg text-green-500 mt-0.5"></i>
+                            <div>
+                                <span class="block text-gray-900 font-medium">(11) 99999-9999</span>
+                                <span class="text-xs text-gray-400">Seg a Sex, 9h às 18h</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 mt-4">
+                            <i class="fa-regular fa-envelope text-lg text-gray-400 mt-0.5"></i>
+                            <a href="mailto:contato@lojaflex4.com.br" class="text-gray-900 font-medium hover:text-brand">contato@lojaflex4.com.br</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-400">&copy; 2024 Lojaflex 4. Todos os direitos reservados.</p>
+                <div class="flex gap-2">
+                    <span class="text-xs text-gray-400">Desenvolvido com plataforma Loja Club</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mini-cart Drawer -->
+    <div id="cart-backdrop" class="fixed inset-0 bg-black/50 z-[60] backdrop-hidden transition-opacity duration-300"></div>
+
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-white shadow-2xl flex flex-col drawer-closed transition-transform duration-300 ease-in-out border-l border-gray-200">
+
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between p-5 border-b border-gray-100">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-bag-shopping"></i> Seu Carrinho (3)
+            </h2>
+            <button id="close-cart-btn" class="text-gray-400 hover:text-gray-900 transition-colors p-2 -mr-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Items -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-6">
+
+            <!-- Item 1 -->
+            <div class="flex gap-4">
+                <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
+                    <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_fbeb0afd63_fe24d37ff06f3528.png" alt="minimalist black nylon backpack, small thumbnail" />
+                </div>
+                <div class="flex flex-col flex-1 py-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <h4 class="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">Mochila Utility Nylon</h4>
+                        <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Preto / Único</span>
+
+                    <div class="mt-auto flex items-center justify-between">
+                        <div class="flex items-center border border-gray-200 rounded-sm">
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
+                            <span class="w-6 text-center text-xs font-medium">1</span>
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">+</button>
+                        </div>
+                        <span class="text-sm font-bold text-brand">R$ 450,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="flex gap-4">
+                <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
+                    <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_b5bf76b7a3_e186b3d8c1fffb1e.png" alt="minimalist white leather sneaker, small thumbnail" />
+                </div>
+                <div class="flex flex-col flex-1 py-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <h4 class="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">Tênis Couro Minimal</h4>
+                        <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Branco / 42</span>
+
+                    <div class="mt-auto flex items-center justify-between">
+                        <div class="flex items-center border border-gray-200 rounded-sm">
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
+                            <span class="w-6 text-center text-xs font-medium">1</span>
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">+</button>
+                        </div>
+                        <span class="text-sm font-bold text-brand">R$ 389,90</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="flex gap-4">
+                <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
+                    <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_d24370d609_ef7b5f33497cdd3c.png" alt="black ceramic coffee mug, small thumbnail" />
+                </div>
+                <div class="flex flex-col flex-1 py-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <h4 class="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">Caneca Cerâmica Matte</h4>
+                        <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Preto / 300ml</span>
+
+                    <div class="mt-auto flex items-center justify-between">
+                        <div class="flex items-center border border-gray-200 rounded-sm">
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
+                            <span class="w-6 text-center text-xs font-medium">2</span>
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">+</button>
+                        </div>
+                        <span class="text-sm font-bold text-brand">R$ 170,00</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-5 border-t border-gray-100 bg-surface/50">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm text-gray-500">Subtotal</span>
+                <span class="text-lg font-bold text-gray-900">R$ 1.009,90</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4 text-center">Pagamento e frete combinados após o envio do pedido.</p>
+            <button class="w-full bg-brand text-white font-medium py-3.5 rounded hover:bg-brand/90 transition-colors flex items-center justify-center gap-2">
+                Avançar para Checkout <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="#" class="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#20bd5a] hover:scale-105 transition-all z-40" aria-label="Contato via WhatsApp">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- UI Interaction Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cart Drawer Logic
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartDrawer = document.getElementById('cart-drawer');
+            const cartBackdrop = document.getElementById('cart-backdrop');
+
+            function toggleCart() {
+                cartDrawer.classList.toggle('drawer-closed');
+                cartDrawer.classList.toggle('drawer-open');
+
+                if (cartBackdrop.classList.contains('backdrop-hidden')) {
+                    cartBackdrop.classList.remove('backdrop-hidden');
+                    cartBackdrop.classList.add('backdrop-visible');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                } else {
+                    cartBackdrop.classList.remove('backdrop-visible');
+                    cartBackdrop.classList.add('backdrop-hidden');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            cartBtn.addEventListener('click', toggleCart);
+            closeCartBtn.addEventListener('click', toggleCart);
+            cartBackdrop.addEventListener('click', toggleCart);
+
+            // Mobile Menu Logic
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarBackdrop = document.getElementById('mobile-sidebar-backdrop');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('mobile-menu-closed');
+                sidebar.classList.toggle('mobile-menu-open');
+
+                if (sidebarBackdrop.classList.contains('backdrop-hidden')) {
+                    sidebarBackdrop.classList.remove('backdrop-hidden');
+                    sidebarBackdrop.classList.add('backdrop-visible');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebarBackdrop.classList.remove('backdrop-visible');
+                    sidebarBackdrop.classList.add('backdrop-hidden');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
+            if(closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+            if(sidebarBackdrop) sidebarBackdrop.addEventListener('click', toggleMenu);
+        });
+    </script>
+</body>
+</html>

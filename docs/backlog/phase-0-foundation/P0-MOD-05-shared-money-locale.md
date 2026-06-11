@@ -28,14 +28,14 @@ A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/R
 - Convenção de coluna para dinheiro em SQLModel: par `*_amount_minor: int` + `*_currency: str(3)` (ou um type composto), aplicado por todos os módulos que guardam valor.
 - Referência **ISO 4217 (moedas)** e **ISO 3166-1 (países)** disponível para seletores/validação.
 - Confirmar/registrar como regra: **timestamps sempre em UTC** (template já usa `DateTime(timezone=True)`); formatação por locale é no frontend.
-- Convenção de `currency` e `locale` que **loja** e **cliente** vão carregar (campos criados nas fases respectivas — Fase 1/4), com fallback nos defaults da plataforma (`P0-CFG-02`).
+- Convenção de `currency` e `locale` que **loja** e **cliente** vão carregar (campos criados nas fases respectivas — Fase 1/6), com fallback nos defaults da plataforma (`P0-CFG-02`).
 
 ## Fora de escopo (o que NÃO entra)
 - Conversão multi-moeda / câmbio em tempo real → pós-V1.
 - i18n completo das UIs → frontends, fases respectivas.
 - Imposto/fiscal → responsabilidade do lojista (doc 02), fora da V1.
-- Modelo de endereço país-aware em si → Fase 4 (`customers`); aqui só fica a convenção/ISO 3166.
-- Normalização de telefone E.164 → Fase 4 (`customers`); aqui só registramos a convenção global.
+- Modelo de endereço país-aware em si → Fase 6 (`customers`); aqui só fica a convenção/ISO 3166.
+- Normalização de telefone E.164 → Fase 6 (`customers`); aqui só registramos a convenção global.
 
 ## Arquivos a criar/alterar
 - `backend/app/core/money.py` (criar) — `Money` + helpers + arredondamento.
@@ -65,7 +65,7 @@ A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/R
 
 ## Notas / Reconciliações
 - **DEC-1 (Fundações) — decidido:** inteiro em unidades menores + moeda ISO 4217 (estilo Stripe). `Money` é um value object próprio; `babel` fornece expoente e formatação. **Não usar `py-moneyed`** (baseado em `Decimal`, conflita com unidades menores). Alternativa histórica considerada: `Decimal` + moeda.
-- **DEC-2 (Fundações):** arredondamento recomendado `ROUND_HALF_UP`; rateio de split por maior-resto. Confirmar antes do split (Fase 6).
+- **DEC-2 (Fundações):** arredondamento recomendado `ROUND_HALF_UP`; rateio de split por maior-resto. Confirmar antes do split (Fase 8).
 - **Implementado:** `app/core/money.py` (`Money`: `+`, `-`, `*int`, `apply_rate(Decimal)` half-up, `decimal_amount`, `format(locale)`) + `CurrencyMismatchError`; `babel` para expoente/format. 14 testes unit verdes; gate `app` verde.
 - **Reconciliação:** não editei `base.py` — dinheiro não cabe como mixin (um modelo pode ter vários valores monetários: preço, total…). A convenção de colunas vive no docstring de `money.py`; sem type composto no MVP.
 - **Refino do harness (P0-TEST-01):** movi os fixtures de DB para `tests/integration/conftest.py`, então `tests/unit` roda **sem DB** (14 testes em 0,55s). Os testes do Money provaram isso.

@@ -2,7 +2,7 @@
 id: P1-STORE-02
 title: stores — serviço/rotas (criar→owner+subdomínio, settings, publish) + equipe
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 3 — Módulo stores"
 area: STORE
 status: done
 depends_on: [P1-API-01, P1-STORE-01, P1-PERM-01, P1-DOM-01, P1-PERM-03]

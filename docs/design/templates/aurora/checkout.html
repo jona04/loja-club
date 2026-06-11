@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Lojaflex 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f6f6f6',
+                            100: '#e7e7e7',
+                            200: '#d1d1d1',
+                            900: '#111111',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-[#f9f9f9] text-brand-900 antialiased selection:bg-brand-900 selection:text-white min-h-screen flex flex-col">
+
+    <!-- Simple Checkout Header -->
+    <header class="bg-white border-b border-gray-200 py-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+            <a href="#" class="text-3xl font-semibold tracking-tight text-brand-900 font-serif">
+                Lojaflex 2.
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 flex flex-col lg:flex-row gap-12 lg:gap-24">
+
+        <!-- MAIN COLUMN: Info Form -->
+        <div class="w-full lg:w-[55%] flex flex-col space-y-12">
+
+            <!-- Breadcrumb / Steps indicator text -->
+            <nav class="text-sm text-gray-500 hidden md:block" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2">
+                    <li><a href="#" class="hover:text-brand-900 transition-colors">Carrinho</a></li>
+                    <li><span class="mx-2 text-gray-300">&gt;</span></li>
+                    <li class="text-brand-900 font-medium">Informações &amp; Entrega</li>
+                </ol>
+            </nav>
+
+            <!-- Seu Pedido (Items) -->
+            <section id="checkout-items" class="bg-white p-6 md:p-8 rounded-sm border border-gray-200">
+                <h2 class="text-xl font-medium text-brand-900 mb-6 font-serif">Seu pedido</h2>
+                <div class="space-y-6">
+                    <!-- Item 1 -->
+                    <div class="flex gap-4">
+                        <div class="h-24 w-20 flex-shrink-0 overflow-hidden bg-gray-50 border border-gray-100 rounded-sm">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_fba0152989_676e0ef2f23036e4.png" alt="Vaso Orgânico Duna">
+                        </div>
+                        <div class="flex flex-1 flex-col justify-between">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-brand-900">Vaso Orgânico Duna</h3>
+                                    <p class="mt-1 text-sm text-gray-500">Bege Acinzentado</p>
+                                </div>
+                                <p class="text-sm font-medium text-brand-900">R$ 289,00</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center border border-gray-300 rounded-sm">
+                                    <button class="px-2.5 py-1 text-gray-500 hover:text-brand-900 transition-colors">-</button>
+                                    <span class="px-2 py-1 text-xs text-brand-900 font-medium w-6 text-center">1</span>
+                                    <button class="px-2.5 py-1 text-gray-500 hover:text-brand-900 transition-colors">+</button>
+                                </div>
+                                <button type="button" class="text-xs text-gray-400 hover:text-red-600 transition-colors underline">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="flex gap-4 pt-6 border-t border-gray-100">
+                        <div class="h-24 w-20 flex-shrink-0 overflow-hidden bg-gray-50 border border-gray-100 rounded-sm">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_bfbf070fea_1f15e1417ab87699.png" alt="Aparador de Livros">
+                        </div>
+                        <div class="flex flex-1 flex-col justify-between">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-brand-900">Aparador de Livros Travertino</h3>
+                                    <p class="mt-1 text-sm text-gray-500">Pedra Natural</p>
+                                </div>
+                                <p class="text-sm font-medium text-brand-900">R$ 450,00</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center border border-gray-300 rounded-sm">
+                                    <button class="px-2.5 py-1 text-gray-500 hover:text-brand-900 transition-colors">-</button>
+                                    <span class="px-2 py-1 text-xs text-brand-900 font-medium w-6 text-center">1</span>
+                                    <button class="px-2.5 py-1 text-gray-500 hover:text-brand-900 transition-colors">+</button>
+                                </div>
+                                <button type="button" class="text-xs text-gray-400 hover:text-red-600 transition-colors underline">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contato -->
+            <section id="checkout-contact" class="space-y-4">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-xl font-medium text-brand-900 font-serif">Informações de contato</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <input type="email" id="email" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="E-mail">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="first-name" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="Nome">
+                        <input type="text" id="last-name" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="Sobrenome">
+                    </div>
+
+                    <!-- Phone with Country Code Select -->
+                    <div class="flex shadow-sm rounded-sm">
+                        <div class="relative flex items-center border border-r-0 border-gray-300 rounded-l-sm bg-white focus-within:z-10 focus-within:ring-1 focus-within:ring-brand-900 focus-within:border-brand-900">
+                            <select id="country-code" name="country-code" class="h-full py-0 pl-3 pr-8 border-transparent bg-transparent text-gray-500 sm:text-sm focus:ring-0 focus:border-transparent outline-none cursor-pointer">
+                                <option>🇧🇷 +55</option>
+                                <option>🇺🇸 +1</option>
+                                <option>🇵🇹 +351</option>
+                            </select>
+                        </div>
+                        <input type="tel" name="phone" id="phone" class="block w-full border border-gray-300 rounded-r-sm p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white" placeholder="Telefone / WhatsApp">
+                    </div>
+
+                    <div class="flex items-start pt-2">
+                        <div class="flex h-5 items-center">
+                            <input id="offers" name="offers" type="checkbox" class="h-4 w-4 rounded-sm border-gray-300 text-brand-900 focus:ring-brand-900">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="offers" class="text-gray-500">Quero receber novidades e ofertas exclusivas por e-mail.</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Entrega -->
+            <section id="checkout-shipping" class="space-y-4">
+                <h2 class="text-xl font-medium text-brand-900 font-serif mt-4">Endereço de entrega</h2>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <select id="country" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm text-brand-900 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm appearance-none outline-none">
+                            <option>Brasil</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="zip" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm md:col-span-1" placeholder="CEP">
+                        <input type="text" id="address" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm md:col-span-2" placeholder="Endereço (Rua, Avenida...)">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="number" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="Número">
+                        <input type="text" id="complement" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm md:col-span-2" placeholder="Complemento (Apto, Bloco)">
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <input type="text" id="neighborhood" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="Bairro">
+                        <input type="text" id="city" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm" placeholder="Cidade">
+                        <div class="relative col-span-2 md:col-span-1">
+                            <select id="state" class="block w-full border-gray-300 rounded-sm border p-3.5 text-sm text-gray-500 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-white shadow-sm appearance-none outline-none">
+                                <option value="" disabled selected>Estado</option>
+                                <option>SP</option>
+                                <option>RJ</option>
+                                <option>MG</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Methods -->
+                <div class="mt-8">
+                    <h3 class="text-sm font-medium text-brand-900 mb-3">Opções de entrega</h3>
+                    <div class="border border-gray-200 rounded-sm bg-white divide-y divide-gray-200">
+
+                        <!-- Option 1 -->
+                        <label class="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center">
+                                <input type="radio" name="shipping_method" class="h-4 w-4 border-gray-300 text-brand-900 focus:ring-brand-900">
+                                <div class="ml-3">
+                                    <span class="block text-sm font-medium text-brand-900">Frete Fixo</span>
+                                    <span class="block text-xs text-gray-500 mt-0.5">5 a 7 dias úteis</span>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium text-brand-900">R$ 45,00</span>
+                        </label>
+
+                        <!-- Option 2 -->
+                        <label class="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center">
+                                <input type="radio" name="shipping_method" class="h-4 w-4 border-gray-300 text-brand-900 focus:ring-brand-900">
+                                <div class="ml-3">
+                                    <span class="block text-sm font-medium text-brand-900">Retirada na Loja</span>
+                                    <span class="block text-xs text-gray-500 mt-0.5">Disponível em 1 dia útil (Pinheiros, SP)</span>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium text-brand-900">Grátis</span>
+                        </label>
+
+                        <!-- Option 3 (Combinada) -->
+                        <label class="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center">
+                                <input type="radio" name="shipping_method" class="h-4 w-4 border-gray-300 text-brand-900 focus:ring-brand-900" checked>
+                                <div class="ml-3">
+                                    <span class="block text-sm font-medium text-brand-900">Entrega Combinada</span>
+                                    <span class="block text-xs text-brand-900/70 mt-0.5 max-w-xs">A loja entrará em contato via WhatsApp após a criação do pedido para combinar o frete e o pagamento.</span>
+                                </div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500">A calcular</span>
+                        </label>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- SIDEBAR: Summary -->
+        <div class="w-full lg:w-[45%] lg:pl-8 xl:pl-12">
+            <div class="sticky top-8 bg-white border border-gray-200 rounded-sm p-6 md:p-8 shadow-sm">
+                <h2 class="text-lg font-medium text-brand-900 border-b border-gray-100 pb-4 mb-6 font-serif">Resumo do Pedido</h2>
+
+                <!-- Discount Code -->
+                <div class="flex space-x-2 mb-8">
+                    <input type="text" class="block w-full border-gray-300 rounded-sm border p-3 text-sm placeholder-gray-400 focus:ring-1 focus:ring-brand-900 focus:border-brand-900 bg-gray-50" placeholder="Código de desconto">
+                    <button class="bg-gray-200 text-gray-600 hover:bg-gray-300 text-sm font-medium px-4 py-3 rounded-sm transition-colors border border-transparent">
+                        Aplicar
+                    </button>
+                </div>
+
+                <!-- Totals -->
+                <dl class="space-y-4 text-sm text-gray-600 mb-6">
+                    <div class="flex justify-between">
+                        <dt>Subtotal</dt>
+                        <dd class="font-medium text-brand-900">R$ 739,00</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt>Frete</dt>
+                        <dd class="text-gray-500 italic">A calcular</dd>
+                    </div>
+                    <div class="flex justify-between border-t border-gray-100 pt-4 mt-4">
+                        <dt class="text-base font-medium text-brand-900">Total a pagar</dt>
+                        <dd class="text-lg font-medium text-brand-900">R$ 739,00</dd>
+                    </div>
+                </dl>
+
+                <!-- Action -->
+                <div class="pt-4">
+                    <button class="w-full bg-brand-900 text-white text-base font-medium py-4 rounded-sm hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2">
+                        Confirmar Pedido <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                    <p class="text-xs text-center text-gray-500 mt-4 leading-relaxed">
+                        Ao clicar em "Confirmar Pedido", seu pedido será registrado e nossa equipe entrará em contato para alinhar entrega e pagamento.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Simple for Checkout -->
+    <footer class="bg-white border-t border-gray-200 py-8 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2024 Lojaflex 2. Todos os direitos reservados.</p>
+            <div class="mt-4 md:mt-0 space-x-4">
+                <a href="#" class="hover:text-brand-900 transition-colors">Termos</a>
+                <a href="#" class="hover:text-brand-900 transition-colors">Privacidade</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

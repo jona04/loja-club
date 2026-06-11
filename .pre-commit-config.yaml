@@ -12,11 +12,18 @@ repos:
       - id: end-of-file-fixer
         exclude: |
             (?x)^(
-                frontend/src/client/.*|
-                backend/app/email-templates/build/.*
+                frontend-dashboard/src/client/.*|
+                frontend-admin/src/client/.*|
+                backend/app/email-templates/build/.*|
+                docs/design/.*
             )$
       - id: trailing-whitespace
-        exclude: ^frontend/src/client/.*
+        exclude: |
+            (?x)^(
+                frontend-dashboard/src/client/.*|
+                frontend-admin/src/client/.*|
+                docs/design/.*
+            )$
   - repo: local
     hooks:
       - id: local-biome-check
@@ -24,7 +31,7 @@ repos:
         entry: npm run lint
         language: system
         types: [text]
-        files: ^frontend/
+        files: ^frontend-dashboard/
 
       - id: local-ruff-check
         name: ruff check

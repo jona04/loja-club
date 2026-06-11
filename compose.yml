@@ -168,7 +168,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
 
-  frontend:
+  frontend-dashboard:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
     restart: always
     networks:
@@ -176,7 +176,7 @@ services:
       - default
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: frontend-dashboard/Dockerfile
       args:
         - VITE_API_URL=https://api.${DOMAIN?Variable not set}
         - NODE_ENV=production
@@ -185,18 +185,78 @@ services:
       - traefik.docker.network=traefik-public
       - traefik.constraint-label=traefik-public
 
-      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
+      - traefik.http.services.${STACK_NAME?Variable not set}-frontend-dashboard.loadbalancer.server.port=80
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`app.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-http.rule=Host(`app.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-http.entrypoints=http
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.rule=Host(`app.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls.certresolver=le
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-https.rule=Host(`app.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-https.tls.certresolver=le
 
       # Enable redirection for HTTP and HTTPS
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-dashboard-http.middlewares=https-redirect
+
+  frontend-admin:
+    image: '${DOCKER_IMAGE_ADMIN?Variable not set}:${TAG-latest}'
+    restart: always
+    networks:
+      - traefik-public
+      - default
+    build:
+      context: .
+      dockerfile: frontend-admin/Dockerfile
+      args:
+        - VITE_API_URL=https://api.${DOMAIN?Variable not set}
+        - NODE_ENV=production
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+
+      - traefik.http.services.${STACK_NAME?Variable not set}-frontend-admin.loadbalancer.server.port=80
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-http.rule=Host(`admin.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-http.entrypoints=http
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-https.rule=Host(`admin.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-https.tls.certresolver=le
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-admin-http.middlewares=https-redirect
+
+  frontend-storefront:
+    image: '${DOCKER_IMAGE_STOREFRONT?Variable not set}:${TAG-latest}'
+    restart: always
+    networks:
+      - traefik-public
+      - default
+    build:
+      context: .
+      dockerfile: frontend-storefront/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=https://api.${DOMAIN?Variable not set}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+
+      - traefik.http.services.${STACK_NAME?Variable not set}-frontend-storefront.loadbalancer.server.port=3000
+
+      # Catch-all for store subdomains; specific Host() routers (app./api./adminer.) win via priority.
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-http.rule=HostRegexp(`^.+\.${DOMAIN?Variable not set}$`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-http.priority=1
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-https.rule=HostRegexp(`^.+\.${DOMAIN?Variable not set}$`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-https.priority=1
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-https.tls.certresolver=le
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-storefront-http.middlewares=https-redirect
 volumes:
   app-db-data:
 

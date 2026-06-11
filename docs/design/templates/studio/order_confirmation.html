@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação do Pedido - Lojaflex 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#000000', // Black accent for utility/catalog vibe
+                        surface: '#f9fafb',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans m-0 p-0 min-h-screen flex flex-col antialiased">
+
+    <!-- Simplified Header for Checkout/Confirmation -->
+    <header id="header" class="bg-white border-b border-gray-200 py-6 w-full flex flex-col items-center justify-center px-4 sticky top-0 z-40">
+        <a href="#" class="flex items-center gap-2 text-2xl font-bold tracking-tight text-brand">
+            <i class="fa-solid fa-shapes text-brand"></i>
+            Lojaflex 4
+        </a>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-1 w-full max-w-[1000px] mx-auto px-4 lg:px-8 py-12 lg:py-20">
+
+        <!-- Success Message Section -->
+        <section id="success-header" class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-50 mb-6">
+                <i class="fa-solid fa-check text-4xl text-green-500"></i>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 tracking-tight">Pedido recebido!</h1>
+            <p class="text-lg text-gray-600 mb-2 font-medium">A loja entrará em contato para combinar o pagamento e a entrega.</p>
+            <p class="text-sm text-gray-500 mb-6">Enviamos os detalhes para o seu e-mail e WhatsApp.</p>
+
+            <div class="inline-block bg-surface border border-gray-200 rounded-lg px-6 py-3">
+                <span class="text-sm text-gray-500 block mb-1">Número do pedido</span>
+                <span class="text-xl font-bold text-brand">#1042</span>
+            </div>
+        </section>
+
+        <!-- Order Details Card -->
+        <section id="order-details" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
+
+                <!-- Left Column: Items -->
+                <div class="p-6 sm:p-8 bg-surface/30">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">Itens do pedido</h2>
+
+                    <ul class="divide-y divide-gray-100 space-y-4">
+                        <!-- Item 1 -->
+                        <li class="flex gap-4 pt-4 first:pt-0">
+                            <div class="w-20 h-24 bg-white rounded-md border border-gray-200 flex-shrink-0 overflow-hidden relative">
+                                <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_b5bf76b7a3_b35ad5c275aff086.png" alt="minimalist white leather sneaker, product photography, white background" />
+                            </div>
+                            <div class="flex flex-col flex-1 justify-center">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Tênis Couro Minimal</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Branco / 42</p>
+                                        <p class="text-xs text-gray-500 mt-1">Qtd: 1</p>
+                                    </div>
+                                    <span class="text-sm font-bold text-gray-900">R$ 389,90</span>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Item 2 -->
+                        <li class="flex gap-4 pt-4">
+                            <div class="w-20 h-24 bg-white rounded-md border border-gray-200 flex-shrink-0 overflow-hidden relative">
+                                <img class="w-full h-full object-contain mix-blend-multiply p-2" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_d021731906_a34f51e845b7af22.png" alt="minimalist basic white t-shirt, flat lay, high quality fabric, white background" />
+                            </div>
+                            <div class="flex flex-col flex-1 justify-center">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Camiseta Essencial Branca</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Básico / M</p>
+                                        <p class="text-xs text-gray-500 mt-1">Qtd: 2</p>
+                                    </div>
+                                    <span class="text-sm font-bold text-gray-900">R$ 179,80</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Column: Summary & Delivery -->
+                <div class="p-6 sm:p-8 flex flex-col">
+
+                    <!-- Customer Info -->
+                    <div class="mb-8">
+                        <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Dados do Cliente</h2>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p class="font-medium text-gray-900">João da Silva</p>
+                            <p>joao@exemplo.com</p>
+                            <p>(11) 98765-4321</p>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Info -->
+                    <div class="mb-8">
+                        <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Entrega Combinada</h2>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p>Rua Exemplo de Endereço, 123</p>
+                            <p>Apto 45 - Centro</p>
+                            <p>São Paulo - SP</p>
+                            <p>01234-567</p>
+                        </div>
+                    </div>
+
+                    <!-- Order Totals -->
+                    <div class="mt-auto pt-6 border-t border-gray-200">
+                        <div class="space-y-3 text-sm mb-4">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal (3 itens)</span>
+                                <span class="font-medium text-gray-900">R$ 569,70</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Frete</span>
+                                <span class="font-medium text-gray-900">A combinar</span>
+                            </div>
+                        </div>
+                        <div class="flex items-end justify-between pt-4 border-t border-gray-100">
+                            <span class="text-base font-semibold text-gray-900">Total parcial</span>
+                            <span class="text-2xl font-bold text-brand tracking-tight">R$ 569,70</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <div class="mt-10 flex justify-center">
+            <a href="#" class="inline-flex items-center justify-center gap-2 h-12 px-8 bg-brand text-white rounded-md font-medium hover:bg-brand/90 transition-colors shadow-sm">
+                Voltar à loja
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-surface border-t border-gray-200 pt-12 pb-8 mt-auto w-full">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand Info -->
+                <div class="col-span-1 md:col-span-1">
+                    <a href="#" class="flex items-center gap-2 text-xl font-bold tracking-tight text-brand mb-4">
+                        <i class="fa-solid fa-shapes"></i>
+                        Lojaflex 4
+                    </a>
+                    <p class="text-sm text-gray-500 mb-4 pr-4">Curadoria de produtos essenciais, minimalistas e utilitários para o seu dia a dia.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-brand transition-colors"><i class="fa-brands fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Institucional</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Sobre a Lojaflex 4</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Termos de Serviço</a></li>
+                    </ul>
+                </div>
+
+                <!-- Atendimento -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Atendimento</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand transition-colors">Dúvidas Frequentes</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Trocas e Devoluções</a></li>
+                        <li><a href="#" class="hover:text-brand transition-colors">Rastrear Pedido</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contato -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contato</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-brands fa-whatsapp text-lg text-green-500 mt-0.5"></i>
+                            <div>
+                                <span class="block text-gray-900 font-medium">(11) 99999-9999</span>
+                                <span class="text-xs text-gray-400">Seg a Sex, 9h às 18h</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 mt-4">
+                            <i class="fa-regular fa-envelope text-lg text-gray-400 mt-0.5"></i>
+                            <a href="mailto:contato@lojaflex4.com.br" class="text-gray-900 font-medium hover:text-brand">contato@lojaflex4.com.br</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-400">&copy; 2024 Lojaflex 4. Todos os direitos reservados.</p>
+                <div class="flex gap-2">
+                    <span class="text-xs text-gray-400">Desenvolvido com plataforma Loja Club</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

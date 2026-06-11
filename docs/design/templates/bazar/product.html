@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fone de Ouvido Bluetooth SoundPro ANC - Lojaflex 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        promo: {
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'float': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-gray-50 text-gray-900 font-sans antialiased overflow-x-hidden">
+
+    <!-- Mini-Cart Drawer -->
+    <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
+        <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-white">
+            <h2 class="text-xl font-bold flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping text-brand-600"></i> Seu Carrinho (2)
+            </h2>
+            <button id="close-cart-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <!-- Cart Item 1 -->
+            <div class="flex gap-4 p-3 bg-white border border-gray-100 rounded-xl shadow-soft">
+                <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_3da4f534f6_1c3ce32457c1c918.png" alt="pair of vibrant colorful trendy sneakers on clean white background, studio lighting" />
+                </div>
+                <div class="flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2">Tênis Urban Comfort Max Colors</h3>
+                        <p class="text-gray-500 text-xs mt-1">Tam: 42 | Cor: Neon</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="font-bold text-brand-600">R$ 299,90</span>
+                        <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-1 border border-gray-200">
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-brand-600"><i class="fa-solid fa-minus text-xs"></i></button>
+                            <span class="text-sm font-medium w-4 text-center">1</span>
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-brand-600"><i class="fa-solid fa-plus text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Item 2 -->
+            <div class="flex gap-4 p-3 bg-white border border-gray-100 rounded-xl shadow-soft">
+                <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_385e007d30_58477aa985ce3336.png" alt="modern wireless over-ear headphones, matte black finish, clean background" />
+                </div>
+                <div class="flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2">Fone de Ouvido Bluetooth SoundPro ANC</h3>
+                        <p class="text-gray-500 text-xs mt-1">Cor: Preto</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="font-bold text-brand-600">R$ 450,00</span>
+                        <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-1 border border-gray-200">
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-brand-600"><i class="fa-solid fa-minus text-xs"></i></button>
+                            <span class="text-sm font-medium w-4 text-center">1</span>
+                            <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-brand-600"><i class="fa-solid fa-plus text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-gray-500">Subtotal</span>
+                <span class="text-xl font-bold">R$ 749,90</span>
+            </div>
+            <button class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl transition-colors shadow-float flex items-center justify-center gap-2">
+                Finalizar Compra <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <p class="text-center text-xs text-gray-400 mt-3"><i class="fa-solid fa-lock mr-1"></i> Compra 100% segura</p>
+        </div>
+    </div>
+
+    <!-- Sticky Header -->
+    <header id="header" class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300">
+        <!-- Top Bar (Promo) -->
+        <div class="bg-brand-900 text-brand-50 text-xs py-1.5 text-center font-medium">
+            🔥 Frete Grátis em milhares de produtos acima de R$ 199. <a href="#" class="underline hover:text-white">Aproveite!</a>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Mobile Menu -->
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <a href="#" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span class="font-bold text-2xl tracking-tight text-gray-900">Lojaflex 3</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center gap-8 font-medium text-gray-600">
+                    <a href="#" class="hover:text-brand-600 transition-colors">Eletrônicos</a>
+                    <a href="#" class="hover:text-brand-600 transition-colors">Moda</a>
+                    <a href="#" class="hover:text-brand-600 transition-colors">Casa</a>
+                    <a href="#" class="hover:text-brand-600 transition-colors">Beleza</a>
+                    <a href="#" class="hover:text-brand-600 transition-colors">Esportes</a>
+                    <a href="#" class="hover:text-brand-600 transition-colors">Livros</a>
+                    <div class="w-px h-5 bg-gray-300 mx-2"></div>
+                    <a href="#" class="flex items-center gap-1.5 text-brand-600 hover:text-brand-700 transition-colors font-bold">
+                        <i class="fa-solid fa-layer-group"></i> Todas as categorias
+                    </a>
+                </nav>
+
+                <!-- Search & Actions -->
+                <div class="flex items-center gap-3 sm:gap-5">
+                    <div class="hidden md:flex relative w-64 xl:w-80">
+                        <input type="text" placeholder="Buscar produtos..." class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-transparent rounded-full focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition-all text-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+                    <button class="open-cart-btn relative p-2 text-gray-700 hover:text-brand-600 transition-colors group">
+                        <i class="fa-solid fa-cart-shopping text-xl group-hover:scale-110 transition-transform"></i>
+                        <span class="absolute top-0 right-0 -mt-1 -mr-1 bg-promo-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Breadcrumb -->
+        <nav class="flex text-sm text-gray-500 mb-6 gap-2 items-center">
+            <a href="#" class="hover:text-brand-600 transition-colors">Início</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <a href="#" class="hover:text-brand-600 transition-colors">Eletrônicos</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-gray-900 font-medium line-clamp-1">Fone de Ouvido Bluetooth SoundPro ANC</span>
+        </nav>
+
+        <!-- Product Details Section -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 sm:p-6 lg:p-8 mb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+
+                <!-- Left Column: Image Gallery -->
+                <div class="lg:col-span-7 flex flex-col gap-4">
+                    <!-- Main Image -->
+                    <div class="w-full aspect-square bg-gray-50 rounded-2xl relative overflow-hidden border border-gray-100 flex items-center justify-center group">
+                        <span class="absolute top-4 left-4 bg-promo-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg z-10 shadow-md">-25% OFF</span>
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-promo-500 shadow-md transition z-10">
+                            <i class="fa-regular fa-heart text-xl"></i>
+                        </button>
+                        <img class="w-full h-full object-contain mix-blend-multiply p-8 transition-transform duration-700 group-hover:scale-105" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_47bc32c606_9140282f0a977e19.png" alt="premium wireless over-ear headphones, matte black finish, elegant minimalist design, floating in cle" />
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+                        <button class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border-2 border-brand-500 overflow-hidden flex items-center justify-center">
+                            <img class="w-full h-full object-cover mix-blend-multiply" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_47bc32c606_fb8bfdebb79a39d2.png" alt="premium wireless over-ear headphones, matte black finish, side profile, elegant minimalist design, c" />
+                        </button>
+                        <button class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border-2 border-transparent hover:border-gray-300 transition overflow-hidden flex items-center justify-center opacity-70 hover:opacity-100">
+                            <img class="w-full h-full object-cover mix-blend-multiply" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_47bc32c606_0f919e4224f036b1.png" alt="premium wireless over-ear headphones, matte black finish, folded state, elegant minimalist design, c" />
+                        </button>
+                        <button class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border-2 border-transparent hover:border-gray-300 transition overflow-hidden flex items-center justify-center opacity-70 hover:opacity-100">
+                            <img class="w-full h-full object-cover mix-blend-multiply" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_47bc32c606_cabff6817c109e33.png" alt="premium wireless over-ear headphones, matte black finish, close up on earcup details and buttons, cl" />
+                        </button>
+                        <button class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 bg-gray-50 rounded-xl border-2 border-transparent hover:border-gray-300 transition overflow-hidden flex items-center justify-center opacity-70 hover:opacity-100">
+                            <img class="w-full h-full object-cover mix-blend-multiply" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_fbddb00079_d6e6799968df926b.png" alt="person wearing premium wireless over-ear headphones, matte black finish, lifestyle shot, soft blurre" />
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Product Info -->
+                <div class="lg:col-span-5 flex flex-col pt-2 lg:pt-6">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-1 rounded-md">SoundMax Pro</span>
+                        <div class="flex items-center text-yellow-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span class="text-gray-500 ml-1 font-medium">(128)</span>
+                        </div>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight mb-4">
+                        Fone de Ouvido Bluetooth SoundPro ANC com Áudio Espacial
+                    </h1>
+
+                    <div class="mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <div class="flex flex-col">
+                            <span class="text-gray-400 line-through text-sm font-medium mb-1">De R$ 599,90</span>
+                            <div class="flex items-center gap-3">
+                                <span class="text-4xl sm:text-5xl font-extrabold text-brand-600 tracking-tight">R$ 449,90</span>
+                                <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-md">Pix ou Boleto</span>
+                            </div>
+                            <span class="text-gray-500 text-sm mt-2">ou até 10x de R$ 44,99 sem juros no cartão</span>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-600 text-sm leading-relaxed mb-8">
+                        Experimente a imersão total com cancelamento de ruído ativo (ANC) de última geração e áudio espacial de alta fidelidade. Design ergonômico premium para horas de conforto absoluto e bateria com até 40h de duração para acompanhar o seu ritmo.
+                    </p>
+
+                    <!-- Options -->
+                    <div class="mb-8">
+                        <h3 class="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Cor: <span class="text-gray-500 font-medium normal-case">Preto Matte</span></h3>
+                        <div class="flex gap-3">
+                            <button class="w-10 h-10 rounded-full bg-black ring-2 ring-offset-2 ring-brand-500 cursor-pointer shadow-sm"></button>
+                            <button class="w-10 h-10 rounded-full bg-gray-200 ring-1 ring-offset-2 ring-gray-200 hover:ring-gray-300 cursor-pointer shadow-sm"></button>
+                            <button class="w-10 h-10 rounded-full bg-blue-900 ring-1 ring-offset-2 ring-gray-200 hover:ring-gray-300 cursor-pointer shadow-sm"></button>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-auto space-y-4">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <!-- Quantity -->
+                            <div class="flex items-center justify-between border border-gray-200 rounded-xl p-2 bg-white w-full sm:w-32 h-14">
+                                <button class="w-10 h-full flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-50 rounded-lg transition"><i class="fa-solid fa-minus text-sm"></i></button>
+                                <span class="text-base font-bold text-gray-900 w-8 text-center">1</span>
+                                <button class="w-10 h-full flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-50 rounded-lg transition"><i class="fa-solid fa-plus text-sm"></i></button>
+                            </div>
+
+                            <!-- Add to Cart Primary Button -->
+                            <button class="open-cart-btn flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg h-14 rounded-xl transition-all shadow-float flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-cart-plus"></i> Adicionar ao carrinho
+                            </button>
+                        </div>
+
+                        <!-- Secondary Feature Button (Placeholder) -->
+                        <button class="w-full bg-white border-2 border-brand-100 hover:border-brand-500 text-brand-600 font-bold text-base py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 group">
+                            <i class="fa-solid fa-cube text-lg group-hover:rotate-12 transition-transform"></i> Personalizar em 3D
+                        </button>
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="mt-8 pt-6 border-t border-gray-100 grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <span class="font-medium">Entrega Rápida</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <span class="font-medium">Garantia 1 Ano</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products Section -->
+        <div>
+            <h2 class="text-2xl font-extrabold text-gray-900 mb-8 flex items-center gap-3">
+                <i class="fa-solid fa-fire text-promo-500"></i> Quem viu, viu também
+            </h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+
+                <!-- Product Card 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-soft hover:shadow-float hover:-translate-y-1 transition-all duration-300 group flex flex-col">
+                    <div class="relative w-full aspect-square bg-gray-50 p-4">
+                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-promo-500 hover:shadow-md transition z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_a6f6e28cb2_12ff77fc21b234c8.png" alt="modern true wireless earbuds in charging case, white finish, minimalist design, clean background" />
+                    </div>
+                    <div class="p-4 flex flex-col flex-1">
+                        <div class="text-xs text-brand-600 font-semibold mb-1">SoundMax</div>
+                        <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight mb-2 line-clamp-2 group-hover:text-brand-600 transition-colors">Fone de Ouvido TWS Earbuds AirPro</h3>
+                        <div class="mt-auto pt-2">
+                            <div class="text-lg sm:text-xl font-extrabold text-gray-900">R$ 249,00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-soft hover:shadow-float hover:-translate-y-1 transition-all duration-300 group flex flex-col">
+                    <div class="relative w-full aspect-square bg-gray-50 p-4">
+                        <span class="absolute top-3 left-3 bg-promo-500 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md z-10">-15%</span>
+                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-promo-500 hover:shadow-md transition z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_0f31ee68ec_b5ae85bfa532128b.png" alt="portable bluetooth speaker, rugged design, black mesh, white background" />
+                    </div>
+                    <div class="p-4 flex flex-col flex-1">
+                        <div class="text-xs text-brand-600 font-semibold mb-1">SoundMax</div>
+                        <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight mb-2 line-clamp-2 group-hover:text-brand-600 transition-colors">Caixa de Som Portátil Bass Boost 30W</h3>
+                        <div class="mt-auto pt-2">
+                            <div class="text-xs text-gray-400 line-through mb-0.5">R$ 399,00</div>
+                            <div class="text-lg sm:text-xl font-extrabold text-gray-900">R$ 339,15</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-soft hover:shadow-float hover:-translate-y-1 transition-all duration-300 group flex flex-col">
+                    <div class="relative w-full aspect-square bg-gray-50 p-4">
+                        <span class="absolute top-3 left-3 bg-brand-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md z-10">Novo</span>
+                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-promo-500 hover:shadow-md transition z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_388fe3f8b2_c4da0fe5429e4b86.png" alt="modern smartwatch with digital display, sport silicone band black, white background" />
+                    </div>
+                    <div class="p-4 flex flex-col flex-1">
+                        <div class="text-xs text-brand-600 font-semibold mb-1">TechPro</div>
+                        <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight mb-2 line-clamp-2 group-hover:text-brand-600 transition-colors">Smartwatch Active X Fitness Tracker</h3>
+                        <div class="mt-auto pt-2">
+                            <div class="text-lg sm:text-xl font-extrabold text-gray-900">R$ 299,90</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-soft hover:shadow-float hover:-translate-y-1 transition-all duration-300 group flex flex-col hidden sm:flex">
+                    <div class="relative w-full aspect-square bg-gray-50 p-4">
+                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-400 hover:text-promo-500 hover:shadow-md transition z-10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_08ce38496e_5b7ad1d46930da40.png" alt="wireless charging pad, sleek black disc design with smartphone charging on it, white background" />
+                    </div>
+                    <div class="p-4 flex flex-col flex-1">
+                        <div class="text-xs text-brand-600 font-semibold mb-1">TechPro</div>
+                        <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight mb-2 line-clamp-2 group-hover:text-brand-600 transition-colors">Carregador Sem Fio Fast Charge 15W</h3>
+                        <div class="mt-auto pt-2">
+                            <div class="text-lg sm:text-xl font-extrabold text-gray-900">R$ 129,00</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-gray-900 text-gray-300 pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
+                <!-- Brand & About -->
+                <div class="lg:col-span-1 text-center md:text-left">
+                    <a href="#" class="flex items-center justify-center md:justify-start gap-2 mb-6">
+                        <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span class="font-bold text-2xl tracking-tight text-white">Lojaflex 3</span>
+                    </a>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Sua loja de confiança com os melhores produtos, preços imbatíveis e o atendimento que você merece. Descubra um novo jeito de comprar online.</p>
+                    <div class="flex items-center justify-center md:justify-start gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-500 hover:text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links 1 -->
+                <div class="text-center md:text-left">
+                    <h4 class="text-white font-bold text-lg mb-6 uppercase tracking-wider text-sm">Departamentos</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Eletrônicos e Celulares</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Moda e Acessórios</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Casa e Decoração</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Beleza e Perfumaria</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Esporte e Lazer</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 2 -->
+                <div class="text-center md:text-left">
+                    <h4 class="text-white font-bold text-lg mb-6 uppercase tracking-wider text-sm">Ajuda & Suporte</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Como comprar</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Prazos e Entregas</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Trocas e Devoluções</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Perguntas Frequentes</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Fale Conosco</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="text-center md:text-left bg-gray-800/50 p-6 rounded-2xl border border-gray-700/50">
+                    <h4 class="text-white font-bold text-lg mb-4">Atendimento</h4>
+                    <p class="text-sm text-gray-400 mb-6">Estamos aqui para ajudar com suas dúvidas e pedidos.</p>
+                    <a href="#" class="flex items-center justify-center md:justify-start gap-3 bg-green-500 text-white font-bold px-4 py-3 rounded-xl hover:bg-green-600 transition-colors mb-4">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> (11) 99999-9999
+                    </a>
+                    <p class="text-xs text-gray-500"><i class="fa-regular fa-envelope mr-1"></i> contato@lojaflex3.com.br</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-gray-500 text-center md:text-left">
+                    &copy; 2024 Lojaflex 3. Todos os direitos reservados. CNPJ: 00.000.000/0001-00.
+                </p>
+                <div class="flex items-center gap-4 text-2xl text-gray-600">
+                    <i class="fa-brands fa-cc-visa hover:text-white transition"></i>
+                    <i class="fa-brands fa-cc-mastercard hover:text-white transition"></i>
+                    <i class="fa-brands fa-pix hover:text-white transition"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="#" class="fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl shadow-float hover:scale-110 hover:bg-green-600 transition-all z-40">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Script for Drawer Toggle -->
+    <script>
+        const cartBtns = document.querySelectorAll('.open-cart-btn');
+        const closeCartBtn = document.getElementById('close-cart-btn');
+        const drawer = document.getElementById('cart-drawer');
+        const overlay = document.getElementById('cart-drawer-overlay');
+        const body = document.body;
+
+        function openCart() {
+            drawer.classList.remove('translate-x-full');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            body.style.overflow = 'hidden';
+        }
+
+        function closeCart() {
+            drawer.classList.add('translate-x-full');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            body.style.overflow = '';
+        }
+
+        cartBtns.forEach(btn => {
+            btn.addEventListener('click', openCart);
+        });
+
+        closeCartBtn.addEventListener('click', closeCart);
+        overlay.addEventListener('click', closeCart);
+    </script>
+</body>
+</html>

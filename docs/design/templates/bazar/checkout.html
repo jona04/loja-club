@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Lojaflex 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        promo: {
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'float': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-gray-50 text-gray-900 font-sans antialiased overflow-x-hidden">
+
+    <!-- Simple Header for Checkout -->
+    <header id="header" class="w-full bg-white border-b border-gray-200 shadow-sm py-4">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <a href="#" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">Lojaflex 3</span>
+                </a>
+                <a href="#" class="text-sm font-medium text-gray-500 hover:text-brand-600 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar à loja
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 tracking-tight">Finalizar Pedido</h1>
+
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+
+            <!-- Main Column (Forms & Items) -->
+            <div class="w-full lg:w-2/3 space-y-8">
+
+                <!-- Block: Seu Pedido -->
+                <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-box"></i></div>
+                        Seu pedido
+                    </h2>
+
+                    <div class="space-y-6">
+                        <!-- Item 1 -->
+                        <div class="flex flex-col sm:flex-row gap-4 pb-6 border-b border-gray-100">
+                            <div class="w-24 h-24 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_3da4f534f6_1c3ce32457c1c918.png" alt="pair of vibrant colorful trendy sneakers on clean white background, studio lighting">
+                            </div>
+                            <div class="flex-1 flex flex-col justify-between">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-gray-900">Tênis Urban Comfort Max Colors</h3>
+                                        <p class="text-sm text-gray-500 mt-1">Tam: 42 | Cor: Neon</p>
+                                    </div>
+                                    <span class="font-extrabold text-brand-600">R$ 299,90</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="flex items-center gap-2 border border-gray-200 rounded-lg p-1 bg-gray-50">
+                                        <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 transition"><i class="fa-solid fa-minus text-sm"></i></button>
+                                        <span class="text-sm font-bold w-6 text-center text-gray-900">1</span>
+                                        <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 transition"><i class="fa-solid fa-plus text-sm"></i></button>
+                                    </div>
+                                    <button class="text-sm text-red-500 hover:text-red-700 font-medium flex items-center gap-1 transition">
+                                        <i class="fa-regular fa-trash-can"></i> Remover
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="w-24 h-24 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_385e007d30_58477aa985ce3336.png" alt="modern wireless over-ear headphones, matte black finish, clean background">
+                            </div>
+                            <div class="flex-1 flex flex-col justify-between">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-gray-900">Fone de Ouvido Bluetooth SoundPro ANC</h3>
+                                        <p class="text-sm text-gray-500 mt-1">Cor: Preto Matte</p>
+                                    </div>
+                                    <span class="font-extrabold text-brand-600">R$ 449,90</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="flex items-center gap-2 border border-gray-200 rounded-lg p-1 bg-gray-50">
+                                        <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 transition"><i class="fa-solid fa-minus text-sm"></i></button>
+                                        <span class="text-sm font-bold w-6 text-center text-gray-900">1</span>
+                                        <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 transition"><i class="fa-solid fa-plus text-sm"></i></button>
+                                    </div>
+                                    <button class="text-sm text-red-500 hover:text-red-700 font-medium flex items-center gap-1 transition">
+                                        <i class="fa-regular fa-trash-can"></i> Remover
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Block: Contato -->
+                <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-sm"><i class="fa-regular fa-user"></i></div>
+                        Informações de Contato
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nome Completo</label>
+                            <input type="text" placeholder="Ex: João da Silva" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                        </div>
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">E-mail</label>
+                            <input type="email" placeholder="seu@email.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                        </div>
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">WhatsApp / Celular</label>
+                            <div class="flex">
+                                <div class="relative w-32 flex-shrink-0">
+                                    <select class="w-full h-full appearance-none pl-10 pr-6 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all text-sm font-medium z-10 relative">
+                                        <option value="+55">+55 (BR)</option>
+                                        <option value="+1">+1 (US)</option>
+                                        <option value="+351">+351 (PT)</option>
+                                    </select>
+                                    <div class="absolute left-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none text-base">🇧🇷</div>
+                                    <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 z-20 pointer-events-none"></i>
+                                </div>
+                                <input type="tel" placeholder="(11) 99999-9999" class="flex-1 w-full px-4 py-3 rounded-r-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all relative z-0">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Block: Entrega -->
+                <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-truck-fast"></i></div>
+                        Entrega
+                    </h2>
+
+                    <!-- Endereço -->
+                    <div class="mb-8">
+                        <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Endereço de Destino</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                            <div class="sm:col-span-4">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">CEP</label>
+                                <input type="text" placeholder="00000-000" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-8">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Rua / Avenida</label>
+                                <input type="text" placeholder="Nome da rua" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Número</label>
+                                <input type="text" placeholder="123" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-5">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Complemento</label>
+                                <input type="text" placeholder="Apto, Sala, etc." class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-4">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Bairro</label>
+                                <input type="text" placeholder="Bairro" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-8">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Cidade</label>
+                                <input type="text" placeholder="Cidade" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-4">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">Estado</label>
+                                <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all">
+                                    <option value="">Selecione</option>
+                                    <option value="SP">São Paulo (SP)</option>
+                                    <option value="RJ">Rio de Janeiro (RJ)</option>
+                                    <option value="MG">Minas Gerais (MG)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Opções de Entrega -->
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Opções de Entrega</h3>
+                        <div class="space-y-3">
+                            <!-- Option 1 -->
+                            <label class="relative flex cursor-pointer rounded-2xl border bg-white p-4 shadow-sm hover:bg-gray-50 border-gray-200 focus-within:ring-2 focus-within:ring-brand-500 transition-all">
+                                <input type="radio" name="delivery_method" class="sr-only peer" checked>
+                                <div class="flex w-full items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-brand-600 peer-checked:bg-brand-600 transition-colors">
+                                            <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">Correios / Transportadora</p>
+                                            <p class="text-xs text-gray-500 mt-0.5">Entrega em 5-7 dias úteis</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-gray-900">R$ 25,00</span>
+                                </div>
+                                <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 pointer-events-none transition-colors"></div>
+                            </label>
+
+                            <!-- Option 2 -->
+                            <label class="relative flex cursor-pointer rounded-2xl border bg-white p-4 shadow-sm hover:bg-gray-50 border-gray-200 focus-within:ring-2 focus-within:ring-brand-500 transition-all">
+                                <input type="radio" name="delivery_method" class="sr-only peer">
+                                <div class="flex w-full items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-brand-600 peer-checked:bg-brand-600 transition-colors">
+                                            <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">Retirada no Local</p>
+                                            <p class="text-xs text-gray-500 mt-0.5">Loja Física (Centro)</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md text-sm">Grátis</span>
+                                </div>
+                                <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 pointer-events-none transition-colors"></div>
+                            </label>
+
+                            <!-- Option 3 -->
+                            <label class="relative flex cursor-pointer rounded-2xl border bg-brand-50 p-4 shadow-sm border-brand-200 focus-within:ring-2 focus-within:ring-brand-500 transition-all">
+                                <input type="radio" name="delivery_method" class="sr-only peer">
+                                <div class="flex w-full items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-brand-600 peer-checked:bg-brand-600 transition-colors">
+                                            <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-brand-900 flex items-center gap-2">
+                                                Entrega Combinada
+                                                <i class="fa-brands fa-whatsapp text-green-500"></i>
+                                            </p>
+                                            <p class="text-xs text-brand-700 mt-1 max-w-xs leading-relaxed">
+                                                A loja entrará em contato via WhatsApp após a compra para combinar o valor e prazo do frete.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 pointer-events-none transition-colors"></div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Sidebar (Resumo) -->
+            <div class="w-full lg:w-1/3">
+                <div class="bg-gray-900 text-white rounded-3xl p-6 md:p-8 sticky top-24 shadow-2xl border border-gray-800">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-receipt text-brand-400"></i> Resumo do Pedido
+                    </h2>
+
+                    <!-- Cupom -->
+                    <div class="mb-6 pb-6 border-b border-gray-800">
+                        <label class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">Cupom de Desconto</label>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Código" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all uppercase text-sm">
+                            <button class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl border border-gray-700 transition-colors text-sm">Aplicar</button>
+                        </div>
+                    </div>
+
+                    <!-- Totais -->
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center text-gray-400">
+                            <span>Subtotal (2 itens)</span>
+                            <span class="font-medium text-white">R$ 749,80</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-400">
+                            <span>Frete</span>
+                            <span class="font-medium text-white">R$ 25,00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-6 border-t border-gray-800 mb-8">
+                        <span class="text-lg font-medium text-gray-300">Total</span>
+                        <div class="text-right">
+                            <span class="text-sm text-gray-400 block mb-1">BRL</span>
+                            <span class="text-3xl font-extrabold text-brand-400 tracking-tight">R$ 774,80</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-lg py-4 px-6 rounded-2xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                        Confirmar Pedido <i class="fa-solid fa-check"></i>
+                    </button>
+
+                    <p class="text-center text-xs text-gray-500 mt-4 leading-relaxed">
+                        <i class="fa-solid fa-info-circle mr-1"></i> Ao confirmar, seu pedido será registrado e entraremos em contato para combinar o pagamento.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Simple Footer for Checkout -->
+    <footer id="footer" class="bg-white border-t border-gray-200 mt-12 py-8">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-gray-500 mb-4">
+                &copy; 2024 Lojaflex 3. Todos os direitos reservados.
+            </p>
+            <div class="flex items-center justify-center gap-4 text-xl text-gray-400">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span class="text-xs font-medium">Ambiente Seguro</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

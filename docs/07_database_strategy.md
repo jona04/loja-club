@@ -100,7 +100,9 @@ Exemplos:
 | `discount_coupons` | Sim |
 | `content_pages` | Sim |
 | `content_menus` | Sim |
+| `content_menu_items` | Sim |
 | `content_store_theme_settings` | Sim |
+| `content_banners` | Sim |
 | `media_files` | Sim |
 
 ## Tabelas principais
@@ -133,7 +135,7 @@ Exemplos:
 
 ### Personalização 3D
 
-> **Fase 5 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 5](backlog/phase-5-3d-products.md).
+> **Fase 7 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 7](backlog/phase-7-3d-products.md).
 
 | Tabela | Função |
 |---|---|

@@ -2,7 +2,7 @@
 id: P1-STORE-01
 title: Módulo stores — modelos store_stores + store_settings
 phase: 1
-etapa: "Etapa 3 — Multi-tenancy (backend)"
+etapa: "Etapa 3 — Módulo stores"
 area: STORE
 status: done
 depends_on: []
@@ -30,7 +30,7 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
 ## Fora de escopo (o que NÃO entra)
 - Serviço/rotas (criar/listar/publicar) → `P1-STORE-02`.
 - `store_members`/papéis → `P1-PERM-01`; `domain_hosts` → `P1-DOM-01`.
-- `currency`/`locale` do **cliente** → Fase 4.
+- `currency`/`locale` do **cliente** → Fase 6.
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/stores/models.py` (criar) — `Store`/`StoreSettings` + schemas públicos.

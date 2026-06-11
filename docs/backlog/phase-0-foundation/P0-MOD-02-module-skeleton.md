@@ -20,7 +20,7 @@ O backend será um monólito **modular**: cada domínio em `app/modules/<nome>/`
 - [04 — FastAPI Template Adaptation](../../04_fastapi_template_adaptation.md)
 
 ## Escopo (o que ENTRA)
-- Criar `app/modules/__init__.py` e os subpacotes que vamos usar até a Fase 4: `accounts`, `stores`, `tenancy`, `domains`, `catalog`, `media`, `product_customization`, `storefront`, `cart`, `checkout`, `orders`, `customers`, `shipping`, `discounts`, `notifications`, `audit`.
+- Criar `app/modules/__init__.py` e os subpacotes que vamos usar até a Fase 6: `accounts`, `stores`, `tenancy`, `domains`, `catalog`, `media`, `product_customization`, `storefront`, `cart`, `checkout`, `orders`, `customers`, `shipping`, `discounts`, `notifications`, `audit`.
 - Convenção por módulo (criar conforme uso, não arquivos vazios à toa): `models.py`, `schemas.py`, `routes.py`, `services.py`, `repositories.py`, `permissions.py`, `exceptions.py`.
 - Registrar a convenção de **nome de tabela com prefixo de domínio** (INV-D3 / doc [07](../../07_database_strategy.md)): cada modelo define `__tablename__` explícito (ex.: `store_stores`, `catalog_products`), nunca o default do template.
 - `app/api/main.py` agregando os routers dos módulos (substitui os includes do template).

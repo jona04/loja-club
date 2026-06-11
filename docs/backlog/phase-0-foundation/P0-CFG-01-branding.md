@@ -20,7 +20,7 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 
 ## Escopo (o que ENTRA)
 - `.env`: `PROJECT_NAME="Loja Club"`, `STACK_NAME=loja-club`, `DOCKER_IMAGE_BACKEND=loja-club-backend`, `DOCKER_IMAGE_FRONTEND=loja-club-frontend`.
-- `frontend/index.html`: `<title>` e favicon da Loja Club.
+- `frontend-dashboard/index.html`: `<title>` e favicon da Loja Club.
 - `README.md` (raiz) e `copier.yml`: nome do projeto Loja Club.
 - Confirmar que `EMAILS_FROM_NAME` herda de `PROJECT_NAME` (já há `_set_default_emails_from` em `config.py`).
 
@@ -30,14 +30,14 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 
 ## Arquivos a criar/alterar
 - `.env` (alterar) — `PROJECT_NAME`, `STACK_NAME`, `DOCKER_IMAGE_*`.
-- `frontend/index.html` (alterar) — título.
-- `frontend/public/` (alterar) — favicon placeholder Loja Club.
+- `frontend-dashboard/index.html` (alterar) — título.
+- `frontend-dashboard/public/` (alterar) — favicon placeholder Loja Club.
 - `README.md` (alterar) — nome/descrição.
 - `copier.yml` (alterar) — nome do projeto.
 
 ## Passos
 1. Editar `.env` com os valores acima.
-2. Trocar título em `frontend/index.html` e o favicon em `frontend/public/`.
+2. Trocar título em `frontend-dashboard/index.html` e o favicon em `frontend-dashboard/public/`.
 3. Ajustar `README.md` e `copier.yml`.
 4. Subir local e conferir título + nome nos e-mails (Mailcatcher).
 
@@ -54,5 +54,5 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 
 ## Notas / Reconciliações
 - Sem divergência com docs: é só configuração/branding do template.
-- **Pendente (design, não gerável aqui):** favicon/logo da Loja Club. Mantidos os ícones do template em `frontend/index.html` (`vite.svg`/`favicon.png`) até existir o asset real.
+- **Pendente (design, não gerável aqui):** favicon/logo da Loja Club. Mantidos os ícones do template em `frontend-dashboard/index.html` (`vite.svg`/`favicon.png`) até existir o asset real.
 - README raiz reescrito (era o do template); `copier.yml` e `.env` com nome/stack Loja Club.
