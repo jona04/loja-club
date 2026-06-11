@@ -121,7 +121,7 @@ fi
 # --- Stack smoke (job: test-docker-compose) ---
 if [ "$RUN_SMOKE" = 1 ]; then
   step "docker - stack smoke" bash -c '
-    docker compose up -d --build --wait backend frontend-dashboard adminer &&
+    docker compose up -d --build --wait backend frontend-dashboard frontend-storefront adminer &&
     curl -fsS http://localhost:8800/api/v1/utils/health-check >/dev/null &&
     curl -fsS http://localhost:5180 >/dev/null'
 else

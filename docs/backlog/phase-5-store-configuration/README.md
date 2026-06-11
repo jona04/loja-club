@@ -28,7 +28,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 2 | [P5-DOC-01](./P5-DOC-01-database-doc-audit.md) | Auditoria do doc de banco (tabelas + índices vs código) | ✅ done | — |
 | 3 | [P5-CFG-01](./P5-CFG-01-template-settings-storage.md) | `content_store_template_settings` + API (storage dos settings) | ✅ done | P4-TPL-01 |
 | 4 | [P5-CFG-02](./P5-CFG-02-template-settings-form.md) | Form genérico no painel (1 componente, N schemas) | ✅ done | P5-CFG-01 |
-| 5 | [P5-DEMO-01](./P5-DEMO-01-import-assets.md) | `demo.json` + `import_assets` (uxpilot → CDN) | todo | P4-TPL-01, P4-TPL-02 |
+| 5 | [P5-DEMO-01](./P5-DEMO-01-import-assets.md) | `demo.json` + `import_assets` (uxpilot → CDN) | ✅ done | P4-TPL-01, P4-TPL-02 |
 | 6 | [P5-DEMO-02](./P5-DEMO-02-template-demo-stores.md) | Loja-demo por template (`<id>-demo`) | todo | P5-DEMO-01 |
 | 7 | [P5-TPL-01](./P5-TPL-01-template-screens-refinements.md) | Refinos das telas de template (admin + dashboard, thumb CDN) | todo | P5-DEMO-01 |
 | 8 | [P5-SF-01](./P5-SF-01-storefront-reads-settings.md) | Vitrine lê `theme.settings` (defaults ⊕ overrides) | ✅ done | P5-CFG-01 |
@@ -55,7 +55,8 @@ P5-DEMO-01 → P5-DEMO-02 ─┼→ P5-PREV-01
 **Da própria fase:**
 - [ ] **e2e compartilha o `redis` do dev** (jobs do `backend-e2e` podem ser pegos pelo `worker` de dev e falhar — ruído, não polui). Isolar com `redis-test`/`worker-e2e`. Origem: `P5-TEST-01`.
 - [x] **`settings_schema` na imagem do backend** ✅ resolvido (`backend/Dockerfile` copia `frontend-storefront/templates/`; seed no docker grava o schema real; doc 27 §Passo 4 atualizada). Origem: `P5-CFG-01`.
-- [ ] **Imagens-default no CDN** + **thumb relativo do seed** + **remover PNGs de `public/`** (Fase 4, `P4-TPL-02`) → `P5-DEMO-01`.
+- [x] **Imagens-default (demo) no CDN** (Fase 4) → `P5-DEMO-01` ✅ (import_assets baixa→S3→CDN). **Thumb relativo do seed** + **remover PNGs de `public/`** → `P5-TPL-01` (lado do dashboard, reusa import_assets).
+- [ ] **`import_assets`: erro por-imagem** (URL 4xx/5xx ou S3 falho aborta o template — decidir continuar+reportar) + **download em memória sem limite** (streaming p/ imagens grandes). Origem: `P5-DEMO-01`.
 - [ ] **Telas de templates: thumb relativo (admin)** + **dashboard thumbnail do CDN** (Fase 4, `P4-ADMIN-03`) → `P5-TPL-01`.
 - [ ] **`previewLayout` sem uso** + **preview ao vivo / botão abrir preview** (Fases 3/4) → `P5-PREV-01`.
 - [x] **Conteúdo estático/lorem → dinâmico** (Fase 3) → `P5-SF-01` ✅ (chrome editável vem de settings nos 3 templates).

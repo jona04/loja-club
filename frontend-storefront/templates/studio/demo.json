@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "name": "Camisetas",
+      "slug": "camisetas"
+    },
+    {
+      "name": "Calças",
+      "slug": "calcas"
+    },
+    {
+      "name": "Acessórios",
+      "slug": "acessorios"
+    }
+  ],
+  "products": [
+    {
+      "name": "Camiseta Oversized Preta",
+      "slug": "camiseta-oversized-preta",
+      "price": 11000,
+      "category": "camisetas",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_bc32955569_22db977743db2466.png"
+    },
+    {
+      "name": "Camiseta Básica Premium",
+      "slug": "camiseta-basica-premium",
+      "price": 8990,
+      "category": "camisetas",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_d021731906_30997120097122d3.png"
+    },
+    {
+      "name": "Moletom Confort",
+      "slug": "moletom-confort",
+      "price": 27990,
+      "category": "camisetas",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_033376daa5_a9cef819ab88e8ec.png"
+    },
+    {
+      "name": "Calça Cargo Bege",
+      "slug": "calca-cargo-bege",
+      "price": 28900,
+      "category": "calcas",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_92e85c0b32_f596f01c1298bf13.png"
+    },
+    {
+      "name": "Calça Chino Verde",
+      "slug": "calca-chino-verde",
+      "price": 19500,
+      "category": "calcas",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_613f0c4b42_72812593bde0fb56.png"
+    },
+    {
+      "name": "Colete Puffer Preto",
+      "slug": "colete-puffer-preto",
+      "price": 29000,
+      "category": "acessorios",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_834d5d55f2_6ea141b10b6fc224.png"
+    },
+    {
+      "name": "Mochila de Nylon Preta",
+      "slug": "mochila-nylon-preta",
+      "price": 45000,
+      "category": "acessorios",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_fbeb0afd63_fe24d37ff06f3528.png"
+    },
+    {
+      "name": "Tênis de Couro Branco",
+      "slug": "tenis-couro-branco",
+      "price": 38990,
+      "category": "acessorios",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/studio/gen_b5bf76b7a3_e186b3d8c1fffb1e.png"
+    }
+  ]
+}

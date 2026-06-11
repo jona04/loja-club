@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "name": "Periféricos",
+      "slug": "perifericos"
+    },
+    {
+      "name": "Câmeras & Foto",
+      "slug": "cameras"
+    },
+    {
+      "name": "Computadores",
+      "slug": "computadores"
+    }
+  ],
+  "products": [
+    {
+      "name": "Mouse Gamer Sem Fio RGB",
+      "slug": "mouse-gamer-rgb",
+      "price": 18990,
+      "category": "perifericos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_740f3fae8f_290c0abf5a518da4.png"
+    },
+    {
+      "name": "Teclado Mecânico Gamer RGB",
+      "slug": "teclado-mecanico-rgb",
+      "price": 34990,
+      "category": "perifericos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_a9a5376b3f_be6fc13d42d7a8b5.png"
+    },
+    {
+      "name": "Headset Bluetooth Imersivo",
+      "slug": "headset-bluetooth",
+      "price": 29990,
+      "category": "perifericos",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_3da4f534f6_1c3ce32457c1c918.png"
+    },
+    {
+      "name": "Câmera de Ação 4K",
+      "slug": "camera-acao-4k",
+      "price": 102000,
+      "category": "cameras",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_d0cdd79ca8_7733b34f8db954c2.png"
+    },
+    {
+      "name": "Smartwatch Esportivo",
+      "slug": "smartwatch-esportivo",
+      "price": 45000,
+      "category": "cameras",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_385e007d30_58477aa985ce3336.png"
+    },
+    {
+      "name": "Tablet Pro com Caneta",
+      "slug": "tablet-pro-caneta",
+      "price": 224900,
+      "category": "computadores",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_8ae4b8dd98_a9d9bb3a61f03196.png"
+    },
+    {
+      "name": "Notebook Ultrafino",
+      "slug": "notebook-ultrafino",
+      "price": 279900,
+      "category": "computadores",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_baefd3b325_dffffaf8d32e49de.png"
+    },
+    {
+      "name": "Caixa de Som Portátil",
+      "slug": "caixa-som-portatil",
+      "price": 59900,
+      "category": "computadores",
+      "image": "https://dsqh10bjdo174.cloudfront.net/public/templates/bazar/gen_15063d928d_f4b6909196d6a852.png"
+    }
+  ]
+}

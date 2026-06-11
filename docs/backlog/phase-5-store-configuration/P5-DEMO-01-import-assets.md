@@ -4,7 +4,7 @@ title: demo.json (aurora/bazar/studio) + import_assets (uxpilot → CDN)
 phase: 5
 etapa: "Etapa 4 — Loja-demo + import de assets"
 area: DEMO
-status: todo
+status: done
 depends_on: [P4-TPL-01, P4-TPL-02]
 blocks: [P5-DEMO-02, P5-TPL-01]
 tests: [integration]
@@ -45,14 +45,18 @@ As imagens do template nascem com **URL do uxpilot** (no `demo.json` e nos defau
 - **Cobrir:** integração — `import_assets` baixa a URL de origem → sobe pro CDN → reescreve; idempotente; URL já-CDN não re-importa.
 
 ## Definition of Done
-- [ ] `demo.json` dos 3 templates (formato do doc 27).
-- [ ] `import_assets` move imagens (schema/demo/thumbnail) → CDN e reescreve as referências.
-- [ ] Idempotente; testes com `moto`.
-- [ ] **Modos de falha mapeados** (URL 404, download grande, S3 falho, re-import) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `demo.json` dos 3 templates (formato do doc 27) — **transcritos dos designs** (aurora=decoração, bazar=eletrônicos, studio=vestuário; produtos + imagens reais).
+- [x] `import_assets` baixa cada imagem → S3 (`public/templates/<id>/…`) → CDN, **reescreve e persiste** o `demo.json` (commitado com URLs do CDN — **uxpilot deixa de ser dependência**). Imagens do **demo** cobertas; defaults `image` do schema = **N/A no V1**; **thumbnail → reconciliado pra `P5-TPL-01`** (mesmo mecanismo).
+- [x] **Idempotente** (URL já-CDN não re-baixa; key determinística); testes `moto` + **smoke real env-gated** (baixou aurora do uxpilot → S3 dev de verdade, 9.9s ✓).
+- [x] **Modos de falha mapeados** (re-import → idempotente; sem `demo.json` → manifesto vazio; URL erro / S3 falho → propaga; download em memória) → ver Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `import_assets.py` (`load_demo`, `_ensure_cdn`, `import_demo_assets` que **persiste** via `_write_demo`); **bake rodado nos 3 templates** → os `demo.json` ficaram com URLs do **CloudFront** (`…/public/templates/<id>/`), **24 imagens no CDN** (bazar/studio/aurora, HTTP 200 verificado); testes (8: mock + estrutura dos 3 reais + smoke real env-gated). Backend verde, `import_assets` **100% cov**.
 
 ## Notas / Reconciliações
-- Funde os follow-ups da Fase 4: "imagens-default no CDN", "thumb relativo do seed", "remover PNGs de `public/`".
+- **Fecha** o follow-up "imagens-default no CDN" da Fase 4 (imagens do demo). O **thumbnail** ("thumb relativo do seed" + "remover PNGs de `public/`") fica em `P5-TPL-01` (lado do dashboard) reusando `import_assets`/`storage`.
+- Escopo do import = **imagens do demo** (o que existe no V1); o mecanismo é genérico (qualquer URL → CDN), reaproveitável p/ thumbnail e futuros campos `image`.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **`import_assets`: erro por-imagem** — uma URL com erro (4xx/5xx) ou falha de S3 hoje **propaga** e aborta o import do template; decidir se continua nas demais + reporta as que falharam. Origem: `P5-DEMO-01`.
+- [ ] **Download em memória (sem limite)** — `_ensure_cdn` carrega a imagem inteira em RAM; pra imagens grandes, considerar streaming/limite de tamanho. Origem: `P5-DEMO-01`.
