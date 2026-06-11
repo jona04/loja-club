@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentPreviewLayoutData, ContentPreviewLayoutResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PrivateCreateUserData, PrivateCreateUserResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentPreviewLayoutData, ContentPreviewLayoutResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PrivateCreateUserData, PrivateCreateUserResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CatalogService {
     /**
@@ -760,6 +760,387 @@ export class MediaService {
             url: '/api/v1/stores/{store_id}/media',
             path: {
                 store_id: data.storeId
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class PlatformAdminService {
+    /**
+     * Get Platform Me
+     * Return the signed-in user and their platform roles (empty if not an admin).
+     * @returns PlatformMe Successful Response
+     * @throws ApiError
+     */
+    public static getPlatformMe(): CancelablePromise<PlatformAdminGetPlatformMeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/me'
+        });
+    }
+    
+    /**
+     * List Stores
+     * List all stores (cross-store), excluding soft-deleted ones.
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_StoreAdminListItem_ Successful Response
+     * @throws ApiError
+     */
+    public static listStores(data: PlatformAdminListStoresData = {}): CancelablePromise<PlatformAdminListStoresResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/stores',
+            query: {
+                search: data.search,
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Store
+     * Get a store's admin detail (identity + settings + members).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StoreAdminDetail Successful Response
+     * @throws ApiError
+     */
+    public static getStore(data: PlatformAdminGetStoreData): CancelablePromise<PlatformAdminGetStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/stores/{store_id}',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Block Store
+     * Block a store (status -> ``blocked``); the dashboard guard then bars it.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StoreAdminListItem Successful Response
+     * @throws ApiError
+     */
+    public static blockStore(data: PlatformAdminBlockStoreData): CancelablePromise<PlatformAdminBlockStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/stores/{store_id}/block',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Unblock Store
+     * Unblock a store (status -> ``active``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @returns StoreAdminListItem Successful Response
+     * @throws ApiError
+     */
+    public static unblockStore(data: PlatformAdminUnblockStoreData): CancelablePromise<PlatformAdminUnblockStoreResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/stores/{store_id}/unblock',
+            path: {
+                store_id: data.storeId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Users
+     * List all account users, excluding soft-deleted ones.
+     * @param data The data for the request.
+     * @param data.search
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_UserPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listUsers(data: PlatformAdminListUsersData = {}): CancelablePromise<PlatformAdminListUsersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/users',
+            query: {
+                search: data.search,
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get User
+     * Get an account user by id.
+     * @param data The data for the request.
+     * @param data.userId
+     * @returns UserPublic Successful Response
+     * @throws ApiError
+     */
+    public static getUser(data: PlatformAdminGetUserData): CancelablePromise<PlatformAdminGetUserResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/users/{user_id}',
+            path: {
+                user_id: data.userId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Impersonate User
+     * Issue an access token to act on behalf of a user (recorded).
+     * @param data The data for the request.
+     * @param data.userId
+     * @returns Token Successful Response
+     * @throws ApiError
+     */
+    public static impersonateUser(data: PlatformAdminImpersonateUserData): CancelablePromise<PlatformAdminImpersonateUserResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/users/{user_id}/impersonate',
+            path: {
+                user_id: data.userId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Plans
+     * List the subscription plan definitions.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_BillingPlanPublic_ Successful Response
+     * @throws ApiError
+     */
+    public static listPlans(data: PlatformAdminListPlansData = {}): CancelablePromise<PlatformAdminListPlansResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/plans',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Plan
+     * Create a subscription plan definition.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns BillingPlanPublic Successful Response
+     * @throws ApiError
+     */
+    public static createPlan(data: PlatformAdminCreatePlanData): CancelablePromise<PlatformAdminCreatePlanResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/plans',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Plan
+     * Get a subscription plan definition by id.
+     * @param data The data for the request.
+     * @param data.planId
+     * @returns BillingPlanPublic Successful Response
+     * @throws ApiError
+     */
+    public static getPlan(data: PlatformAdminGetPlanData): CancelablePromise<PlatformAdminGetPlanResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/plans/{plan_id}',
+            path: {
+                plan_id: data.planId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Plan
+     * Update a subscription plan definition.
+     * @param data The data for the request.
+     * @param data.planId
+     * @param data.requestBody
+     * @returns BillingPlanPublic Successful Response
+     * @throws ApiError
+     */
+    public static updatePlan(data: PlatformAdminUpdatePlanData): CancelablePromise<PlatformAdminUpdatePlanResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/platform/plans/{plan_id}',
+            path: {
+                plan_id: data.planId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Delete Plan
+     * Soft-delete a subscription plan definition.
+     * @param data The data for the request.
+     * @param data.planId
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static deletePlan(data: PlatformAdminDeletePlanData): CancelablePromise<PlatformAdminDeletePlanResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/platform/plans/{plan_id}',
+            path: {
+                plan_id: data.planId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Templates
+     * List the registered theme templates.
+     * @returns ThemeTemplateAdminPublic Successful Response
+     * @throws ApiError
+     */
+    public static listTemplates(): CancelablePromise<PlatformAdminListTemplatesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/templates'
+        });
+    }
+    
+    /**
+     * Create Template
+     * Register a theme template (its code must already exist in the storefront).
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns ThemeTemplateAdminPublic Successful Response
+     * @throws ApiError
+     */
+    public static createTemplate(data: PlatformAdminCreateTemplateData): CancelablePromise<PlatformAdminCreateTemplateResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/templates',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Template
+     * Get a registered theme template by id.
+     * @param data The data for the request.
+     * @param data.templateId
+     * @returns ThemeTemplateAdminPublic Successful Response
+     * @throws ApiError
+     */
+    public static getTemplate(data: PlatformAdminGetTemplateData): CancelablePromise<PlatformAdminGetTemplateResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/platform/templates/{template_id}',
+            path: {
+                template_id: data.templateId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Template
+     * Update a theme template's metadata/status.
+     * @param data The data for the request.
+     * @param data.templateId
+     * @param data.requestBody
+     * @returns ThemeTemplateAdminPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateTemplate(data: PlatformAdminUpdateTemplateData): CancelablePromise<PlatformAdminUpdateTemplateResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/platform/templates/{template_id}',
+            path: {
+                template_id: data.templateId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Upload Template Thumbnail
+     * Upload a template's thumbnail to the CDN and link it.
+     * @param data The data for the request.
+     * @param data.templateId
+     * @param data.formData
+     * @returns ThemeTemplateAdminPublic Successful Response
+     * @throws ApiError
+     */
+    public static uploadTemplateThumbnail(data: PlatformAdminUploadTemplateThumbnailData): CancelablePromise<PlatformAdminUploadTemplateThumbnailResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/platform/templates/{template_id}/thumbnail',
+            path: {
+                template_id: data.templateId
             },
             formData: data.formData,
             mediaType: 'multipart/form-data',

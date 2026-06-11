@@ -12,11 +12,12 @@
 #   feito no docker — não é repetido aqui.)
 #
 # Uso:
-#   bash scripts/ci-local.sh             # tudo (lento: ~10-15 min com docker)
-#   bash scripts/ci-local.sh --quick     # pula e2e + smoke (sem docker pesado)
-#   bash scripts/ci-local.sh --no-e2e    # pula só o e2e
-#   bash scripts/ci-local.sh --no-smoke  # pula só o smoke do stack
+#   bash scripts/ci-local.sh             # TUDO, incl. e2e completo (dashboard+admin) (~10-15 min)
+#   bash scripts/ci-local.sh --quick     # pula e2e + smoke (só lint/testes rápidos, sem docker)
+#   bash scripts/ci-local.sh --no-e2e    # roda tudo, menos o e2e
+#   bash scripts/ci-local.sh --no-smoke  # roda tudo, menos o smoke do stack
 #   bash scripts/ci-local.sh -h
+# Passos pulados aparecem como ⊘ PULADO no resumo — nunca somem.
 #
 # Não para no primeiro erro: roda tudo e mostra um resumo PASS/FAIL no final
 # (exit != 0 se algo falhar). Logs completos de cada passo ficam em /tmp.
@@ -66,6 +67,14 @@ step() {
   S_TIME+=("$((SECONDS - t0))")
 }
 
+# skip "Rótulo" "motivo" — registra um passo PULADO (aparece no resumo, não some).
+skip() {
+  printf '\n\033[1;36m── %s\033[0m\n   \033[33m⊘ PULADO\033[0m %s\n' "$1" "${2:-}"
+  S_NAME+=("$1")
+  S_RES+=("SKIP")
+  S_TIME+=("0")
+}
+
 # ───────────────────────── Backend (job: test-backend) ─────────────────────────
 step "backend · lint (mypy/ty/ruff/format)" bash -c 'cd backend && uv run bash scripts/lint.sh'
 step "infra · sobe db/redis/mailcatcher"    docker compose up -d --wait db redis mailcatcher
@@ -92,6 +101,9 @@ step "frontend-storefront · biome (lint)" bash -c "cd frontend-storefront && ..
 if [ "$RUN_E2E" = 1 ]; then
   step "e2e · dashboard (playwright)"   bash -c 'CI=1 docker compose run --build --rm playwright bunx playwright test'
   step "e2e · admin (playwright-admin)" bash -c 'CI=1 docker compose run --build --rm playwright-admin bunx playwright test'
+else
+  skip "e2e · dashboard (playwright)"   "(rode sem --quick/--no-e2e p/ habilitar)"
+  skip "e2e · admin (playwright-admin)" "(rode sem --quick/--no-e2e p/ habilitar)"
 fi
 
 # ─────────────────── Smoke do stack (job: test-docker-compose) ──────────────────
@@ -100,18 +112,20 @@ if [ "$RUN_SMOKE" = 1 ]; then
     docker compose up -d --wait backend frontend-dashboard adminer &&
     curl -fsS http://localhost:8800/api/v1/utils/health-check >/dev/null &&
     curl -fsS http://localhost:5180 >/dev/null'
+else
+  skip "docker · smoke do stack" "(rode sem --quick/--no-smoke p/ habilitar)"
 fi
 
 # ──────────────────────────────── Resumo ────────────────────────────────
 printf '\n\033[1m═══════════════════ RESUMO ═══════════════════\033[0m\n'
 fails=0
 for i in "${!S_NAME[@]}"; do
-  if [ "${S_RES[$i]}" = PASS ]; then
-    printf '  \033[32m✔\033[0m %-46s %3ss\n' "${S_NAME[$i]}" "${S_TIME[$i]}"
-  else
-    printf '  \033[31m✗ %-46s %3ss\033[0m\n' "${S_NAME[$i]}" "${S_TIME[$i]}"
-    fails=$((fails + 1))
-  fi
+  case "${S_RES[$i]}" in
+    PASS) printf '  \033[32m✔\033[0m %-46s %3ss\n' "${S_NAME[$i]}" "${S_TIME[$i]}" ;;
+    SKIP) printf '  \033[33m⊘ %-46s (pulado)\033[0m\n' "${S_NAME[$i]}" ;;
+    *)    printf '  \033[31m✗ %-46s %3ss\033[0m\n' "${S_NAME[$i]}" "${S_TIME[$i]}"
+          fails=$((fails + 1)) ;;
+  esac
 done
 printf '\033[1m═══════════════════════════════════════════════\033[0m\n'
 echo "  logs completos: $LOGDIR"
