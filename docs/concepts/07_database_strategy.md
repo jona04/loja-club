@@ -305,7 +305,12 @@ A performance depende muito dos índices compostos com `store_id`.
 | `account_users` | `email` único |
 | `store_stores` | `slug` único quando ativo |
 | `store_members` | `store_id + user_id` único quando ativo |
+| `store_members` | `store_id + status` |
+| `store_roles` | `key` único |
+| `store_permissions` | `key` único |
 | `store_role_permissions` | `role + permission` único |
+| `store_settings` | `store_id` único |
+| `platform_admin_roles` | `user_id + role` único |
 | `domain_hosts` | `host` único quando ativo |
 | `domain_hosts` | `store_id + status` |
 | `catalog_products` | `store_id + slug` único quando ativo |
@@ -314,7 +319,9 @@ A performance depende muito dos índices compostos com `store_id`.
 | `catalog_product_variants` | `store_id + product_id + status` |
 | `catalog_product_images` | `store_id + product_id + position` |
 | `catalog_categories` | `store_id + slug` único quando ativo |
+| `catalog_product_categories` | `product_id + category_id` único |
 | `catalog_inventory_items` | `store_id + product_id + variant_id` |
+| `catalog_collections` | `store_id + slug` único quando ativo |
 | `customization_product_settings` | `store_id + product_id` único |
 | `customization_sessions` | `store_id + product_id + status` |
 | `customization_sessions` | `store_id + guest_session_id + status` |
@@ -348,11 +355,15 @@ A performance depende muito dos índices compostos com `store_id`.
 | `discount_coupons` | `store_id + code` único quando ativo |
 | `content_pages` | `store_id + slug` único quando ativo |
 | `content_menus` | `store_id + location` |
+| `content_menu_items` | `store_id + menu_id + position` |
+| `content_banners` | `store_id + position` |
 | `content_store_theme_settings` | `store_id` único |
 | `content_store_template_settings` | `store_id + template_id` único quando ativo |
+| `billing_plans` | `key` único quando ativo |
 | `billing_store_subscriptions` | `store_id + status` |
 | `billing_platform_commissions` | `store_id + order_id` |
 | `audit_logs` | `store_id + created_at` |
+| `audit_logs` | `user_id + created_at` |
 | `account_login_events` | `user_id + created_at` |
 | `media_files` | `store_id + id` |
 | `media_files` | `store_id + owner_type + owner_id` |

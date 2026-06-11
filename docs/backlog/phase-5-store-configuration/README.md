@@ -25,7 +25,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
 | 1 | [P5-TEST-01](./P5-TEST-01-e2e-disposable-db.md) | Banco descartável pro e2e (`db-test` + `backend-e2e`) | ✅ done | — |
-| 2 | [P5-DOC-01](./P5-DOC-01-database-doc-audit.md) | Auditoria do doc de banco (tabelas + índices vs código) | todo | — |
+| 2 | [P5-DOC-01](./P5-DOC-01-database-doc-audit.md) | Auditoria do doc de banco (tabelas + índices vs código) | ✅ done | — |
 | 3 | [P5-CFG-01](./P5-CFG-01-template-settings-storage.md) | `content_store_template_settings` + API (storage dos settings) | todo | P4-TPL-01 |
 | 4 | [P5-CFG-02](./P5-CFG-02-template-settings-form.md) | Form genérico no painel (1 componente, N schemas) | todo | P5-CFG-01 |
 | 5 | [P5-DEMO-01](./P5-DEMO-01-import-assets.md) | `demo.json` + `import_assets` (uxpilot → CDN) | todo | P4-TPL-01, P4-TPL-02 |

@@ -4,7 +4,7 @@ title: Auditoria do doc de banco (tabelas + índices vs código)
 phase: 5
 etapa: "Etapa 1 — Groundwork (e2e + doc de banco)"
 area: DOC
-status: todo
+status: done
 depends_on: []
 blocks: []
 tests: none
@@ -40,13 +40,14 @@ Conforme as tabelas foram criadas (Fases 0–4), o doc [07](../../concepts/07_da
 - **Cobrir:** revisão — `alembic check` vazio confirma models ↔ migrations; a auditoria confirma migrations ↔ doc.
 
 ## Definition of Done
-- [ ] Toda tabela criada (Fases 0–4) está no doc 07, na lista certa (global/por-loja).
-- [ ] Todo índice/unique relevante está na seção "Índices completos iniciais".
-- [ ] Divergências de nome/coluna corrigidas no doc.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Toda tabela criada (Fases 0–4) está no doc 07 — **25/25 já documentadas** (nenhuma faltava).
+- [x] Todo índice/unique relevante na seção "Índices completos iniciais" — **+11 índices reais** que faltavam, adicionados (de 54 → 65).
+- [x] Divergências corrigidas no doc (nenhuma de **nome** de tabela; só **índices ausentes**).
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Divergências encontradas listadas aqui (citar a tabela).
+- **Tabelas:** 25/25 reais já no doc 07 — nada a adicionar.
+- **Índices adicionados** (existiam no código, faltavam no doc): `store_members(store_id+status)`, `store_settings(store_id)`, `store_roles(key)`, `store_permissions(key)`, `platform_admin_roles(user_id+role)`, `catalog_product_categories(product_id+category_id)`, `catalog_collections(store_id+slug ativo)`, `audit_logs(user_id+created_at)`, `billing_plans(key ativo)`, `content_menu_items(store_id+menu_id+position)`, `content_banners(store_id+position)`.
 
 ## Follow-ups
 - [ ] — nenhum (preencher ao implementar).
