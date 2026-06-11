@@ -15,6 +15,16 @@ Docs de referência: [26](../26_template_system.md) (sistema de templates), [27]
 
 ---
 
+## Etapa 0 — Isolar o e2e do banco de dev (PRIMEIRA — corrige a poluição)
+
+> **Bug atual (vindo da Fase 4):** os serviços `playwright`/`playwright-admin` batem no `backend` → db **`app`** (o de dev), e o **signup** dos testes **commita** usuários → poluem o banco principal de dev. O `pytest` **não** polui (rollback). Os sample-tests de isolamento (`count==1`) quebram após qualquer rodada de e2e.
+
+- [ ] **Db descartável pro e2e:** `db-test` (Postgres efêmero, ex. `tmpfs`) + `backend-e2e` (mesma imagem, `POSTGRES_SERVER=db-test`); os `playwright*` apontam `VITE_API_URL` pra ele. O db de dev **nunca** é tocado por teste.
+- [ ] Sample-tests de isolamento voltam a valer sem limpeza manual; `docker compose down -v` reseta só o `db-test`.
+- [ ] (Origem: follow-up "e2e polui o db de dev" da Fase 4.)
+
+---
+
 ## Etapa 1 — Settings schema: storage + API (backend)
 
 > O schema **vem do código** (manifesto), seedado em `content_theme_templates.settings_schema` na [Fase 4](./phase-4-platform-admin.md). Aqui entra o **armazenamento dos valores** do lojista + a API.

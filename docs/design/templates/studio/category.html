@@ -35,7 +35,7 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
-        
+
         /* Drawer transition utilities */
         .drawer-open { transform: translateX(0%); }
         .drawer-closed { transform: translateX(100%); }
@@ -138,7 +138,7 @@
 
         <!-- Main Content Area -->
         <main class="flex-1 flex flex-col min-w-0 pb-16">
-            
+
             <!-- Breadcrumb -->
             <div class="px-4 lg:px-6 pt-5 pb-2">
                 <nav class="flex text-xs text-gray-500" aria-label="Breadcrumb">
@@ -173,7 +173,7 @@
             <!-- Dense Product Grid -->
             <!-- Using grid-cols-2 to grid-cols-5 to achieve the dense look requested -->
             <div id="product-grid" class="p-4 lg:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-x-5 md:gap-y-8">
-                
+
                 <!-- Product Card 1 -->
                 <a href="#" class="group block">
                     <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
@@ -261,7 +261,7 @@
                         </div>
                     </div>
                 </a>
-                
+
                 <!-- Product Card 7 -->
                 <a href="#" class="group block">
                     <div class="aspect-[4/5] bg-surface rounded-md overflow-hidden relative mb-3">
@@ -385,7 +385,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
                 <p class="text-xs text-gray-400">&copy; 2024 Lojaflex 4. Todos os direitos reservados.</p>
                 <div class="flex gap-2">
@@ -397,9 +397,9 @@
 
     <!-- Mini-cart Drawer -->
     <div id="cart-backdrop" class="fixed inset-0 bg-black/50 z-[60] backdrop-hidden transition-opacity duration-300"></div>
-    
+
     <div id="cart-drawer" class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-white shadow-2xl flex flex-col drawer-closed transition-transform duration-300 ease-in-out border-l border-gray-200">
-        
+
         <!-- Drawer Header -->
         <div class="flex items-center justify-between p-5 border-b border-gray-100">
             <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -412,7 +412,7 @@
 
         <!-- Drawer Items -->
         <div class="flex-1 overflow-y-auto p-5 space-y-6">
-            
+
             <!-- Item 1 -->
             <div class="flex gap-4">
                 <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
@@ -424,7 +424,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Preto / Único</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -447,7 +447,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Branco / 42</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -458,7 +458,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Item 3 -->
             <div class="flex gap-4">
                 <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
@@ -470,7 +470,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Preto / 300ml</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -514,7 +514,7 @@
             function toggleCart() {
                 cartDrawer.classList.toggle('drawer-closed');
                 cartDrawer.classList.toggle('drawer-open');
-                
+
                 if (cartBackdrop.classList.contains('backdrop-hidden')) {
                     cartBackdrop.classList.remove('backdrop-hidden');
                     cartBackdrop.classList.add('backdrop-visible');
@@ -539,7 +539,7 @@
             function toggleMenu() {
                 sidebar.classList.toggle('mobile-menu-closed');
                 sidebar.classList.toggle('mobile-menu-open');
-                
+
                 if (sidebarBackdrop.classList.contains('backdrop-hidden')) {
                     sidebarBackdrop.classList.remove('backdrop-hidden');
                     sidebarBackdrop.classList.add('backdrop-visible');

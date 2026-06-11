@@ -35,13 +35,13 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
-        
+
         /* Drawer transition utilities */
         .drawer-open { transform: translateX(0%); }
         .drawer-closed { transform: translateX(100%); }
         .backdrop-visible { opacity: 1; pointer-events: auto; }
         .backdrop-hidden { opacity: 0; pointer-events: none; }
-        
+
         /* Sidebar modified to be always off-canvas on this page */
         .mobile-menu-open { transform: translateX(0%); }
         .mobile-menu-closed { transform: translateX(-100%); }
@@ -116,7 +116,7 @@
 
     <!-- Main Content Area -->
     <main id="main-content" class="flex-1 w-full max-w-[1200px] mx-auto pb-24">
-        
+
         <!-- Breadcrumb -->
         <div class="px-4 lg:px-0 pt-6 pb-6">
             <nav class="flex text-xs text-gray-500" aria-label="Breadcrumb">
@@ -142,7 +142,7 @@
 
         <!-- Product Details Section -->
         <div id="product-details" class="px-4 lg:px-0 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-            
+
             <!-- Left Column: Gallery -->
             <div class="lg:col-span-7 flex flex-col gap-4">
                 <!-- Main Image -->
@@ -150,7 +150,7 @@
                     <img class="w-full h-full object-contain mix-blend-multiply p-8" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_d021731906_ac2dbb1c5556ca69.png" alt="minimalist basic white t-shirt, flat lay, high quality fabric, white background, studio lighting" />
                     <span class="absolute top-4 left-4 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-gray-900 border border-gray-200 rounded-sm">Básico</span>
                 </div>
-                
+
                 <!-- Thumbnails -->
                 <div class="grid grid-cols-4 gap-4">
                     <div class="aspect-square bg-surface rounded-md overflow-hidden border-2 border-brand cursor-pointer">
@@ -170,13 +170,13 @@
 
             <!-- Right Column: Info -->
             <div class="lg:col-span-5 flex flex-col py-2">
-                
+
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight leading-tight">Camiseta Essencial Branca</h1>
-                
+
                 <div class="mt-4 flex items-end gap-3">
                     <span class="text-4xl font-bold text-brand tracking-tight">R$ 89,90</span>
                 </div>
-                
+
                 <p class="text-sm text-gray-500 mt-2">Pagamento e frete combinados após o pedido.</p>
 
                 <div class="mt-8 text-gray-600 text-sm leading-relaxed space-y-4">
@@ -203,7 +203,7 @@
                     <button class="w-full h-14 bg-brand text-white rounded-md font-bold text-lg hover:bg-brand/90 transition-colors shadow-sm flex items-center justify-center gap-2">
                         Adicionar ao carrinho
                     </button>
-                    
+
                     <button class="w-full h-12 bg-white border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
                         <i class="fa-solid fa-cube text-gray-400"></i>
                         Personalizar em 3D
@@ -226,7 +226,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="border-t border-gray-200 border-b">
                     <button class="w-full py-4 flex items-center justify-between text-left group">
                         <span class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Cuidados</span>
@@ -240,7 +240,7 @@
         <!-- Related Products Section -->
         <section id="related-products" class="mt-24 px-4 lg:px-0">
             <h2 class="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-8">Itens relacionados</h2>
-            
+
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 md:gap-y-8">
                 <!-- Product Card 1 -->
                 <a href="#" class="group block">
@@ -360,7 +360,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
                 <p class="text-xs text-gray-400">&copy; 2024 Lojaflex 4. Todos os direitos reservados.</p>
                 <div class="flex gap-2">
@@ -372,9 +372,9 @@
 
     <!-- Mini-cart Drawer -->
     <div id="cart-backdrop" class="fixed inset-0 bg-black/50 z-[60] backdrop-hidden transition-opacity duration-300"></div>
-    
+
     <div id="cart-drawer" class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-white shadow-2xl flex flex-col drawer-closed transition-transform duration-300 ease-in-out border-l border-gray-200">
-        
+
         <!-- Drawer Header -->
         <div class="flex items-center justify-between p-5 border-b border-gray-100">
             <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -387,7 +387,7 @@
 
         <!-- Drawer Items -->
         <div class="flex-1 overflow-y-auto p-5 space-y-6">
-            
+
             <!-- Item 1 -->
             <div class="flex gap-4">
                 <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
@@ -399,7 +399,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Preto / Único</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -422,7 +422,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Branco / 42</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -433,7 +433,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Item 3 -->
             <div class="flex gap-4">
                 <div class="w-20 h-24 bg-surface rounded flex-shrink-0 relative overflow-hidden border border-gray-100">
@@ -445,7 +445,7 @@
                         <button class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-regular fa-trash-can text-sm"></i></button>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Preto / 300ml</span>
-                    
+
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex items-center border border-gray-200 rounded-sm">
                             <button class="w-6 h-6 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
@@ -489,7 +489,7 @@
             function toggleCart() {
                 cartDrawer.classList.toggle('drawer-closed');
                 cartDrawer.classList.toggle('drawer-open');
-                
+
                 if (cartBackdrop.classList.contains('backdrop-hidden')) {
                     cartBackdrop.classList.remove('backdrop-hidden');
                     cartBackdrop.classList.add('backdrop-visible');
@@ -514,7 +514,7 @@
             function toggleMenu() {
                 sidebar.classList.toggle('mobile-menu-closed');
                 sidebar.classList.toggle('mobile-menu-open');
-                
+
                 if (sidebarBackdrop.classList.contains('backdrop-hidden')) {
                     sidebarBackdrop.classList.remove('backdrop-hidden');
                     sidebarBackdrop.classList.add('backdrop-visible');

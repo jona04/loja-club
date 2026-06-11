@@ -13,10 +13,17 @@ repos:
         exclude: |
             (?x)^(
                 frontend-dashboard/src/client/.*|
-                backend/app/email-templates/build/.*
+                frontend-admin/src/client/.*|
+                backend/app/email-templates/build/.*|
+                docs/design/.*
             )$
       - id: trailing-whitespace
-        exclude: ^frontend-dashboard/src/client/.*
+        exclude: |
+            (?x)^(
+                frontend-dashboard/src/client/.*|
+                frontend-admin/src/client/.*|
+                docs/design/.*
+            )$
   - repo: local
     hooks:
       - id: local-biome-check
