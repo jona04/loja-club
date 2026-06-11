@@ -443,10 +443,11 @@ export type StorefrontStore = {
 };
 
 /**
- * Public appearance for rendering (active template + theme fields).
+ * Public appearance for rendering (active template + theme fields + chrome).
  *
  * Read-only: a store with no settings yet falls back to the default template
- * (``classic``) without creating a row.
+ * without creating a row. ``settings`` are the active template's schema-driven
+ * chrome values (defaults merged with the store's overrides).
  */
 export type StorefrontTheme = {
     active_template_id: string;
@@ -456,6 +457,9 @@ export type StorefrontTheme = {
     primary_color?: (string | null);
     background_color?: (string | null);
     font_family?: (string | null);
+    settings?: {
+        [key: string]: unknown;
+    };
 };
 
 /**
@@ -566,6 +570,25 @@ export type StoreThemeSettingsPublic = {
 };
 
 /**
+ * A store's saved chrome overrides for a template (keyed by schema ``key``).
+ */
+export type TemplateSettingsPublic = {
+    template_id: string;
+    settings?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * Patch the store's chrome overrides for the active template.
+ */
+export type TemplateSettingsUpdate = {
+    settings: {
+        [key: string]: unknown;
+    };
+};
+
+/**
  * A theme template as managed in the platform admin.
  */
 export type ThemeTemplateAdminPublic = {
@@ -591,7 +614,7 @@ export type ThemeTemplateCreate = {
 };
 
 /**
- * Public representation of a global theme template.
+ * Public representation of a global theme template (with its editable schema).
  */
 export type ThemeTemplatePublic = {
     name: string;
@@ -599,6 +622,9 @@ export type ThemeTemplatePublic = {
     is_active?: boolean;
     preview_image_url?: (string | null);
     id: string;
+    settings_schema?: (Array<{
+    [key: string]: unknown;
+}> | null);
 };
 
 /**
@@ -930,6 +956,31 @@ export type ContentPreviewLayoutData = {
 };
 
 export type ContentPreviewLayoutResponse = (StoreThemeSettingsPublic);
+
+export type ContentGetLayoutSettingsData = {
+    storeId: string;
+};
+
+export type ContentGetLayoutSettingsResponse = (TemplateSettingsPublic);
+
+export type ContentUpdateLayoutSettingsData = {
+    requestBody: TemplateSettingsUpdate;
+    storeId: string;
+};
+
+export type ContentUpdateLayoutSettingsResponse = (TemplateSettingsPublic);
+
+export type ContentResetLayoutSettingsData = {
+    storeId: string;
+};
+
+export type ContentResetLayoutSettingsResponse = (TemplateSettingsPublic);
+
+export type ContentListMyTemplatesData = {
+    storeId: string;
+};
+
+export type ContentListMyTemplatesResponse = (Array<(string)>);
 
 export type HealthHealthResponse = ({
     [key: string]: (string);

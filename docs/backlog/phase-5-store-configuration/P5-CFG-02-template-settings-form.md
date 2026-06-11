@@ -4,7 +4,7 @@ title: Form genérico de settings no painel (1 componente, N schemas)
 phase: 5
 etapa: "Etapa 3 — Form genérico no painel"
 area: CFG
-status: todo
+status: done
 depends_on: [P5-CFG-01]
 blocks: []
 tests: [e2e]
@@ -45,15 +45,18 @@ Com o storage + API prontos (`P5-CFG-01`), o painel ganha **um form genérico** 
 - **Cobrir:** e2e — editar um campo → salva → reflete; resetar → volta ao default; sem `layout.update` não salva.
 
 ## Definition of Done
-- [ ] Form genérico renderiza o schema do template ativo (todos os `type` V1).
-- [ ] "Meus templates" + resetar.
-- [ ] Upload de imagem gated `layout.assets.update`.
-- [ ] Gates (`tsc`/`biome`) + e2e.
-- [ ] **Modos de falha mapeados** (schema vazio, valor inválido, upload falho) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Form genérico (`TemplateSettingsForm`) renderiza o schema do template ativo — `text`/`textarea`/`boolean` (os usados nos templates V1; `select`/`image` também tratados).
+- [x] "Meus templates": badge **"Personalizado"** no grid (via `GET …/layout/settings/mine`) + **resetar** (linha ativa).
+- [ ] Upload de imagem gated `layout.assets.update` — **diferido** (nenhum template V1 tem campo `image`); Follow-up.
+- [x] Gates (`tsc`/`biome`/`vitest`) + **e2e** (`store-layout.spec.ts`: cria loja → personaliza → salva → persiste).
+- [x] **Modos de falha mapeados** (schema vazio → form não renderiza; valor inválido → 422 do backend; upload de imagem → diferido).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `TemplateSettingsForm.tsx` (+ teste unit) ligado em `store-layout.tsx`; badge "Personalizado" + `listMyTemplates`; backend `GET /layout/settings/mine` (+ teste integração); e2e `store-layout.spec.ts`. Backend **251 testes / 94% cov**; frontend tsc/biome/**vitest 23/23**; **e2e verde**.
 
 ## Notas / Reconciliações
-- Reaproveita padrões do `frontend-dashboard` (form/upload existentes).
+- "Meus templates" implementado como **badge no grid** (não lista separada) — doc 09 reconciliado.
+- Todos os schemas V1 (aurora/bazar/studio) usam só `text`/`textarea`/`boolean`; `select`/`image` ficam tratados no form mas sem template que os exercite.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Upload de imagem nos campos `image`** (reusa `media`, gated `layout.assets.update`) — diferido: nenhum template V1 tem campo `image` e `layout.assets.update` ainda não está ligada a rota. Fazer quando um template tiver campo `image`. Origem: `P5-CFG-02`.

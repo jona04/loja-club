@@ -85,6 +85,16 @@ def get_layout_settings(
     return services.get_active_template_settings(session=session, store_id=store_id)
 
 
+@router.get(
+    "/settings/mine",
+    response_model=list[str],
+    dependencies=[Depends(require_permission("layout.view"))],
+)
+def list_my_templates(store_id: uuid.UUID, session: SessionDep) -> list[str]:
+    """Return the ids of templates the store has customized ("my templates")."""
+    return services.list_customized_templates(session=session, store_id=store_id)
+
+
 @router.patch(
     "/settings",
     response_model=TemplateSettingsPublic,

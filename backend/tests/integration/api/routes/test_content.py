@@ -203,3 +203,21 @@ def test_template_settings_viewer_cannot_write(
     assert client.get(base, headers=vh).status_code == 200
     assert client.patch(base, headers=vh, json={"settings": {}}).status_code == 403
     assert client.delete(base, headers=vh).status_code == 403
+
+
+def test_my_templates_lists_customized(
+    client: TestClient, two_stores: TenantContext
+) -> None:
+    """`/settings/mine` lists the templates the store has customized."""
+    a = two_stores.store_a
+    h = two_stores.owner_a_headers
+    base = f"{BASE}/{a.id}/layout"
+    assert client.get(f"{base}/settings/mine", headers=h).json() == []
+    client.patch(
+        f"{base}/settings",
+        headers=h,
+        json={"settings": {"announcement_text": "x"}},
+    )
+    assert client.get(f"{base}/settings/mine", headers=h).json() == ["aurora"]
+    client.delete(f"{base}/settings", headers=h)
+    assert client.get(f"{base}/settings/mine", headers=h).json() == []

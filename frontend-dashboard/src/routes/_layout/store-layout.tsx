@@ -4,6 +4,7 @@ import { type ChangeEvent, useEffect, useRef, useState } from "react"
 
 import { ContentService, MediaService } from "@/client"
 import { StoreGate } from "@/components/Store/StoreGate"
+import { TemplateSettingsForm } from "@/components/Store/TemplateSettingsForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -71,6 +72,12 @@ export function StoreLayoutScreen() {
     enabled: storeId !== "",
   })
 
+  const myTemplatesQuery = useQuery({
+    queryKey: ["layout-my-templates", storeId],
+    queryFn: () => ContentService.listMyTemplates({ storeId }),
+    enabled: storeId !== "",
+  })
+
   useEffect(() => {
     const data = layoutQuery.data
     if (!data) {
@@ -120,6 +127,7 @@ export function StoreLayoutScreen() {
   }
 
   const templates = templatesQuery.data ?? []
+  const customized = myTemplatesQuery.data ?? []
   const previewTemplate = templates.find((t) => t.id === previewId) ?? null
 
   const onPickBanner = (event: ChangeEvent<HTMLInputElement>) => {
@@ -169,11 +177,18 @@ export function StoreLayoutScreen() {
                   <div className="p-3">
                     <div className="flex items-center justify-between gap-2">
                       <h3 className="font-medium">{template.name}</h3>
-                      {selected ? (
-                        <span className="text-xs font-medium text-primary">
-                          Ativo
-                        </span>
-                      ) : null}
+                      <div className="flex items-center gap-1.5">
+                        {customized.includes(template.id) ? (
+                          <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                            Personalizado
+                          </span>
+                        ) : null}
+                        {selected ? (
+                          <span className="text-xs font-medium text-primary">
+                            Ativo
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                     {template.description ? (
                       <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
@@ -319,6 +334,12 @@ export function StoreLayoutScreen() {
           )}
         </CardContent>
       </Card>
+
+      <TemplateSettingsForm
+        storeId={storeId}
+        templates={templates}
+        canEdit={canEdit}
+      />
 
       <Dialog
         open={previewId !== null}

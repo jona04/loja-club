@@ -226,7 +226,7 @@ Além de escolher o template, o lojista **personaliza** o chrome específico del
 
 - o painel renderiza **um form genérico** a partir do `settings_schema` do template ativo (campos `text`/`textarea`/`image`/`boolean`/`select`, agrupados por `group`) — **um componente, N schemas** (nem form hardcoded, nem tela por template);
 - valores ficam **por loja × template** (`content_store_template_settings`) — trocar de template **não perde** o preenchido; **resetar = excluir** → re-selecionar volta aos defaults;
-- **"Meus templates"** lista os templates que a loja já editou;
+- os templates **já personalizados** ficam marcados (badge **"Personalizado"**) no grid de seleção;
 - upload de imagem nos campos `image` reusa `media`, **gated `layout.assets.update`**;
 - **preview navegável**: o lojista abre a **loja-demo** do template (storefront real, cada clique navega) — o modelo bonito que ele copia. Ver doc [26](./26_template_system.md).
 

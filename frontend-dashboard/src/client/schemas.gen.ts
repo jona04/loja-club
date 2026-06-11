@@ -2014,15 +2014,55 @@ export const StorefrontThemeSchema = {
                 }
             ],
             title: 'Font Family'
+        },
+        settings: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Settings',
+            default: {}
         }
     },
     type: 'object',
     required: ['active_template_id'],
     title: 'StorefrontTheme',
-    description: `Public appearance for rendering (active template + theme fields).
+    description: `Public appearance for rendering (active template + theme fields + chrome).
 
 Read-only: a store with no settings yet falls back to the default template
-(\`\`classic\`\`) without creating a row.`
+without creating a row. \`\`settings\`\` are the active template's schema-driven
+chrome values (defaults merged with the store's overrides).`
+} as const;
+
+export const TemplateSettingsPublicSchema = {
+    properties: {
+        template_id: {
+            type: 'string',
+            title: 'Template Id'
+        },
+        settings: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Settings',
+            default: {}
+        }
+    },
+    type: 'object',
+    required: ['template_id'],
+    title: 'TemplateSettingsPublic',
+    description: "A store's saved chrome overrides for a template (keyed by schema ``key``)."
+} as const;
+
+export const TemplateSettingsUpdateSchema = {
+    properties: {
+        settings: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Settings'
+        }
+    },
+    type: 'object',
+    required: ['settings'],
+    title: 'TemplateSettingsUpdate',
+    description: "Patch the store's chrome overrides for the active template."
 } as const;
 
 export const ThemeTemplateAdminPublicSchema = {
@@ -2168,12 +2208,27 @@ export const ThemeTemplatePublicSchema = {
         id: {
             type: 'string',
             title: 'Id'
+        },
+        settings_schema: {
+            anyOf: [
+                {
+                    items: {
+                        additionalProperties: true,
+                        type: 'object'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Settings Schema'
         }
     },
     type: 'object',
     required: ['name', 'id'],
     title: 'ThemeTemplatePublic',
-    description: 'Public representation of a global theme template.'
+    description: 'Public representation of a global theme template (with its editable schema).'
 } as const;
 
 export const ThemeTemplateUpdateSchema = {

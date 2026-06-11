@@ -92,6 +92,28 @@ def get_store_template_settings(
     ).first()
 
 
+def list_store_template_settings(
+    *, session: Session, store_id: uuid.UUID
+) -> list[ContentStoreTemplateSettings]:
+    """Return all active per-template settings rows of a store.
+
+    Args:
+        session: Active database session.
+        store_id: The store whose customized templates are listed.
+
+    Returns:
+        The store's active :class:`ContentStoreTemplateSettings` rows.
+    """
+    return list(
+        session.exec(
+            select(ContentStoreTemplateSettings).where(
+                ContentStoreTemplateSettings.store_id == store_id,
+                col(ContentStoreTemplateSettings.deleted_at).is_(None),
+            )
+        ).all()
+    )
+
+
 # The storefront templates shipped in V1. Authoritative for the seed.
 # ``preview_image_url`` is served by the dashboard (hardcoded; CloudFront later).
 CANONICAL_TEMPLATES: list[dict[str, str]] = [

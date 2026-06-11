@@ -76,7 +76,7 @@ def get_or_create_theme_settings(
     """Return the store's theme settings, creating a default row if absent.
 
     A store with no settings yet gets one with the default template
-    (``classic``), so the panel and storefront always have a row to read.
+    (``aurora``), so the panel and storefront always have a row to read.
 
     Args:
         session: Active database session.
@@ -261,6 +261,20 @@ def get_active_template_settings(
         template_id=theme.active_template_id,
         settings=row.settings if row else {},
     )
+
+
+def list_customized_templates(*, session: Session, store_id: uuid.UUID) -> list[str]:
+    """Return the ids of the templates the store has customized ("my templates").
+
+    Args:
+        session: Active database session.
+        store_id: The store whose customized templates are listed.
+
+    Returns:
+        The template ids that have active per-store settings.
+    """
+    rows = repositories.list_store_template_settings(session=session, store_id=store_id)
+    return [row.template_id for row in rows]
 
 
 def update_active_template_settings(
