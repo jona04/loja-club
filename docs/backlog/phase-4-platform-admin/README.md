@@ -30,7 +30,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 3 | [P4-STORE-01](./P4-STORE-01-admin-store-operations.md) | Operação de lojas (listar/detalhe/**bloquear**) | ✅ done | P4-PLAT-01 |
 | 4 | [P4-USER-01](./P4-USER-01-admin-users-support.md) | Usuários + suporte (impersonation auditada) + guard soft-delete | ✅ done | P4-PLAT-01 |
 | 5 | [P4-PLAN-01](./P4-PLAN-01-plans-stub.md) | Planos (seed/stub; billing = Fase 8) | ✅ done | P4-PLAT-01 |
-| 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) | todo | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
+| 6 | [P4-ADMIN-02](./P4-ADMIN-02-admin-operation-screens.md) | Telas de operação (lojas/usuários/planos/suporte) — e2e 6/6 | ✅ done | P4-ADMIN-01, P4-STORE-01, P4-USER-01, P4-PLAN-01 |
 | 7 | [P4-TPL-01](./P4-TPL-01-template-registry.md) | Registro de templates (CRUD + `settings_schema` do código) | ✅ done | P4-PLAT-01 |
 | 8 | [P4-TPL-02](./P4-TPL-02-template-cdn-assets.md) | Thumbnail de template no **CDN** (imagens chrome/demo = Fase 5) | ✅ done | P4-TPL-01 |
 | 9 | [P4-ADMIN-03](./P4-ADMIN-03-admin-template-screens.md) | Telas de templates (CRUD + thumbnail + schema read-only) | todo | P4-ADMIN-01, P4-TPL-01, P4-TPL-02 |
@@ -65,3 +65,4 @@ P4-PLAT-01 → P4-ADMIN-01
 - [ ] **Empacotar os `settings-schema.json` no deploy do backend:** o seed lê de `frontend-storefront/templates/<id>/settings-schema.json`; na imagem Docker do backend esse dir não existe → o build precisa copiar os JSONs, senão o schema fica `null` em deploy. Origem: `P4-TPL-01`.
 - [ ] **Imagens-default no CDN** (Fase 5, quando houver campos `image`; guardar **separado** do `settings_schema` p/ o seed não sobrescrever), **limpeza de asset antigo** no re-upload, e **remover os PNGs de `public/`** após uploads. Origem: `P4-TPL-02`.
 - [x] **`frontend-admin`: smoke (docker) + `bun.lock` + e2e Playwright 3/3** — validado. Resta o **gate de CI** (e2e de **todos** os frontends → deploy) na **Fase 9** (regra em `P3-SF-03`). Origem: `P4-ADMIN-01`.
+- [ ] **Telas admin (ADMIN-02):** atribuir plano à loja (Fase 8); detalhe da loja com pedidos/volume (Fase 6) + webhooks/comissões (Fase 8); **handoff da impersonation** (abrir o painel como o usuário) → Fase 9. Origem: `P4-ADMIN-02`.
