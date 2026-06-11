@@ -129,21 +129,84 @@ services:
         # SSR runs inside the container → reach the backend on the internal network.
         - NEXT_PUBLIC_API_URL=http://backend:8000
 
+  # e2e runs against a DISPOSABLE database, not the dev one. `db-test` uses tmpfs
+  # (in memory): no volume -> nothing to wipe, and impossible to confuse with the
+  # dev db's `app-db-data` volume. Never run `docker compose down -v` locally (it
+  # would wipe the dev db) -- the tmpfs is already disposable; run e2e via the
+  # `ci-local.sh` pipeline.
+  db-test:
+    image: postgres:18
+    restart: "no"
+    tmpfs:
+      - /var/lib/postgresql/data/pgdata
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
+
+  prestart-e2e:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: "no"
+    depends_on:
+      db-test:
+        condition: service_healthy
+    command: bash scripts/prestart.sh
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_SERVER=db-test
+
+  backend-e2e:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: "no"
+    depends_on:
+      db-test:
+        condition: service_healthy
+      prestart-e2e:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    command:
+      - fastapi
+      - run
+      - "app/main.py"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_SERVER=db-test
+      - REDIS_HOST=redis
+      - SMTP_HOST=mailcatcher
+      - SMTP_PORT=1025
+      - SMTP_TLS=false
+      - EMAILS_FROM_EMAIL=noreply@example.com
+
   playwright:
     build:
       context: .
       dockerfile: frontend-dashboard/Dockerfile.playwright
       args:
-        - VITE_API_URL=http://backend:8000
+        - VITE_API_URL=http://backend-e2e:8000
         - NODE_ENV=production
     ipc: host
     depends_on:
-      - backend
+      - backend-e2e
       - mailcatcher
     env_file:
       - .env
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://backend-e2e:8000
       - MAILCATCHER_HOST=http://mailcatcher:1080
       # For the reports when run locally
       - PLAYWRIGHT_HTML_HOST=0.0.0.0
@@ -159,15 +222,15 @@ services:
       context: .
       dockerfile: frontend-admin/Dockerfile.playwright
       args:
-        - VITE_API_URL=http://backend:8000
+        - VITE_API_URL=http://backend-e2e:8000
         - NODE_ENV=production
     ipc: host
     depends_on:
-      - backend
+      - backend-e2e
     env_file:
       - .env
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://backend-e2e:8000
       - PLAYWRIGHT_HTML_HOST=0.0.0.0
       - CI=${CI}
     volumes:

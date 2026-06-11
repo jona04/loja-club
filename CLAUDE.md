@@ -58,7 +58,7 @@ def charge(order_id: str, amount: Money) -> Payment:
 - **TSDoc** em funções, componentes e hooks exportados (parâmetros + retorno), em inglês.
 
 ### Idioma
-- **Docstrings, comentários e identificadores: inglês.**
+- **Código/config sempre em inglês** — docstrings, comentários, identificadores **e strings de saída** em **qualquer** arquivo de código/config: Python, TS, **shell (`.sh`), `compose`/YAML, Dockerfile**. Nunca português no código (só os `.md` em `docs/` são português).
 - Documentação `.md` em `docs/`: **português** (como hoje).
 
 ## Outras convenções (resumo — detalhes nas Fundações)

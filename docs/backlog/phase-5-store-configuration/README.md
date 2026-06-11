@@ -24,7 +24,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P5-TEST-01](./P5-TEST-01-e2e-disposable-db.md) | Banco descartável pro e2e (`db-test` + `backend-e2e`) | todo | — |
+| 1 | [P5-TEST-01](./P5-TEST-01-e2e-disposable-db.md) | Banco descartável pro e2e (`db-test` + `backend-e2e`) | ✅ done | — |
 | 2 | [P5-DOC-01](./P5-DOC-01-database-doc-audit.md) | Auditoria do doc de banco (tabelas + índices vs código) | todo | — |
 | 3 | [P5-CFG-01](./P5-CFG-01-template-settings-storage.md) | `content_store_template_settings` + API (storage dos settings) | todo | P4-TPL-01 |
 | 4 | [P5-CFG-02](./P5-CFG-02-template-settings-form.md) | Form genérico no painel (1 componente, N schemas) | todo | P5-CFG-01 |
@@ -50,7 +50,10 @@ P5-DEMO-01 → P5-DEMO-02 ─┼→ P5-PREV-01
 > Item adiado vira checkbox aqui (origem + quando), e também na seção Follow-ups da task.
 
 **Esta fase fecha follow-ups de fases anteriores** (marcar `[x]` na **origem** ao concluir a task):
-- [ ] **e2e polui o db de dev** (Fase 4) → `P5-TEST-01`.
+- [x] **e2e polui o db de dev** (Fase 4) → `P5-TEST-01` ✅ (db-test tmpfs + backend-e2e; db de dev provado intacto).
+
+**Da própria fase:**
+- [ ] **e2e compartilha o `redis` do dev** (jobs do `backend-e2e` podem ser pegos pelo `worker` de dev e falhar — ruído, não polui). Isolar com `redis-test`/`worker-e2e`. Origem: `P5-TEST-01`.
 - [ ] **Imagens-default no CDN** + **thumb relativo do seed** + **remover PNGs de `public/`** (Fase 4, `P4-TPL-02`) → `P5-DEMO-01`.
 - [ ] **Telas de templates: thumb relativo (admin)** + **dashboard thumbnail do CDN** (Fase 4, `P4-ADMIN-03`) → `P5-TPL-01`.
 - [ ] **`previewLayout` sem uso** + **preview ao vivo / botão abrir preview** (Fases 3/4) → `P5-PREV-01`.

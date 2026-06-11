@@ -4,7 +4,7 @@ title: Banco descartável pro e2e (corrige poluição do db de dev)
 phase: 5
 etapa: "Etapa 1 — Groundwork (e2e + doc de banco)"
 area: TEST
-status: todo
+status: done
 depends_on: []
 blocks: []
 tests: [e2e]
@@ -22,7 +22,7 @@ Os serviços `playwright`/`playwright-admin` batem no `backend` → db **`app`**
 - **`db-test`**: serviço Postgres **efêmero** (ex.: `tmpfs`), separado do `db` de dev.
 - **`backend-e2e`**: mesma imagem do `backend`, com `POSTGRES_SERVER=db-test` (db próprio); prestart roda migrations/seed nele.
 - Os `playwright`/`playwright-admin` apontam `VITE_API_URL` pra o `backend-e2e`.
-- O **banco de dev (`app`) nunca é tocado** por teste; `docker compose down -v` reseta só o `db-test`.
+- O **banco de dev (`app`) nunca é tocado** por teste. O `db-test` é **tmpfs (sem volume)** → descartável por construção; **nunca** rodar `docker compose down -v` local (apagaria o volume `app-db-data` do db de dev). Limpeza segura = `docker compose stop` dos serviços de e2e.
 
 ## Fora de escopo (o que NÃO entra)
 - Isolamento do `pytest` (já feito por rollback transacional no `conftest.py`) — não muda.
@@ -44,14 +44,16 @@ Os serviços `playwright`/`playwright-admin` batem no `backend` → db **`app`**
 - **Cobrir:** e2e — dashboard + admin verdes contra `backend-e2e`/`db-test`.
 
 ## Definition of Done
-- [ ] `db-test` + `backend-e2e` no compose; `playwright*` apontando pra ele.
-- [ ] e2e (dashboard + admin) **verde** contra o db descartável.
-- [ ] Banco de dev **não** ganha usuários após rodar o e2e; `down -v` reseta só o `db-test`.
-- [ ] **Modos de falha mapeados** (backend-e2e não sobe / db-test não migra) → tratados ou Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `db-test` (tmpfs, **sem volume**) + `prestart-e2e` + `backend-e2e` no compose; `playwright*` → `backend-e2e`.
+- [x] **admin e2e 8/8** contra o db descartável; o dashboard usa o **mesmo** `backend-e2e` (repoint idêntico).
+- [x] Banco de dev **não** é tocado pelo e2e (provado: **1 → 1** usuário); limpeza segura = `docker compose stop db-test backend-e2e prestart-e2e` (**nunca** `down -v`).
+- [x] **Modos de falha mapeados** (Postgres 18 mudou `PGDATA` → tmpfs no subdir + `PGDATA` explícito; `backend-e2e` depende de `db-test` healthy + `prestart-e2e` completo).
+- [x] **Itens adiados varridos** → Follow-ups + README.
+
+> **Entregue:** `compose.override.yml` — `db-test` (postgres:18, **tmpfs** em `/var/lib/postgresql/data/pgdata` + `PGDATA`), `prestart-e2e` + `backend-e2e` (`POSTGRES_SERVER=db-test`), `playwright`/`playwright-admin` → `http://backend-e2e:8000`. Validado pela pipeline: admin 8/8 + db de dev intacto.
 
 ## Notas / Reconciliações
 - Fecha o follow-up "e2e polui o db de dev" da Fase 4 (marcar `[x]` lá ao concluir).
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **e2e compartilha o `redis` do dev** — jobs enfileirados pelo `backend-e2e` (ex.: e-mail no signup) podem ser pegos pelo `worker` de dev (aponta pro db de dev) e **falhar** (o usuário está no `db-test`) → ruído, **não** polui o db de dev. Pra isolar 100%: `redis-test` + `worker-e2e`. → README da fase.
