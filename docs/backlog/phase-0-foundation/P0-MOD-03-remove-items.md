@@ -16,7 +16,7 @@ tests: [integration]
 O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Removê-lo limpa o backend e o frontend antes de construir o catálogo real.
 
 ## Docs de referência
-- [04 — FastAPI Template Adaptation](../../04_fastapi_template_adaptation.md)
+- [04 — FastAPI Template Adaptation](../../concepts/04_fastapi_template_adaptation.md)
 
 ## Escopo (o que ENTRA)
 - Backend: remover `ItemBase/Item/ItemCreate/ItemUpdate/ItemPublic/ItemsPublic` de `app/models.py`; remover `create_item` de `app/crud.py`; remover `app/api/routes/items.py` e seu include em `app/api/main.py`.

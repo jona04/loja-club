@@ -16,7 +16,7 @@ tests: none
 Depois do refactor modular (módulos, remoção de `items`, `account_users`), o CI, os scripts e o client OpenAPI do frontend precisam refletir a nova estrutura e continuar verdes.
 
 ## Docs de referência
-- [16 — Testing Strategy](../../16_testing_strategy.md)
+- [16 — Testing Strategy](../../concepts/16_testing_strategy.md)
 
 ## Escopo (o que ENTRA)
 - Ajustar GitHub Actions (`.github/workflows/`) e `.pre-commit-config.yaml` para os novos paths de `app/modules/*`.

@@ -16,7 +16,7 @@ tests: none
 O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identidade do template: `PROJECT_NAME="Full Stack FastAPI Project"`, título do template no frontend, nomes de stack genéricos. Esta task dá a cara da Loja Club.
 
 ## Docs de referência
-- [04 — FastAPI Template Adaptation](../../04_fastapi_template_adaptation.md)
+- [04 — FastAPI Template Adaptation](../../concepts/04_fastapi_template_adaptation.md)
 
 ## Escopo (o que ENTRA)
 - `.env`: `PROJECT_NAME="Loja Club"`, `STACK_NAME=loja-club`, `DOCKER_IMAGE_BACKEND=loja-club-backend`, `DOCKER_IMAGE_FRONTEND=loja-club-frontend`.
@@ -25,7 +25,7 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 - Confirmar que `EMAILS_FROM_NAME` herda de `PROJECT_NAME` (já há `_set_default_emails_from` em `config.py`).
 
 ## Fora de escopo (o que NÃO entra)
-- Paleta, logo final, design system completo → doc [21](../../21_design_system_todo.md), fases de frontend.
+- Paleta, logo final, design system completo → doc [21](../../concepts/21_design_system_todo.md), fases de frontend.
 - Domínio, CORS e secrets → `P0-CFG-02`.
 
 ## Arquivos a criar/alterar

@@ -91,7 +91,7 @@ Funcionalidades:
 
 ### Produtos personalizáveis (Fase 7)
 
-> **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 7 (Produtos 3D)**; na **Fase 8** fica restrita a planos pagos. Ver [Fase 7](./backlog/phase-7-3d-products.md).
+> **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 7 (Produtos 3D)**; na **Fase 8** fica restrita a planos pagos. Ver [Fase 7](../backlog/phase-7-3d-products.md).
 
 Na Fase 7, o lojista **gera o próprio modelo 3D via API de terceiros** (Meshy/Tripo3D/Hyper3D) a partir de uma imagem/descrição do produto — **não há catálogo da plataforma**. O modelo é **por loja**.
 
@@ -219,6 +219,16 @@ Funcionalidades da V1:
 > **`logo_url` e a descrição ficam em Configurações** (Fase 1, `store_settings`), não nesta tela — o tema cuida só de aparência/layout (doc 10, §"Configuração no banco"). O destaque da home no V1 usa produtos `is_featured` (atributo do produto, Fase 2); `featured_collection_id` é forward-looking (ver follow-up "Destaque por coleção" no README da Fase 3).
 
 > A evolução pra **templates ricos** (carrossel/seções) é a [`P3-TPL-01`](../backlog/phase-3-storefront-and-layouts/P3-TPL-01-template-architecture-aurora.md): o lojista escolhe o template por uma **lista com imagem de preview** (sem preview ao vivo ainda); o **cadastro** de templates é via admin da plataforma (futuro). Trocar de template **não quebra** o fluxo de compra.
+
+### Personalização do template (schema-driven, Fase 5)
+
+Além de escolher o template, o lojista **personaliza** o chrome específico dele:
+
+- o painel renderiza **um form genérico** a partir do `settings_schema` do template ativo (campos `text`/`textarea`/`image`/`boolean`/`select`, agrupados por `group`) — **um componente, N schemas** (nem form hardcoded, nem tela por template);
+- valores ficam **por loja × template** (`content_store_template_settings`) — trocar de template **não perde** o preenchido; **resetar = excluir** → re-selecionar volta aos defaults;
+- **"Meus templates"** lista os templates que a loja já editou;
+- upload de imagem nos campos `image` reusa `media`, **gated `layout.assets.update`**;
+- **preview navegável**: o lojista abre a **loja-demo** do template (storefront real, cada clique navega) — o modelo bonito que ele copia. Ver doc [26](./26_template_system.md).
 
 Quando salvar, a loja pública deve refletir a alteração.
 

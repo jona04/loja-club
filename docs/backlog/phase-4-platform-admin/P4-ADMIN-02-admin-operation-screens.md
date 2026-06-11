@@ -15,9 +15,9 @@ tests: [e2e]
 As telas do `frontend-admin` que consomem os endpoints de operação (`P4-STORE-01`/`P4-USER-01`/`P4-PLAN-01`): a equipe opera lojas, usuários e planos, e usa o suporte (impersonation).
 
 ## Docs de referência
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
 
 ## Escopo (o que ENTRA)
 - **Lojas:** lista (busca/paginação) + detalhe (settings/membros/pedidos/volume/webhooks/comissões) + **bloquear/desbloquear**.

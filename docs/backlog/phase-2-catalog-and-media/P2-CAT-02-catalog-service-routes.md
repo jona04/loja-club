@@ -16,15 +16,15 @@ tests: [integration]
 Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com gating por `catalog.*` e padrão de API (`P1-API-01`). Reusa `require_permission`, `get_active_store`, `get_store_scoped` (INV-T2) e o `Page`.
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (produtos)
-- [20 — API Contracts](../../20_api_contracts_todo.md)
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md) (`catalog.*`)
-- [07 — Database Strategy](../../07_database_strategy.md) (regras de query)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) (produtos)
+- [20 — API Contracts](../../concepts/20_api_contracts_todo.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md) (`catalog.*`)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md) (regras de query)
 
 ## Escopo (o que ENTRA)
 - **Produtos:** listar (paginado), criar, atualizar, **publicar**, **arquivar** (tirar do ar, reversível), **deletar** (soft delete). Geração de `slug` a partir do nome + único por loja quando ativo. `currency` default herdada da loja.
 - **Categorias:** CRUD; **variações**; **estoque** (atualizar quantidade); **imagens** (vincular `media_file_id`, reordenar `position`).
-- Gating: `catalog.product.*`, `catalog.category.*`, `catalog.inventory.*`, `catalog.product.update` p/ publicar — conforme doc [08](../../08_modules_and_permissions.md).
+- Gating: `catalog.product.*`, `catalog.category.*`, `catalog.inventory.*`, `catalog.product.update` p/ publicar — conforme doc [08](../../concepts/08_modules_and_permissions.md).
 - Acesso a recurso por `store_id + id` (`get_store_scoped`). Incluir router no `api/router.py`. Regenerar client OpenAPI.
 
 ## Fora de escopo (o que NÃO entra)

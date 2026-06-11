@@ -4,7 +4,7 @@
 
 > Objetivo: a loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (imagem) e categorias renderizam; o lojista troca o template e a vitrine muda.
 
-Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [05](../../05_frontend_architecture.md), [06](../../06_multitenancy_and_domains.md), [10](../../10_storefront_and_layouts.md), [13](../../13_performance_cache_and_cdn.md), [07](../../07_database_strategy.md), [20](../../20_api_contracts_todo.md), [21](../../21_design_system_todo.md), [16](../../16_testing_strategy.md).
+Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [05](../../concepts/05_frontend_architecture.md), [06](../../concepts/06_multitenancy_and_domains.md), [10](../../concepts/10_storefront_and_layouts.md), [13](../../concepts/13_performance_cache_and_cdn.md), [07](../../concepts/07_database_strategy.md), [20](../../concepts/20_api_contracts_todo.md), [21](../../concepts/21_design_system_todo.md), [16](../../concepts/16_testing_strategy.md).
 
 > Visão geral / trilha de alto nível: [`../phase-3-storefront-and-layouts.md`](../phase-3-storefront-and-layouts.md). Este README é o **índice detalhado** das tasks.
 
@@ -63,7 +63,7 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 
 - [ ] **Smoke do Traefik** (`P3-FE-01`): com o proxy rodando, confirmar `app.`→painel, `api.`→backend, `{loja}.${DOMAIN}`→storefront (o wildcard só foi validado por `compose config`, não no roteamento real).
 - [ ] **Lint/test/e2e do `frontend-storefront` nos gates** (`P3-FE-01`) **→ `P3-SF-03`**: pre-commit/CI só cobrem `frontend-dashboard`; a `P3-SF-03` adiciona o e2e do storefront + a regra de gate (e2e de todos os frontends bloqueia deploy — wiring na Fase 9).
-- [ ] **Pipeline da imagem do `frontend-storefront`** (`P3-FE-01`): `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push (doc [12](../../12_aws_infrastructure_and_deployment.md)) não está montado — Fase 8/9.
+- [ ] **Pipeline da imagem do `frontend-storefront`** (`P3-FE-01`): `DOCKER_IMAGE_STOREFRONT` + serviço no `compose.yml` existem, mas o build/push (doc [12](../../concepts/12_aws_infrastructure_and_deployment.md)) não está montado — Fase 8/9.
 - [ ] **Dockerfile do storefront single-stage** (`P3-FE-01`): otimizar p/ Next standalone depois.
 - [ ] **`bun.lock`** (`P3-FE-01`): confirmar/regerar com o `bun` do usuário antes de commitar (regenerado via `oven/bun:1` 1.3.14).
 - [x] **Default de theme settings** (`P3-CONTENT-01`): loja sem row de theme → vitrine usa `classic` — fallback **read-side** feito em `P3-SF-01` (`_theme` retorna `classic` sem criar row); o painel cria via `get_or_create` (`P3-CONTENT-02`).
@@ -87,7 +87,7 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [ ] **Categoria: paginação-UI + filtros + ordenação** (`P3-SF-02`): doc 10 §"Página de categoria" — a API já pagina (`skip/limit`); faltam a UI de paginação + filtros/ordenação.
 - [ ] **Home: contato + links sociais** (`P3-SF-02`): doc 10 §"Componentes da home" — além do WhatsApp, expor contato/links sociais (menu configurável já coberto pelos follow-ups de menu).
 - [ ] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 6): a página de produto é **informativa** no V1 (sem botão de compra); o **carrinho** entra na Fase 6. O WhatsApp da vitrine é só o **botão flutuante** de contato (não há "comprar pelo WhatsApp").
-- [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../21_design_system_todo.md). (O salto pra **templates profissionais** é a `P3-TPL-01`.)
+- [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../concepts/21_design_system_todo.md). (O salto pra **templates profissionais** é a `P3-TPL-01`.)
 - [x] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-03`) **→ `P4-ADMIN-03`** ✅: CRUD de templates + thumbnail no CDN + schema read-only *(import de imagens / loja-demo / preview navegável = [Fase 5](../phase-5-store-configuration.md))*.
 - [ ] **Preview ao vivo no painel** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 4)**: preview navegável (loja-demo por template) em outra aba. (Render inline com os dados da própria loja segue futuro.)
 - [ ] **Compatibilidade 3D dos templates** (`P3-TPL-01`/`P3-TPL-02` → Fase 7): reservar o **slot** do editor 3D na página de produto de **todos** os templates.

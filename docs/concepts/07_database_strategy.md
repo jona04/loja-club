@@ -102,6 +102,7 @@ Exemplos:
 | `content_menus` | Sim |
 | `content_menu_items` | Sim |
 | `content_store_theme_settings` | Sim |
+| `content_store_template_settings` | Sim |
 | `content_banners` | Sim |
 | `media_files` | Sim |
 
@@ -135,7 +136,7 @@ Exemplos:
 
 ### Personalização 3D
 
-> **Fase 7 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 7](backlog/phase-7-3d-products.md).
+> **Fase 7 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 7](../backlog/phase-7-3d-products.md).
 
 | Tabela | Função |
 |---|---|
@@ -221,8 +222,9 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 
 | Tabela | Função |
 |---|---|
-| `content_theme_templates` | Templates globais |
-| `content_store_theme_settings` | Template ativo e configurações |
+| `content_theme_templates` | Templates globais (+ `settings_schema` do template, vindo do código) |
+| `content_store_theme_settings` | Template ativo + configurações universais (banner/headline/cor) |
+| `content_store_template_settings` | Valores do `settings_schema` **por loja × template** (jsonb, soft delete) |
 | `content_pages` | Páginas da loja |
 | `content_menus` | Menus |
 | `content_menu_items` | Itens do menu |
@@ -347,6 +349,7 @@ A performance depende muito dos índices compostos com `store_id`.
 | `content_pages` | `store_id + slug` único quando ativo |
 | `content_menus` | `store_id + location` |
 | `content_store_theme_settings` | `store_id` único |
+| `content_store_template_settings` | `store_id + template_id` único quando ativo |
 | `billing_store_subscriptions` | `store_id + status` |
 | `billing_platform_commissions` | `store_id + order_id` |
 | `audit_logs` | `store_id + created_at` |

@@ -13,17 +13,17 @@ tests: [integration]
 # P1-STORE-01 — Módulo `stores`: modelos `store_stores` + `store_settings`
 
 ## Contexto
-A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[08](../../08_modules_and_permissions.md)). Esta task cria o módulo `stores` e seus modelos base, sobre os quais membership, domínios, tenancy e todo o comércio se apoiam. Usa os mixins da Fase 0 (`P0-MOD-01`).
+A loja é o **tenant** central (doc [06](../../concepts/06_multitenancy_and_domains.md)/[08](../../concepts/08_modules_and_permissions.md)). Esta task cria o módulo `stores` e seus modelos base, sobre os quais membership, domínios, tenancy e todo o comércio se apoiam. Usa os mixins da Fase 0 (`P0-MOD-01`).
 
 ## Docs de referência
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (estados da loja, configurações)
-- [07 — Database Strategy](../../07_database_strategy.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) (estados da loja, configurações)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md)
 - [Fundações INV-G3/INV-T1/INV-D1..D5](../_foundations-and-bottlenecks.md)
 
 ## Escopo (o que ENTRA)
 - `store_stores` (`__tablename__="store_stores"`): `id` (UUID), `name`, `slug` (único **quando ativo**), `status` (`draft|active|paused|suspended|blocked|archived`), **`currency` (ISO 4217)** e **`locale`** próprios da loja (INV-G3; default vem de `P0-CFG-02`), timestamps, soft delete. Mixins: `UUIDMixin`/`TimestampMixin`/`SoftDeleteMixin`.
-- `store_settings` (`__tablename__="store_settings"`): `store_id` (único, 1:1), nome público, descrição, `logo_url`, e-mail/telefone de contato, endereço, redes sociais, `whatsapp_number`, flag publicada. Doc [09](../../09_merchant_dashboard.md).
+- `store_settings` (`__tablename__="store_settings"`): `store_id` (único, 1:1), nome público, descrição, `logo_url`, e-mail/telefone de contato, endereço, redes sociais, `whatsapp_number`, flag publicada. Doc [09](../../concepts/09_merchant_dashboard.md).
 - Migration Alembic; índices: `store_stores.slug` único (parcial p/ não-arquivadas), `store_settings.store_id` único.
 - Registrar os modelos em `app/models_registry.py`.
 
@@ -40,7 +40,7 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
 
 ## Passos
 1. Modelar `Store` (com `status` como enum, `currency`/`locale`) e `StoreSettings` (1:1) usando os mixins.
-2. Definir o enum de status conforme doc [09](../../09_merchant_dashboard.md).
+2. Definir o enum de status conforme doc [09](../../concepts/09_merchant_dashboard.md).
 3. Gerar e aplicar a migration; conferir índices/constraints em db do zero.
 4. Registrar no `models_registry`.
 
@@ -54,7 +54,7 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
 
 ## Definition of Done
 - [x] `store_stores` e `store_settings` criadas via migration `516224031edd` (aplica em db do zero).
-- [x] `Store` carrega `currency`/`locale` próprios; `status` (enum `storestatus`) com os 6 estados do doc [09](../../09_merchant_dashboard.md).
+- [x] `Store` carrega `currency`/`locale` próprios; `status` (enum `storestatus`) com os 6 estados do doc [09](../../concepts/09_merchant_dashboard.md).
 - [x] Índices/constraints (slug único quando não-deletado; `store_settings.store_id` 1:1) verificados por integração *(80 testes; cobertura 91%)*.
 
 ## Notas / Reconciliações
@@ -62,7 +62,7 @@ A loja é o **tenant** central (doc [06](../../06_multitenancy_and_domains.md)/[
 - **Implementado:** `Store`/`StoreSettings` herdam `UUIDMixin`/`TimestampMixin`/`SoftDeleteMixin`; `status` = enum nativo Postgres (`storestatus`); `currency`/`locale` **obrigatórios** (preenchidos a partir do default da plataforma em `P1-STORE-02`); `social_links` = coluna JSON. Schemas `StorePublic`/`StoreSettingsPublic` prontos.
 - **Slug "quando ativo" = `deleted_at IS NULL`** (índice único parcial). Loja `archived` tem `deleted_at` setado → slug liberado para reuso. O índice fica em `__table_args__` (para o `create_all` dos testes enforçar) **e** na migration.
 - **Migration via autogenerate**, limpa de dois ruídos não-relacionados que **foram resolvidos na sequência** (mini-limpeza, mesma PR): o probe `_MixinProbe` (`tests/integration/test_base_mixins.py`) passou a usar um `MetaData()` próprio (não registra mais no `SQLModel.metadata`), e o índice foi renomeado `ix_user_email`→`ix_account_users_email` pela migration `c2d3e4f5a6b7`. **Verificado:** autogenerate agora vem **vazio** (sem ruído recorrente).
-- **Layout do módulo (convenção):** `models.py` = só tabelas + `*Base`; `StoreStatus` foi para `enums.py` e `StorePublic`/`StoreSettingsPublic` para `schemas.py` (mesmo split aplicado ao `accounts`). Convenção atualizada no doc [04](../../04_fastapi_template_adaptation.md) + README do backlog (#4).
+- **Layout do módulo (convenção):** `models.py` = só tabelas + `*Base`; `StoreStatus` foi para `enums.py` e `StorePublic`/`StoreSettingsPublic` para `schemas.py` (mesmo split aplicado ao `accounts`). Convenção atualizada no doc [04](../../concepts/04_fastapi_template_adaptation.md) + README do backlog (#4).
 
 ## Follow-ups
 - [x] **Limpeza do ruído de `alembic autogenerate`** (`_MixinProbe` isolado em `MetaData()` próprio + rename `ix_user_email`→`ix_account_users_email`, migration `c2d3e4f5a6b7`) — *resolvido nesta task.* → README da fase.

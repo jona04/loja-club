@@ -13,16 +13,16 @@ tests: [unit, e2e]
 # P1-DASH-03 — Menu dinâmico por permissão + telas base
 
 ## Contexto
-O painel mostra um **menu modular** em que cada módulo só aparece se o papel do usuário permite (e, na Fase 8, se o plano permite) — doc [05](../../05_frontend_architecture.md)/[09](../../09_merchant_dashboard.md)/[08](../../08_modules_and_permissions.md). Esta task entrega o menu dinâmico e as **telas base** da Fase 1 (dashboard, configurações, equipe). A segurança real está no backend (`P1-PERM-03`); o front esconder módulo é só UX.
+O painel mostra um **menu modular** em que cada módulo só aparece se o papel do usuário permite (e, na Fase 8, se o plano permite) — doc [05](../../concepts/05_frontend_architecture.md)/[09](../../concepts/09_merchant_dashboard.md)/[08](../../concepts/08_modules_and_permissions.md). Esta task entrega o menu dinâmico e as **telas base** da Fase 1 (dashboard, configurações, equipe). A segurança real está no backend (`P1-PERM-03`); o front esconder módulo é só UX.
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) (menu, configurações, equipe, estados da loja)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md) ("Roteamento por permissão")
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md) (módulo ↔ permissão base)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) (menu, configurações, equipe, estados da loja)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md) ("Roteamento por permissão")
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md) (módulo ↔ permissão base)
 
 ## Escopo (o que ENTRA)
 - **Menu modular dinâmico:** módulo aparece só se o papel do membro tem a permissão base (`*.view`). Gancho para gating de plano (Fase 8). Consome as **permissões do membro na loja ativa** expostas pela API.
-- **Dashboard inicial** (esqueleto; métricas reais conforme dados existirem em fases seguintes) — doc [09](../../09_merchant_dashboard.md).
+- **Dashboard inicial** (esqueleto; métricas reais conforme dados existirem em fases seguintes) — doc [09](../../concepts/09_merchant_dashboard.md).
 - **Configurações da loja** (nome, descrição, logo, contato, redes, WhatsApp, status publicada) → `PATCH /stores/{store_id}/settings`.
 - **Equipe** (listar membros, convidar, alterar papel, remover) → endpoints de equipe de `P1-STORE-02`.
 - Esconder módulo/ações sem permissão (UX); ações de salvar exigem a permissão (ex.: sem `layout.update` vê, mas não salva).
@@ -58,7 +58,7 @@ O painel mostra um **menu modular** em que cada módulo só aparece se o papel d
 - [x] Itens adiados varridos → Follow-ups + README.
 
 ## Notas / Reconciliações
-- **API:** as permissões do membro ativo já vêm de `GET /stores/{id}/me` (exposto na `P1-DASH-02`/`useActiveStore`). Adicionei **`GET /stores/{id}/settings`** (gated `settings.view`) — o form precisa carregar os valores e só havia `PATCH`; consistente com o contrato (doc [20](../../20_api_contracts_todo.md) não enumera endpoints, só a convenção de URL). Client regenerado.
+- **API:** as permissões do membro ativo já vêm de `GET /stores/{id}/me` (exposto na `P1-DASH-02`/`useActiveStore`). Adicionei **`GET /stores/{id}/settings`** (gated `settings.view`) — o form precisa carregar os valores e só havia `PATCH`; consistente com o contrato (doc [20](../../concepts/20_api_contracts_todo.md) não enumera endpoints, só a convenção de URL). Client regenerado.
 - **Menu:** `buildMenu(permissions)` — módulo aparece se permissão base (ou `null`) + `planAllowsModule` (stub Fase 8). 3 módulos reais (Dashboard/Configurações/Equipe); itens placeholder de outros módulos ficam para suas fases (evitei links 404).
 - **Gating é UX:** segurança real é o backend (`P1-PERM-03`). Save desabilitado sem `settings.update` (com unit); ações de equipe escondidas sem `team.*`.
 

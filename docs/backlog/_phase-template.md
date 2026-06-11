@@ -29,7 +29,7 @@ Docs de referência: [NN](../NN_nome.md), [NN](../NN_nome.md), … *(os docs con
 
 ---
 
-## Testes (doc [16](../16_testing_strategy.md))
+## Testes (doc [16](../concepts/16_testing_strategy.md))
 - [ ] o que validar (cobre todas as etapas da fase).
 
 ---

@@ -16,9 +16,9 @@ tests: [unit]
 Para exercitar subdomínios de loja localmente (via Traefik wildcard) e preparar o multi-tenant, o ambiente de desenvolvimento precisa de um domínio que suporte subdomínios e de CORS para `app.`/`admin.`/`*.`. Também precisamos eliminar os segredos `changethis`.
 
 ## Docs de referência
-- [03 — System Architecture](../../03_system_architecture.md)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [03 — System Architecture](../../concepts/03_system_architecture.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 
 ## Escopo (o que ENTRA)
 - `.env`: `DOMAIN=localhost` no dev (`*.localhost` resolve para 127.0.0.1 nos navegadores; `/etc/hosts` para ferramentas de CLI), permitindo subdomínios via Traefik.

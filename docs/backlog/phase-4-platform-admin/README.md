@@ -2,7 +2,7 @@
 
 > Objetivo: a equipe Loja Club ganha o **admin da plataforma** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a **[Fase 5](../phase-5-store-configuration.md)**.
 
-Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [25](../../25_platform_admin.md), [26](../../26_template_system.md), [05](../../05_frontend_architecture.md), [08](../../08_modules_and_permissions.md), [06](../../06_multitenancy_and_domains.md)/[12](../../12_aws_infrastructure_and_deployment.md), [13](../../13_performance_cache_and_cdn.md), [07](../../07_database_strategy.md), [14](../../14_security_strategy.md), [16](../../16_testing_strategy.md).
+Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [25](../../concepts/25_platform_admin.md), [26](../../concepts/26_template_system.md), [05](../../concepts/05_frontend_architecture.md), [08](../../concepts/08_modules_and_permissions.md), [06](../../concepts/06_multitenancy_and_domains.md)/[12](../../concepts/12_aws_infrastructure_and_deployment.md), [13](../../concepts/13_performance_cache_and_cdn.md), [07](../../concepts/07_database_strategy.md), [14](../../concepts/14_security_strategy.md), [16](../../concepts/16_testing_strategy.md).
 
 > Visão geral / trilha de alto nível: [`../phase-4-platform-admin.md`](../phase-4-platform-admin.md). Este README é o **índice detalhado** das tasks.
 

@@ -27,7 +27,7 @@ Cada template tem **blocos e textos de chrome diferentes** — barra de anúncio
 
 ## Docs de referência
 - [`P3-TPL-03`](./P3-TPL-03-dashboard-template-picker.md) (picker + banner) · [`P3-TPL-01`](./P3-TPL-01-template-architecture-aurora.md) (templates/contrato) · [`P3-TPL-02`](./P3-TPL-02-templates-bazar-studio.md)
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) · [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) · [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md)
 
 ## Escopo (o que ENTRA)
 - **`settings_schema` por template** — coluna em `content_theme_templates`, **seedada** (Aurora/Bazar/Studio) com **todos os blocos/frases editáveis** de cada um + defaults (os textos apresentáveis do `P3-TPL-03` viram esses defaults). Tipos V1: `text`/`textarea`/`image`/`boolean`/`select`.

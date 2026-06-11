@@ -16,8 +16,8 @@ tests: [unit, integration]
 O preço é **global** — depende do **país da loja**. Hoje a `Store` carrega `currency` (ISO 4217) + `locale`, mas **setados manualmente / default da plataforma**; **não há `country`** nem derivação automática. E a vitrine **`formatPrice` hardcoda `pt-BR`**, então o **símbolo sai errado** pra loja não-BR (`USD` → `US$ 10,00` em vez de `$10.00`). Esta task faz a loja **escolher o país** e derivar **moeda + locale** (e o **símbolo**, derivável via `Intl`), de forma consistente entre backend, painel e vitrine.
 
 ## Docs de referência
-- [07 — Database Strategy](../../07_database_strategy.md) (`store_stores`)
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md) (exibição de preço)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md) (`store_stores`)
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md) (exibição de preço)
 - `INV-D5` (dinheiro = minor units + ISO 4217) em [`_foundations`](../_foundations-and-bottlenecks.md)
 
 ## Escopo (o que ENTRA)
@@ -37,7 +37,7 @@ O preço é **global** — depende do **país da loja**. Hoje a `Store` carrega 
 - `backend/app/core/localization.py` (criar) — `localize_country` + **mapa curado** dos países suportados.
 - `frontend-storefront/lib/api.ts` (alterar) — `formatPrice` usar o locale da loja (`locale` no `StorefrontStore`).
 - `frontend-dashboard/.../Store/NoStores.tsx` (alterar) — seletor de país **obrigatório** no form de criar loja.
-- `docs/07_database_strategy.md` (alterar) — `country` na `store_stores`.
+- `docs/concepts/07_database_strategy.md` (alterar) — `country` na `store_stores`.
 
 ## Passos
 1. Helper `country → {currency, locale, symbol}` (lib) + testes.

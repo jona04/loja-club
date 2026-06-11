@@ -13,22 +13,22 @@ tests: [integration]
 # P1-PERM-01 — `store_members` + `store_roles` (membership)
 
 ## Contexto
-Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias lojas com **papel diferente em cada uma** (doc [08](../../08_modules_and_permissions.md)/[06](../../06_multitenancy_and_domains.md)). Esta task cria a tabela de membership e a tabela de papéis (seed); o catálogo de permissões e o enforcement vêm depois.
+Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias lojas com **papel diferente em cada uma** (doc [08](../../concepts/08_modules_and_permissions.md)/[06](../../concepts/06_multitenancy_and_domains.md)). Esta task cria a tabela de membership e a tabela de papéis (seed); o catálogo de permissões e o enforcement vêm depois.
 
 ## Docs de referência
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md)
-- [07 — Database Strategy](../../07_database_strategy.md) (lista `store_members` e `store_roles` como **tabelas**; índices)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md) (lista `store_members` e `store_roles` como **tabelas**; índices)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
 
 ## Escopo (o que ENTRA)
-- `store_roles` (`__tablename__="store_roles"`): tabela **seedada** com os 6 papéis do doc [08](../../08_modules_and_permissions.md) — `owner|admin|manager|support|catalog|marketing` (`key` único + `name`). Doc [07](../../07_database_strategy.md) lista `store_roles` como tabela.
-- `store_members` (`__tablename__="store_members"`): `store_id`, `user_id` (→ `account_users.id`), `role` (→ `store_roles`), `status` (`active|invited|removed`), `invited_at`, `removed_at`, timestamps, soft delete (mixins). Índice **único `store_id + user_id` quando ativo**; índice `store_id + status` (doc [07](../../07_database_strategy.md)).
+- `store_roles` (`__tablename__="store_roles"`): tabela **seedada** com os 6 papéis do doc [08](../../concepts/08_modules_and_permissions.md) — `owner|admin|manager|support|catalog|marketing` (`key` único + `name`). Doc [07](../../concepts/07_database_strategy.md) lista `store_roles` como tabela.
+- `store_members` (`__tablename__="store_members"`): `store_id`, `user_id` (→ `account_users.id`), `role` (→ `store_roles`), `status` (`active|invited|removed`), `invited_at`, `removed_at`, timestamps, soft delete (mixins). Índice **único `store_id + user_id` quando ativo**; índice `store_id + status` (doc [07](../../concepts/07_database_strategy.md)).
 - Migration: cria as duas tabelas. **Seed dos 6 papéis via `init_db`** (idempotente, mesma estratégia do superuser — ver Notas).
 
 ## Fora de escopo (o que NÃO entra)
 - Catálogo de permissões (`store_permissions`) + mapa papel→permissões → `P1-PERM-02`.
 - `require_permission`/enforcement na rota → `P1-PERM-03`.
-- Overrides de permissão por membro: doc [07](../../07_database_strategy.md) lista `store_member_permissions` como **opcional** ("se necessário") → **fora do MVP** (só papel→permissões em `P1-PERM-02`).
+- Overrides de permissão por membro: doc [07](../../concepts/07_database_strategy.md) lista `store_member_permissions` como **opcional** ("se necessário") → **fora do MVP** (só papel→permissões em `P1-PERM-02`).
 - Convite por e-mail (fluxo completo) → tela em `P1-DASH-03`; **envio pelo worker** (task `send_email`, INV-F5).
 
 ## Arquivos a criar/alterar
@@ -59,5 +59,5 @@ Liga `account_users` (Fase 0) às lojas: um usuário pode ser membro de várias 
 ## Notas / Reconciliações
 - **Seed via `init_db`, não na migration (reconciliação):** os testes criam o schema com `create_all` (não rodam migrations), então o seed na migration não chegaria neles. Seguindo o padrão do superuser, os papéis são seedados em `init_db` (idempotente), com fonte única `STORE_ROLES` em `stores/repositories.py`. A migration só cria as tabelas. Prod: `prestart`→`init_db` semeia (como o superuser).
 - **`MembershipStatus`** (`invited|active|removed`) em `stores/enums.py`; **`StoreMember`** com mixins (soft delete) + FKs (`store_stores`/`account_users`/`store_roles`); **`StoreRole`** é lookup mínimo (`id`/`key`/`name`).
-- **`store_roles` é global/seed** (os 6 papéis valem para todas as lojas; aplicam-se no contexto da loja via `store_members`). Doc [07](../../07_database_strategy.md) diz "papéis por loja" — interpretado como "no contexto da loja", não linhas por-loja. Se a implementação exigir papéis editáveis por loja, registrar e atualizar o doc.
+- **`store_roles` é global/seed** (os 6 papéis valem para todas as lojas; aplicam-se no contexto da loja via `store_members`). Doc [07](../../concepts/07_database_strategy.md) diz "papéis por loja" — interpretado como "no contexto da loja", não linhas por-loja. Se a implementação exigir papéis editáveis por loja, registrar e atualizar o doc.
 - `account_users.is_superuser` ↔ admin de plataforma: superuser cobre acesso interno no MVP; `platform_admin_roles` na Fase 4 (herdado de `P0-MOD-04`).

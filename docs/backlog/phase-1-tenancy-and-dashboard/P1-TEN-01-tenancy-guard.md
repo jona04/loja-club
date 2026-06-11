@@ -16,10 +16,10 @@ tests: [integration]
 O isolamento entre lojas é o invariante mais crítico (INV-T1..T4; GARGALO §2). Esta task cria o **guard central de tenant** — uma só porta de entrada para "qual loja é esta e o usuário pode operá-la" — em vez de filtros `store_id` espalhados. Cobre os dois caminhos: **painel** (loja no path) e **storefront** (loja pelo `Host`).
 
 ## Docs de referência
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 - [Fundações §2 (INV-T1..T4) + §10 (isolamento)](../_foundations-and-bottlenecks.md)
-- [13 — Performance, Cache and CDN](../../13_performance_cache_and_cdn.md)
+- [13 — Performance, Cache and CDN](../../concepts/13_performance_cache_and_cdn.md)
 
 ## Escopo (o que ENTRA)
 - `app/modules/tenancy/deps.py`:

@@ -13,11 +13,11 @@ tests: [unit, e2e]
 # P1-DASH-02 — Login + seletor de loja ativa + contexto
 
 ## Contexto
-Um usuário pode ser membro de várias lojas; o painel precisa, após o login, **resolver a loja ativa** e usá-la como contexto de todas as chamadas (`/stores/{store_id}/...`) — doc [09](../../09_merchant_dashboard.md)/[05](../../05_frontend_architecture.md).
+Um usuário pode ser membro de várias lojas; o painel precisa, após o login, **resolver a loja ativa** e usá-la como contexto de todas as chamadas (`/stores/{store_id}/...`) — doc [09](../../concepts/09_merchant_dashboard.md)/[05](../../concepts/05_frontend_architecture.md).
 
 ## Docs de referência
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md) ("Seleção de loja ativa")
-- [05 — Frontend Architecture](../../05_frontend_architecture.md) ("Seleção de loja ativa no dashboard")
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md) ("Seleção de loja ativa")
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md) ("Seleção de loja ativa no dashboard")
 
 ## Escopo (o que ENTRA)
 - **Login** reaproveitando `routes/login.tsx` + `hooks/useAuth.ts` (já no template).

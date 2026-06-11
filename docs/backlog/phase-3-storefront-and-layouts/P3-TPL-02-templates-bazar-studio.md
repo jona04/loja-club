@@ -46,7 +46,7 @@ Com a arquitetura pronta (`P3-TPL-01`/Aurora), portar **Bazar** (home por **seç
 - `frontend-storefront/lib/{templates,template-types}.ts` (alterar) — expor `Shell` no contrato `Template`.
 - `frontend-storefront/app/{checkout,pedido,conta,institucional/[slug]}/page.tsx` (alterar) — usar o **Shell do template ativo** (resolver), não o `AuroraShell` fixo.
 - `backend/app/modules/storefront/{services,schemas,routes}.py` (alterar) — home expõe **produtos por categoria (N)** + testes.
-- `docs/10_storefront_and_layouts.md` (alterar) — reconciliar.
+- `docs/concepts/10_storefront_and_layouts.md` (alterar) — reconciliar.
 
 ## Passos
 1. Backend: home pública passa a expor `produtos por categoria (N)` (Bazar).

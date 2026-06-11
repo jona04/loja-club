@@ -16,9 +16,9 @@ tests: [integration]
 A equipe precisa **operar todas as lojas** (visão cross-store, fora do tenant): listar, ver detalhe e **bloquear/desbloquear** uma loja. O guard do painel (`P1-TEN-01`) já barra `suspended`/`blocked`; aqui entram os endpoints que setam esse estado.
 
 ## Docs de referência
-- [25 — Platform Admin](../../25_platform_admin.md)
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md)
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md)
+- [25 — Platform Admin](../../concepts/25_platform_admin.md)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md)
 
 ## Escopo (o que ENTRA)
 - Rotas `platform_admin` (gated `platform.stores.view|block|unblock`, **sem** `store_id` no path): listar lojas (paginado, busca), detalhe (settings, membros, nº de pedidos, volume transacionado, webhooks com erro, comissões).

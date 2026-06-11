@@ -16,12 +16,12 @@ tests: [integration]
 Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem rodar fora da requisição. Esta task fecha a **decisão da lib de fila** e cria a **interface mínima**, sem implementar tasks reais ainda.
 
 ## Docs de referência
-- [03 — System Architecture](../../03_system_architecture.md)
-- [13 — Performance, Cache and CDN](../../13_performance_cache_and_cdn.md)
-- [12 — AWS Infrastructure and Deployment](../../12_aws_infrastructure_and_deployment.md)
+- [03 — System Architecture](../../concepts/03_system_architecture.md)
+- [13 — Performance, Cache and CDN](../../concepts/13_performance_cache_and_cdn.md)
+- [12 — AWS Infrastructure and Deployment](../../concepts/12_aws_infrastructure_and_deployment.md)
 
 ## Escopo (o que ENTRA)
-- Decidir a lib de fila e registrar em [18_open_decisions.md](../../18_open_decisions.md). **Recomendado: `arq`** (async, baseado em Redis, leve, casa com FastAPI async).
+- Decidir a lib de fila e registrar em [18_open_decisions.md](../../concepts/18_open_decisions.md). **Recomendado: `arq`** (async, baseado em Redis, leve, casa com FastAPI async).
 - `backend/pyproject.toml`: dependência da lib escolhida.
 - `backend/app/core/queue.py`: interface mínima `enqueue(task_name, *args, **kwargs)` que isola o resto do código da lib.
 - `compose.yml`: serviço `worker` (e `scheduler` se a lib exigir) consumindo a fila do Redis.
@@ -33,7 +33,7 @@ Tarefas pesadas (thumbnails, e-mails, expiração de sessões, webhooks) devem r
 - Limpeza de sessões expiradas e processamento de webhook → fases respectivas.
 
 ## Arquivos a criar/alterar
-- `docs/18_open_decisions.md` (alterar) — registrar a lib escolhida.
+- `docs/concepts/18_open_decisions.md` (alterar) — registrar a lib escolhida.
 - `backend/pyproject.toml` (alterar) — dep da fila.
 - `backend/app/core/queue.py` (criar) — `enqueue()` + bootstrap do worker.
 - `compose.yml` (alterar) — serviço `worker`.

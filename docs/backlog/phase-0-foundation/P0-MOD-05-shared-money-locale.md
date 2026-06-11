@@ -16,9 +16,9 @@ tests: [unit]
 A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/Real/2 casas decimais. Como preço aparece já no catálogo (Fase 2) e cascateia para carrinho, pedido, split e billing, o **tipo de dinheiro global** precisa nascer na fundação, antes de qualquer modelo com valor monetário.
 
 ## Docs de referência
-- [07 — Database Strategy](../../07_database_strategy.md)
-- [02 — Business Model and Rules](../../02_business_model_and_rules.md) (comissão/split)
-- [11 — Checkout, Payments and Split](../../11_checkout_payments_and_split.md)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md)
+- [02 — Business Model and Rules](../../concepts/02_business_model_and_rules.md) (comissão/split)
+- [11 — Checkout, Payments and Split](../../concepts/11_checkout_payments_and_split.md)
 - [Fundações & Gargalos](../_foundations-and-bottlenecks.md) — DEC-1, DEC-2, INV-G1..G6
 
 ## Escopo (o que ENTRA)

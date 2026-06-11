@@ -15,10 +15,10 @@ tests: [e2e]
 O `frontend-dashboard` tem e2e Playwright e o `frontend-admin` ganhou na `P4-ADMIN-01`. O **`frontend-storefront` ainda NÃO tem** (validou só por "smoke real" do backend). Esta task adiciona o e2e Playwright do storefront **e firma a regra de release**: só sobe pra produção o que passa no e2e de **TODOS** os frontends.
 
 ## Docs de referência
-- [16 — Testing Strategy](../../16_testing_strategy.md)
-- [10 — Storefront and Layouts](../../10_storefront_and_layouts.md)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
-- [12 — AWS Infra & Deployment](../../12_aws_infrastructure_and_deployment.md) (CI/CD)
+- [16 — Testing Strategy](../../concepts/16_testing_strategy.md)
+- [10 — Storefront and Layouts](../../concepts/10_storefront_and_layouts.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
+- [12 — AWS Infra & Deployment](../../concepts/12_aws_infrastructure_and_deployment.md) (CI/CD)
 
 ## Escopo (o que ENTRA)
 - `frontend-storefront/playwright.config.ts` + `Dockerfile.playwright` + service `playwright-storefront` no `compose.override.yml` (espelhando dashboard/admin).
