@@ -13,12 +13,12 @@ tests: none
 # P1-DASH-01 — Infra do painel (`frontend-dashboard`, Traefik `app.`)
 
 ## Contexto
-O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do template reaproveitado como **`frontend-dashboard`** (doc [05](../../05_frontend_architecture.md)/[09](../../09_merchant_dashboard.md)). Esta task ajusta roteamento/infra e limpa resíduos do template antes de construir as telas.
+O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do template reaproveitado como **`frontend-dashboard`** (doc [05](../../concepts/05_frontend_architecture.md)/[09](../../concepts/09_merchant_dashboard.md)). Esta task ajusta roteamento/infra e limpa resíduos do template antes de construir as telas.
 
 ## Docs de referência
-- [05 — Frontend Architecture](../../05_frontend_architecture.md) (três frontends; URLs)
-- [09 — Merchant Dashboard](../../09_merchant_dashboard.md)
-- [03 — System Architecture](../../03_system_architecture.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md) (três frontends; URLs)
+- [09 — Merchant Dashboard](../../concepts/09_merchant_dashboard.md)
+- [03 — System Architecture](../../concepts/03_system_architecture.md)
 
 ## Escopo (o que ENTRA)
 - **Traefik:** host do painel `dashboard.${DOMAIN}` → **`app.${DOMAIN}`** (labels em `compose.yml`).
@@ -55,7 +55,7 @@ O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do templa
 - [x] `tsc` + `vitest` (2) verdes; `vite build` ok; `biome` limpo.
 
 ## Notas / Reconciliações
-- Doc [05](../../05_frontend_architecture.md) pede 3 projetos separados (`frontend-dashboard`/`admin`/`storefront`). No MVP mapeamos o `frontend/` existente ao papel de **dashboard**; o **rename físico** do diretório (e a criação de admin/storefront) fica para o início das Fases 3/6 (mexe em workspace bun/`bun.lock`/Dockerfiles).
+- Doc [05](../../concepts/05_frontend_architecture.md) pede 3 projetos separados (`frontend-dashboard`/`admin`/`storefront`). No MVP mapeamos o `frontend/` existente ao papel de **dashboard**; o **rename físico** do diretório (e a criação de admin/storefront) fica para o início das Fases 3/6 (mexe em workspace bun/`bun.lock`/Dockerfiles).
 - **Limpeza:** removido o cluster inteiro `routes/_layout/admin.tsx` + `components/Admin/*` (AddUser/columns/EditUser/DeleteUser/UserActionsMenu) — era **auto-contido** (nada fora dele importava) e é gestão de `account_users` = **admin de plataforma** (Fase 4, `frontend-admin`). O item "Admin" do `AppSidebar` (só superuser) saiu.
 - **`routeTree.gen.ts`** é gerado pelo plugin do TanStack Router; regenerado via `vite build` (não há `tsr` standalone local; `bun` ausente — usei o `node_modules` da raiz do workspace).
 - **Smoke ao vivo (manual):** `docker compose up -d proxy frontend` e então `curl -H "Host: app.localhost" http://localhost:8088/` (ou abrir `http://app.localhost:8088`). Não executado aqui (build da imagem do frontend é pesado); a mudança é só o label Traefik + o CORS já contempla o host.

@@ -1,10 +1,10 @@
 # 25 — Admin do SaaS (plataforma)
 
-> Como a equipe **Loja Club** opera a plataforma. Complementa o doc [08](./08_modules_and_permissions.md) (permissões) e [09](./09_merchant_dashboard.md) (painel do lojista). O backlog é a **[Fase 4](./backlog/phase-4-platform-admin.md)** (admin, antes do lançamento) + o que sobra na **[Fase 9](./backlog/phase-9-platform-ops-and-production.md)** (segurança/CI-CD/beta).
+> Como a equipe **Loja Club** opera a plataforma. Complementa o doc [08](./08_modules_and_permissions.md) (permissões) e [09](./09_merchant_dashboard.md) (painel do lojista). O backlog é a **[Fase 4](../backlog/phase-4-platform-admin.md)** (admin, antes do lançamento) + o que sobra na **[Fase 9](../backlog/phase-9-platform-ops-and-production.md)** (segurança/CI-CD/beta).
 
 ## Por que existe (e por que antes do lançamento)
 
-O admin é a ferramenta interna da plataforma — separada do painel do lojista. Foi **puxado pra antes do lançamento** porque o lojista precisa **escolher e personalizar templates** ([Fase 5](./backlog/phase-5-store-configuration.md)), e os templates precisam estar **registrados pela plataforma** (thumbnail no CDN + settings schema; o **import das imagens**, a **loja-demo** e o **preview navegável** são a [Fase 5](./backlog/phase-5-store-configuration.md)). Sem o admin, isso fica hardcoded. As demais funções de operação (segurança, observabilidade, CI/CD, beta) seguem depois (Fase 9).
+O admin é a ferramenta interna da plataforma — separada do painel do lojista. Foi **puxado pra antes do lançamento** porque o lojista precisa **escolher e personalizar templates** ([Fase 5](../backlog/phase-5-store-configuration.md)), e os templates precisam estar **registrados pela plataforma** (thumbnail no CDN + settings schema; o **import das imagens**, a **loja-demo** e o **preview navegável** são a [Fase 5](../backlog/phase-5-store-configuration.md)). Sem o admin, isso fica hardcoded. As demais funções de operação (segurança, observabilidade, CI/CD, beta) seguem depois (Fase 9).
 
 ## `frontend-admin` (projeto separado)
 
@@ -27,13 +27,13 @@ O admin é a ferramenta interna da plataforma — separada do painel do lojista.
 
 ### Cadastro "inteligente" de templates — abordagem
 
-Um template tem **código** (componentes React + os **manifestos** `settings-schema.json` e `demo.json` no `frontend-storefront`) **e dados** (metadados, assets, conteúdo demo, valores por loja). O **schema vem do código** (seedado no deploy) — o admin **não autora os campos**, o que evita divergência schema↔código. O admin gerencia a parte **operável**: **registrar**, subir o **thumbnail**, **disparar o import** das imagens pro CDN, montar a **loja-demo** e **ativar/desativar**. Um template **genuinamente novo** exige deploy do storefront (código + manifestos) — o passo-a-passo está no doc [27](./27_template_authoring_guide.md). *(Import/demo/preview são entregues na [Fase 5](./backlog/phase-5-store-configuration.md).)*
+Um template tem **código** (componentes React + os **manifestos** `settings-schema.json` e `demo.json` no `frontend-storefront`) **e dados** (metadados, assets, conteúdo demo, valores por loja). O **schema vem do código** (seedado no deploy) — o admin **não autora os campos**, o que evita divergência schema↔código. O admin gerencia a parte **operável**: **registrar**, subir o **thumbnail**, **disparar o import** das imagens pro CDN, montar a **loja-demo** e **ativar/desativar**. Um template **genuinamente novo** exige deploy do storefront (código + manifestos) — o passo-a-passo está no doc [27](./27_template_authoring_guide.md). *(Import/demo/preview são entregues na [Fase 5](../backlog/phase-5-store-configuration.md).)*
 
 ## Fora do escopo da Fase 4 (fica para a Fase 9)
 
 - Segurança/observabilidade completas (audit hardening, Sentry, rate limit, URLs assinadas, backups, alertas).
 - CI/CD e deploy automatizado; beta com lojas reais.
-- **Config da API de geração 3D** no admin — depende da **[Fase 7](./backlog/phase-7-3d-products.md)**.
+- **Config da API de geração 3D** no admin — depende da **[Fase 7](../backlog/phase-7-3d-products.md)**.
 
 ## Telas (referência)
 

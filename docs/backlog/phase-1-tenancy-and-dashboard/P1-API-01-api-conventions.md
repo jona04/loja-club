@@ -13,19 +13,19 @@ tests: [unit, integration]
 # P1-API-01 — Padrão de API (response/erro/paginação/headers de tenant)
 
 ## Contexto
-As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** para não retrabalhar depois de dezenas de endpoints (INV-A1/A2, GARGALO §5; DEC-5 paginação pendente). O doc [20](../../20_api_contracts_todo.md) ainda é um TODO. Esta task fixa as convenções que todos os endpoints da loja reusarão.
+As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** para não retrabalhar depois de dezenas de endpoints (INV-A1/A2, GARGALO §5; DEC-5 paginação pendente). O doc [20](../../concepts/20_api_contracts_todo.md) ainda é um TODO. Esta task fixa as convenções que todos os endpoints da loja reusarão.
 
 ## Docs de referência
-- [20 — API Contracts TODO](../../20_api_contracts_todo.md)
+- [20 — API Contracts TODO](../../concepts/20_api_contracts_todo.md)
 - [Fundações §5 (API) + DEC-5](../_foundations-and-bottlenecks.md)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 
 ## Escopo (o que ENTRA)
 - **URL/versão:** `/api/v1`; painel sob `/api/v1/stores/{store_id}/...`; APIs públicas do storefront resolvem a loja pelo `Host` (consumo na Fase 3, só a convenção aqui). INV-A1.
 - **Paginação (resolver DEC-5):** decidir **offset (`skip`/`limit`)** — já usado no template (`UsersPublic` = `{data, count}`) — vs cursor; documentar a escolha e padronizar o envelope de lista (`{data: [...], count: <total>}`).
 - **Response:** recurso único = objeto direto; lista = envelope de paginação acima. Tipo genérico reutilizável de paginação.
-- **Erro:** formato unificado para erros de negócio/validação (manter `{detail}` do FastAPI e/ou padronizar `code`/`message`); decidir e documentar (sem vazar dado interno — doc [06](../../06_multitenancy_and_domains.md) "loja não encontrada").
+- **Erro:** formato unificado para erros de negócio/validação (manter `{detail}` do FastAPI e/ou padronizar `code`/`message`); decidir e documentar (sem vazar dado interno — doc [06](../../concepts/06_multitenancy_and_domains.md) "loja não encontrada").
 - **Headers/identificação de tenant:** painel → `store_id` no path (não header); storefront → `Host`. Documentar.
 - **Idempotency-Key:** reservar a convenção para operações sensíveis (criar pedido/pagamento) — implementação Fase 6/7 (INV-A3); só documentar aqui.
 
@@ -36,7 +36,7 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
 
 ## Arquivos a criar/alterar
 - `backend/app/core/api.py` (criar) — tipo genérico de paginação (`Page[T]`/envelope `{data, count}`) e params de paginação reutilizáveis; helper de erro se necessário.
-- `docs/20_api_contracts_todo.md` (alterar) — preencher os TODOs decididos (URL, response, erro, paginação, headers de tenant).
+- `docs/concepts/20_api_contracts_todo.md` (alterar) — preencher os TODOs decididos (URL, response, erro, paginação, headers de tenant).
 - `docs/backlog/_foundations-and-bottlenecks.md` (alterar) — marcar **DEC-5** como decidido.
 
 ## Passos
@@ -55,7 +55,7 @@ As Fundações mandam **travar o padrão de API na primeira API real (Fase 1)** 
   - integração — `GET /api/v1/stores` (em `P1-STORE-02`) responde no padrão.
 
 ## Definition of Done
-- [x] Convenções (URL, response, erro, paginação, tenant) **documentadas** no doc [20](../../20_api_contracts_todo.md).
+- [x] Convenções (URL, response, erro, paginação, tenant) **documentadas** no doc [20](../../concepts/20_api_contracts_todo.md).
 - [x] Tipos/params de paginação reutilizáveis em `app/core/api.py`, com unit verde *(73 testes; cobertura 91%)*.
 - [x] **DEC-5** marcada como decidida nas Fundações.
 

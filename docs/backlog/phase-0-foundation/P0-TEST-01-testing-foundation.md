@@ -16,7 +16,7 @@ tests: meta
 O template é integração-pesado (Pytest contra Postgres real, limpeza por `delete` no fim da sessão) e o frontend só tem Playwright (E2E). Para seguir a regra de testes das Fundações (§10) — unit para lógica pura, integração no seam, E2E para jornadas — precisamos do **chão de testes** antes de escrever os testes das fases: layout, isolamento por teste, mock de externos e runner de unit no frontend.
 
 ## Docs de referência
-- [16 — Testing Strategy](../../16_testing_strategy.md)
+- [16 — Testing Strategy](../../concepts/16_testing_strategy.md)
 - [Fundações & Gargalos §10](../_foundations-and-bottlenecks.md) (INV-TEST-1/2, DEC-9/10/11)
 
 ## Escopo (o que ENTRA)

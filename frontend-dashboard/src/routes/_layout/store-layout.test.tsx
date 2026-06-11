@@ -8,7 +8,10 @@ vi.mock("@/client", () => ({
     listTemplates: vi.fn().mockResolvedValue([]),
     getLayout: vi.fn().mockResolvedValue({}),
     updateLayout: vi.fn().mockResolvedValue({}),
-    previewLayout: vi.fn().mockResolvedValue({}),
+    getLayoutSettings: vi.fn().mockResolvedValue({}),
+    updateLayoutSettings: vi.fn().mockResolvedValue({}),
+    resetLayoutSettings: vi.fn().mockResolvedValue({}),
+    listMyTemplates: vi.fn().mockResolvedValue([]),
   },
 }))
 

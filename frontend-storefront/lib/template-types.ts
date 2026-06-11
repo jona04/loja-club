@@ -49,5 +49,5 @@ export interface Template {
   Home: (props: HomeProps) => ReactNode
   Category: (props: CategoryProps) => ReactNode
   Product: (props: ProductProps) => ReactNode
-  Shell: (props: ShellProps) => ReactNode
+  Shell: (props: ShellProps) => ReactNode | Promise<ReactNode>
 }

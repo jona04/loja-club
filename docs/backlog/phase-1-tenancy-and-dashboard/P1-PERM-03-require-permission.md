@@ -13,11 +13,11 @@ tests: [integration]
 # P1-PERM-03 — Autorização: `require_permission` (deps)
 
 ## Contexto
-A **segurança real está no backend** (esconder botão no front é só UX — INV-A4/S1). O doc [08](../../08_modules_and_permissions.md) define a regra de autorização: autenticado → membro da loja → papel tem a permissão → recurso pertence à loja. Esta task implementa a dependency que aplica isso nas rotas.
+A **segurança real está no backend** (esconder botão no front é só UX — INV-A4/S1). O doc [08](../../concepts/08_modules_and_permissions.md) define a regra de autorização: autenticado → membro da loja → papel tem a permissão → recurso pertence à loja. Esta task implementa a dependency que aplica isso nas rotas.
 
 ## Docs de referência
-- [08 — Modules and Permissions](../../08_modules_and_permissions.md) ("Regra de autorização", "Plano + permissão")
-- [14 — Security Strategy](../../14_security_strategy.md)
+- [08 — Modules and Permissions](../../concepts/08_modules_and_permissions.md) ("Regra de autorização", "Plano + permissão")
+- [14 — Security Strategy](../../concepts/14_security_strategy.md)
 - [Fundações INV-S1/INV-A4](../_foundations-and-bottlenecks.md)
 
 ## Escopo (o que ENTRA)
@@ -61,5 +61,5 @@ A **segurança real está no backend** (esconder botão no front é só UX — I
 - **Implementado em `app/modules/tenancy/deps.py`:** extraí `get_active_membership` (valida loja+membership, reusado pelo `get_active_store` e pelo `require_permission`); `require_permission(perm)` compõe membership + checa a permissão **no banco** (`store_role_permissions` ⋈ `store_permissions`, consistente com a decisão de tabelas) + `_plan_allows()`.
 - **Ownership (INV-T2):** a checagem `recurso.store_id == store_id` é o helper `get_store_scoped` (`P1-TEN-01`); as rotas comerciais o usam. Testado em `test_tenancy.py`.
 - **Testes:** decisão por papel testada diretamente (chamando a dependency); não-membro/404 via `get_active_membership`. O **gating ponta-a-ponta por HTTP** numa rota real é exercitado na `P1-STORE-02` (endpoints com `Depends(require_permission(...))`).
-- "Plano + permissão" (doc [08](../../08_modules_and_permissions.md)): no MVP só a permissão é ativa; o plano entra na Fase 8.
+- "Plano + permissão" (doc [08](../../concepts/08_modules_and_permissions.md)): no MVP só a permissão é ativa; o plano entra na Fase 8.
 - **Typing:** `col()` no `onclause` do `join` (o SQLModel infere `bool` sem ele). **Lint deve rodar via `uv run bash scripts/lint.sh`** (o `lint.sh` chama `mypy`/`ty` diretos, que precisam do venv ativo).

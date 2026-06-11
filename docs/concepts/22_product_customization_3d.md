@@ -1,6 +1,6 @@
 # Product Customization 3D
 
-> **Escopo (ver [Fase 7 — Produtos 3D](./backlog/phase-7-3d-products.md)):**
+> **Escopo (ver [Fase 7 — Produtos 3D](../backlog/phase-7-3d-products.md)):**
 > - **O 3D é a Fase 7.** A Fase 2 (catálogo) entrega **só imagem**; o 3D e o 3D personalizável vêm na **Fase 7 (Produtos 3D)**.
 > - **Os modelos 3D são gerados pelo lojista**, via **API de terceiros** (image/text → GLB): candidatos **Meshy / Tripo3D / Hyper3D** (decisão no doc [18](./18_open_decisions.md)). Os modelos são **por loja** (`store_id`); não há catálogo 3D da plataforma.
 > - **Personalização restrita a plano pago = Fase 8:** na Fase 7 qualquer lojista personaliza (livre); na **Fase 8** (planos/pagamentos) só lojista com **plano pago** personaliza (sem plano grátis).

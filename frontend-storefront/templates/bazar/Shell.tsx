@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { CSSProperties, ReactNode } from "react"
 
-import type { Category, StorefrontStore } from "@/lib/api"
+import { type Category, getHome, type StorefrontStore } from "@/lib/api"
 import { CartProvider } from "@/lib/cart"
 import { whatsappLink } from "@/lib/format"
 
@@ -27,7 +27,7 @@ const HELP_LINKS = [
  * @param children - The page content.
  * @returns The wrapped Bazar page.
  */
-export function BazarShell({
+export async function BazarShell({
   store,
   categories,
   locale,
@@ -39,6 +39,14 @@ export function BazarShell({
   children: ReactNode
 }) {
   const name = store.public_name || store.name
+  const { theme } = await getHome()
+  const settings = theme.settings ?? {}
+  const announcement =
+    (settings.announcement_text as string) ||
+    "🔥 Frete Grátis em milhares de produtos acima de R$ 199."
+  const footerContact =
+    (settings.footer_contact as string) ||
+    "Estamos aqui para ajudar com suas dúvidas e pedidos."
   const rootStyle = {
     fontFamily: "var(--font-jakarta), sans-serif",
   } as CSSProperties
@@ -49,7 +57,12 @@ export function BazarShell({
         className="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased"
         style={rootStyle}
       >
-        <BazarHeader name={name} categories={categories} locale={locale} />
+        <BazarHeader
+          name={name}
+          categories={categories}
+          locale={locale}
+          announcement={announcement}
+        />
 
         <main className="flex-1">{children}</main>
 
@@ -126,9 +139,7 @@ export function BazarShell({
                 <h4 className="mb-4 text-lg font-bold text-white">
                   Atendimento
                 </h4>
-                <p className="mb-6 text-sm text-gray-400">
-                  Estamos aqui para ajudar com suas dúvidas e pedidos.
-                </p>
+                <p className="mb-6 text-sm text-gray-400">{footerContact}</p>
                 {store.whatsapp_number ? (
                   <a
                     href={whatsappLink(store.whatsapp_number)}

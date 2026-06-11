@@ -6,7 +6,7 @@ adds products, and sells — without standing up any infrastructure of their own
 
 > **Status:** early development. Phases 0–1 (foundation + multi-tenancy + merchant
 > panel) are done; Phase 2 (catalog + media) is in progress. See the
-> [roadmap](./docs/17_v1_roadmap.md) and the [backlog](./docs/backlog/README.md).
+> [roadmap](./docs/concepts/17_v1_roadmap.md) and the [backlog](./docs/backlog/README.md).
 
 ## Architecture at a glance
 

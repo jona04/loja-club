@@ -16,9 +16,9 @@ tests: meta
 As Fundações §10 atribuem à **Fase 1** as **fixtures/factories multi-tenant** e a **suíte de isolamento** (precisam de `Store`). Esta task cria o ferramental de teste reutilizável (duas lojas, membros com papéis) e a suíte que prova "Loja A não vê Loja B", consumida por todas as features comerciais seguintes.
 
 ## Docs de referência
-- [16 — Testing Strategy](../../16_testing_strategy.md) (isolamento é o item nº1)
+- [16 — Testing Strategy](../../concepts/16_testing_strategy.md) (isolamento é o item nº1)
 - [Fundações §10 + GARGALO §2](../_foundations-and-bottlenecks.md)
-- [06 — Multitenancy and Domains](../../06_multitenancy_and_domains.md)
+- [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md)
 
 ## Escopo (o que ENTRA)
 - **Factories/fixtures** em `tests/integration` (estende `P0-TEST-01`): `create_store`, `create_member(store, user, role)`, `two_stores` (A/B com owners distintos), headers de auth por membro.

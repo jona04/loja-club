@@ -16,9 +16,9 @@ tests: [integration]
 Endpoints do **painel** para o lojista escolher o template e editar a aparência; aplicar template **invalida o cache de leitura** que a vitrine (`P3-SF-01`) consome.
 
 ## Docs de referência
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
-- [13 — Performance, Cache & CDN](../../13_performance_cache_and_cdn.md)
-- [20 — API Contracts](../../20_api_contracts_todo.md)
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md)
+- [13 — Performance, Cache & CDN](../../concepts/13_performance_cache_and_cdn.md)
+- [20 — API Contracts](../../concepts/20_api_contracts_todo.md)
 
 ## Escopo (o que ENTRA)
 - Sob `/api/v1/stores/{store_id}/...`, gated por **`layout.*`** (ver=`layout.view`, preview=`layout.preview`, aplicar/editar=`layout.update`, assets=`layout.assets.update`): listar templates; obter template ativo; **preview**; **aplicar template** (salva `active_template_id`); editar `banner`/`headline`/`featured_collection`.

@@ -17,8 +17,8 @@ A Fase 2 sobe imagens de produto e artes de cliente. Esta task entrega **(a)** a
 
 ## Docs de referência
 - [Fundações](../_foundations-and-bottlenecks.md) (INV-F2, INV-S2/S3, DEC-8, DEC-11)
-- [12 — AWS Infrastructure](../../12_aws_infrastructure_and_deployment.md)
-- [13 — Cache/CDN](../../13_performance_cache_and_cdn.md) · [14 — Security](../../14_security_strategy.md)
+- [12 — AWS Infrastructure](../../concepts/12_aws_infrastructure_and_deployment.md)
+- [13 — Cache/CDN](../../concepts/13_performance_cache_and_cdn.md) · [14 — Security](../../concepts/14_security_strategy.md)
 
 ## Escopo (o que ENTRA)
 ### 1. Código

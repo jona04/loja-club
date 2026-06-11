@@ -18,6 +18,7 @@ import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
 import { Route as LayoutStoreSettingsRouteImport } from './routes/_layout/store-settings'
 import { Route as LayoutStoreLayoutRouteImport } from './routes/_layout/store-layout'
+import { Route as LayoutStoreContentRouteImport } from './routes/_layout/store-content'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutProductsRouteImport } from './routes/_layout/products'
 
@@ -65,6 +66,11 @@ const LayoutStoreLayoutRoute = LayoutStoreLayoutRouteImport.update({
   path: '/store-layout',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutStoreContentRoute = LayoutStoreContentRouteImport.update({
+  id: '/store-content',
+  path: '/store-content',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-content': typeof LayoutStoreContentRoute
   '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
   '/team': typeof LayoutTeamRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/store-content': typeof LayoutStoreContentRoute
   '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
   '/team': typeof LayoutTeamRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_layout/products': typeof LayoutProductsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/store-content': typeof LayoutStoreContentRoute
   '/_layout/store-layout': typeof LayoutStoreLayoutRoute
   '/_layout/store-settings': typeof LayoutStoreSettingsRoute
   '/_layout/team': typeof LayoutTeamRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/products'
     | '/settings'
+    | '/store-content'
     | '/store-layout'
     | '/store-settings'
     | '/team'
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/products'
     | '/settings'
+    | '/store-content'
     | '/store-layout'
     | '/store-settings'
     | '/team'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_layout/products'
     | '/_layout/settings'
+    | '/_layout/store-content'
     | '/_layout/store-layout'
     | '/_layout/store-settings'
     | '/_layout/team'
@@ -227,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutStoreLayoutRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/store-content': {
+      id: '/_layout/store-content'
+      path: '/store-content'
+      fullPath: '/store-content'
+      preLoaderRoute: typeof LayoutStoreContentRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -247,6 +266,7 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutProductsRoute: typeof LayoutProductsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutStoreContentRoute: typeof LayoutStoreContentRoute
   LayoutStoreLayoutRoute: typeof LayoutStoreLayoutRoute
   LayoutStoreSettingsRoute: typeof LayoutStoreSettingsRoute
   LayoutTeamRoute: typeof LayoutTeamRoute
@@ -256,6 +276,7 @@ interface LayoutRouteChildren {
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutProductsRoute: LayoutProductsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutStoreContentRoute: LayoutStoreContentRoute,
   LayoutStoreLayoutRoute: LayoutStoreLayoutRoute,
   LayoutStoreSettingsRoute: LayoutStoreSettingsRoute,
   LayoutTeamRoute: LayoutTeamRoute,

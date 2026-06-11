@@ -16,8 +16,8 @@ tests: [integration]
 A aparência da loja (template ativo, banner, headline, destaque) e conteúdo editorial (páginas, menus, banners). Separado de `store_settings` (Fase 1), que é a fonte de **contato/negócio**.
 
 ## Docs de referência
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
-- [07 — Database Strategy](../../07_database_strategy.md)
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md)
 
 ## Escopo (o que ENTRA)
 - `content_theme_templates` (**global**, sem `store_id`): `id` (`classic`/`modern`), `name`, `description`, `is_active`, `preview_image_url`. **Seed** dos dois.
@@ -55,7 +55,7 @@ A aparência da loja (template ativo, banner, headline, destaque) e conteúdo ed
 ## Notas / Reconciliações
 - **`store_settings` (Fase 1) × `content_store_theme_settings`:** o primeiro é contato/negócio (`public_name`, `description`, `logo_url`, `contact_*`); o theme é **só aparência**. `logo_url`/`description` ficam em `store_settings` — fora do theme.
 - **`content_theme_templates` é global** (PK string `classic`/`modern`, sem `store_id`/soft-delete, seedado). Os demais são por loja + soft delete. `content_store_theme_settings` é **1-por-loja** (`store_id` único direto, como `store_settings`).
-- **`content_menu_items`/`content_banners` recebem `store_id`** (invariante "store_id em toda tabela comercial") — doc [07](../../07_database_strategy.md) atualizado (lista de `store_id`).
+- **`content_menu_items`/`content_banners` recebem `store_id`** (invariante "store_id em toda tabela comercial") — doc [07](../../concepts/07_database_strategy.md) atualizado (lista de `store_id`).
 - **`is_published` (page) / `is_active` (banner/template) têm serventia documentada:** lidos por `P3-SF-01`/`P3-CONTENT-02` (vitrine só serve publicado/ativo; só templates ativos são selecionáveis).
 - FKs sem nome explícito = padrão das migrations existentes do projeto.
 

@@ -16,8 +16,8 @@ tests: [unit, integration]
 Todo modelo de domínio vai compartilhar o mesmo padrão: PK UUID, timestamps, soft delete e (quando comercial) `store_id`. Centralizar isso em mixins evita repetição e garante consistência com os docs.
 
 ## Docs de referência
-- [07 — Database Strategy](../../07_database_strategy.md)
-- [14 — Security Strategy](../../14_security_strategy.md) (soft delete)
+- [07 — Database Strategy](../../concepts/07_database_strategy.md)
+- [14 — Security Strategy](../../concepts/14_security_strategy.md) (soft delete)
 
 ## Escopo (o que ENTRA)
 - `backend/app/db/base.py` com mixins SQLModel:

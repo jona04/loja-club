@@ -20,10 +20,12 @@ export function BazarHeader({
   name,
   categories,
   locale,
+  announcement,
 }: {
   name: string
   categories: Category[]
   locale: string
+  announcement: string
 }) {
   const cart = useCart()
 
@@ -31,7 +33,7 @@ export function BazarHeader({
     <>
       <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-md">
         <div className="bg-indigo-900 py-1.5 text-center text-xs font-medium text-indigo-50">
-          🔥 Frete Grátis em milhares de produtos acima de R$ 199.
+          {announcement}
         </div>
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between gap-4">

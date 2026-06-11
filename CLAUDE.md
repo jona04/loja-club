@@ -1,6 +1,6 @@
 # Loja Club — instruções do projeto
 
-SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/01..24`; **backlog acionável** em `docs/backlog/`; **invariantes e decisões** em `docs/backlog/_foundations-and-bottlenecks.md`.
+SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/concepts/`; **backlog acionável** em `docs/backlog/`; **invariantes e decisões** em `docs/backlog/_foundations-and-bottlenecks.md`.
 
 ## Regra de ouro
 O código imita a lógica dos docs — **não inventar lógica de negócio nova**. Se uma limitação técnica impedir seguir o doc, atualizar o `.md` para refletir o código; **nunca** deixar doc e código divergentes.
@@ -20,7 +20,7 @@ Portas do stack são **não-padrão** (db `5442`, redis `6399`, backend `8800`, 
 - **Validar tudo de uma vez:** `bash scripts/ci-local.sh` roda os testes/lint/pre-commit do CI (backend + frontends + e2e + smoke) com **resumo PASS/FAIL** (`--quick` pula o docker pesado). Rodar **no momento certo** — ao fechar uma task/fase ou pra confirmar que está tudo passando — não a cada mudancinha.
 
 ## Roadmap
-10 fases sequenciais (0–9); **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
+10 fases sequenciais (0–9); **índice, foco atual e status estão em [`docs/backlog/README.md`](docs/backlog/README.md)** — a fonte única (não duplicar aqui). Trilha em `docs/concepts/17_v1_roadmap.md`; cada fase vira tasks (template `docs/backlog/_task-template.md`) ao entrar nela.
 
 ## Disciplina (sempre)
 - **Modos de falha / edge cases viram follow-up na hora** — ao escrever o caminho feliz, registrar o que acontece se falhar / for grande demais / chegar fora de ordem (na task **e** no README da fase). Nunca deixar uma falha sem rastro.
@@ -58,7 +58,7 @@ def charge(order_id: str, amount: Money) -> Payment:
 - **TSDoc** em funções, componentes e hooks exportados (parâmetros + retorno), em inglês.
 
 ### Idioma
-- **Docstrings, comentários e identificadores: inglês.**
+- **Código/config sempre em inglês** — docstrings, comentários, identificadores **e strings de saída** em **qualquer** arquivo de código/config: Python, TS, **shell (`.sh`), `compose`/YAML, Dockerfile**. Nunca português no código (só os `.md` em `docs/` são português).
 - Documentação `.md` em `docs/`: **português** (como hoje).
 
 ## Outras convenções (resumo — detalhes nas Fundações)

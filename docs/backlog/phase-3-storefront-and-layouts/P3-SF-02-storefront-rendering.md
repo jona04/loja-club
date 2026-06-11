@@ -16,10 +16,10 @@ tests: [e2e]
 A vitrine pública: o Next.js lê o `Host`, chama a API pública (`P3-SF-01`) e renderiza com o template ativo da loja. Só **imagem** (o editor 3D é Fase 7).
 
 ## Docs de referência
-- [10 — Storefront & Layouts](../../10_storefront_and_layouts.md)
-- [05 — Frontend Architecture](../../05_frontend_architecture.md)
-- [13 — Performance, Cache & CDN](../../13_performance_cache_and_cdn.md)
-- [21 — Design System](../../21_design_system_todo.md)
+- [10 — Storefront & Layouts](../../concepts/10_storefront_and_layouts.md)
+- [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)
+- [13 — Performance, Cache & CDN](../../concepts/13_performance_cache_and_cdn.md)
+- [21 — Design System](../../concepts/21_design_system_todo.md)
 
 ## Escopo (o que ENTRA)
 - **Resolução por Host** (middleware/SSR) → `store_id` + dados públicos; **"loja não encontrada"** amigável (host inexistente/loja não publicada).

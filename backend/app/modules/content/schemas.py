@@ -26,9 +26,23 @@ class ThemeUpdate(SQLModel):
 
 
 class ThemeTemplatePublic(ContentThemeTemplateBase):
-    """Public representation of a global theme template."""
+    """Public representation of a global theme template (with its editable schema)."""
 
     id: str
+    settings_schema: list[dict[str, object]] | None = None
+
+
+class TemplateSettingsPublic(SQLModel):
+    """A store's saved chrome overrides for a template (keyed by schema ``key``)."""
+
+    template_id: str
+    settings: dict[str, object] = {}
+
+
+class TemplateSettingsUpdate(SQLModel):
+    """Patch the store's chrome overrides for the active template."""
+
+    settings: dict[str, object]
 
 
 class StoreThemeSettingsPublic(ContentStoreThemeSettingsBase):
@@ -43,6 +57,69 @@ class ContentPagePublic(ContentPageBase):
 
     id: uuid.UUID
     store_id: uuid.UUID
+
+
+class ContentPageCreate(ContentPageBase):
+    """Payload to create an editorial page."""
+
+
+class ContentPageUpdate(SQLModel):
+    """Partial update of an editorial page (only set fields apply)."""
+
+    slug: str | None = Field(default=None, max_length=255)
+    title: str | None = Field(default=None, max_length=255)
+    body: str | None = None
+    is_published: bool | None = None
+
+
+class ContentBannerCreate(SQLModel):
+    """Payload to create a storefront banner."""
+
+    image_url: str = Field(max_length=2048)
+    link_url: str | None = Field(default=None, max_length=2048)
+    title: str | None = Field(default=None, max_length=255)
+    is_active: bool = True
+    position: int = 0
+
+
+class ContentBannerUpdate(SQLModel):
+    """Partial update of a storefront banner (only set fields apply)."""
+
+    image_url: str | None = Field(default=None, max_length=2048)
+    link_url: str | None = Field(default=None, max_length=2048)
+    title: str | None = Field(default=None, max_length=255)
+    is_active: bool | None = None
+    position: int | None = None
+
+
+class ContentMenuCreate(SQLModel):
+    """Payload to create a navigation menu."""
+
+    name: str = Field(max_length=255)
+    location: MenuLocation = MenuLocation.header
+
+
+class ContentMenuUpdate(SQLModel):
+    """Partial update of a navigation menu (only set fields apply)."""
+
+    name: str | None = Field(default=None, max_length=255)
+    location: MenuLocation | None = None
+
+
+class ContentMenuItemCreate(SQLModel):
+    """Payload to add an item to a navigation menu."""
+
+    label: str = Field(max_length=255)
+    url: str = Field(max_length=2048)
+    position: int = 0
+
+
+class ContentMenuItemUpdate(SQLModel):
+    """Partial update of a menu item (only set fields apply)."""
+
+    label: str | None = Field(default=None, max_length=255)
+    url: str | None = Field(default=None, max_length=2048)
+    position: int | None = None
 
 
 class ContentMenuItemPublic(SQLModel):

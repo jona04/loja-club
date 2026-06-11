@@ -5,6 +5,7 @@ import logging
 from sqlmodel import Session
 
 from app.core.db import engine, init_db
+from app.modules.content.demo_store import seed_demo_stores
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ def init() -> None:
     """Open a session and seed initial data into the database."""
     with Session(engine) as session:
         init_db(session)
+        seed_demo_stores(session=session)
 
 
 def main() -> None:

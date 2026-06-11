@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 
-import type { Category, StorefrontStore } from "@/lib/api"
+import { type Category, getHome, type StorefrontStore } from "@/lib/api"
 import { CartProvider } from "@/lib/cart"
 import { whatsappLink } from "@/lib/format"
 
@@ -18,7 +18,7 @@ import { StudioHeader } from "./StudioHeader"
  * @param children - The page content.
  * @returns The wrapped Studio page.
  */
-export function StudioShell({
+export async function StudioShell({
   store,
   categories: _categories,
   locale,
@@ -30,10 +30,19 @@ export function StudioShell({
   children: ReactNode
 }) {
   const name = store.public_name || store.name
+  const { theme } = await getHome()
+  const settings = theme.settings ?? {}
+  const announcement = (settings.announcement_text as string) || ""
+  const footerContact = (settings.footer_contact as string) || ""
 
   return (
     <CartProvider>
       <div className="flex min-h-screen flex-col bg-white text-gray-900 antialiased">
+        {announcement ? (
+          <div className="bg-black py-2 text-center text-xs font-medium tracking-wide text-white">
+            {announcement}
+          </div>
+        ) : null}
         <StudioHeader name={name} locale={locale} />
 
         <main className="flex flex-1 flex-col">{children}</main>
@@ -43,6 +52,9 @@ export function StudioShell({
             <p>
               © {new Date().getFullYear()} {name}. Plataforma Loja Club.
             </p>
+            {footerContact ? (
+              <p className="whitespace-pre-line text-center">{footerContact}</p>
+            ) : null}
             <div className="flex gap-5">
               <Link href="/pages/sobre" className="hover:text-black">
                 Sobre

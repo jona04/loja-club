@@ -1,66 +1,23 @@
 # Loja Club — Documentação do Projeto
 
-Este diretório contém a documentação inicial da **Loja Club V1**, baseada nas decisões arquiteturais, de produto e de negócio definidas até agora.
+Documentação da **Loja Club V1** — SaaS multi-tenant de ecommerce. Organizada em três partes:
 
-A documentação está em português por enquanto. A estrutura de pastas e nomes de arquivos está em inglês para facilitar uso posterior no Codex, GitHub e ferramentas de desenvolvimento.
+- **[`concepts/`](./concepts/README.md)** — os **docs conceituais** (produto, arquitetura, negócio, banco, etc., 01–27). **Fonte de verdade** das decisões; o código imita a lógica daqui.
+- **[`backlog/`](./backlog/README.md)** — o **backlog acionável** (todo list por fase, em nível de task). Foco atual: Fases 0–6 (o MVP utilizável para teste).
+- **[`design/`](./design/)** — os **designs** dos templates (HTML do uxpilot — referência de port).
 
-## Sumário
-
-1. [Product Vision](./01_product_vision.md)
-2. [Business Model and Rules](./02_business_model_and_rules.md)
-3. [System Architecture](./03_system_architecture.md)
-4. [FastAPI Template Adaptation](./04_fastapi_template_adaptation.md)
-5. [Frontend Architecture](./05_frontend_architecture.md)
-6. [Multitenancy and Domains](./06_multitenancy_and_domains.md)
-7. [Database Strategy](./07_database_strategy.md)
-8. [Modules and Permissions](./08_modules_and_permissions.md)
-9. [Merchant Dashboard](./09_merchant_dashboard.md)
-10. [Storefront and Layouts](./10_storefront_and_layouts.md)
-11. [Checkout, Payments and Split](./11_checkout_payments_and_split.md)
-12. [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md)
-13. [Performance, Cache and CDN](./13_performance_cache_and_cdn.md)
-14. [Security Strategy](./14_security_strategy.md)
-15. [Observability and Operations](./15_observability_and_operations.md)
-16. [Testing Strategy](./16_testing_strategy.md)
-17. [V1 Roadmap](./17_v1_roadmap.md)
-18. [Open Decisions](./18_open_decisions.md)
-19. [Legal and Compliance TODO](./19_legal_and_compliance_todo.md)
-20. [API Contracts TODO](./20_api_contracts_todo.md)
-21. [Design System TODO](./21_design_system_todo.md)
-22. [Product Customization 3D](./22_product_customization_3d.md)
-23. [Customer Identity and Guest Checkout](./23_customer_identity_and_guest_checkout.md)
-24. [V2 Ideas](./24_v2_ideas.md)
-25. [Platform Admin](./25_platform_admin.md)
-26. [Template System](./26_template_system.md)
-27. [Template Authoring Guide](./27_template_authoring_guide.md)
-
-## Backlog de implementação
-
-O backlog acionável (todo list por fase, em nível de tarefa) fica em [backlog/](./backlog/README.md). Foco atual: Fases 0–6 (o MVP utilizável para teste).
+Português por enquanto; nomes de pasta/arquivo em inglês.
 
 ## Decisões canônicas até agora
 
-- A Loja Club será uma plataforma **SaaS multi-tenant de ecommerce**.
-- A V1 terá foco comercial inicial em **brindes, gráficas e comunicação visual**.
-- A V1 será construída usando o **Full Stack FastAPI Template** como base.
-- O backend será um **monólito modular em FastAPI**.
-- O banco principal será **PostgreSQL**.
-- A estratégia de multi-tenancy será **banco compartilhado com `store_id` nas tabelas comerciais**.
-- A plataforma terá **frontend público das lojas**, **painel do lojista** e **admin da plataforma**.
-- A V1 terá `frontend-storefront`, `frontend-dashboard` e `frontend-admin` como projetos separados.
-- O painel do lojista e o admin da plataforma não devem morar no mesmo frontend.
-- O storefront público deve ser separado do painel do lojista.
-- O sistema de subdomínios será feito com **wildcard DNS** e resolução da loja pelo `Host` da requisição.
-- O gateway de pagamento fará o split. A Loja Club **não vai reter dinheiro dos lojistas**.
-- A primeira versão terá **2 templates/layouts prontos** para as lojas públicas.
-- A **personalização 3D** é da **Fase 7**: o lojista gera os modelos via **API de terceiros** (não há catálogo 3D da plataforma).
-- O lojista poderá alterar o template ativo no painel, salvar e refletir imediatamente na loja pública.
-- Produtos comuns continuarão funcionando com fotos, variações e carrinho tradicional.
-- O cliente final poderá comprar e personalizar sem login obrigatório.
-- Carrinhos e personalizações anônimas terão sessão com validade.
-- O projeto usa soft delete/status arquivado em vez de delete físico para registros de negócio.
-- O painel do lojista será dividido por módulos, permitindo bloqueio por permissão e por plano.
-- Um usuário poderá gerenciar várias lojas, e uma loja poderá ter vários usuários.
-- A V1 deve ser completa e funcional, mas sem microserviços e sem Kubernetes no primeiro momento.
-- Toda a V1 é ambiente de **dev**: Fases 0–7 rodam **local** (com S3/CloudFront reais) e Fases 8–9 sobem na AWS com **EC2** + Docker Compose + Traefik.
-- A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**.
+- A Loja Club será uma plataforma **SaaS multi-tenant de ecommerce**, com foco comercial inicial em **brindes, gráficas e comunicação visual**.
+- Construída sobre o **Full Stack FastAPI Template**; backend = **monólito modular em FastAPI**; banco = **PostgreSQL** (compartilhado, com `store_id` nas tabelas comerciais).
+- Três frontends separados: **`frontend-storefront`** (loja pública), **`frontend-dashboard`** (painel do lojista) e **`frontend-admin`** (admin da plataforma).
+- Subdomínios via **wildcard DNS** + resolução da loja pelo `Host`.
+- O gateway de pagamento faz o **split**; a Loja Club **não retém dinheiro** dos lojistas.
+- **Templates prontos** (Aurora/Bazar/Studio) para as lojas públicas — o lojista **escolhe e personaliza**, sem montar layout livre; trocar de template não quebra o fluxo de compra.
+- **Personalização 3D** = **Fase 7**: o lojista gera os modelos via **API de terceiros** (não há catálogo 3D da plataforma).
+- O cliente final compra e personaliza **sem login obrigatório**; carrinhos/sessões anônimas têm validade.
+- **Soft delete / status arquivado** em vez de delete físico para registros de negócio.
+- Um usuário pode gerenciar várias lojas; uma loja pode ter vários usuários (papéis/permissões por loja).
+- Toda a V1 é ambiente de **dev**: Fases 0–7 rodam **local** (com S3/CloudFront reais); Fases 8–9 sobem na AWS com **EC2** + Docker Compose + Traefik. **Produção robusta** (ECS/Fargate) fica para **depois da V1**.

@@ -52,8 +52,8 @@ cria no uxpilot ──► porta p/ React + manifestos   registra template     es
                     ─────── Fase 5: import_assets (imgs→CDN) · monta a loja-demo · preview navegável ───────
 ```
 
-- **Cadastro (admin, [Fase 4](./backlog/phase-4-platform-admin.md)):** metadados (id/nome/status) + **thumbnail no CDN** + **registro do schema** (vindo do código). *(Atualizar template existente pelo admin = baixa prioridade.)*
-- **Demo + preview + personalização ([Fase 5](./backlog/phase-5-store-configuration.md)):** `import_assets` (imagens→CDN) + monta a **loja-demo por template** (do `demo.json`/design) + **preview navegável** + o lojista **personaliza** (form do schema) e abre o preview.
+- **Cadastro (admin, [Fase 4](../backlog/phase-4-platform-admin.md)):** metadados (id/nome/status) + **thumbnail no CDN** + **registro do schema** (vindo do código). *(Atualizar template existente pelo admin = baixa prioridade.)*
+- **Demo + preview + personalização ([Fase 5](../backlog/phase-5-store-configuration.md)):** `import_assets` (imagens→CDN) + monta a **loja-demo por template** (do `demo.json`/design) + **preview navegável** + o lojista **personaliza** (form do schema) e abre o preview.
 - **Render (storefront):** resolve `active_template_id` → componentes React, lendo dados reais + `theme.settings[key] ?? default`.
 
 ## Personalização schema-driven (o "settings schema")
