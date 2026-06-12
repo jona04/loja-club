@@ -1,4 +1,5 @@
 import {
+  Contact,
   FileText,
   LayoutDashboard,
   type LucideIcon,
@@ -31,6 +32,12 @@ export const MENU_MODULES: MenuModule[] = [
     path: "/orders",
     icon: ShoppingCart,
     permission: "orders.view",
+  },
+  {
+    title: "Clientes",
+    path: "/customers",
+    icon: Contact,
+    permission: "customers.view",
   },
   {
     title: "Layout",

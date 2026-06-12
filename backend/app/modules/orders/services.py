@@ -16,7 +16,7 @@ from app.modules.cart.enums import CartStatus
 from app.modules.cart.models import CartCart, CartItem
 from app.modules.catalog.models import InventoryItem, Product
 from app.modules.customers.models import CustomerProfile
-from app.modules.customers.schemas import AddressInput
+from app.modules.customers.schemas import AddressInput, CustomerOrderRow
 from app.modules.orders.enums import OrderStatus
 from app.modules.orders.models import (
     Order,
@@ -518,6 +518,41 @@ def set_status(*, session: Session, order: Order, new_status: OrderStatus) -> Or
     session.commit()
     session.refresh(order)
     return order
+
+
+def list_orders_by_customer(
+    *, session: Session, store_id: uuid.UUID, customer_id: uuid.UUID
+) -> list[CustomerOrderRow]:
+    """Return a customer's orders, newest first (for the customers panel).
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        customer_id: The customer whose orders are listed.
+
+    Returns:
+        The customer's order history as lean rows.
+    """
+    orders = session.exec(
+        select(Order)
+        .where(
+            Order.store_id == store_id,
+            Order.customer_id == customer_id,
+            col(Order.deleted_at).is_(None),
+        )
+        .order_by(col(Order.created_at).desc())
+    ).all()
+    return [
+        CustomerOrderRow(
+            id=o.id,
+            order_number=o.order_number,
+            status=o.status,
+            currency=o.currency,
+            total_amount_minor=o.total_amount_minor,
+            created_at=o.created_at,
+        )
+        for o in orders
+    ]
 
 
 def add_note(

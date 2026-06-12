@@ -35,7 +35,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 6 | [P6-CHK-01](./P6-CHK-01-checkout-flow.md) | Checkout: sessão + fluxo (sem gateway) | ✅ done | P6-CUST-01, P6-CART-01, P6-SHIP-01, P6-ORD-01 |
 | 7 | [P6-SF-01](./P6-SF-01-storefront-cart-checkout.md) | Vitrine: carrinho real + checkout/confirmação (3 templates) | ✅ done | P6-CART-01, P6-CHK-01 |
 | 8 | [P6-ORD-02](./P6-ORD-02-orders-panel.md) | Painel de pedidos | ✅ done | P6-ORD-01 |
-| 9 | [P6-CUST-02](./P6-CUST-02-customers-panel.md) | Painel de clientes | todo | P6-CUST-01 |
+| 9 | [P6-CUST-02](./P6-CUST-02-customers-panel.md) | Painel de clientes | ✅ done | P6-CUST-01 |
 | 10 | [P6-NOTIF-01](./P6-NOTIF-01-order-emails.md) | E-mails de pedido (worker) + health + E2E do marco | todo | P6-ORD-01, P6-CHK-01 |
 | 11 | [P6-DISC-01](./P6-DISC-01-coupons.md) | Cupons (**fast-follow**) | todo | P6-CART-01 |
 | 12 | [P6-SHIP-02](./P6-SHIP-02-shipping-zones.md) | Frete completo: zonas/tarifas/regras (**fast-follow**) | todo | P6-SHIP-01 |
@@ -77,6 +77,9 @@ Fast-follow: P6-DISC-01 (cupons) · P6-SHIP-02 (zonas/tarifas) · P6-SF-02 (vari
 - [ ] **Recap completo na confirmação** — designs trazem breakdown (subtotal/frete) + recap de cliente/endereço (varia por template); hoje a confirmação mostra itens + total + handoff. Completar por template. Origem: `P6-SF-01`.
 - [ ] **e2e Playwright do painel de pedidos** — fluxo "vê pedido → marca pago" coberto por integração + vitest, não por Playwright (falta seedar pedido no e2e). Origem: `P6-ORD-02`.
 - [ ] **Exportar pedidos (`orders.export`)** — permissão existe no catálogo, sem rota/botão. Origem: `P6-ORD-02`.
+- [ ] **e2e Playwright do painel de clientes** — fluxo "acha cliente → vê histórico" coberto por integração + vitest, não por Playwright. Origem: `P6-CUST-02`.
+- [ ] **Busca de cliente por telefone formatado** — telefone em E.164; busca crua não casa "(86)"/espaços; normalizar termo (só dígitos). Origem: `P6-CUST-02`.
+- [ ] **`customers.export`/`customers.delete` (LGPD)** — permissões existem, sem rota/UI; cruza com `customer_consents`. Origem: `P6-CUST-02`.
 - [x] **Steppers de quantidade + remover no checkout** ✅ `P6-SF-01` — resumo do pedido editável (via `cart.setQty/remove`) nos 3 templates, fiel aos designs.
 - [ ] **`shipping.private_delivery.update` órfã** — o CRUD de frete usa `shipping.create/update/delete`; a permissão `shipping.private_delivery.update` não é lida por rota. Virar ação própria (`P6-SHIP-02`) ou remover do catálogo. Origem: `P6-SHIP-01`.
 - [ ] **Token seguro p/ continuar a compra (cross-device)** — adiado; recuperação no mesmo navegador já funciona pelo cookie; cross-device cruza com o fluxo de código da Fase 8. Origem: `P6-CART-01`.

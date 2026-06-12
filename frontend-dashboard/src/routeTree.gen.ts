@@ -22,6 +22,7 @@ import { Route as LayoutStoreContentRouteImport } from './routes/_layout/store-c
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutProductsRouteImport } from './routes/_layout/products'
 import { Route as LayoutOrdersRouteImport } from './routes/_layout/orders'
+import { Route as LayoutCustomersRouteImport } from './routes/_layout/customers'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -87,6 +88,11 @@ const LayoutOrdersRoute = LayoutOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutCustomersRoute = LayoutCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/customers': typeof LayoutCustomersRoute
   '/orders': typeof LayoutOrdersRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/customers': typeof LayoutCustomersRoute
   '/orders': typeof LayoutOrdersRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/_layout/customers': typeof LayoutCustomersRoute
   '/_layout/orders': typeof LayoutOrdersRoute
   '/_layout/products': typeof LayoutProductsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/customers'
     | '/orders'
     | '/products'
     | '/settings'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/customers'
     | '/orders'
     | '/products'
     | '/settings'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/_layout/customers'
     | '/_layout/orders'
     | '/_layout/products'
     | '/_layout/settings'
@@ -279,10 +291,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutOrdersRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/customers': {
+      id: '/_layout/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof LayoutCustomersRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
+  LayoutCustomersRoute: typeof LayoutCustomersRoute
   LayoutOrdersRoute: typeof LayoutOrdersRoute
   LayoutProductsRoute: typeof LayoutProductsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
@@ -294,6 +314,7 @@ interface LayoutRouteChildren {
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutCustomersRoute: LayoutCustomersRoute,
   LayoutOrdersRoute: LayoutOrdersRoute,
   LayoutProductsRoute: LayoutProductsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,

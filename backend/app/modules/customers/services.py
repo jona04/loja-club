@@ -9,7 +9,8 @@ import secrets
 import uuid
 from datetime import timedelta
 
-from sqlmodel import Session
+from sqlalchemy import or_
+from sqlmodel import Session, col, func, select
 
 from app.core.api import AppError
 from app.db.base import get_datetime_utc
@@ -20,7 +21,7 @@ from app.modules.customers.models import (
     CustomerProfile,
 )
 from app.modules.customers.normalization import normalize_email, normalize_phone
-from app.modules.customers.schemas import AddressInput
+from app.modules.customers.schemas import AddressInput, CustomerSummary
 
 GUEST_SESSION_TTL = timedelta(days=30)
 
@@ -165,6 +166,84 @@ def create_or_update_customer(
     if address is not None:
         _add_address_if_new(session, store_id, customer.id, address)
     return customer
+
+
+def get_customer(
+    *, session: Session, store_id: uuid.UUID, customer_id: uuid.UUID
+) -> CustomerProfile:
+    """Return a store's customer by id, or raise 404.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        customer_id: The customer to fetch.
+
+    Returns:
+        The store-scoped :class:`CustomerProfile`.
+
+    Raises:
+        AppError: 404 if the customer is missing or belongs to another store.
+    """
+    customer = session.exec(
+        select(CustomerProfile).where(
+            CustomerProfile.id == customer_id,
+            CustomerProfile.store_id == store_id,
+            col(CustomerProfile.deleted_at).is_(None),
+        )
+    ).first()
+    if customer is None:
+        raise AppError("customer_not_found", "Customer not found", status_code=404)
+    return customer
+
+
+def list_customers(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    search: str | None,
+    skip: int,
+    limit: int,
+) -> tuple[list[CustomerSummary], int]:
+    """Return a paginated list of the store's customers (newest first).
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        search: Optional case-insensitive filter on name/email/phone.
+        skip: Offset.
+        limit: Page size.
+
+    Returns:
+        A ``(summaries, total)`` tuple.
+    """
+    count_stmt = (
+        select(func.count())
+        .select_from(CustomerProfile)
+        .where(
+            CustomerProfile.store_id == store_id,
+            col(CustomerProfile.deleted_at).is_(None),
+        )
+    )
+    list_stmt = select(CustomerProfile).where(
+        CustomerProfile.store_id == store_id,
+        col(CustomerProfile.deleted_at).is_(None),
+    )
+    if search:
+        like = f"%{search.strip()}%"
+        predicate = or_(
+            col(CustomerProfile.name).ilike(like),
+            col(CustomerProfile.email).ilike(like),
+            col(CustomerProfile.phone_e164).ilike(like),
+        )
+        count_stmt = count_stmt.where(predicate)
+        list_stmt = list_stmt.where(predicate)
+    total = session.exec(count_stmt).one()
+    rows = session.exec(
+        list_stmt.order_by(col(CustomerProfile.created_at).desc())
+        .offset(skip)
+        .limit(limit)
+    ).all()
+    return [CustomerSummary.model_validate(c) for c in rows], total
 
 
 def ensure_guest_session(

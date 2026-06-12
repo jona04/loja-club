@@ -306,6 +306,58 @@ export type ContentPageUpdate = {
     is_published?: (boolean | null);
 };
 
+/**
+ * A saved customer address.
+ */
+export type CustomerAddressPublic = {
+    id: string;
+    recipient_name: (string | null);
+    line1: string;
+    number: (string | null);
+    line2: (string | null);
+    neighborhood: (string | null);
+    city: string;
+    state: (string | null);
+    postal_code: (string | null);
+    country: string;
+};
+
+/**
+ * A customer's profile, saved addresses and order history (panel detail).
+ */
+export type CustomerDetail = {
+    id: string;
+    name: string;
+    email: (string | null);
+    phone_e164: (string | null);
+    created_at: string;
+    addresses: Array<CustomerAddressPublic>;
+    orders: Array<CustomerOrderRow>;
+};
+
+/**
+ * An order in a customer's purchase history.
+ */
+export type CustomerOrderRow = {
+    id: string;
+    order_number: number;
+    status: OrderStatus;
+    currency: string;
+    total_amount_minor: number;
+    created_at: string;
+};
+
+/**
+ * A row in the panel customers list.
+ */
+export type CustomerSummary = {
+    id: string;
+    name: string;
+    email: (string | null);
+    phone_e164: (string | null);
+    created_at: string;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -553,6 +605,11 @@ export type Page_BillingPlanPublic_ = {
 
 export type Page_CategoryPublic_ = {
     data: Array<CategoryPublic>;
+    count: number;
+};
+
+export type Page_CustomerSummary_ = {
+    data: Array<CustomerSummary>;
     count: number;
 };
 
@@ -1555,6 +1612,22 @@ export type ContentDeleteMenuItemData = {
 };
 
 export type ContentDeleteMenuItemResponse = (void);
+
+export type CustomersListCustomersData = {
+    limit?: number;
+    search?: (string | null);
+    skip?: number;
+    storeId: string;
+};
+
+export type CustomersListCustomersResponse = (Page_CustomerSummary_);
+
+export type CustomersGetCustomerData = {
+    customerId: string;
+    storeId: string;
+};
+
+export type CustomersGetCustomerResponse = (CustomerDetail);
 
 export type HealthHealthResponse = ({
     [key: string]: (string);

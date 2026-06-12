@@ -1178,6 +1178,236 @@ export const ContentPageUpdateSchema = {
     description: 'Partial update of an editorial page (only set fields apply).'
 } as const;
 
+export const CustomerAddressPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        recipient_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipient Name'
+        },
+        line1: {
+            type: 'string',
+            title: 'Line1'
+        },
+        number: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Number'
+        },
+        line2: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Line2'
+        },
+        neighborhood: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Neighborhood'
+        },
+        city: {
+            type: 'string',
+            title: 'City'
+        },
+        state: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'State'
+        },
+        postal_code: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Postal Code'
+        },
+        country: {
+            type: 'string',
+            title: 'Country'
+        }
+    },
+    type: 'object',
+    required: ['id', 'recipient_name', 'line1', 'number', 'line2', 'neighborhood', 'city', 'state', 'postal_code', 'country'],
+    title: 'CustomerAddressPublic',
+    description: 'A saved customer address.'
+} as const;
+
+export const CustomerDetailSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone_e164: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone E164'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        addresses: {
+            items: {
+                '$ref': '#/components/schemas/CustomerAddressPublic'
+            },
+            type: 'array',
+            title: 'Addresses'
+        },
+        orders: {
+            items: {
+                '$ref': '#/components/schemas/CustomerOrderRow'
+            },
+            type: 'array',
+            title: 'Orders'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'email', 'phone_e164', 'created_at', 'addresses', 'orders'],
+    title: 'CustomerDetail',
+    description: "A customer's profile, saved addresses and order history (panel detail)."
+} as const;
+
+export const CustomerOrderRowSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        order_number: {
+            type: 'integer',
+            title: 'Order Number'
+        },
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        currency: {
+            type: 'string',
+            title: 'Currency'
+        },
+        total_amount_minor: {
+            type: 'integer',
+            title: 'Total Amount Minor'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'order_number', 'status', 'currency', 'total_amount_minor', 'created_at'],
+    title: 'CustomerOrderRow',
+    description: "An order in a customer's purchase history."
+} as const;
+
+export const CustomerSummarySchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone_e164: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone E164'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'email', 'phone_e164', 'created_at'],
+    title: 'CustomerSummary',
+    description: 'A row in the panel customers list.'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -2015,6 +2245,25 @@ export const Page_CategoryPublic_Schema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'Page[CategoryPublic]'
+} as const;
+
+export const Page_CustomerSummary_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/CustomerSummary'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[CustomerSummary]'
 } as const;
 
 export const Page_OrderSummary_Schema = {
