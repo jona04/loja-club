@@ -128,5 +128,22 @@ Doc [02](../concepts/02_business_model_and_rules.md), [07](../concepts/07_databa
 
 ---
 
+## Etapa 5 — Frete por região (completa o `shipping` da Fase 6)
+> **Veio da Fase 6** (era o fast-follow `P6-SHIP-02`): além dos métodos MVP da Fase 6 (retirada/combinada/fixo), o frete por **região** (cidade/estado). Entra aqui, quando a loja vende "de verdade" (pagamento + entrega real).
+
+Doc [11 — Entrega combinada](../concepts/11_checkout_payments_and_split.md), [09 — Frete](../concepts/09_merchant_dashboard.md), [07](../concepts/07_database_strategy.md).
+
+### Modelos (com `store_id`)
+- [ ] `shipping_zones` (regiões de entrega), `shipping_rates` (tarifa por zona/método — índice `store_id+shipping_method_id`), `shipping_method_rules` (cidade/região/estado + tipo de entrega). Doc [07](../concepts/07_database_strategy.md).
+
+### Regras
+- [ ] CRUD no painel (gated `shipping.*`) + **cálculo do frete por região no checkout** (substitui o frete fixo plano quando houver zona/tarifa).
+- [ ] **Limitar `private_delivery` por cidade/região/estado** (resolve a permissão `shipping.private_delivery.update`, hoje órfã desde `P6-SHIP-01`).
+
+### Testes (doc [16](../concepts/16_testing_strategy.md))
+- [ ] tarifa por região aplicada no checkout; `private_delivery` limitada por região; isolamento por loja; região sem tarifa / endereço fora de cobertura tratados.
+
+---
+
 ## Reconciliações (registrar aqui)
 - (preencher conforme surgirem)

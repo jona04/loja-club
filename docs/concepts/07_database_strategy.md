@@ -197,7 +197,7 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 | `cart_items` | Itens do carrinho |
 | `checkout_sessions` | Sessões de checkout |
 
-`cart_items` guarda o **`variant_id`** quando o produto comprado tiver variação (a vitrine seleciona a variação na página de produto).
+`cart_items` guarda o **`variant_id`** quando o produto comprado tiver variação (a vitrine seleciona a variação na página de produto). `cart_carts` guarda o **`coupon_code`** aplicado (validado contra `discount_coupons` no carrinho/checkout; o desconto é recalculado a cada render).
 
 ### Pedidos
 

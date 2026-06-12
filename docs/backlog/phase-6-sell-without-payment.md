@@ -20,15 +20,15 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 > Prioridade: **receber um pedido o quanto antes** (lançar ASAP; pagamento por último — [doc 17](../concepts/17_v1_roadmap.md)).
 >
 > 1. **Núcleo vendável:** `customers` (dedup) → `cart` (servidor) → `checkout` → `orders` → e-mail/WhatsApp. Frete começa só com **retirada / combinada / frete fixo** (sem zonas/tarifas).
-> 2. **Fast-follow** (depois que o núcleo vende): **cupons** (Etapa 2), **zonas/tarifas de frete** (Etapa 1 completa) e **seleção de variação** na vitrine.
+> 2. **Fast-follow** (depois que o núcleo vende): **cupons** (Etapa 2, ✅ `P6-DISC-01`). **Zonas/tarifas de frete** e **seleção de variação na vitrine** **saíram da Fase 6** → **Fase 8 (Etapa 5)** e **Fase 7 (Etapa 8)** respectivamente (não eram do MVP de vender).
 >
 > Gateway/split/webhook = **Fase 8**. Aqui o checkout para no **pedido pendente** + confirmação (ver [doc 11 — Venda sem gateway](../concepts/11_checkout_payments_and_split.md)).
 
 ## Pré-requisitos adiantados (de follow-ups abertos)
 
-- [ ] **Vitrine expõe variações + disponibilidade** (doc 10 §Página de produto; follow-up `P3-SF-01`/`P3-SF-02`): `StorefrontProduct` passa a trazer variações + estoque; o produto deixa escolher a variação e o `cart_item` guarda `variant_id`. *(Necessário só quando a seleção de variação entrar — fast-follow.)*
-- [ ] **Índice único de estoque** `(store_id, product_id, variant_id)` (follow-up `P2-CAT-02`): pré-requisito da baixa de estoque confiável (evita linha duplicada/corrida de upsert). Doc [07](../concepts/07_database_strategy.md).
-- [ ] **Políticas da loja (troca/devolução/privacidade)** (follow-up `P1` — carimbado "Fase 6/checkout", `checkout.policies.*`): configuração no painel + exibição/link no checkout. Doc [09](../concepts/09_merchant_dashboard.md)/[11](../concepts/11_checkout_payments_and_split.md).
+- [ ] **Vitrine expõe variações + disponibilidade** (doc 10 §Página de produto; follow-up `P3-SF-01`/`P3-SF-02`): `StorefrontProduct` passa a trazer variações + estoque; o produto deixa escolher a variação e o `cart_item` guarda `variant_id`. **Movido pra [Fase 7, Etapa 8](./phase-7-3d-products.md)** (saiu da Fase 6; o carrinho já aceita `variant_id` desde `P6-CART-01`).
+- [x] **Índice único de estoque** `(store_id, product_id, variant_id)` (follow-up `P2-CAT-02`) → **✅ `P6-ORD-01`** (único + `nulls_not_distinct` na linha product-level; baixa de estoque confiável). Doc [07](../concepts/07_database_strategy.md).
+- [x] **Políticas da loja (troca/devolução/privacidade)** (follow-up `P1`, `checkout.policies.*`) → **✅ `P6-CHK-01`** (campos em `store_settings` + rota painel gated `checkout.policies.update` + exibição/link na vitrine). Doc [09](../concepts/09_merchant_dashboard.md)/[11](../concepts/11_checkout_payments_and_split.md).
 
 ---
 
@@ -43,11 +43,11 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 ## Etapa 1 — Módulo `shipping` (frete) — antes do carrinho
 
-> **MVP fino:** começar só com **retirada local**, **entrega combinada** (`private_delivery`) e **frete fixo** — o suficiente pro checkout funcionar. **Zonas/tarifas/regras** por cidade/região (`shipping_zones`/`shipping_rates`/`shipping_method_rules`) = **fast-follow**.
+> **MVP fino (Fase 6):** só **retirada local**, **entrega combinada** (`private_delivery`) e **frete fixo** — o suficiente pro checkout funcionar. **Zonas/tarifas/regras** por cidade/região (`shipping_zones`/`shipping_rates`/`shipping_method_rules`) **saíram pra [Fase 8, Etapa 5](./phase-8-customer-account-and-payments.md)**.
 
 ### Modelos (com `store_id`)
 - [ ] `shipping_methods`: `type` (`fixed_shipping|free_shipping|local_pickup|private_delivery`), `is_active`, nome, descrição exibida no checkout. Doc [07](../concepts/07_database_strategy.md)/[11](../concepts/11_checkout_payments_and_split.md).
-- [ ] `shipping_zones`, `shipping_rates`, `shipping_method_rules` (cidade/região/estado). Doc [07](../concepts/07_database_strategy.md).
+- [ ] ~~`shipping_zones`, `shipping_rates`, `shipping_method_rules`~~ → **Fase 8, Etapa 5** (saiu da Fase 6).
 
 ### Rotas/serviço (doc [20](../concepts/20_api_contracts_todo.md))
 - [ ] CRUD de métodos; configurar frete fixo, grátis (valor mínimo), retirada local, entrega combinada; definir regiões; mensagem exibida no checkout.

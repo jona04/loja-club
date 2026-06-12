@@ -19,8 +19,8 @@ O **admin do SaaS** ([Fase 4](./phase-4-platform-admin.md)) e a **configuração
 | 4 | [phase-4-platform-admin.md](./phase-4-platform-admin.md) · [tasks](./phase-4-platform-admin/README.md) | 1–3 | **Admin do SaaS** (`frontend-admin` + `platform_admin`): operar lojas/planos + **registrar templates** (thumbnail no CDN + schema) — **antes do lançamento**; **decomposta; concluída** |
 | 5 | [phase-5-store-configuration.md](./phase-5-store-configuration.md) · [tasks](./phase-5-store-configuration/README.md) | 1–6 | **Configuração da loja**: **loja-demo** por template (import → CDN) + lojista personaliza o template (**schema-driven**) + **preview navegável** + conteúdo das páginas — **decomposta; concluída** |
 | 6 | [phase-6-sell-without-payment.md](./phase-6-sell-without-payment.md) · [tasks](./phase-6-sell-without-payment/README.md) | 0–7 + marco | **Vender sem pagamento** (guest): tipo de produto, frete, carrinho, checkout, pedidos, clientes, notificações + **handoff WhatsApp** — **tudo local**; **decomposta em tasks** |
-| 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 1–7 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront |
-| 8 | [phase-8-customer-account-and-payments.md](./phase-8-customer-account-and-payments.md) | 1–4 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing |
+| 7 | [phase-7-3d-products.md](./phase-7-3d-products.md) | 1–8 | **Produtos 3D**: lojista gera via API + personalização + editor 3D no storefront + **seleção de variação na vitrine** (veio da Fase 6) |
+| 8 | [phase-8-customer-account-and-payments.md](./phase-8-customer-account-and-payments.md) | 1–5 | **Deploy dev na AWS (EC2)**, conta/login do cliente, pagamentos e split, billing + **frete por região** (veio da Fase 6) |
 | 9 | [phase-9-platform-ops-and-production.md](./phase-9-platform-ops-and-production.md) | 1–3 | Segurança/observabilidade, **CI/CD**, beta (o admin é a Fase 4) |
 
 > **Fim do MVP (dev local):** Fase 6. **V1 completa (dev online na AWS):** Fase 9.

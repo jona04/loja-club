@@ -46,8 +46,15 @@ Docs de referência: [22](../concepts/22_product_customization_3d.md), [07](../c
 - [ ] Ver sessões/arte da loja (polling), baixar arquivos (URL assinada), atualizar status de arte/produção. Doc [09](../concepts/09_merchant_dashboard.md).
 - [ ] **Montar a personalização pelo cliente** (assistida): a partir do contato do cliente, abrir o editor em nome dele, salvar a sessão e gerar o **link de acesso** para o cliente ver/aprovar. Doc [22](../concepts/22_product_customization_3d.md).
 
+## Etapa 8 — Vitrine: seleção de variação (geral, não-3D)
+> **Veio da Fase 6** (era o fast-follow `P6-SF-02`): a página de produto da vitrine ganha o seletor de variação. Fica aqui porque é a fase que reabre a página de produto do storefront (junto do editor 3D). Não depende de 3D — só do catálogo (Fase 2) + carrinho (`P6-CART-01`, que já aceita `variant_id`).
+- [ ] `StorefrontProduct` passa a expor **variações + disponibilidade** (hoje só imagem/nome/preço/descrição) — `backend/app/modules/storefront/{schemas,services}.py`. Doc [10 — Página de produto](../concepts/10_storefront_and_layouts.md)/[07](../concepts/07_database_strategy.md).
+- [ ] Página de produto (3 templates): **escolher a variação** + ver disponibilidade; o add-to-cart envia o `variant_id` (o backend já guarda em `cart_items` desde `P6-CART-01`). Fecha o follow-up "Vitrine expõe variações + disponibilidade" (Fase 3, `P3-SF-01`/`P3-SF-02`) — marcar na origem ao concluir.
+- [ ] **Modos de falha:** variação sem estoque (desabilita/avisa); produto sem variação (compra direta).
+
 ## Testes (doc [16](../concepts/16_testing_strategy.md))
 - [ ] **Isolamento** (sessão de personalização só da loja); **arte privada** (URL assinada); **congelamento** da personalização no pedido (não depende da sessão viva); item `image_3d_customizable` só entra no carrinho com sessão `approved`.
+- [ ] **Variação na vitrine (Etapa 8):** integração — variações/estoque no payload público; e2e (`P3-SF-03`) — escolher variação → carrinho com o `variant_id` certo.
 
 ---
 

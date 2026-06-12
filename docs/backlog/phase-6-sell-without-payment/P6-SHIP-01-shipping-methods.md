@@ -13,7 +13,7 @@ tests: [integration]
 # P6-SHIP-01 — Frete: métodos MVP
 
 ## Contexto
-O checkout precisa de opções de entrega. **MVP fino:** retirada local, entrega combinada (`private_delivery`) e frete fixo — o suficiente pra vender. Zonas/tarifas por região = `P6-SHIP-02`.
+O checkout precisa de opções de entrega. **MVP fino:** retirada local, entrega combinada (`private_delivery`) e frete fixo — o suficiente pra vender. Zonas/tarifas por região = **Fase 8, Etapa 5** (saiu da Fase 6).
 
 ## Docs de referência
 - [11 — Entrega combinada](../../concepts/11_checkout_payments_and_split.md)
@@ -27,7 +27,7 @@ O checkout precisa de opções de entrega. **MVP fino:** retirada local, entrega
 - `private_delivery`: sem cálculo automático; deixa claro no checkout/pedido que a entrega é **combinada após a compra**.
 
 ## Fora de escopo (o que NÃO entra)
-- **Zonas/tarifas/regras** (`shipping_zones`/`shipping_rates`/`shipping_method_rules`): `P6-SHIP-02` (fast-follow).
+- **Zonas/tarifas/regras** (`shipping_zones`/`shipping_rates`/`shipping_method_rules`): **Fase 8, Etapa 5** (saiu da Fase 6).
 
 ## Arquivos a criar/alterar
 - `backend/app/modules/shipping/{models,enums,schemas,services,repositories,routes}.py` (criar).
@@ -50,8 +50,8 @@ O checkout precisa de opções de entrega. **MVP fino:** retirada local, entrega
 - [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Zonas/tarifas movidas pra `P6-SHIP-02` (MVP fino primeiro).
+- Zonas/tarifas movidas pra **Fase 8, Etapa 5** (MVP fino primeiro; saíram da Fase 6).
 - **Implementação:** `shipping_methods` (soft delete) + enum `ShippingMethodType` + índice `store_id+type+is_active`. CRUD em `/stores/{id}/shipping/methods` gated `shipping.view/create/update/delete`; leitura pública em `GET /storefront/shipping-methods` (host-resolved, só ativos). Validação: `fixed_shipping` exige `price_amount_minor` (422). **Sem moeda por método** — os valores são na moeda da loja (single-currency, INV-G3), pareados com `store.currency` no checkout. A aplicação da regra "free acima do mínimo" + o aviso de `private_delivery` no checkout são do `P6-CHK-01`/`P6-SF-01`. Migration `50108c983547`. 5 testes, módulo 100%.
 
 ## Follow-ups
-- [ ] **`shipping.private_delivery.update` órfã** — o CRUD usa `shipping.create/update/delete` (genérico, cobre `private_delivery`); a permissão `shipping.private_delivery.update` não é lida por nenhuma rota. Decidir se vira ação própria (config da entrega combinada / regras de região no `P6-SHIP-02`) ou remover do catálogo. Origem: `P6-SHIP-01`.
+- [ ] **`shipping.private_delivery.update` órfã** — o CRUD usa `shipping.create/update/delete` (genérico, cobre `private_delivery`); a permissão `shipping.private_delivery.update` não é lida por nenhuma rota. Decidir se vira ação própria (config da entrega combinada / regras de região na **Fase 8, Etapa 5**) ou remover do catálogo. Origem: `P6-SHIP-01`.

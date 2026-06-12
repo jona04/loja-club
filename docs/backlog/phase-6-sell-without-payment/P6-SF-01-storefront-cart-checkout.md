@@ -25,7 +25,7 @@ Liga a vitrine ao backend: o carrinho client (localStorage) passa a ler o **carr
 - **Confirmação** com **número do pedido** + **botão de WhatsApp** (mensagem pré-preenchida: pedido + itens, `whatsapp_number`) + políticas.
 
 ## Fora de escopo (o que NÃO entra)
-- Seleção de variação na vitrine: `P6-SF-02` (fast-follow) — aqui vende produto `image` simples.
+- Seleção de variação na vitrine: **Fase 7, Etapa 8** (saiu da Fase 6) — aqui vende produto `image` simples.
 - Editor de personalização: **Fase 7**.
 
 ## Arquivos a criar/alterar
@@ -62,6 +62,6 @@ Liga a vitrine ao backend: o carrinho client (localStorage) passa a ler o **carr
 - [ ] **e2e + validação de runtime do storefront** — sem infra de Playwright (bloqueio do `P5-SF-01`); o fluxo carrinho/checkout (round-trip do cookie via Server Actions) está validado por `tsc`/`biome`/`next build` + integração no backend, **mas não no browser**. Montar a infra + validar ao vivo (incluindo os **3 checkouts**: Aurora/Bazar/Studio). Origem: `P6-SF-01`.
 - [ ] **Cookie `secure`/`domain` em produção** — as Server Actions setam o cookie guest `httpOnly`+`lax` **sem `secure`** (dev http); produção (https) precisa `secure` + decidir `domain`. (Resolve a parte "Set-Cookie via SSR" do follow-up do `P6-CUST-01`; falta o `secure`/`domain`.) Origem: `P6-SF-01`.
 - [ ] **Chrome de checkout simplificado** — os designs de `checkout.html`/`order_confirmation.html` usam um header **enxuto** (logo + "voltar à loja"), mas a página usa o `Template.Shell` completo da loja. Decidir se o checkout ganha um chrome próprio (mais foco) ou mantém o Shell. Origem: `P6-SF-01`.
-- [x] **Granularidade do endereço** ✅ — endereço BR completo (CEP/Rua/Número/Complemento/Bairro/Cidade/Estado) nos 3 checkouts, com `number`/`neighborhood` adicionados ao backend (migration `f11beee66d67`). Resta só **CEP→autofill** (consulta de CEP) como melhoria futura — cruza com o frete por zona (`P6-SHIP-02`). Origem: `P6-SF-01`.
+- [x] **Granularidade do endereço** ✅ — endereço BR completo (CEP/Rua/Número/Complemento/Bairro/Cidade/Estado) nos 3 checkouts, com `number`/`neighborhood` adicionados ao backend (migration `f11beee66d67`). Resta só **CEP→autofill** (consulta de CEP) como melhoria futura — cruza com o frete por zona (Fase 8, Etapa 5). Origem: `P6-SF-01`.
 - [ ] **Cupom de desconto no checkout** — os 3 designs têm um campo de cupom; deixado de fora aqui (cupom é a `P6-DISC-01`, ainda não construída) para não renderizar input não-funcional. Ligar nos 3 (cada estilo) quando os cupons existirem. Origem: `P6-SF-01` → `P6-DISC-01`.
 - [ ] **Recap completo na confirmação** — a confirmação dos designs traz, além de itens + total, um **breakdown** (subtotal/frete) e um **recap de cliente/endereço/entrega** (varia por template, ex.: "Dados do Cliente" no Studio). Hoje a confirmação mostra itens + total + handoff WhatsApp. Completar o recap por template. Origem: `P6-SF-01`.
