@@ -17,6 +17,7 @@ import app.modules.content.models  # noqa: F401
 import app.modules.customers.models  # noqa: F401
 import app.modules.domains.models  # noqa: F401
 import app.modules.media.models  # noqa: F401
+import app.modules.orders.models  # noqa: F401
 import app.modules.platform_admin.models  # noqa: F401
 import app.modules.shipping.models  # noqa: F401
 import app.modules.stores.models  # noqa: F401

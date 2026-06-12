@@ -4,7 +4,7 @@ title: Pedidos — módulo + criação (congela/estoque/número)
 phase: 6
 etapa: "Etapa 6 — Módulo orders (pedidos)"
 area: ORD
-status: todo
+status: done
 depends_on: [P6-CART-01]
 blocks: [P6-CHK-01, P6-ORD-02, P6-NOTIF-01]
 tests: [integration]
@@ -47,15 +47,17 @@ O coração da fase: transformar um carrinho num **pedido `pending_payment`** co
 - **Cobrir:** cria `pending_payment`; **preço/variação congelados** (mudar o produto depois não altera o pedido); **estoque decrementa** e **cancelar devolve**; `order_number` **sequencial e único** por loja (isolado entre lojas).
 
 ## Definition of Done
-- [ ] Tabelas de pedido + enum enxuto + índices (`order_number` único) + migration (`alembic check` vazio).
-- [ ] `create_order` congela preço/variação, decrementa estoque e gera `order_number` (pipeline por item **extensível**).
-- [ ] `cancel_order` devolve estoque.
-- [ ] **Modos de falha mapeados** (estoque some entre validação e criação; corrida de `order_number`; cancelar já enviado; carrinho vazio) → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Tabelas de pedido + enum enxuto + índices (`order_number` único) + migration (`alembic check` vazio).
+- [x] `create_order` congela preço/variação, decrementa estoque e gera `order_number` (pipeline por item **extensível**).
+- [x] `cancel_order` devolve estoque.
+- [x] **Modos de falha mapeados** (estoque some entre validação e criação → 409; cancelar já enviado/entregue → 409; carrinho vazio → 422; corrida de `order_number` → unicidade + follow-up de retry) → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- **Adianta** o follow-up `P2-CAT-02` (índice único de estoque `store_id+product_id+variant_id`) — pré-requisito da baixa de estoque confiável (marcar `[x]` na origem ao concluir).
+- **Adianta** o follow-up `P2-CAT-02` (índice único de estoque `store_id+product_id+variant_id`, com `nulls_not_distinct` p/ a linha product-level com `variant_id` NULL) — marcado `[x]` na origem.
 - Enum de status enxuto vs doc 11 (a tabela completa lá inclui os de pagamento da Fase 8).
+- **Implementação:** `order_orders` (`order_number` único+sequencial, status, total/frete/desconto, método snapshot, customer/guest) + `order_items` (congela nome/preço/`variant_id`) + `order_addresses` (snapshot) + `order_status_history` + `order_notes`. `create_order` re-valida+decrementa estoque, congela por item (`_freeze_item` = hook da Fase 7), gera `order_number` (`max+1`), grava histórico e marca o carrinho `converted`; preço congelado = o do carrinho (o que o cliente viu). `cancel_order` faz restock (status permitidos: pending_payment/paid/processing). **Sem rotas** (CHK-01 chama; ORD-02 expõe). Migration `33517f4ccbc8` (enums reusados via `postgresql.ENUM(create_type=False)`). 9 testes, módulo 100%.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Corrida de `order_number`** — `max+1` + índice único garante que não duplica, mas concorrência alta gera `IntegrityError` (500) sem retry. Adicionar retry/lock por loja. Origem: `P6-ORD-01`.
+- [ ] **`order_fulfillments` + `order_refunds` adiados** — não criados (sem consumidor: o status do pedido cobre o envio no MVP; reembolso é Fase 8). Criar quando forem consumidos. Origem: `P6-ORD-01`.

@@ -177,6 +177,8 @@ class InventoryItem(
             "store_id",
             "product_id",
             "variant_id",
+            unique=True,
+            postgresql_nulls_not_distinct=True,
         ),
     )
 
