@@ -44,7 +44,7 @@ import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/store-content")({
   component: StoreContentRoute,
-  head: () => ({ meta: [{ title: "Conteúdo da Loja - Loja Club" }] }),
+  head: () => ({ meta: [{ title: "Conteúdo da Loja - Kriar" }] }),
 })
 
 function StoreContentRoute() {

@@ -31,7 +31,7 @@ class BillingPlanBase(SQLModel):
 class BillingPlan(
     UUIDMixin, TimestampMixin, SoftDeleteMixin, BillingPlanBase, table=True
 ):
-    """A Loja Club subscription plan definition.
+    """A Kriar subscription plan definition.
 
     ``key`` is unique among non-deleted plans (partial unique index), so a
     deleted plan's key can be reused.

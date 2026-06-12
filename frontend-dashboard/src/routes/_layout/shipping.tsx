@@ -42,7 +42,7 @@ import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/shipping")({
   component: ShippingRoute,
-  head: () => ({ meta: [{ title: "Frete - Loja Club" }] }),
+  head: () => ({ meta: [{ title: "Frete - Kriar" }] }),
 })
 
 function ShippingRoute() {

@@ -1,6 +1,6 @@
 """Integration-test fixtures: per-test DB isolation and an HTTP test client.
 
-Integration tests run against a real PostgreSQL (the Loja Club dev database).
+Integration tests run against a real PostgreSQL (the Kriar dev database).
 Each test runs inside a transaction that is rolled back on teardown, so tests are
 isolated and order-independent (see ``docs/backlog/_foundations-and-bottlenecks.md``,
 DEC-10). Unit tests live in ``tests/unit`` and must not depend on these fixtures.

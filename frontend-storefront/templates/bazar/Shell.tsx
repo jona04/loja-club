@@ -159,7 +159,7 @@ export async function BazarShell({
             <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-800 pt-8 md:flex-row">
               <p className="text-center text-sm text-gray-500 md:text-left">
                 © {new Date().getFullYear()} {name}. Todos os direitos
-                reservados. Plataforma Loja Club.
+                reservados. Plataforma Kriar.
               </p>
               <div className="flex items-center gap-4 text-2xl text-gray-600">
                 <i className="fa-brands fa-cc-visa" />

@@ -1,4 +1,4 @@
-# Loja Club — Frontend (merchant dashboard)
+# Kriar — Frontend (merchant dashboard)
 
 The merchant panel, built with [Vite](https://vitejs.dev/),
 [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/),

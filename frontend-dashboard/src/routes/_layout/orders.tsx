@@ -35,7 +35,7 @@ import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/orders")({
   component: OrdersRoute,
-  head: () => ({ meta: [{ title: "Pedidos - Loja Club" }] }),
+  head: () => ({ meta: [{ title: "Pedidos - Kriar" }] }),
 })
 
 function OrdersRoute() {

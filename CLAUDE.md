@@ -1,4 +1,4 @@
-# Loja Club — instruções do projeto
+# Kriar — instruções do projeto
 
 SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/concepts/`; **backlog acionável** em `docs/backlog/`; **invariantes e decisões** em `docs/backlog/_foundations-and-bottlenecks.md`.
 

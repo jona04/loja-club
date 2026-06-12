@@ -32,7 +32,7 @@ describe("unit sample", () => {
   })
 
   it("renders a component with Testing Library", () => {
-    render(<Hello name="Loja Club" />)
-    expect(screen.getByText("Olá, Loja Club")).toBeInTheDocument()
+    render(<Hello name="Kriar" />)
+    expect(screen.getByText("Olá, Kriar")).toBeInTheDocument()
   })
 })

@@ -170,7 +170,7 @@ export async function AuroraShell({
                 © {new Date().getFullYear()} {name}. Todos os direitos
                 reservados.
               </p>
-              <span className="mt-4 md:mt-0">Plataforma Loja Club</span>
+              <span className="mt-4 md:mt-0">Plataforma Kriar</span>
             </div>
           </div>
         </footer>

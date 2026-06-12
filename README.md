@@ -1,4 +1,4 @@
-# Loja Club
+# Kriar
 
 Multi-tenant ecommerce **SaaS** with an initial focus on promotional products,
 print shops and visual communication. A merchant signs up, creates a store,

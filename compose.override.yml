@@ -1,6 +1,6 @@
 services:
 
-  # Dev services are exposed on the Loja Club host ports below. With
+  # Dev services are exposed on the Kriar host ports below. With
   # DOMAIN=localhost and Traefik they are also reachable at
   # api./app./admin.<DOMAIN> (routing wired up in later phases).
   proxy:

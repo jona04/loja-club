@@ -26,7 +26,7 @@ import { useActiveStore } from "@/hooks/useActiveStore"
 
 export const Route = createFileRoute("/_layout/customers")({
   component: CustomersRoute,
-  head: () => ({ meta: [{ title: "Clientes - Loja Club" }] }),
+  head: () => ({ meta: [{ title: "Clientes - Kriar" }] }),
 })
 
 function CustomersRoute() {

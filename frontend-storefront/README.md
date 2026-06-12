@@ -1,6 +1,6 @@
 # frontend-storefront
 
-Vitrine pública (Next.js, App Router) das lojas Loja Club, resolvida por **Host**
+Vitrine pública (Next.js, App Router) das lojas Kriar, resolvida por **Host**
 (`{loja}.${DOMAIN}`). O painel do lojista é o [`frontend-dashboard`](../frontend-dashboard/README.md).
 
 Faz parte do **workspace bun** (lockfile único na raiz). bun não está instalado no

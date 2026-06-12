@@ -12,7 +12,7 @@ on:
 jobs:
   test-backend:
     runs-on: ubuntu-latest
-    # The DB/Redis containers publish on Loja Club's non-default host ports
+    # The DB/Redis containers publish on Kriar's non-default host ports
     # (see compose.override.yml); host-run steps connect through those.
     env:
       POSTGRES_PORT: "5442"
