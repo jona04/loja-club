@@ -28,7 +28,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | # | ID | Task | Status | Depende de |
 |---|----|------|--------|-----------|
 | 1 | [P6-CAT-01](./P6-CAT-01-product-type-and-cart-gate.md) | Tipo de produto (`type`) + portão do add-to-cart | ✅ done | — |
-| 2 | [P6-CUST-01](./P6-CUST-01-customer-identity-dedup.md) | Identidade do cliente + dedup (guest) | todo | — |
+| 2 | [P6-CUST-01](./P6-CUST-01-customer-identity-dedup.md) | Identidade do cliente + dedup (guest) | ✅ done | — |
 | 3 | [P6-SHIP-01](./P6-SHIP-01-shipping-methods.md) | Frete: métodos MVP (retirada/combinada/fixo) | todo | — |
 | 4 | [P6-CART-01](./P6-CART-01-server-cart.md) | Carrinho de servidor (`cart_carts`/`cart_items`) | todo | P6-CAT-01 |
 | 5 | [P6-ORD-01](./P6-ORD-01-orders-create.md) | Pedidos: módulo + criação (congela/estoque/nº) | todo | P6-CART-01 |
@@ -65,4 +65,6 @@ Fast-follow: P6-DISC-01 (cupons) · P6-SHIP-02 (zonas/tarifas) · P6-SF-02 (vari
 - [ ] **Editar categorias de um produto** (Fase 3) — não é desta fase; segue aberto.
 
 **Da própria fase:**
-- (preencher conforme as tasks forem implementadas.)
+- [ ] **`customer_consents` (LGPD)** — não incluído no `P6-CUST-01`; quando precisar registrar consentimento. Origem: `P6-CUST-01`.
+- [ ] **Limpeza de guest sessions expiradas** — `expires_at` existe, falta worker que marque/limpe (doc 23 pede `expired`). Origem: `P6-CUST-01`.
+- [ ] **Cookie `secure`/`domain` + Set-Cookie via SSR do storefront** — hoje `httponly`+`samesite=lax` sem `secure` (dev http); produção precisa `secure` + `domain` + Next repassar o `Set-Cookie`. Tratar em `P6-CART-01`/`P6-SF-01`. Origem: `P6-CUST-01`.
