@@ -32,6 +32,79 @@ export const AddItemInputSchema = {
     description: 'Add a product (optionally a variant) to the cart.'
 } as const;
 
+export const AddressInputSchema = {
+    properties: {
+        recipient_name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipient Name'
+        },
+        line1: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Line1'
+        },
+        line2: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Line2'
+        },
+        city: {
+            type: 'string',
+            maxLength: 255,
+            title: 'City'
+        },
+        state: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'State'
+        },
+        postal_code: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Postal Code'
+        },
+        country: {
+            type: 'string',
+            maxLength: 2,
+            title: 'Country',
+            description: 'ISO 3166-1 alpha-2'
+        }
+    },
+    type: 'object',
+    required: ['line1', 'city', 'country'],
+    title: 'AddressInput',
+    description: 'An address provided at checkout (appended to the customer if new).'
+} as const;
+
 export const BillingPlanCreateSchema = {
     properties: {
         key: {
@@ -531,6 +604,73 @@ export const CategoryUpdateSchema = {
     type: 'object',
     title: 'CategoryUpdate',
     description: 'Partial update for a category.'
+} as const;
+
+export const CheckoutContactSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone'
+        },
+        region: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Region'
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'CheckoutContact',
+    description: 'Customer contact collected at checkout (no password).'
+} as const;
+
+export const CheckoutInputSchema = {
+    properties: {
+        contact: {
+            '$ref': '#/components/schemas/CheckoutContact'
+        },
+        address: {
+            '$ref': '#/components/schemas/AddressInput'
+        },
+        shipping_method_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Shipping Method Id'
+        }
+    },
+    type: 'object',
+    required: ['contact', 'address', 'shipping_method_id'],
+    title: 'CheckoutInput',
+    description: 'The checkout submission: contact + address + chosen shipping method.'
 } as const;
 
 export const ContentBannerCreateSchema = {
@@ -1311,6 +1451,138 @@ export const NewPasswordSchema = {
     description: 'Password-reset payload (token + new password).'
 } as const;
 
+export const OrderItemPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        variant_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Variant Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        quantity: {
+            type: 'integer',
+            title: 'Quantity'
+        },
+        unit_price_amount_minor: {
+            type: 'integer',
+            title: 'Unit Price Amount Minor'
+        },
+        unit_price_currency: {
+            type: 'string',
+            title: 'Unit Price Currency'
+        },
+        line_total_amount_minor: {
+            type: 'integer',
+            title: 'Line Total Amount Minor'
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'variant_id', 'name', 'quantity', 'unit_price_amount_minor', 'unit_price_currency', 'line_total_amount_minor'],
+    title: 'OrderItemPublic',
+    description: 'A purchased line (frozen name/price).'
+} as const;
+
+export const OrderPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        order_number: {
+            type: 'integer',
+            title: 'Order Number'
+        },
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        currency: {
+            type: 'string',
+            title: 'Currency'
+        },
+        subtotal_amount_minor: {
+            type: 'integer',
+            title: 'Subtotal Amount Minor'
+        },
+        shipping_amount_minor: {
+            type: 'integer',
+            title: 'Shipping Amount Minor'
+        },
+        discount_amount_minor: {
+            type: 'integer',
+            title: 'Discount Amount Minor'
+        },
+        total_amount_minor: {
+            type: 'integer',
+            title: 'Total Amount Minor'
+        },
+        shipping_method_type: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/ShippingMethodType'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        shipping_method_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Shipping Method Name'
+        },
+        items: {
+            items: {
+                '$ref': '#/components/schemas/OrderItemPublic'
+            },
+            type: 'array',
+            title: 'Items'
+        }
+    },
+    type: 'object',
+    required: ['id', 'order_number', 'status', 'currency', 'subtotal_amount_minor', 'shipping_amount_minor', 'discount_amount_minor', 'total_amount_minor', 'shipping_method_type', 'shipping_method_name', 'items'],
+    title: 'OrderPublic',
+    description: 'An order with its items (checkout confirmation + panel detail).'
+} as const;
+
+export const OrderStatusSchema = {
+    type: 'string',
+    enum: ['pending_payment', 'paid', 'processing', 'shipped', 'delivered', 'canceled'],
+    title: 'OrderStatus',
+    description: `Operational status of an order in the no-gateway phase (doc 11).
+
+\`\`pending_payment\`\` → \`\`paid\`\` (marked manually) → \`\`processing\`\` →
+\`\`shipped\`\` → \`\`delivered\`\`; \`\`canceled\`\` at any allowed point (restocks).
+The payment statuses (\`\`payment_failed\`\`/\`\`refunded\`\`/\`\`chargeback\`\`) arrive
+with the gateway in Fase 8 — none is created here.`
+} as const;
+
 export const Page_BillingPlanPublic_Schema = {
     properties: {
         data: {
@@ -1521,6 +1793,89 @@ export const PlatformMeSchema = {
     required: ['id', 'email', 'is_platform_admin'],
     title: 'PlatformMe',
     description: 'The signed-in user and their platform roles (empty if not an admin).'
+} as const;
+
+export const PoliciesPublicSchema = {
+    properties: {
+        return_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Return Policy'
+        },
+        exchange_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Exchange Policy'
+        },
+        privacy_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Privacy Policy'
+        }
+    },
+    type: 'object',
+    required: ['return_policy', 'exchange_policy', 'privacy_policy'],
+    title: 'PoliciesPublic',
+    description: "A store's checkout policies (return/exchange/privacy)."
+} as const;
+
+export const PoliciesUpdateSchema = {
+    properties: {
+        return_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Return Policy'
+        },
+        exchange_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Exchange Policy'
+        },
+        privacy_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Privacy Policy'
+        }
+    },
+    type: 'object',
+    title: 'PoliciesUpdate',
+    description: "Partial update of a store's checkout policies."
 } as const;
 
 export const PrivateUserCreateSchema = {
@@ -2316,6 +2671,39 @@ export const StoreSettingsPublicSchema = {
             ],
             title: 'Address'
         },
+        return_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Return Policy'
+        },
+        exchange_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Exchange Policy'
+        },
+        privacy_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Privacy Policy'
+        },
         id: {
             type: 'string',
             format: 'uuid',
@@ -2744,6 +3132,39 @@ export const StorefrontStoreSchema = {
                 }
             ],
             title: 'Whatsapp Number'
+        },
+        return_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Return Policy'
+        },
+        exchange_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Exchange Policy'
+        },
+        privacy_policy: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Privacy Policy'
         }
     },
     type: 'object',

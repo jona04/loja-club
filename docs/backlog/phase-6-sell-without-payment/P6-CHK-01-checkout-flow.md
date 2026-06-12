@@ -4,7 +4,7 @@ title: Checkout — sessão + fluxo (sem gateway)
 phase: 6
 etapa: "Etapa 5 — Módulo checkout"
 area: CHK
-status: todo
+status: done
 depends_on: [P6-CUST-01, P6-CART-01, P6-SHIP-01, P6-ORD-01]
 blocks: [P6-SF-01, P6-NOTIF-01]
 tests: [integration]
@@ -46,15 +46,16 @@ Orquestra a finalização: coleta contato/endereço/entrega, identifica o client
 - **Cobrir:** compra sem login cria `pending_payment`; dedup acionado no checkout; estoque/valores validados (composável); `private_delivery` marca "combinada"; **pedido não vira pago sozinho**; isolamento por loja.
 
 ## Definition of Done
-- [ ] `checkout_sessions` + migration (`alembic check` vazio).
-- [ ] Fluxo completo sem login até `pending_payment` (dedup + endereço + entrega + políticas).
-- [ ] **Validação composável** (estoque/valores) + **interface de pagamento** stub.
-- [ ] **Modos de falha mapeados** (sessão expirada; estoque some na revisão; loja sem método de entrega; telefone inválido) → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `checkout_sessions` + migration (`alembic check` vazio).
+- [x] Fluxo completo sem login até `pending_payment` (dedup + endereço + entrega + políticas).
+- [x] **Validação composável** (estoque/valores) + **interface de pagamento** stub.
+- [x] **Modos de falha mapeados** (estoque some na revisão → 409 no `create_order`; loja sem método ativo → 404; telefone inválido → 422; sessão expirada → fluxo é single-call, abandono = follow-up de limpeza) → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- **Adianta** o follow-up de **políticas da loja** (`checkout.policies.*`, Fase 1) — config no painel + exibição no checkout.
+- **Adianta** o follow-up de **políticas da loja** (`checkout.policies.*`, Fase 1) — `return/exchange/privacy_policy` em `store_settings`, rota painel `GET/PATCH /stores/{id}/checkout/policies` (gated `checkout.view`/`checkout.policies.update`), e exposição em `StorefrontStore` (a vitrine mostra no checkout). Marcado `[x]` na origem.
 - Congelamento por item + validação **composáveis** (costura pra Fase 7 plugar a personalização).
+- **Implementação:** `checkout_sessions` (`active`→`completed`, expira 24h) + `submit_checkout` (`POST /storefront/checkout`, host+cookie guest): valida (lista composável `_CHECKOUT_CHECKS`) → `create_or_update_customer` (dedup/E.164) → resolve método ativo (404 se indisponível) → `create_order` → retorna `OrderPublic`. **Sem gateway:** `payments/gateway.py` (`PaymentGateway` Protocol + `NoOpGateway` + `get_gateway()`) é chamado como no-op (seam Fase 8). `OrderPublic`/`OrderItemPublic` + `order_to_public` adicionados em `orders`. Migration `9e95a44969bd`. 7 testes, módulos checkout+payments 100%.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **Limpeza de `checkout_sessions` abandonadas** — sessões `active` que não viram `completed` ficam até `expires_at` sem worker que marque `expired` (mesma família do follow-up de guest sessions do `P6-CUST-01`). Origem: `P6-CHK-01`.

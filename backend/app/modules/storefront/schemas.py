@@ -26,6 +26,9 @@ class StorefrontStore(SQLModel):
     description: str | None = None
     logo_url: str | None = None
     whatsapp_number: str | None = None
+    return_policy: str | None = None
+    exchange_policy: str | None = None
+    privacy_policy: str | None = None
 
 
 class StorefrontTheme(SQLModel):

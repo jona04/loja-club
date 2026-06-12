@@ -24,6 +24,7 @@ from app.modules.orders.models import (
     OrderItem,
     OrderStatusHistory,
 )
+from app.modules.orders.schemas import OrderItemPublic, OrderPublic
 from app.modules.shipping.enums import ShippingMethodType
 from app.modules.shipping.models import ShippingMethod
 
@@ -268,3 +269,29 @@ def cancel_order(*, session: Session, order: Order) -> Order:
     session.commit()
     session.refresh(order)
     return order
+
+
+def order_to_public(*, session: Session, order: Order) -> OrderPublic:
+    """Build an order's public payload (with its items).
+
+    Args:
+        session: Active database session.
+        order: The order to represent.
+
+    Returns:
+        The :class:`OrderPublic` (order + items), for the confirmation/panel.
+    """
+    items = _order_items(session, order)
+    return OrderPublic(
+        id=order.id,
+        order_number=order.order_number,
+        status=order.status,
+        currency=order.currency,
+        subtotal_amount_minor=order.subtotal_amount_minor,
+        shipping_amount_minor=order.shipping_amount_minor,
+        discount_amount_minor=order.discount_amount_minor,
+        total_amount_minor=order.total_amount_minor,
+        shipping_method_type=order.shipping_method_type,
+        shipping_method_name=order.shipping_method_name,
+        items=[OrderItemPublic.model_validate(item) for item in items],
+    )

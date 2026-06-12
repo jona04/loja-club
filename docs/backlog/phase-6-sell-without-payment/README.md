@@ -32,7 +32,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 3 | [P6-SHIP-01](./P6-SHIP-01-shipping-methods.md) | Frete: métodos MVP (retirada/combinada/fixo) | ✅ done | — |
 | 4 | [P6-CART-01](./P6-CART-01-server-cart.md) | Carrinho de servidor (`cart_carts`/`cart_items`) | ✅ done | P6-CAT-01 |
 | 5 | [P6-ORD-01](./P6-ORD-01-orders-create.md) | Pedidos: módulo + criação (congela/estoque/nº) | ✅ done | P6-CART-01 |
-| 6 | [P6-CHK-01](./P6-CHK-01-checkout-flow.md) | Checkout: sessão + fluxo (sem gateway) | todo | P6-CUST-01, P6-CART-01, P6-SHIP-01, P6-ORD-01 |
+| 6 | [P6-CHK-01](./P6-CHK-01-checkout-flow.md) | Checkout: sessão + fluxo (sem gateway) | ✅ done | P6-CUST-01, P6-CART-01, P6-SHIP-01, P6-ORD-01 |
 | 7 | [P6-SF-01](./P6-SF-01-storefront-cart-checkout.md) | Vitrine: carrinho real + checkout/confirmação (3 templates) | todo | P6-CART-01, P6-CHK-01 |
 | 8 | [P6-ORD-02](./P6-ORD-02-orders-panel.md) | Painel de pedidos | todo | P6-ORD-01 |
 | 9 | [P6-CUST-02](./P6-CUST-02-customers-panel.md) | Painel de clientes | todo | P6-CUST-01 |
@@ -60,7 +60,7 @@ Fast-follow: P6-DISC-01 (cupons) · P6-SHIP-02 (zonas/tarifas) · P6-SF-02 (vari
 **Esta fase fecha/adianta follow-ups de fases anteriores** (marcar `[x]` na **origem** ao concluir a task):
 - [x] **Índice único de estoque** `(store_id, product_id, variant_id)` (Fase 2, `P2-CAT-02`) → `P6-ORD-01` ✅ (único, `nulls_not_distinct` p/ a linha product-level; baixa de estoque confiável).
 - [ ] **Vitrine expõe variações + disponibilidade** (Fase 3, `P3-SF-01`/`P3-SF-02`) → `P6-SF-02`.
-- [ ] **Políticas da loja (troca/devolução/privacidade)** (Fase 1, `checkout.policies.*`) → `P6-CHK-01`.
+- [x] **Políticas da loja (troca/devolução/privacidade)** (Fase 1, `checkout.policies.*`) → `P6-CHK-01` ✅ (campos em `store_settings` + rota painel gated `checkout.policies.update` + exposição na vitrine).
 - [ ] **Carrinho/checkout reais + ação de compra na vitrine** (Fase 3, `P3-TPL-01`/`P3-SF-02`) → `P6-CART-01`/`P6-SF-01`.
 - [ ] **Editar categorias de um produto** (Fase 3) — não é desta fase; segue aberto.
 
@@ -73,3 +73,4 @@ Fast-follow: P6-DISC-01 (cupons) · P6-SHIP-02 (zonas/tarifas) · P6-SF-02 (vari
 - [ ] **N+1 no payload do carrinho** + **snapshot de preço stale** — `to_public` busca produto/imagens por item; preço congelado no add (o pedido re-congela). Origem: `P6-CART-01`.
 - [ ] **Corrida de `order_number`** — `max+1` + índice único não duplica, mas concorrência gera `IntegrityError` sem retry. Adicionar retry/lock por loja. Origem: `P6-ORD-01`.
 - [ ] **`order_fulfillments` + `order_refunds` adiados** — stub tables não criadas (status do pedido cobre envio; reembolso = Fase 8). Criar quando consumidas. Origem: `P6-ORD-01`.
+- [ ] **Limpeza de `checkout_sessions` abandonadas** — sessões `active` que não viram `completed` ficam até `expires_at` sem worker (mesma família do follow-up de guest sessions). Origem: `P6-CHK-01`.

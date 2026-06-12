@@ -296,18 +296,7 @@ Exemplos:
 
 Evitar transformar cada recurso em produto separado.
 
-Não usar como produto independente por enquanto:
-
-- Kriar Pages;
-- Kriar Templates;
-- Kriar Checkout;
-- Kriar Flow;
-- Kriar Chat;
-- Kriar Studio.
-
-Esses nomes podem aparecer no futuro se uma área ganhar peso comercial próprio, mas não devem nascer como submarcas. Templates, checkout, páginas, chat e fluxo de pedidos são recursos da plataforma.
-
-`Studio` pode ser usado futuramente como nome de uma área criativa mais ampla, caso o produto junte criação de loja por IA, edição visual, templates, imagens e 3D em uma experiência única. Por enquanto, é melhor evitar: para o lojista pequeno, "Store", "Produtos 3D", "Templates" e "Créditos" são mais claros.
+Templates, checkout, páginas, chat e fluxo de pedidos devem nascer como recursos da plataforma. Só devem virar nomes de produto se um dia tiverem oferta, página comercial e cobrança próprias.
 
 ## Nomes no painel do lojista
 
@@ -349,7 +338,15 @@ O painel pode agrupar esses itens por seção, mas os nomes devem continuar dire
 
 ## Site público e landing page
 
-A lista abaixo não é necessariamente um mapa de páginas separadas. Na primeira versão, a maioria deve ser seção da landing page principal.
+O detalhe da landing page fica no doc [Kriar Landing Page](./29_kriar_landing_page.md).
+
+Resumo da direção:
+
+- a landing é voltada para o **lojista**, não para o cliente final da loja;
+- a primeira dobra deve explicar rapidamente o valor: criar uma loja online com IA e vender com menos atrito;
+- ao descer a página, o lojista deve descobrir progressivamente que Kriar também cobre vitrine, catálogo, templates, pedidos, clientes, entrega, WhatsApp/Pix/checkout, produtos 3D e créditos de IA;
+- a página deve vender a plataforma como um todo, sem transformar cada recurso em uma submarca;
+- páginas verticais, como **Kriar para brindes personalizados**, podem aprofundar dores específicas sem limitar a marca principal.
 
 Navegação inicial em português:
 
@@ -362,52 +359,6 @@ Navegação inicial em português:
 - Começar
 
 `Produtos 3D` pode entrar na navegação principal quando a campanha estiver focada em brindes, gráficas ou personalizados. Na home mais geral, pode aparecer apenas como seção ou página interna.
-
-Seções recomendadas para a landing page:
-
-- Hero: Crie sua loja online com IA.
-- Como funciona: crie a loja, cadastre produtos, publique e venda.
-- Templates e demos: escolha um modelo bonito e personalize sem começar do zero.
-- Catálogo e vitrine: produtos, categorias, imagens, variações e destaques.
-- Venda local e online: WhatsApp, Pix, checkout, retirada, frete fixo e entrega combinada.
-- Operação da loja: pedidos, clientes, pagamentos, cupons, equipe e relatórios.
-- Produtos 3D: gere/vincule modelos, permita personalização e aprove a arte antes do pedido.
-- Créditos de IA: use créditos para ações com custo real, como geração 3D e futuras ferramentas de IA.
-- Para brindes personalizados: página/seção vertical com dor específica de gráficas, brindes e comunicação visual.
-- Exemplos e lojas demo.
-- Preços e planos.
-- Perguntas frequentes.
-
-Páginas que podem existir depois:
-
-- Produto
-- Templates
-- Produtos 3D
-- Créditos de IA
-- Preços
-- Exemplos
-- Para brindes personalizados
-- Entrar
-
-Páginas futuras em inglês:
-
-- Home
-- Product
-- Templates
-- 3D Products
-- AI Credits
-- Pricing
-- Examples
-- Custom Products
-- Sign in
-
-As páginas de verticais devem vender dores específicas sem limitar a marca principal.
-
-Exemplo:
-
-> Kriar para brindes personalizados
-
-Essa página pode falar de produtos 3D, personalização, aprovação visual e pedidos por WhatsApp.
 
 ## Relação com Loja Club
 

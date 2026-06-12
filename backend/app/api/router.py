@@ -8,6 +8,8 @@ from app.modules.accounts.auth import router as auth_router
 from app.modules.accounts.routes import router as users_router
 from app.modules.cart.routes import router as cart_router
 from app.modules.catalog.routes import router as catalog_router
+from app.modules.checkout.routes import public_router as checkout_public_router
+from app.modules.checkout.routes import router as checkout_router
 from app.modules.content.routes import router as content_router
 from app.modules.media.routes import router as media_router
 from app.modules.platform_admin.routes import router as platform_admin_router
@@ -21,6 +23,8 @@ api_router.include_router(users_router)
 api_router.include_router(stores_router)
 api_router.include_router(cart_router)
 api_router.include_router(catalog_router)
+api_router.include_router(checkout_router)
+api_router.include_router(checkout_public_router)
 api_router.include_router(content_router)
 api_router.include_router(media_router)
 api_router.include_router(platform_admin_router)

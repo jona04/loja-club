@@ -10,6 +10,22 @@ export type AddItemInput = {
 };
 
 /**
+ * An address provided at checkout (appended to the customer if new).
+ */
+export type AddressInput = {
+    recipient_name?: (string | null);
+    line1: string;
+    line2?: (string | null);
+    city: string;
+    state?: (string | null);
+    postal_code?: (string | null);
+    /**
+     * ISO 3166-1 alpha-2
+     */
+    country: string;
+};
+
+/**
  * Payload to create a plan definition.
  */
 export type BillingPlanCreate = {
@@ -144,6 +160,25 @@ export type CategoryUpdate = {
     name?: (string | null);
     slug?: (string | null);
     description?: (string | null);
+};
+
+/**
+ * Customer contact collected at checkout (no password).
+ */
+export type CheckoutContact = {
+    name: string;
+    email?: (string | null);
+    phone?: (string | null);
+    region?: (string | null);
+};
+
+/**
+ * The checkout submission: contact + address + chosen shipping method.
+ */
+export type CheckoutInput = {
+    contact: CheckoutContact;
+    address: AddressInput;
+    shipping_method_id: string;
 };
 
 /**
@@ -374,6 +409,47 @@ export type NewPassword = {
     new_password: string;
 };
 
+/**
+ * A purchased line (frozen name/price).
+ */
+export type OrderItemPublic = {
+    id: string;
+    product_id: string;
+    variant_id: (string | null);
+    name: string;
+    quantity: number;
+    unit_price_amount_minor: number;
+    unit_price_currency: string;
+    line_total_amount_minor: number;
+};
+
+/**
+ * An order with its items (checkout confirmation + panel detail).
+ */
+export type OrderPublic = {
+    id: string;
+    order_number: number;
+    status: OrderStatus;
+    currency: string;
+    subtotal_amount_minor: number;
+    shipping_amount_minor: number;
+    discount_amount_minor: number;
+    total_amount_minor: number;
+    shipping_method_type: (ShippingMethodType | null);
+    shipping_method_name: (string | null);
+    items: Array<OrderItemPublic>;
+};
+
+/**
+ * Operational status of an order in the no-gateway phase (doc 11).
+ *
+ * ``pending_payment`` → ``paid`` (marked manually) → ``processing`` →
+ * ``shipped`` → ``delivered``; ``canceled`` at any allowed point (restocks).
+ * The payment statuses (``payment_failed``/``refunded``/``chargeback``) arrive
+ * with the gateway in Fase 8 — none is created here.
+ */
+export type OrderStatus = 'pending_payment' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'canceled';
+
 export type Page_BillingPlanPublic_ = {
     data: Array<BillingPlanPublic>;
     count: number;
@@ -428,6 +504,24 @@ export type PlatformMe = {
     full_name?: (string | null);
     is_platform_admin: boolean;
     platform_roles?: Array<(string)>;
+};
+
+/**
+ * A store's checkout policies (return/exchange/privacy).
+ */
+export type PoliciesPublic = {
+    return_policy: (string | null);
+    exchange_policy: (string | null);
+    privacy_policy: (string | null);
+};
+
+/**
+ * Partial update of a store's checkout policies.
+ */
+export type PoliciesUpdate = {
+    return_policy?: (string | null);
+    exchange_policy?: (string | null);
+    privacy_policy?: (string | null);
 };
 
 /**
@@ -666,6 +760,9 @@ export type StorefrontStore = {
     description?: (string | null);
     logo_url?: (string | null);
     whatsapp_number?: (string | null);
+    return_policy?: (string | null);
+    exchange_policy?: (string | null);
+    privacy_policy?: (string | null);
 };
 
 /**
@@ -744,6 +841,9 @@ export type StoreSettingsPublic = {
     contact_phone?: (string | null);
     whatsapp_number?: (string | null);
     address?: (string | null);
+    return_policy?: (string | null);
+    exchange_policy?: (string | null);
+    privacy_policy?: (string | null);
     id: string;
     store_id: string;
     social_links?: ({
@@ -1184,6 +1284,25 @@ export type CatalogSetInventoryData = {
 };
 
 export type CatalogSetInventoryResponse = (InventoryPublic);
+
+export type CheckoutGetPoliciesData = {
+    storeId: string;
+};
+
+export type CheckoutGetPoliciesResponse = (PoliciesPublic);
+
+export type CheckoutUpdatePoliciesData = {
+    requestBody: PoliciesUpdate;
+    storeId: string;
+};
+
+export type CheckoutUpdatePoliciesResponse = (PoliciesPublic);
+
+export type CheckoutSubmitCheckoutData = {
+    requestBody: CheckoutInput;
+};
+
+export type CheckoutSubmitCheckoutResponse = (OrderPublic);
 
 export type ContentListTemplatesData = {
     storeId: string;
