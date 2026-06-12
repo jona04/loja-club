@@ -1,6 +1,6 @@
 # Fase 1 — Multi-tenancy e painel base
 
-> Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.loja.club`, seleciona loja ativa e vê um menu controlado por permissões.
+> Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.kriar.shop`, seleciona loja ativa e vê um menu controlado por permissões.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [06](../../concepts/06_multitenancy_and_domains.md), [08](../../concepts/08_modules_and_permissions.md), [09](../../concepts/09_merchant_dashboard.md), [05](../../concepts/05_frontend_architecture.md), [07](../../concepts/07_database_strategy.md), [14](../../concepts/14_security_strategy.md), [16](../../concepts/16_testing_strategy.md), [20](../../concepts/20_api_contracts_todo.md).
 
@@ -8,7 +8,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 ## Definition of Done da fase
 
-- Usuário cria loja → `store_stores` + `store_members` (owner) + `domain_hosts` (`{slug}.loja.club`).
+- Usuário cria loja → `store_stores` + `store_members` (owner) + `domain_hosts` (`{slug}.kriar.shop`).
 - Resolução por `Host` retorna o `store_id` correto; host inexistente/inativo → "loja não encontrada", sem vazar dado interno.
 - **Guard central de tenant**: nenhum recurso comercial é buscado só por id (sempre `store_id + id`); autorização sempre no backend.
 - **Padrão de API travado** (response/erro/paginação/headers de tenant) e reusado pelos endpoints.

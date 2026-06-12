@@ -57,7 +57,7 @@ Exemplos:
 | Tabela | Função |
 |---|---|
 | `account_users` | Usuários da plataforma |
-| `billing_plans` | Planos da Loja Club |
+| `billing_plans` | Planos da Kriar |
 | `platform_settings` | Configurações globais |
 | `content_theme_templates` | Templates globais disponíveis |
 | `feature_flags` | Flags de recursos |
@@ -138,13 +138,15 @@ Exemplos:
 
 ### Personalização 3D
 
-> **Fase 7 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 7](../backlog/phase-7-3d-products.md).
+> **Fase 7 (Produtos 3D).** Há **dois tipos de modelo**: o **catálogo da plataforma** (`platform_3d_models`/`_versions`, **sem `store_id`**, populado por **seed**; o lojista **escolhe** — Fase 7) e os **modelos gerados pelo lojista** (`customization_3d_models`/`_versions`, **por loja** `store_id`, gerados via API — **[Fase 12](../backlog/phase-12-merchant-3d-generation.md)**). Ver [Fase 7](../backlog/phase-7-3d-products.md).
 
 | Tabela | Função |
 |---|---|
-| `customization_3d_models` | Modelos 3D do lojista (por loja; gerados via API) |
-| `customization_3d_model_versions` | Versões dos arquivos (GLB) e parâmetros do modelo |
-| `customization_product_settings` | Configuração de personalização por produto/loja |
+| `platform_3d_models` | Catálogo público de modelos 3D da plataforma (sem `store_id`; via seed; **Fase 7**) |
+| `platform_3d_model_versions` | Versões (GLB) + áreas/limites dos modelos do catálogo |
+| `customization_3d_models` | Modelos 3D **do lojista** (por loja; gerados via API; **Fase 12**) |
+| `customization_3d_model_versions` | Versões dos arquivos (GLB) e parâmetros do modelo da loja |
+| `customization_product_settings` | Vínculo produto → modelo (do catálogo ou da loja) + config de personalização |
 | `customization_sessions` | Sessões salvas de personalização do cliente |
 | `customization_uploads` | Arquivos enviados pelo cliente |
 | `customization_cart_items` | Personalização aprovada no carrinho |
@@ -259,7 +261,7 @@ private_delivery
 O tipo `private_delivery` representa entrega combinada entre cliente e loja.
 Ele deve permitir regras por cidade, região ou estado, mas não precisa calcular automaticamente preço ou prazo na V1.
 
-### Billing da Loja Club
+### Billing da Kriar
 
 | Tabela | Função |
 |---|---|

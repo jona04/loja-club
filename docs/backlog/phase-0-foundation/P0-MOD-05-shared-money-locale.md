@@ -13,7 +13,7 @@ tests: [unit]
 # P0-MOD-05 — Tipos compartilhados globais (Money/Currency, locale, UTC)
 
 ## Contexto
-A Loja Club terá clientes **internacionais**. A base não pode assumir Brasil/Real/2 casas decimais. Como preço aparece já no catálogo (Fase 2) e cascateia para carrinho, pedido, split e billing, o **tipo de dinheiro global** precisa nascer na fundação, antes de qualquer modelo com valor monetário.
+A Kriar terá clientes **internacionais**. A base não pode assumir Brasil/Real/2 casas decimais. Como preço aparece já no catálogo (Fase 2) e cascateia para carrinho, pedido, split e billing, o **tipo de dinheiro global** precisa nascer na fundação, antes de qualquer modelo com valor monetário.
 
 ## Docs de referência
 - [07 — Database Strategy](../../concepts/07_database_strategy.md)

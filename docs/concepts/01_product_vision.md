@@ -2,17 +2,17 @@
 
 ## Visão geral
 
-A **Loja Club** será uma plataforma SaaS multi-tenant de ecommerce, permitindo que várias empresas criem e operem suas próprias lojas virtuais dentro de uma infraestrutura única.
+A **Kriar** será uma plataforma SaaS multi-tenant de ecommerce, permitindo que várias empresas criem e operem suas próprias lojas virtuais dentro de uma infraestrutura única.
 
 A proposta é entregar uma solução com a base operacional de uma plataforma como Shopify, mas com um diferencial inicial claro: atender primeiro empresas de brindes, gráficas, comunicação visual e produtos personalizados.
 
-O lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Loja Club, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
+O lojista não precisa desenvolver um ecommerce próprio, contratar hospedagem separada, configurar checkout do zero ou montar toda a infraestrutura técnica. Ele entra na Kriar, cria sua loja, cadastra produtos, configura pagamento/frete/layout e começa a vender.
 
-Além do ecommerce comum, a Loja Club permitirá produtos personalizáveis em 3D **(Fase 7 — ver [Produtos 3D](../backlog/phase-7-3d-products.md); a Fase 2 de catálogo entrega só imagem)**. O cliente escolhe um produto, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho. **Os modelos 3D são gerados pelo lojista via API de terceiros** — não há biblioteca da plataforma.
+Além do ecommerce comum, a Kriar permitirá produtos personalizáveis em 3D **(Fase 7 — ver [Produtos 3D](../backlog/phase-7-3d-products.md); a Fase 2 de catálogo entrega só imagem)**. O cliente escolhe um produto, abre uma experiência de personalização, envia uma imagem, ajusta a arte no modelo 3D, aprova o resultado visual e adiciona ao carrinho. **Os modelos 3D vêm do catálogo da plataforma** (Fase 7, via seed) ou são **gerados pelo lojista** via API de terceiros (Fase 12).
 
 ## Posicionamento
 
-A Loja Club não deve ser apresentada apenas como um “criador de sites”. Ela deve ser posicionada como uma **infraestrutura de comércio online**.
+A Kriar não deve ser apresentada apenas como um “criador de sites”. Ela deve ser posicionada como uma **infraestrutura de comércio online**.
 
 A plataforma deve oferecer:
 
@@ -20,7 +20,7 @@ A plataforma deve oferecer:
 - painel administrativo do lojista;
 - cadastro de produtos;
 - imagens e mídia;
-- modelos 3D gerados pelo lojista via API (Fase 7);
+- modelos 3D do **catálogo da plataforma** (Fase 7) + **gerados pelo lojista** via API (Fase 12);
 - produtos personalizáveis;
 - sessão de personalização salva;
 - carrinho;
@@ -43,7 +43,7 @@ O lojista deve conseguir:
 
 1. Criar sua conta.
 2. Criar uma ou mais lojas.
-3. Escolher um subdomínio inicial, por exemplo `minhaloja.loja.club`.
+3. Escolher um subdomínio inicial, por exemplo `minhaloja.kriar.shop`.
 4. Configurar identidade básica da loja.
 5. Escolher entre dois templates prontos na V1.
 6. Cadastrar produtos e imagens.
@@ -62,12 +62,12 @@ O lojista deve conseguir:
 
 ## Experiência do cliente final
 
-O cliente final deve acessar a loja pública do lojista sem necessariamente saber que a Loja Club está por trás.
+O cliente final deve acessar a loja pública do lojista sem necessariamente saber que a Kriar está por trás.
 
 Exemplos:
 
-- `brindesfortaleza.loja.club`
-- `presentescriativos.loja.club`
+- `brindesfortaleza.kriar.shop`
+- `presentescriativos.kriar.shop`
 - `www.minhaloja.com.br`
 
 O cliente final deve conseguir:
@@ -102,7 +102,7 @@ A V1 deve incluir:
 - subdomínio automático;
 - catálogo;
 - upload de imagens;
-- modelos 3D gerados pelo lojista via API, por loja (Fase 7);
+- modelos 3D do catálogo da plataforma (Fase 7) e gerados pelo lojista, por loja (Fase 12);
 - produtos personalizáveis em 3D;
 - upload de arte pelo cliente final;
 - sessão de personalização persistida;
@@ -120,7 +120,7 @@ A V1 deve incluir:
 - entrega combinada para envio local/particular;
 - cupons básicos;
 - notificações por e-mail;
-- planos da Loja Club;
+- planos da Kriar;
 - permissões por módulo;
 - admin interno;
 - observabilidade mínima;
@@ -149,7 +149,7 @@ A V1 não deve começar com:
 - banco separado por loja;
 - BI avançado;
 - wallet interna;
-- retenção de saldo pela Loja Club.
+- retenção de saldo pela Kriar.
 
 ## Princípio do produto
 
@@ -161,5 +161,5 @@ Um diferencial importante é permitir que lojas locais vendam online sem depende
 Quando fizer sentido para a região, a loja poderá oferecer entrega combinada, usando contato direto com o cliente e serviços locais como 99, Uber, motoboy próprio ou alternativas semelhantes.
 
 Outro diferencial central é a personalização 3D.
-A Loja Club começa nichada para um público que sente essa dor todos os dias: brindes, gráficas e comunicação visual.
+A Kriar começa nichada para um público que sente essa dor todos os dias: brindes, gráficas e comunicação visual.
 Ao mesmo tempo, a plataforma continua atendendo lojistas de ecommerce comum que só precisam cadastrar fotos, variações, preço e estoque.

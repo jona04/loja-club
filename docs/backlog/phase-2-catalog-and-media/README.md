@@ -58,7 +58,7 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (do
 
 ## Reconciliações da fase (registrar conforme surgirem)
 
-- **3D é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md).** O **lojista gera o modelo via API 3rd-party** (Meshy/Tripo3D/Hyper3D); não há catálogo 3D da plataforma. Decompõe em tasks quando chegar a fase.
+- **3D é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md).** Os modelos vêm do **catálogo da plataforma** (via seed; o lojista escolhe); a **geração pelo lojista** (GLB via API 3rd-party — Meshy/Tripo3D/Hyper3D) é a [Fase 12](../phase-12-merchant-3d-generation.md). Decompõe em tasks quando chegar a fase.
 - **Produto = imagem.** O campo `type` (`image`/`image_3d`/`image_3d_customizable`) entra na **Fase 7** (migration no `catalog_products`).
 - **Storage real (sem MinIO):** S3 + CloudFront de verdade desde o dev local (DEC-8); testes com `moto` + smoke real (`P2-MEDIA-01`).
 - **Pillow** para thumbnails: registrar a decisão de lib nas Fundações ao implementar `P2-MEDIA-02`.

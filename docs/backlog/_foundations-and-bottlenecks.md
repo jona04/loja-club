@@ -2,7 +2,7 @@
 
 > **Não é uma fase.** É um doc de **referência cross-fase**: invariantes e decisões que a base precisa honrar, e os **gargalos** que, se ignorados, causam retrabalho caro. Cada item aponta **em qual fase/task** é implementado. Lido junto, dá a visão de sistema para ajustar a base cedo.
 
-> **Sequência de fases:** **3D/personalização = [Fase 7 — Produtos 3D](./phase-7-3d-products.md)** (lojista gera os modelos via API de terceiros; sem catálogo da plataforma) e **planos + pagamentos = Fase 8**. Os invariantes de personalização (congelar arte no pedido — INV-P5; arte privada — INV-S2) e de pagamento valem **a partir da fase** correspondente.
+> **Sequência de fases:** **3D/personalização = [Fase 7 — Produtos 3D](./phase-7-3d-products.md)** (modelos do **catálogo da plataforma**, populados por seed; o lojista escolhe) — a **geração pelo próprio lojista** (GLB via API + mapear área) é a **[Fase 12](./phase-12-merchant-3d-generation.md)**; **planos + pagamentos + pagamento em 2 etapas = Fase 8**. Os invariantes de personalização (congelar arte no pedido — INV-P5; arte privada — INV-S2) e de pagamento valem **a partir da fase** correspondente.
 
 Relaciona-se com: [03](../concepts/03_system_architecture.md), [06](../concepts/06_multitenancy_and_domains.md), [07](../concepts/07_database_strategy.md), [08](../concepts/08_modules_and_permissions.md), [11](../concepts/11_checkout_payments_and_split.md), [13](../concepts/13_performance_cache_and_cdn.md), [14](../concepts/14_security_strategy.md), [20](../concepts/20_api_contracts_todo.md), [23](../concepts/23_customer_identity_and_guest_checkout.md).
 
@@ -76,7 +76,7 @@ Relaciona-se com: [03](../concepts/03_system_architecture.md), [06](../concepts/
 - **INV-P1 — Abstração de provedor de pagamento** (não assumir um único gateway BR; permitir multi-região, ex.: Stripe internacional). → Fase 8.
 - **INV-P2 — Confirmação só por webhook** assinado + **idempotente** (tabela `payment_webhooks`, `gateway_event_id` único). → Fase 8.
 - **INV-P3 — Nunca armazenar cartão**; dados sensíveis no gateway. → Fase 8.
-- **INV-P4 — Split usa a comissão do plano**; Loja Club não retém dinheiro. → Fase 8 (billing/payments).
+- **INV-P4 — Split usa a comissão do plano**; Kriar não retém dinheiro. → Fase 8 (billing/payments).
 - **INV-P5 — Personalização aprovada é congelada no pedido** (cópia própria), independente da sessão viva. → Fase 6.
 
 ## 8. Segurança & privacidade
@@ -178,4 +178,5 @@ Não duplicar cobertura de ramos no nível de cima.
 | SMS/WhatsApp | Fase 8 |
 | Fundação de testes (layout, isolamento, mocks, vitest) | Fase 0 — `P0-TEST-01` |
 | Fixtures/factories multi-tenant + testes de isolamento | Fase 1 |
-| Auditoria, rate limit completo, segredos, backups | Fase 9 |
+| Rate limit (endpoints sensíveis), segredos (SSM), backups ligados — **mínimo** | Fase 9 |
+| Auditoria (`audit`), hardening completo, retenção de logs, restore testado | Fase 10 |

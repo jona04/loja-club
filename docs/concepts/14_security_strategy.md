@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A Loja Club será uma plataforma multi-tenant de ecommerce. Segurança é crítica porque o sistema lidará com:
+A Kriar será uma plataforma multi-tenant de ecommerce. Segurança é crítica porque o sistema lidará com:
 
 - dados de lojistas;
 - dados de clientes finais;
@@ -22,7 +22,7 @@ A Loja Club será uma plataforma multi-tenant de ecommerce. Segurança é críti
 3. Frontend esconder botão não é segurança.
 4. Backend deve validar permissão em toda ação crítica.
 5. Webhooks devem ser validados e idempotentes.
-6. A Loja Club não deve armazenar cartão.
+6. A Kriar não deve armazenar cartão.
 7. Segredos não devem ficar no código.
 8. Uploads devem ser validados.
 9. Ações sensíveis devem gerar auditoria.
@@ -95,7 +95,7 @@ Frontend apenas melhora UX.
 
 ## Admin da plataforma
 
-Admins internos da Loja Club precisam de permissões globais.
+Admins internos da Kriar precisam de permissões globais.
 
 Ações sensíveis devem gerar auditoria:
 
@@ -143,7 +143,7 @@ Arquivos enviados pelo cliente não devem seguir a mesma regra dos assets públi
 
 ## Pagamentos
 
-A Loja Club não deve armazenar cartão.
+A Kriar não deve armazenar cartão.
 
 Dados sensíveis de pagamento devem ficar no gateway.
 
@@ -201,7 +201,7 @@ Não commitar:
 
 ## LGPD
 
-A Loja Club lidará com dados pessoais.
+A Kriar lidará com dados pessoais.
 
 Dados típicos:
 
@@ -279,14 +279,14 @@ Adicionar headers de segurança quando aplicável:
 Permitir apenas origens esperadas:
 
 ```text
-app.loja.club
-admin.loja.club
-*.loja.club
-loja.club
+app.kriar.shop
+admin.kriar.shop
+*.kriar.shop
+kriar.shop
 ```
 
 Cuidado com wildcard amplo em APIs autenticadas.
 
 ## Decisão canônica
 
-A segurança da Loja Club depende principalmente de isolamento por `store_id`, permissões fortes no backend, validação de webhooks, não armazenar dados sensíveis de pagamento, auditoria, gestão segura de segredos e tratamento privado dos arquivos de personalização.
+A segurança da Kriar depende principalmente de isolamento por `store_id`, permissões fortes no backend, validação de webhooks, não armazenar dados sensíveis de pagamento, auditoria, gestão segura de segredos e tratamento privado dos arquivos de personalização.

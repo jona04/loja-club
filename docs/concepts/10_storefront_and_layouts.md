@@ -11,8 +11,8 @@ Além das páginas tradicionais de ecommerce, o storefront deve suportar produto
 Exemplos:
 
 ```text
-brindesfortaleza.loja.club
-presentescriativos.loja.club
+brindesfortaleza.kriar.shop
+presentescriativos.kriar.shop
 www.minhaloja.com.br
 ```
 
@@ -47,7 +47,7 @@ Toda requisição do storefront deve resolver a loja pelo domínio.
 
 Fluxo:
 
-1. usuário acessa `empresa.loja.club`;
+1. usuário acessa `empresa.kriar.shop`;
 2. storefront lê o host;
 3. consulta backend ou cache;
 4. backend busca em `domain_hosts`;
@@ -100,7 +100,7 @@ frontend-storefront/
 
 - **Cada template = uma árvore de componentes própria** no `frontend-storefront` (`templates/<nome>/{Home,Category,Product,blocos}`), não só estilo condicional; um **resolver** mapeia `active_template_id` → a árvore.
 - **2–3 templates** bem distintos (carrossel no topo, hero, seções ricas), adaptados de **referências de design** fornecidas.
-- **Registro:** `content_theme_templates` lista os disponíveis, cada um com **`preview_image_url`**. O painel mostra **lista + imagem** (o lojista escolhe pela imagem; **não há preview ao vivo** ainda). Por ora os templates entram via **seed/código** — a **tela de admin** (loja.club) pra cadastrá-los é **futura** (Fase 4 — admin).
+- **Registro:** `content_theme_templates` lista os disponíveis, cada um com **`preview_image_url`**. O painel mostra **lista + imagem** (o lojista escolhe pela imagem; **não há preview ao vivo** ainda). Por ora os templates entram via **seed/código** — a **tela de admin** (kriar.shop) pra cadastrá-los é **futura** (Fase 4 — admin).
 - **Models mais ricos:** carrossel (vários banners ordenados → `content_banners`), seções configuráveis, etc. — reaproveita `content_banners`/`content_menus`/`content_pages`; campos/tabelas novos **a definir** no spec.
 - **Contrato (invariante):** trocar de template **não quebra** o fluxo do cliente — todos consomem o mesmo contrato de dados e levam ao mesmo **fluxo de compra** (Fase 6); e **todos reservam um slot pro editor 3D** (Fase 7).
 - **Telas por template (V1 + Fase 6):** Home · Categoria · Produto · **Checkout single-page** · Confirmação. O **carrinho é um drawer** (mini-carrinho no header), não página separada. Editor 3D (Fase 7) e área do cliente/login/acompanhar pedido (Fase 8) entram depois; **página institucional** reusa o *shell* do template.
@@ -182,14 +182,14 @@ A V1 deve permitir preview simples.
 Possíveis URLs:
 
 ```text
-app.loja.club/layout/preview/classic
-app.loja.club/layout/preview/modern
+app.kriar.shop/layout/preview/classic
+app.kriar.shop/layout/preview/modern
 ```
 
 Ou:
 
 ```text
-preview.loja.club/{store_slug}?template=classic
+preview.kriar.shop/{store_slug}?template=classic
 ```
 
 Para V1, o preview dentro do painel é suficiente.

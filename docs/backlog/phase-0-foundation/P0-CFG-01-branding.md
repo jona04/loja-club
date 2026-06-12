@@ -1,6 +1,6 @@
 ---
 id: P0-CFG-01
-title: Branding Loja Club
+title: Branding Kriar
 phase: 0
 etapa: "Etapa 1 — Fundação do projeto"
 area: CFG
@@ -10,18 +10,18 @@ blocks: []
 tests: none
 ---
 
-# P0-CFG-01 — Branding Loja Club
+# P0-CFG-01 — Branding Kriar
 
 ## Contexto
-O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identidade do template: `PROJECT_NAME="Full Stack FastAPI Project"`, título do template no frontend, nomes de stack genéricos. Esta task dá a cara da Loja Club.
+O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identidade do template: `PROJECT_NAME="Full Stack FastAPI Project"`, título do template no frontend, nomes de stack genéricos. Esta task dá a cara da Kriar.
 
 ## Docs de referência
 - [04 — FastAPI Template Adaptation](../../concepts/04_fastapi_template_adaptation.md)
 
 ## Escopo (o que ENTRA)
-- `.env`: `PROJECT_NAME="Loja Club"`, `STACK_NAME=loja-club`, `DOCKER_IMAGE_BACKEND=loja-club-backend`, `DOCKER_IMAGE_FRONTEND=loja-club-frontend`.
-- `frontend-dashboard/index.html`: `<title>` e favicon da Loja Club.
-- `README.md` (raiz) e `copier.yml`: nome do projeto Loja Club.
+- `.env`: `PROJECT_NAME="Kriar"`, `STACK_NAME=loja-club`, `DOCKER_IMAGE_BACKEND=loja-club-backend`, `DOCKER_IMAGE_FRONTEND=loja-club-frontend`.
+- `frontend-dashboard/index.html`: `<title>` e favicon da Kriar.
+- `README.md` (raiz) e `copier.yml`: nome do projeto Kriar.
 - Confirmar que `EMAILS_FROM_NAME` herda de `PROJECT_NAME` (já há `_set_default_emails_from` em `config.py`).
 
 ## Fora de escopo (o que NÃO entra)
@@ -31,7 +31,7 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 ## Arquivos a criar/alterar
 - `.env` (alterar) — `PROJECT_NAME`, `STACK_NAME`, `DOCKER_IMAGE_*`.
 - `frontend-dashboard/index.html` (alterar) — título.
-- `frontend-dashboard/public/` (alterar) — favicon placeholder Loja Club.
+- `frontend-dashboard/public/` (alterar) — favicon placeholder Kriar.
 - `README.md` (alterar) — nome/descrição.
 - `copier.yml` (alterar) — nome do projeto.
 
@@ -48,11 +48,11 @@ O projeto foi gerado do Full Stack FastAPI Template e ainda está com a identida
 - **Quando:** —
 
 ## Definition of Done
-- [x] Painel abre com título "Loja Club". *(título em `index.html`; confirmação visual ao subir o front)*
-- [x] E-mails de teste usam o nome "Loja Club" como remetente. *(via `PROJECT_NAME` → `EMAILS_FROM_NAME` no `config.py`)*
+- [x] Painel abre com título "Kriar". *(título em `index.html`; confirmação visual ao subir o front)*
+- [x] E-mails de teste usam o nome "Kriar" como remetente. *(via `PROJECT_NAME` → `EMAILS_FROM_NAME` no `config.py`)*
 - [x] Containers locais usam o prefixo `loja-club-*` (via `STACK_NAME`/`DOCKER_IMAGE_*`).
 
 ## Notas / Reconciliações
 - Sem divergência com docs: é só configuração/branding do template.
-- **Pendente (design, não gerável aqui):** favicon/logo da Loja Club. Mantidos os ícones do template em `frontend-dashboard/index.html` (`vite.svg`/`favicon.png`) até existir o asset real.
-- README raiz reescrito (era o do template); `copier.yml` e `.env` com nome/stack Loja Club.
+- **Pendente (design, não gerável aqui):** favicon/logo da Kriar. Mantidos os ícones do template em `frontend-dashboard/index.html` (`vite.svg`/`favicon.png`) até existir o asset real.
+- README raiz reescrito (era o do template); `copier.yml` e `.env` com nome/stack Kriar.

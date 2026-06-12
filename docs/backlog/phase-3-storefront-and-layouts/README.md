@@ -2,7 +2,7 @@
 
 > O **editor 3D + personalização** é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md). Esta fase entrega o **storefront base** (só imagem) + os layouts.
 
-> Objetivo: a loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (imagem) e categorias renderizam; o lojista troca o template e a vitrine muda.
+> Objetivo: a loja pública abre em `nomedaloja.kriar.shop` com o template escolhido; produtos (imagem) e categorias renderizam; o lojista troca o template e a vitrine muda.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [05](../../concepts/05_frontend_architecture.md), [06](../../concepts/06_multitenancy_and_domains.md), [10](../../concepts/10_storefront_and_layouts.md), [13](../../concepts/13_performance_cache_and_cdn.md), [07](../../concepts/07_database_strategy.md), [20](../../concepts/20_api_contracts_todo.md), [21](../../concepts/21_design_system_todo.md), [16](../../concepts/16_testing_strategy.md).
 
@@ -88,7 +88,7 @@ P3-TPL-01 (arquitetura + Aurora) → P3-TPL-02 (Bazar + Studio)  ∥  P3-TPL-03 
 - [ ] **Home: contato + links sociais** (`P3-SF-02`): doc 10 §"Componentes da home" — além do WhatsApp, expor contato/links sociais (menu configurável já coberto pelos follow-ups de menu).
 - [x] **Produto: ação de compra (carrinho)** (`P3-SF-02` → Fase 6) ✅ `P6-SF-01`: o produto ganhou add-to-cart real (carrinho de servidor). *(O WhatsApp da vitrine segue como botão flutuante de contato; o handoff de pagamento por WhatsApp é na confirmação do checkout.)*
 - [x] **Layout/design da vitrine — 1ª passada** (`P3-SF-02`): redesenhada com cara de ecommerce — header sticky (logo/inicial + nav em pills), hero (banner no `modern`), cards com hover, galeria de produto interativa, tipografia **Inter**, espaçamento, estados vazios, responsivo e cores do tema via `--primary`/bg/fonte. **Resta:** menu mobile (hamburguer), busca e refinos do [doc 21 — Design System](../../concepts/21_design_system_todo.md). (O salto pra **templates profissionais** é a `P3-TPL-01`.)
-- [x] **Admin (loja.club) pra cadastrar templates** (`P3-TPL-03`) **→ `P4-ADMIN-03`** ✅: CRUD de templates + thumbnail no CDN + schema read-only *(import de imagens / loja-demo / preview navegável = [Fase 5](../phase-5-store-configuration.md))*.
+- [x] **Admin (kriar.shop) pra cadastrar templates** (`P3-TPL-03`) **→ `P4-ADMIN-03`** ✅: CRUD de templates + thumbnail no CDN + schema read-only *(import de imagens / loja-demo / preview navegável = [Fase 5](../phase-5-store-configuration.md))*.
 - [x] **Preview ao vivo no painel** (`P3-TPL-03`) **→ [Fase 5](../phase-5-store-configuration.md) (Etapa 4)** ✅ `P5-PREV-01`: preview navegável (loja-demo por template) em outra aba. (Render inline com os dados da própria loja segue futuro.)
 - [ ] **Compatibilidade 3D dos templates** (`P3-TPL-01`/`P3-TPL-02` → Fase 7): reservar o **slot** do editor 3D na página de produto de **todos** os templates.
 - [ ] **Checkout + confirmação dos templates** (`P3-TPL-01`/`P3-TPL-02` → **Fase 6**): as telas de **checkout single-page + confirmação** dos 3 templates **já estão desenhadas** (`docs/design/templates/<nome>/`); ficam **funcionais na Fase 6** (carrinho/pedido).

@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-**Kriar** é a marca pública pensada para evoluir a Loja Club para uma plataforma de ecommerce com IA.
+**Kriar** é a marca pública: uma plataforma de ecommerce com IA.
 
 A marca deve ser ampla o suficiente para vender para pequenos negócios em geral, mas forte o bastante para sustentar diferenciais como criação de lojas por IA, produtos personalizáveis, experiências 3D, créditos de IA e fluxos comerciais mais inteligentes.
 
@@ -16,9 +16,8 @@ Marca:
 
 - **Kriar**
 
-Domínios comprados:
+Domínio:
 
-- `kriar.ai`
 - `kriar.shop`
 
 Leitura desejada no Brasil:
@@ -46,36 +45,18 @@ A marca principal deve ser simplesmente:
 
 ## Estratégia de domínios
 
-`kriar.ai` deve ser o domínio principal da empresa e da plataforma.
+`kriar.shop` é o **único domínio** — plataforma e lojas no mesmo domínio.
 
-Uso recomendado:
+Uso:
 
-- site institucional;
-- login;
-- painel do lojista;
-- aplicação principal;
-- documentação;
-- API;
-- páginas sobre IA, planos e créditos.
+- **Plataforma:** `kriar.shop` (institucional/`www.`), `app.kriar.shop` (painel do lojista), `api.kriar.shop` (API/backend), `admin.kriar.shop` (admin interno).
+- **Lojas dos lojistas:** subdomínios `*.kriar.shop` (ex.: `minhaloja.kriar.shop`), lojas demo e campanhas comerciais.
 
 Exemplos:
 
-- `kriar.ai`
-- `app.kriar.ai`
-- `api.kriar.ai`
-- `docs.kriar.ai`
-
-`kriar.shop` deve ser usado para lojas publicadas, demos e campanhas comerciais.
-
-Uso recomendado:
-
-- subdomínios das lojas;
-- lojas demo;
-- campanhas de ecommerce;
-- exemplos públicos.
-
-Exemplos:
-
+- `app.kriar.shop`
+- `api.kriar.shop`
+- `admin.kriar.shop`
 - `brindes.kriar.shop`
 - `demo.kriar.shop`
 - `minhaloja.kriar.shop`
@@ -280,8 +261,8 @@ Regra:
 Arquitetura recomendada para a primeira versão pública:
 
 - **Kriar**: marca principal e nome da plataforma.
-- **Kriar Store**: nome do produto principal quando for necessário diferenciar a oferta de ecommerce. Inclui criação da loja, vitrine, catálogo, templates, checkout, pedidos, clientes, equipe, domínios, relatórios e operação. Na primeira landing, pode nem aparecer; o lojista compra **Kriar**.
-- **Produtos 3D**: diferencial comercial dentro do Kriar Store. Inclui geração/vínculo de modelo 3D via API de terceiros, definição de áreas personalizáveis, upload de arte, aprovação visual e snapshot no pedido. Pode ter página própria, mas não precisa virar uma submarca. Em inglês: **3D Products**.
+- **Kriar**: nome do produto principal quando for necessário diferenciar a oferta de ecommerce. Inclui criação da loja, vitrine, catálogo, templates, checkout, pedidos, clientes, equipe, domínios, relatórios e operação. Na primeira landing, pode nem aparecer; o lojista compra **Kriar**.
+- **Produtos 3D**: diferencial comercial dentro do Kriar. Inclui geração/vínculo de modelo 3D via API de terceiros, definição de áreas personalizáveis, upload de arte, aprovação visual e snapshot no pedido. Pode ter página própria, mas não precisa virar uma submarca. Em inglês: **3D Products**.
 - **Créditos de IA**: mecanismo comercial e financeiro para recursos que geram custo real de API. Em inglês: **AI Credits**. Deve ser explicado como pacote de uso produtivo, não como pedágio para tudo.
 - **Kriar Admin**: nome interno possível para o admin da plataforma, não uma marca pública para lojistas.
 
@@ -360,9 +341,9 @@ Navegação inicial em português:
 
 `Produtos 3D` pode entrar na navegação principal quando a campanha estiver focada em brindes, gráficas ou personalizados. Na home mais geral, pode aparecer apenas como seção ou página interna.
 
-## Relação com Loja Club
+## Relação com Kriar
 
-Loja Club pode continuar como nome histórico do projeto, codinome interno ou nome antigo enquanto a transição acontece.
+Kriar pode continuar como nome histórico do projeto, codinome interno ou nome antigo enquanto a transição acontece.
 
 Para marca pública, a direção recomendada é migrar para:
 
@@ -375,10 +356,9 @@ Essa decisão ainda pode exigir ajustes futuros em documentação, UI, domínios
 - Definir logo final.
 - Definir paleta final.
 - Definir tipografia.
-- Decidir se `kriar.ai` será sempre o domínio principal da aplicação.
-- Decidir se todas as lojas publicadas usarão `*.kriar.shop`.
-- Decidir se Loja Club será removido da marca pública ou mantido como legado temporário.
 - Validar marca no INPI, USPTO e TMview.
+
+> **Decidido:** o domínio é **`kriar.shop`** (único — plataforma em `app.`/`api.`/`admin.`, lojas em `*.kriar.shop`); o nome antigo foi totalmente substituído por **Kriar**.
 - Validar redes sociais e handles oficiais.
 
 ## Princípio guia

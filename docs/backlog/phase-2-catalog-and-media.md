@@ -58,4 +58,4 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 ## Reconciliações
 
-- **3D — Fase 7:** o lojista gera o modelo via API 3rd-party; **não há biblioteca 3D da plataforma**. Ver [Fase 7](./phase-7-3d-products.md) e doc [22](../concepts/22_product_customization_3d.md).
+- **3D — Fase 7:** os modelos vêm do **catálogo da plataforma** (via seed; o lojista escolhe); a **geração pelo lojista** (GLB via API) é a [Fase 12](./phase-12-merchant-3d-generation.md). Ver [Fase 7](./phase-7-3d-products.md) e doc [22](../concepts/22_product_customization_3d.md).

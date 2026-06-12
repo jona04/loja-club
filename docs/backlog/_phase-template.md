@@ -1,6 +1,6 @@
-# Fase N — Título (dev local | dev online na AWS)
+# Fase N — Título (dev local | dev online na AWS | produção)
 
-> Objetivo: **1 parágrafo** — o que a fase entrega e por quê. (Ambiente: **dev local** nas Fases 0–7; **dev online na AWS (EC2)** nas Fases 8–9.)
+> Objetivo: **1 parágrafo** — o que a fase entrega e por quê. (Ambiente: **dev local** nas Fases 0–8; **dev online na AWS (EC2)** nas Fases 9–10; **produção** na Fase 11.)
 
 Docs de referência: [NN](../NN_nome.md), [NN](../NN_nome.md), … *(os docs conceituais que a fase realiza)*
 

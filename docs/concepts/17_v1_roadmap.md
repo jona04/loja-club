@@ -2,24 +2,24 @@
 
 ## Objetivo
 
-Construir uma primeira versão da Loja Club capaz de operar lojas reais.
+Construir uma primeira versão da Kriar capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-> **Toda a V1 é um ambiente de desenvolvimento (dev).** As Fases 0–7 rodam **local** (na máquina do desenvolvedor) e as Fases 8–9 sobem o sistema **no ar na AWS, em EC2**. A **produção robusta** (ECS/Fargate + ALB) fica para **depois da V1**. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+> **Ambientes.** As Fases **0–8** rodam **local** (na máquina do dev); a **Fase 9** sobe o sistema **no ar na AWS, em EC2** (ainda **dev**); a **Fase 10** consolida (follow-ups + segurança); a **Fase 11** é a **produção robusta** (ECS/Fargate + ALB). A **Fase 12** dá ao lojista a geração do próprio 3D. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
 
-A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração de pagamento/split para o final** (Fase 8).
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração de pagamento/split para o final** (Fase 8) e o **deploy** logo depois (Fase 9).
 
 Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
 
 ## Como ler este roadmap
 
 - As etapas estão agrupadas em **fases**.
-- **Toda a V1 é dev:** Fases 0–7 **local**; Fases 8–9 **online na AWS (EC2)**. Produção robusta (ECS/Fargate) é **pós-V1**.
+- **Ambientes:** Fases 0–8 **local**; Fase 9 **dev online na AWS (EC2)**; Fase 10 consolidação; **Fase 11 produção** (ECS/Fargate).
 - Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
-- O **marco do MVP (dev local)** acontece ao fim da Fase 6, **antes** de subir para a AWS e de pagamentos.
+- O **marco do MVP (dev local)** acontece ao fim da Fase 6, **antes** de pagamentos e do deploy.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Deploy na AWS, conta do cliente, pagamento e billing** ficam nas Fases 8–9.
+- **Conta do cliente, pagamento e billing** = Fase 8 (local); **deploy dev na AWS** = Fase 9; **produção** = Fase 11.
 - Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
 - **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](../backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
 
@@ -32,7 +32,7 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 Entregas:
 
 - criar projeto a partir do Full Stack FastAPI Template;
-- configurar nome/branding Loja Club (`PROJECT_NAME`, e-mails, frontend);
+- configurar nome/branding Kriar (`PROJECT_NAME`, e-mails, frontend);
 - configurar variáveis de ambiente;
 - rodar Docker Compose local;
 - validar backend;
@@ -46,7 +46,7 @@ Entregas:
 Resultado:
 
 ```text
-Projeto base rodando localmente com backend, frontend, banco e proxy, já com a cara da Loja Club.
+Projeto base rodando localmente com backend, frontend, banco e proxy, já com a cara da Kriar.
 ```
 
 ### Etapa 2 — Refatoração modular
@@ -94,7 +94,7 @@ Usuário cria loja e os dados ficam isolados por store_id.
 
 Entregas:
 
-- painel em `app.loja.club` (local: `app.localhost`);
+- painel em `app.kriar.shop` (local: `app.localhost`);
 - login;
 - seleção de loja ativa;
 - menu modular;
@@ -137,7 +137,7 @@ Resultado:
 Lojista consegue cadastrar produtos reais com imagens (servidas por S3/CloudFront).
 ```
 
-> A personalização 3D é a **Fase 7 — Produtos 3D** (ver abaixo): o lojista **gera o modelo via API de terceiros**; não há biblioteca da plataforma.
+> A personalização 3D é a **Fase 7 — Produtos 3D** (ver abaixo): os modelos vêm do **catálogo da plataforma** (populado por seed; o lojista **escolhe**). A **geração pelo próprio lojista** (GLB via API + mapear área) é a **Fase 12**.
 
 ---
 
@@ -164,7 +164,7 @@ Entregas:
 Resultado:
 
 ```text
-Loja pública abre em nomedaloja.loja.club (local: *.localhost).
+Loja pública abre em nomedaloja.kriar.shop (local: *.localhost).
 ```
 
 ### Etapa 2 — Layouts/templates
@@ -191,7 +191,7 @@ Lojista escolhe entre 2 layouts e a loja pública muda ao salvar.
 
 ## Fase 4 — Admin do SaaS (dev local)
 
-> Objetivo: a equipe Loja Club ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](../backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
+> Objetivo: a equipe Kriar ganha o **admin** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a configuração da loja (Fase 5). Detalhe em [`backlog/phase-4-platform-admin.md`](../backlog/phase-4-platform-admin.md); decisões em [25](./25_platform_admin.md).
 
 Entregas:
 
@@ -388,16 +388,17 @@ Este é o ponto que você pediu para alcançar o quanto antes: o sistema **rodan
 
 ---
 
-## Fase 7 — Produtos 3D (dev local)
+## Fase 7 — Produtos 3D — catálogo da plataforma (dev local)
 
-> O **lojista gera o próprio modelo 3D (GLB) via API de terceiros** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)); **não há catálogo 3D da plataforma**. Modelos **por loja**. Detalhe em [`backlog/phase-7-3d-products.md`](../backlog/phase-7-3d-products.md).
+> Os modelos 3D personalizáveis vêm de um **catálogo público da plataforma** (caneca, camiseta…), **populado por seed** pelo dev (igual ao registro de templates — rápido/barato; o lojista não gera GLB de item comum); o **admin só habilita/desabilita**, e o lojista **escolhe** do catálogo. A **geração pelo próprio lojista** (GLB via API + mapear área) é a **Fase 12**. Detalhe em [`backlog/phase-7-3d-products.md`](../backlog/phase-7-3d-products.md).
 
 ### Etapa 1 — Produtos 3D e personalização
 
 Entregas:
 
+- **catálogo público de modelos 3D** (plataforma, via **seed**) + **admin habilita/desabilita**;
 - módulo `product_customization`;
-- **geração de modelo 3D via API** (lojista, a partir de imagem/descrição) → GLB por loja no S3;
+- o lojista **escolhe um modelo do catálogo** e vincula ao produto;
 - campo `type` do produto (`image`/`image_3d`/`image_3d_customizable`);
 - configuração de produto personalizável;
 - sessão de personalização salva;
@@ -411,36 +412,16 @@ Entregas:
 Resultado:
 
 ```text
-Cliente personaliza, em 3D, um produto cujo modelo o próprio lojista gerou via API, aprova a arte, e o lojista recebe exatamente o que foi aprovado.
+Cliente personaliza, em 3D, um produto cujo modelo veio do catálogo da plataforma, aprova a arte, e o lojista recebe exatamente o que foi aprovado — sem gerar nenhum GLB.
 ```
 
 ---
 
-## Fase 8 — Dev online na AWS (EC2)
+## Fase 8 — Conta do cliente, pagamentos e billing (dev local)
 
-> Aqui o sistema vai **para o ar** (ainda como ambiente **dev**), em **EC2**. Subir antes de pagamentos é necessário porque o gateway envia **webhooks** para uma URL pública.
+> Conta do cliente, gateway com **split**, **billing** e **pagamento em 2 etapas** — **construído e testado local** (webhooks **mockados**). O **deploy dev na AWS** (que destrava os webhooks reais) é a **Fase 9**. Detalhe em [`backlog/phase-8-customer-account-and-payments.md`](../backlog/phase-8-customer-account-and-payments.md).
 
-### Etapa 1 — Deploy do ambiente dev na AWS (EC2)
-
-Entregas:
-
-- provisionar **EC2 + Docker Compose + Traefik**;
-- **RDS PostgreSQL**;
-- **Redis** (container no EC2 ou ElastiCache);
-- **S3 + CloudFront** do ambiente online (a implementação já existe desde o dev local);
-- **Route 53** com wildcard `*.loja.club` + `api.`/`app.`;
-- **SSL** via Traefik/Let's Encrypt (ACM depois);
-- **SES/SMTP real** para os e-mails;
-- **não expor** Adminer/Mailcatcher/Traefik dashboard;
-- health checks acessíveis.
-
-Resultado:
-
-```text
-Sistema no ar (dev), em EC2, pronto para receber webhooks de pagamento.
-```
-
-### Etapa 2 — Conta e login do cliente
+### Etapa 1 — Conta e login do cliente
 
 > Detalhes em `23_customer_identity_and_guest_checkout.md`. No MVP o cliente já é identificado por e-mail/telefone; aqui ele ganha login e área própria, sincronizando com o que comprou como convidado.
 
@@ -462,7 +443,7 @@ Resultado:
 Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
 ```
 
-### Etapa 3 — Pagamentos e split
+### Etapa 2 — Pagamentos e split
 
 Entregas:
 
@@ -471,20 +452,34 @@ Entregas:
 - payment account por loja;
 - criação de transação;
 - split automático;
-- webhook assinado;
-- idempotência;
+- webhook assinado + idempotência (**contra mock** local; real na Fase 9);
 - status de pagamento;
 - atualização de pedido por webhook;
 - substituir o "pagamento combinado" pelo gateway no checkout;
-- testes de webhook.
+- testes de webhook (mock).
 
 Resultado:
 
 ```text
-Cliente paga, gateway divide valores e pedido é atualizado por webhook.
+Cliente paga, gateway divide valores e pedido é atualizado por webhook (validado contra mock; real na Fase 9).
 ```
 
-### Etapa 4 — Billing da Loja Club
+### Etapa 3 — Pagamento em 2 etapas (sinal + saldo na entrega)
+
+Entregas:
+
+- ativar/desativar a modalidade por loja + **percentual do sinal** (default 50%) — config no painel;
+- **opção no checkout**: "pagar tudo agora" ou "sinal de X% agora + saldo na entrega" (mostra os valores);
+- modelo: `order.payment_plan` (`full|deposit_balance`) + `deposit_amount`/`balance_amount`; o **sinal** vira transação no gateway (com split), o **saldo** é marcado recebido na entrega;
+- **status próprio** `payment_status` `pending→deposit_paid→paid`, visível pra **cliente** (confirmação/área), **lojista** (painel + "marcar saldo recebido") e **admin** (operação).
+
+Resultado:
+
+```text
+O cliente paga 50% agora e 50% na entrega; lojista, cliente e admin acompanham o sinal e o saldo pelo status.
+```
+
+### Etapa 4 — Billing da Kriar
 
 Entregas:
 
@@ -500,90 +495,113 @@ Entregas:
 Resultado:
 
 ```text
-Loja Club começa a monetizar por mensalidade e/ou comissão.
+Kriar começa a monetizar por mensalidade e/ou comissão.
 ```
 
 ---
 
-## Fase 9 — Operação da plataforma, CI/CD e beta
+## Fase 9 — Deploy dev na AWS + ops mínimo (dev online)
 
-> O **admin da plataforma** é a **Fase 4** (antes do lançamento — ver [`backlog/phase-4-platform-admin.md`](../backlog/phase-4-platform-admin.md)); aqui ficam **segurança/observabilidade, CI/CD e o beta**.
+> Sobe o sistema **para o ar** (ainda **dev**, em **EC2**) — o que destrava os **webhooks reais** de pagamento (Fase 8) — com o **mínimo** de CI/CD e ops/segurança pra operar. O **admin** já está no ar desde a **Fase 4**. Revisão geral = **Fase 10**; produção = **Fase 11**; beta = **Fase 11**. Detalhe em [`backlog/phase-9-platform-ops-and-dev-deploy.md`](../backlog/phase-9-platform-ops-and-dev-deploy.md).
 
-### Etapa 1 — Segurança e observabilidade
+### Etapa 1 — Deploy do ambiente dev na AWS (EC2)
 
 Entregas:
 
-- auditoria;
-- Sentry;
-- CloudWatch;
-- health checks completos;
-- rate limit;
-- validação de webhooks;
-- política de segredos;
-- segurança de uploads de arte;
-- URLs assinadas para arquivos privados;
-- backups;
-- logs estruturados;
-- alertas mínimos.
+- provisionar **EC2 + Docker Compose + Traefik** (mesmo stack do dev local);
+- **RDS PostgreSQL**; **Redis** (container ou ElastiCache);
+- **S3 + CloudFront** do ambiente; **Route 53** (`*.kriar.shop` + `api.`/`app.`/`admin.`);
+- **SSL** via Traefik/Let's Encrypt (ACM é a Fase 11);
+- **SES/SMTP real** (substitui o Mailcatcher); **não expor** Adminer/Mailcatcher/Traefik;
+- segredos em SSM; health checks acessíveis (já existem).
+
+### Etapa 2 — Go-live dos pagamentos (webhook real)
+
+Entregas:
+
+- apontar o gateway pra URL pública; **validar webhook real** (assinatura + idempotência); confirmar transação/pedido/split de ponta a ponta;
+- conferir o **pagamento em 2 etapas** online.
+
+### Etapa 3 — CI/CD
+
+Entregas:
+
+- GitHub Actions: lint + type check + testes + build Docker;
+- **gate de e2e** (Playwright de todos os frontends → só sobe o que passa);
+- deploy automatizado pro **EC2 (dev online)** a cada merge; disciplina de migrations; rollback básico.
+
+### Etapa 4 — Ops/segurança mínimo
+
+Entregas:
+
+- Sentry (DSN por ambiente); logs estruturados + alertas básicos;
+- **rate limit** nos endpoints sensíveis; HTTPS + headers + CORS restrito; backups do RDS ligados.
 
 Resultado:
 
 ```text
-Ambiente dev online pronto para uso controlado.
+Sistema no ar (dev) na AWS, pagamentos rodando de verdade, deploy automatizado.
 ```
 
-### Etapa 2 — CI/CD
+---
+
+## Fase 10 — Follow-ups, débito técnico e segurança geral (dev online)
+
+> Consolidação antes da produção: **zera os follow-ups/débito técnico** das fases 0–9 e faz a **revisão geral de segurança**. Detalhe em [`backlog/phase-10-followups-and-hardening.md`](../backlog/phase-10-followups-and-hardening.md).
 
 Entregas:
 
-- GitHub Actions: lint + type check + testes;
-- build das imagens Docker;
-- push para registry (ECR/registry escolhido);
-- deploy automatizado para o **EC2 (dev online)**;
-- disciplina de migrations (rodar em dev antes);
-- rollback básico.
+- varredura e fechamento de **todos os follow-ups** (campo de cupom na vitrine + tela de cupons, corridas/idempotência, limpeza de sessões, N+1, LGPD `customer_consents`/export, MJML no pipeline, etc.);
+- módulo **`audit`** (auditoria de negócio) + **hardening completo** (restore testado, CSP, retenção de logs, revisão de permissões);
+- revisão de performance/cache/índices e edge cases.
 
 Resultado:
 
 ```text
-Deploy automatizado do ambiente dev na AWS a cada merge.
+Sistema sólido, sem follow-ups soltos, revisado de segurança — pronto pra produção.
 ```
+
+---
+
+## Fase 11 — Produção na AWS + beta com lojas reais
+
+> Troca a orquestração por **serviços gerenciados** (mantendo backend/banco/storage) e valida com um **beta** real. Detalhe em [`backlog/phase-11-production.md`](../backlog/phase-11-production.md).
+
+### Etapa 1 — Infra de produção
+
+- **ECS/Fargate + ECR**; **ALB** + **ACM**; **RDS Multi-AZ**/read replicas; **ElastiCache**; **autoescala**; **CD** apontando pra ECS + rollback testado.
+
+### Etapa 2 — Domínios próprios dos lojistas
+
+- estratégia de **certificado** para `custom_domain` (emissão/renovação + roteamento).
 
 ### Etapa 3 — Beta com lojas reais
 
-Entregas:
-
-- cadastrar primeiras lojas;
-- priorizar brindes, gráficas e comunicação visual;
-- testar vendas reais;
-- testar personalização 3D real;
-- validar fluxo de pagamento;
-- validar split;
-- validar suporte;
-- coletar feedback;
-- corrigir bugs críticos.
+- onboarding das primeiras lojas; vendas reais; personalização 3D; **pagamento e split**; **pagamento em 2 etapas**; **jurídico/compliance mínimo**; feedback + correções.
 
 Resultado:
 
 ```text
-V1 validada com lojistas reais (no ambiente dev online da AWS).
+Kriar em produção na AWS, validada por lojistas reais.
 ```
 
 ---
 
-## Pós-V1 — Produção robusta (fora do escopo da V1)
+## Fase 12 — 3D gerado pelo lojista (traga seu próprio modelo)
 
-> Não entra na V1. Quando a V1 (dev) estiver validada, migrar para produção trocando a orquestração por serviços gerenciados, **mantendo backend, banco e storage**:
+> Além do **catálogo da plataforma** (Fase 7), o lojista **gera o próprio GLB via API externa** (Meshy/Tripo3D/Hyper3D — decisão no doc [18](./18_open_decisions.md)) e **mapeia a área personalizável pelo painel**. Recurso **premium** (plano). Detalhe em [`backlog/phase-12-merchant-3d-generation.md`](../backlog/phase-12-merchant-3d-generation.md).
 
-- ECS/Fargate + ECR;
-- ALB;
-- ACM;
-- RDS Multi-AZ / read replicas conforme necessidade;
-- ElastiCache;
-- autoescala;
-- estratégia de certificado para domínios próprios dos lojistas.
+Entregas:
 
-Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+- abstração do provedor de geração 3D (assíncrono via worker); GLB **por loja** no S3/CDN;
+- editor no painel pra **mapear a área imprimível** + limites do modelo gerado;
+- vincular o modelo gerado ao produto (entra no fluxo da Fase 7); **gating de plano**.
+
+Resultado:
+
+```text
+O lojista cria o próprio modelo 3D e define a área personalizável, sem depender do catálogo da plataforma.
+```
 
 ---
 
@@ -616,9 +634,9 @@ A V1 está completa quando, além de tudo acima:
 - pagamento é processado pelo gateway;
 - webhook confirma pedido;
 - split é aplicado;
-- comissão da Loja Club é registrada;
+- comissão da Kriar é registrada;
 - billing/assinatura está ativo (se definido na V1);
-- admin Loja Club consegue monitorar;
+- admin Kriar consegue monitorar;
 - segurança e observabilidade mínimas estão no ar;
 - CI/CD faz deploy automatizado para o EC2;
 - beta validado com lojistas reais.

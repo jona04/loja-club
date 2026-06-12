@@ -23,7 +23,7 @@ O `frontend-dashboard` tem e2e Playwright e o `frontend-admin` ganhou na `P4-ADM
 ## Escopo (o que ENTRA)
 - `frontend-storefront/playwright.config.ts` + `Dockerfile.playwright` + service `playwright-storefront` no `compose.override.yml` (espelhando dashboard/admin).
 - Specs da **navegação real** da vitrine: home → categoria → produto; **host desconhecido → "loja não encontrada"**; resolução por **Host** (`X-Forwarded-Host`).
-- **Regra de release (vale p/ TODOS os frontends):** o e2e de **dashboard + admin + storefront** roda no **CI** e **bloqueia o deploy** — nenhuma vitrine/painel sobe com e2e vermelho. (O **wiring** do gate no pipeline é a **[Fase 9](../phase-9-platform-ops-and-production.md)**, Etapa 2 — CI/CD.)
+- **Regra de release (vale p/ TODOS os frontends):** o e2e de **dashboard + admin + storefront** roda no **CI** e **bloqueia o deploy** — nenhuma vitrine/painel sobe com e2e vermelho. (O **wiring** do gate no pipeline é a **[Fase 9](../phase-9-platform-ops-and-dev-deploy.md)**, Etapa 2 — CI/CD.)
 
 ## Fora de escopo (o que NÃO entra)
 - Carrinho/checkout reais → Fase 6.

@@ -10,34 +10,34 @@ Usar Docker desde o início.
 
 ## Dev vs Produção na V1
 
-> **Toda a V1 é um ambiente de desenvolvimento (dev).** Produção robusta vem **depois** da V1.
+> **Dev local nas Fases 0–8; dev online (EC2) nas Fases 9–10.** Produção robusta é a **Fase 11**.
 
 | Etapa | Ambiente | Onde roda | Arquivos / CDN |
 |---|---|---|---|
-| Fases 0–7 | **dev local** | máquina do desenvolvedor (Docker Compose + Traefik) | **AWS S3 + CloudFront reais** (bucket/distribuição de dev) |
-| Fases 8–9 | **dev online na AWS** | **EC2** + Docker Compose + Traefik | AWS S3 + CloudFront |
-| Pós-V1 | **produção** | ECS/Fargate + ALB (troca a orquestração por serviços gerenciados) | AWS S3 + CloudFront |
+| Fases 0–8 | **dev local** | máquina do desenvolvedor (Docker Compose + Traefik) | **AWS S3 + CloudFront reais** (bucket/distribuição de dev) |
+| Fases 9–10 | **dev online na AWS** | **EC2** + Docker Compose + Traefik | AWS S3 + CloudFront |
+| Fase 11 | **produção** | ECS/Fargate + ALB (troca a orquestração por serviços gerenciados) | AWS S3 + CloudFront |
 
 Pontos importantes:
 
 - Mesmo no **dev local**, os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront de verdade**, com implementação normal via SDK (boto3). **Não usar MinIO** nem stand-ins locais de storage.
-- O sistema só vai **para o ar** nas Fases 8–9, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
-- A migração para **produção** (ECS/Fargate + ALB etc.) é um passo **posterior à V1** e troca apenas a camada de orquestração/entrada, mantendo o mesmo backend, banco e storage.
-- **Região AWS (1ª etapa):** **Ohio (`us-east-2`)** — todos os recursos de dev (S3, CloudFront, IAM e, depois, compute) na mesma região. A região de produção é revisada na migração pós-V1.
+- O sistema só vai **para o ar** na **Fase 9**, em **EC2** (necessário, entre outros, para receber webhooks de pagamento em URL pública).
+- A migração para **produção** (ECS/Fargate + ALB etc.) é a **Fase 11** e troca apenas a camada de orquestração/entrada, mantendo o mesmo backend, banco e storage.
+- **Região AWS (1ª etapa):** **Ohio (`us-east-2`)** — todos os recursos de dev (S3, CloudFront, IAM e, depois, compute) na mesma região. A região de produção é revisada na Fase 11.
 
 ## Ambientes
 
-A Loja Club terá, ao longo do tempo:
+A Kriar terá, ao longo do tempo:
 
 ```text
-dev local      (V1, Fases 0–7) — máquina do desenvolvedor
-dev online     (V1, Fases 8–9) — EC2 na AWS
-production     (pós-V1)         — ECS/Fargate na AWS
+dev local      (Fases 0–8)  — máquina do desenvolvedor
+dev online     (Fases 9–10) — EC2 na AWS
+production     (Fase 11)    — ECS/Fargate na AWS
 ```
 
 `dev local` roda na máquina de desenvolvimento, mas já usa S3/CloudFront reais para arquivos.
 `dev online` é o mesmo stack publicado em EC2, com domínios, TLS e serviços AWS, para teste compartilhado e beta.
-`production` é o ambiente robusto dos lojistas e clientes, montado **depois** da V1.
+`production` é o ambiente robusto dos lojistas e clientes, montado na **Fase 11**.
 
 ## Desenvolvimento local
 
@@ -58,7 +58,7 @@ adminer
 mailcatcher
 ```
 
-## Dev online na AWS (V1 — Fases 8–9)
+## Dev online na AWS (Fases 9–10)
 
 O ambiente online da V1 usa **EC2** (não ECS):
 
@@ -75,7 +75,7 @@ Motivo:
 - Traefik facilita subdomínios e HTTPS;
 - já permite receber webhooks de pagamento (URL pública).
 
-## Produção robusta (pós-V1)
+## Produção robusta (Fase 11)
 
 > Fora do escopo da V1. Quando a V1 (dev) estiver validada, a produção troca a orquestração por serviços gerenciados.
 
@@ -109,7 +109,7 @@ Serviços:
 |---|---|
 | `backend-api` | API FastAPI |
 | `frontend-dashboard` | Painel do lojista |
-| `frontend-admin` | Admin interno da Loja Club |
+| `frontend-admin` | Admin interno da Kriar |
 | `frontend-storefront` | Lojas públicas |
 | `worker` | Tarefas assíncronas |
 | `scheduler` | Tarefas agendadas |
@@ -125,10 +125,10 @@ Traefik será usado em:
 Roteamento:
 
 ```text
-api.loja.club        -> backend-api
-app.loja.club        -> frontend-dashboard
-admin.loja.club      -> frontend-admin
-*.loja.club          -> frontend-storefront
+api.kriar.shop        -> backend-api
+app.kriar.shop        -> frontend-dashboard
+admin.kriar.shop      -> frontend-admin
+*.kriar.shop          -> frontend-storefront
 ```
 
 Traefik não precisa conhecer cada loja. O wildcard envia tudo para o storefront.
@@ -145,10 +145,10 @@ Em produção ECS, Traefik pode ser substituído por:
 Roteamento conceitual:
 
 ```text
-api.loja.club        -> ALB -> backend-api
-app.loja.club        -> ALB/CloudFront -> frontend-dashboard
-admin.loja.club      -> ALB/CloudFront -> frontend-admin
-*.loja.club          -> CloudFront/ALB -> frontend-storefront
+api.kriar.shop        -> ALB -> backend-api
+app.kriar.shop        -> ALB/CloudFront -> frontend-dashboard
+admin.kriar.shop      -> ALB/CloudFront -> frontend-admin
+*.kriar.shop          -> CloudFront/ALB -> frontend-storefront
 ```
 
 ## S3 e CloudFront
@@ -200,7 +200,7 @@ maior instância
 Opções:
 
 1. Redis container no dev (local e EC2).
-2. ElastiCache em produção (pós-V1).
+2. ElastiCache em produção (Fase 11).
 
 Redis será usado para:
 
@@ -232,18 +232,18 @@ Responsável por:
 Route 53:
 
 ```text
-loja.club
-www.loja.club
-api.loja.club
-app.loja.club
-admin.loja.club
-*.loja.club
+kriar.shop
+www.kriar.shop
+api.kriar.shop
+app.kriar.shop
+admin.kriar.shop
+*.kriar.shop
 ```
 
 Wildcard importante:
 
 ```text
-*.loja.club
+*.kriar.shop
 ```
 
 ## Certificados
@@ -251,11 +251,11 @@ Wildcard importante:
 ACM para:
 
 ```text
-loja.club
-*.loja.club
-api.loja.club
-app.loja.club
-admin.loja.club
+kriar.shop
+*.kriar.shop
+api.kriar.shop
+app.kriar.shop
+admin.kriar.shop
 ```
 
 Domínios próprios de lojistas exigem estratégia adicional de certificado.
@@ -305,4 +305,4 @@ Para V1 barata, a expectativa inicial pode ficar em faixa controlada se usar:
 
 ## Decisão canônica
 
-A Loja Club usará Docker desde o começo. **Toda a V1 é dev**: Fases 0–7 em **dev local** (com S3/CloudFront reais) e Fases 8–9 em **dev online na AWS** com EC2 + Docker Compose + Traefik + RDS + Redis/ElastiCache + S3 + CloudFront. A **produção robusta com ECS/Fargate + ALB** é um passo **posterior à V1**.
+A Kriar usará Docker desde o começo. **Dev**: Fases 0–8 em **dev local** (com S3/CloudFront reais) e Fases 9–10 em **dev online na AWS** com EC2 + Docker Compose + Traefik + RDS + Redis/ElastiCache + S3 + CloudFront. A **produção robusta com ECS/Fargate + ALB** é a **Fase 11**.

@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A Loja Club precisa de testes focados em comportamento crítico.
+A Kriar precisa de testes focados em comportamento crítico.
 
 O foco da V1 deve ser testar:
 
@@ -214,4 +214,4 @@ Antes de produção, testar:
 
 ## Decisão canônica
 
-A estratégia de testes deve priorizar multi-tenancy, permissões, personalização 3D, checkout, webhooks e isolamento de dados. Esses são os pontos mais críticos para evitar falhas graves na Loja Club.
+A estratégia de testes deve priorizar multi-tenancy, permissões, personalização 3D, checkout, webhooks e isolamento de dados. Esses são os pontos mais críticos para evitar falhas graves na Kriar.

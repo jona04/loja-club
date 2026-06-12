@@ -2,7 +2,7 @@
 
 ## Decisão principal
 
-A Loja Club não vai reter dinheiro.
+A Kriar não vai reter dinheiro.
 
 O gateway de pagamento será responsável por:
 
@@ -11,7 +11,7 @@ O gateway de pagamento será responsável por:
 - aplicar antifraude, se houver;
 - fazer split;
 - repassar a parte do lojista;
-- repassar a comissão da Loja Club;
+- repassar a comissão da Kriar;
 - lidar com cadastro financeiro do recebedor.
 
 ## Gateways candidatos
@@ -34,11 +34,11 @@ Exemplo:
 ```text
 Venda: R$ 100,00
 Taxa do gateway: R$ 4,00
-Comissão Loja Club: R$ 3,00
+Comissão Kriar: R$ 3,00
 Lojista: R$ 93,00
 ```
 
-A comissão da Loja Club será definida pelo plano da loja.
+A comissão da Kriar será definida pelo plano da loja.
 
 ## Fluxo de checkout
 
@@ -62,7 +62,7 @@ A comissão da Loja Club será definida pelo plano da loja.
 
 ## Pedido pendente
 
-Antes de chamar o gateway, a Loja Club deve criar um pedido com status:
+Antes de chamar o gateway, a Kriar deve criar um pedido com status:
 
 ```text
 pending_payment
@@ -159,7 +159,7 @@ Regras:
 - pode ser limitada por cidade, região ou estado;
 - o checkout deve informar que a entrega será combinada após a compra;
 - o pedido deve registrar que a entrega depende de contato com a loja;
-- a Loja Club não calcula automaticamente preço, prazo ou disponibilidade de aplicativos;
+- a Kriar não calcula automaticamente preço, prazo ou disponibilidade de aplicativos;
 - a responsabilidade pela entrega continua sendo do lojista.
 
 Essa opção permite vendas locais com mais flexibilidade, especialmente para lojas físicas que atendem clientes próximos.
@@ -270,7 +270,7 @@ A V1 deve tentar suportar:
 
 Cartão parcelado pode ser suportado, mas deve ser configurado com cuidado por causa das taxas.
 
-## Comissão da Loja Club
+## Comissão da Kriar
 
 A comissão deve vir do plano.
 
@@ -301,7 +301,7 @@ Regras:
 
 Chargeback é risco comercial do lojista.
 
-A Loja Club pode:
+A Kriar pode:
 
 - registrar o evento;
 - exibir alerta;
@@ -331,9 +331,9 @@ Todo webhook deve validar:
 | Arte personalizada enviada pelo cliente | Cliente/lojista, conforme termos |
 | Produção diferente da arte aprovada | Lojista |
 | Entrega combinada não realizada | Lojista |
-| Checkout da plataforma fora do ar | Loja Club |
-| Erro técnico no sistema | Loja Club |
+| Checkout da plataforma fora do ar | Kriar |
+| Erro técnico no sistema | Kriar |
 
 ## Decisão canônica
 
-A V1 usará gateway com split. A Loja Club não reterá valores. O checkout criará pedido pendente, congelará personalizações aprovadas, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.
+A V1 usará gateway com split. A Kriar não reterá valores. O checkout criará pedido pendente, congelará personalizações aprovadas, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.

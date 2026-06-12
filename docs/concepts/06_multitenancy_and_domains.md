@@ -2,7 +2,7 @@
 
 ## Decisão principal
 
-A Loja Club será multi-tenant por loja.
+A Kriar será multi-tenant por loja.
 
 Cada loja será um tenant.
 
@@ -57,7 +57,7 @@ Quando alguém acessa uma loja pública, o sistema precisa identificar a loja pe
 Exemplo:
 
 ```text
-Host: empresaexemplo.loja.club
+Host: empresaexemplo.kriar.shop
 ```
 
 Fluxo:
@@ -76,7 +76,7 @@ Uma mesma loja pode ter mais de um host.
 Exemplo:
 
 ```text
-brindesfortaleza.loja.club
+brindesfortaleza.kriar.shop
 www.brindesfortaleza.com.br
 brindesfortaleza.com.br
 ```
@@ -90,7 +90,7 @@ Campos sugeridos:
 |---|---|
 | `id` | Identificador |
 | `store_id` | Loja dona do domínio |
-| `host` | Exemplo: `empresa.loja.club` |
+| `host` | Exemplo: `empresa.kriar.shop` |
 | `type` | `platform_subdomain` ou `custom_domain` |
 | `status` | `pending`, `active`, `failed`, `blocked` |
 | `ssl_status` | `pending`, `issued`, `failed` |
@@ -106,13 +106,13 @@ Na V1, todo lojista deve receber um subdomínio automático.
 Exemplo:
 
 ```text
-minhaloja.loja.club
+minhaloja.kriar.shop
 ```
 
 O DNS deve ser configurado com wildcard uma única vez:
 
 ```text
-*.loja.club -> aponta para a entrada da plataforma
+*.kriar.shop -> aponta para a entrada da plataforma
 ```
 
 Com isso, a plataforma não precisa criar DNS manualmente para cada loja.
@@ -140,7 +140,7 @@ Domínio:
 
 ```text
 store_id: 123
-host: empresaexemplo.loja.club
+host: empresaexemplo.kriar.shop
 type: platform_subdomain
 status: active
 ```
@@ -154,7 +154,7 @@ Fluxo ideal:
 1. Lojista informa `www.empresa.com.br`.
 2. Plataforma salva domínio como pendente.
 3. Plataforma mostra instrução de DNS.
-4. Lojista cria CNAME apontando para a Loja Club.
+4. Lojista cria CNAME apontando para a Kriar.
 5. Plataforma verifica DNS.
 6. Plataforma ativa domínio.
 7. Plataforma emite/associa certificado.
@@ -163,7 +163,7 @@ Fluxo ideal:
 Exemplo:
 
 ```text
-www.empresa.com.br CNAME custom.loja.club
+www.empresa.com.br CNAME custom.kriar.shop
 ```
 
 ## Traefik e wildcard
@@ -171,10 +171,10 @@ www.empresa.com.br CNAME custom.loja.club
 No desenvolvimento local/dev, Traefik pode rotear:
 
 ```text
-api.loja.club        -> backend-api
-app.loja.club        -> frontend-dashboard
-admin.loja.club      -> frontend-admin
-*.loja.club          -> frontend-storefront
+api.kriar.shop        -> backend-api
+app.kriar.shop        -> frontend-dashboard
+admin.kriar.shop      -> frontend-admin
+*.kriar.shop          -> frontend-storefront
 ```
 
 Traefik não precisa saber quais lojas existem. Ele só roteia qualquer subdomínio para o storefront.

@@ -2,7 +2,7 @@
 
 ## Modelo de negócio
 
-A Loja Club será um SaaS de ecommerce com possibilidade de comissão por venda.
+A Kriar será um SaaS de ecommerce com possibilidade de comissão por venda.
 
 O foco comercial inicial será em lojas de brindes, gráficas e comunicação visual, porque a personalização 3D é um diferencial forte para esse público.
 
@@ -12,7 +12,7 @@ O modelo recomendado para a V1 é:
 - comissão percentual por venda via split de pagamento;
 - gateway responsável por receber, descontar taxa e repassar valores.
 
-A Loja Club não deve reter valores dos lojistas.
+A Kriar não deve reter valores dos lojistas.
 
 ## Planos iniciais sugeridos
 
@@ -30,21 +30,21 @@ Também pode existir um plano inicial sem mensalidade:
 
 ## Taxa do gateway
 
-A taxa do gateway é separada da comissão da Loja Club.
+A taxa do gateway é separada da comissão da Kriar.
 
 Exemplo:
 
 Venda de R$ 100,00.
 
 - Gateway cobra R$ 4,00.
-- Loja Club cobra R$ 3,00.
+- Kriar cobra R$ 3,00.
 - Lojista recebe R$ 93,00.
 
 O valor exato dependerá do gateway, método de pagamento, parcelamento e prazo de recebimento.
 
 ## Regras de responsabilidade
 
-A Loja Club fornece tecnologia. O lojista vende o produto.
+A Kriar fornece tecnologia. O lojista vende o produto.
 
 | Área | Responsável |
 |---|---|
@@ -60,15 +60,15 @@ A Loja Club fornece tecnologia. O lojista vende o produto.
 | Atendimento ao consumidor | Lojista |
 | Processamento do pagamento | Gateway |
 | Split de pagamento | Gateway |
-| Infraestrutura da loja | Loja Club |
-| Modelos 3D publicados pela plataforma | Loja Club |
-| Painel administrativo | Loja Club |
-| Segurança da plataforma | Loja Club |
-| Disponibilidade técnica | Loja Club |
+| Infraestrutura da loja | Kriar |
+| Modelos 3D publicados pela plataforma | Kriar |
+| Painel administrativo | Kriar |
+| Segurança da plataforma | Kriar |
+| Disponibilidade técnica | Kriar |
 
 ## Regra sobre retenção de dinheiro
 
-A Loja Club não deve:
+A Kriar não deve:
 
 - receber 100% do valor da venda na conta própria;
 - guardar saldo do lojista;
@@ -84,14 +84,14 @@ O gateway deve:
 - fazer KYC/cadastro do recebedor;
 - aplicar split;
 - repassar ao lojista;
-- repassar comissão para a Loja Club;
+- repassar comissão para a Kriar;
 - lidar com regras do arranjo de pagamento.
 
 ## Regra sobre vendedor oficial
 
 O vendedor oficial é sempre o lojista.
 
-A Loja Club deve aparecer nos termos como:
+A Kriar deve aparecer nos termos como:
 
 - plataforma tecnológica;
 - fornecedora de software;
@@ -101,7 +101,7 @@ A Loja Club deve aparecer nos termos como:
 
 ## Regras de bloqueio da loja
 
-A Loja Club deve poder suspender loja em casos como:
+A Kriar deve poder suspender loja em casos como:
 
 - fraude;
 - produto proibido;

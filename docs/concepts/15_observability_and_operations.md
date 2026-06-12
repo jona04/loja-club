@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A Loja Club precisa ter visibilidade operacional desde a V1.
+A Kriar precisa ter visibilidade operacional desde a V1.
 
 Não basta o sistema funcionar localmente. É necessário saber quando:
 
