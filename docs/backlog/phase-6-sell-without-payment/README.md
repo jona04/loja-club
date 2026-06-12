@@ -27,7 +27,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|----|------|--------|-----------|
-| 1 | [P6-CAT-01](./P6-CAT-01-product-type-and-cart-gate.md) | Tipo de produto (`type`) + portão do add-to-cart | todo | — |
+| 1 | [P6-CAT-01](./P6-CAT-01-product-type-and-cart-gate.md) | Tipo de produto (`type`) + portão do add-to-cart | ✅ done | — |
 | 2 | [P6-CUST-01](./P6-CUST-01-customer-identity-dedup.md) | Identidade do cliente + dedup (guest) | todo | — |
 | 3 | [P6-SHIP-01](./P6-SHIP-01-shipping-methods.md) | Frete: métodos MVP (retirada/combinada/fixo) | todo | — |
 | 4 | [P6-CART-01](./P6-CART-01-server-cart.md) | Carrinho de servidor (`cart_carts`/`cart_items`) | todo | P6-CAT-01 |

@@ -4,7 +4,7 @@ title: Tipo de produto (type) + portão do add-to-cart
 phase: 6
 etapa: "Etapa 0 — Catálogo: tipo de produto + portão do add-to-cart"
 area: CAT
-status: todo
+status: done
 depends_on: []
 blocks: [P6-CART-01]
 tests: [integration]
@@ -47,14 +47,16 @@ Costura para a [Fase 7](../phase-7-3d-products.md): o add-to-cart precisa saber 
 - **Cobrir:** integração — produto novo nasce `image`; `type` aparece no público/vitrine; portão deixa `image`/`image_3d` passar e **barra** `image_3d_customizable`.
 
 ## Definition of Done
-- [ ] `type` em `catalog_products` (default `image`) + migration (`alembic check` vazio).
-- [ ] Portão do add-to-cart type-aware (no-op p/ `image`).
-- [ ] `type` no `ProductPublic`/`StorefrontProduct`.
-- [ ] **Modos de falha mapeados** (produto legado sem `type` → default `image`; customizável sem sessão → erro) → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `type` em `catalog_products` (default `image`) + migration (`alembic check` vazio).
+- [x] Portão do add-to-cart type-aware (no-op p/ `image`).
+- [x] `type` no `ProductPublic`/`StorefrontProduct`.
+- [x] **Modos de falha mapeados** (produto legado sem `type` → default `image`; customizável sem sessão → erro) → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Reconcilia o doc 22 (era `simple`/`customizable_3d`) para `image|image_3d|image_3d_customizable`; o `type` **nasce aqui** (Fase 7 Etapa 2 reconciliada — passa a só **ativar** os tipos 3D).
+- **Implementação:** `ProductType` em `catalog/enums.py`; `type` em `ProductBase` (→ herda no `Product` [coluna] e no `ProductPublic`/`StorefrontProduct` [leitura]; **não** entra em `ProductCreate`/`Update`, então na Fase 6 é sempre `image`). Portão = `catalog.services.assert_addable_to_cart(product, *, has_approved_customization=False)` → **422 `customization_required`** para `image_3d_customizable` sem sessão (o kwarg é a costura que o carrinho da Fase 7 usa).
+- **Migration `6d906257c2c5`:** cria o enum, adiciona a coluna com `server_default='image'` (backfill das linhas existentes — 29 no dev), depois **dropa** o server default (casa com o model; `alembic check` vazio). Downgrade dropa coluna + enum.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] — nenhum.

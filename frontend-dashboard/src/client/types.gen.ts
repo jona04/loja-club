@@ -424,6 +424,7 @@ export type ProductPublic = {
     name: string;
     slug: string;
     description?: (string | null);
+    type?: ProductType;
     status?: ProductStatus;
     /**
      * Price in minor units (INV-D4)
@@ -449,6 +450,21 @@ export type ProductPublic = {
  * Deleting a product is a **soft delete** (``deleted_at``), not a status.
  */
 export type ProductStatus = 'draft' | 'published' | 'archived';
+
+/**
+ * What a product is, for the storefront and the add-to-cart gate (doc 22).
+ *
+ * - ``image``: a regular product (photos); may have variants; goes straight
+ * to the cart.
+ * - ``image_3d``: has a 3D model for viewing, but no customization; goes
+ * straight to the cart.
+ * - ``image_3d_customizable``: has a customizable 3D model — the customer must
+ * customize and approve before adding to the cart.
+ *
+ * All products are ``image`` in this phase; the 3D types are activated later
+ * (Fase 7), when a 3D model is generated and linked.
+ */
+export type ProductType = 'image' | 'image_3d' | 'image_3d_customizable';
 
 /**
  * Partial update for a product (unset fields are left unchanged).
@@ -531,6 +547,7 @@ export type StorefrontProduct = {
     name: string;
     slug: string;
     description?: (string | null);
+    type?: ProductType;
     status?: ProductStatus;
     /**
      * Price in minor units (INV-D4)
