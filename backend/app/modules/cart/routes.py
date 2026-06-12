@@ -13,7 +13,12 @@ from sqlmodel import Session
 from app.api.deps import SessionDep
 from app.modules.cart import services
 from app.modules.cart.models import CartCart
-from app.modules.cart.schemas import AddItemInput, CartPublic, UpdateItemInput
+from app.modules.cart.schemas import (
+    AddItemInput,
+    ApplyCouponInput,
+    CartPublic,
+    UpdateItemInput,
+)
 from app.modules.customers.deps import guest_session
 from app.modules.customers.models import CustomerGuestSession
 
@@ -69,4 +74,22 @@ def remove_item(
     """Remove a cart line."""
     cart = _resolve_cart(session, guest)
     services.remove_item(session=session, cart=cart, item_id=item_id)
+    return services.to_public(session=session, cart=cart)
+
+
+@router.post("/coupon", response_model=CartPublic)
+def apply_coupon(
+    guest: GuestSession, data: ApplyCouponInput, session: SessionDep
+) -> CartPublic:
+    """Apply a coupon code to the cart (422 if it does not apply)."""
+    cart = _resolve_cart(session, guest)
+    services.apply_coupon(session=session, cart=cart, code=data.code)
+    return services.to_public(session=session, cart=cart)
+
+
+@router.delete("/coupon", response_model=CartPublic)
+def remove_coupon(guest: GuestSession, session: SessionDep) -> CartPublic:
+    """Remove the coupon applied to the cart."""
+    cart = _resolve_cart(session, guest)
+    services.remove_coupon(session=session, cart=cart)
     return services.to_public(session=session, cart=cart)

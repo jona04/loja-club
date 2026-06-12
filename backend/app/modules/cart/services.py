@@ -18,6 +18,7 @@ from app.modules.cart.schemas import AddItemInput, CartItemPublic, CartPublic
 from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
 from app.modules.catalog.models import InventoryItem, Product, ProductVariant
 from app.modules.catalog.services import assert_addable_to_cart, list_images
+from app.modules.discounts import services as discount_services
 from app.modules.stores.models import Store
 
 
@@ -260,6 +261,33 @@ def remove_item(*, session: Session, cart: CartCart, item_id: uuid.UUID) -> None
     session.commit()
 
 
+def apply_coupon(*, session: Session, cart: CartCart, code: str) -> None:
+    """Validate a coupon against the cart subtotal and apply it.
+
+    Raises:
+        AppError: 422 if the coupon is invalid/expired/below the minimum/over its
+            usage limit (see ``discounts.services.validate_coupon``).
+    """
+    items = _active_items(session, cart)
+    subtotal = sum(i.unit_price_amount_minor * i.quantity for i in items)
+    coupon = discount_services.validate_coupon(
+        session=session,
+        store_id=cart.store_id,
+        code=code,
+        subtotal_amount_minor=subtotal,
+    )
+    cart.coupon_code = coupon.code
+    session.add(cart)
+    session.commit()
+
+
+def remove_coupon(*, session: Session, cart: CartCart) -> None:
+    """Remove any coupon applied to the cart."""
+    cart.coupon_code = None
+    session.add(cart)
+    session.commit()
+
+
 def _item_public(
     session: Session, store_id: uuid.UUID, item: CartItem
 ) -> CartItemPublic:
@@ -298,10 +326,19 @@ def to_public(*, session: Session, cart: CartCart) -> CartPublic:
     else:
         store = session.get(Store, cart.store_id)
         currency = store.currency if store else ""
+    coupon, discount = discount_services.quote_discount(
+        session=session,
+        store_id=cart.store_id,
+        code=cart.coupon_code,
+        subtotal_amount_minor=subtotal,
+    )
     return CartPublic(
         id=cart.id,
         currency=currency,
         item_count=sum(item.quantity for item in items),
         subtotal_amount_minor=subtotal,
+        coupon_code=coupon.code if coupon is not None else None,
+        discount_amount_minor=discount,
+        total_amount_minor=subtotal - discount,
         items=item_publics,
     )

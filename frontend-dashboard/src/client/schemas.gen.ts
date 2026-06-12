@@ -129,6 +129,20 @@ export const AddressInputSchema = {
     description: 'An address provided at checkout (appended to the customer if new).'
 } as const;
 
+export const ApplyCouponInputSchema = {
+    properties: {
+        code: {
+            type: 'string',
+            maxLength: 64,
+            title: 'Code'
+        }
+    },
+    type: 'object',
+    required: ['code'],
+    title: 'ApplyCouponInput',
+    description: 'Apply a coupon code to the cart.'
+} as const;
+
 export const BillingPlanCreateSchema = {
     properties: {
         key: {
@@ -496,6 +510,25 @@ export const CartPublicSchema = {
             type: 'integer',
             title: 'Subtotal Amount Minor'
         },
+        coupon_code: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Coupon Code'
+        },
+        discount_amount_minor: {
+            type: 'integer',
+            title: 'Discount Amount Minor'
+        },
+        total_amount_minor: {
+            type: 'integer',
+            title: 'Total Amount Minor'
+        },
         items: {
             items: {
                 '$ref': '#/components/schemas/CartItemPublic'
@@ -505,9 +538,9 @@ export const CartPublicSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'currency', 'item_count', 'subtotal_amount_minor', 'items'],
+    required: ['id', 'currency', 'item_count', 'subtotal_amount_minor', 'coupon_code', 'discount_amount_minor', 'total_amount_minor', 'items'],
     title: 'CartPublic',
-    description: 'A cart with its items and computed subtotal.'
+    description: 'A cart with its items, subtotal and the applied coupon (if any).'
 } as const;
 
 export const CategoryCreateSchema = {
@@ -1176,6 +1209,259 @@ export const ContentPageUpdateSchema = {
     type: 'object',
     title: 'ContentPageUpdate',
     description: 'Partial update of an editorial page (only set fields apply).'
+} as const;
+
+export const CouponCreateSchema = {
+    properties: {
+        code: {
+            type: 'string',
+            maxLength: 64,
+            title: 'Code'
+        },
+        type: {
+            '$ref': '#/components/schemas/CouponType'
+        },
+        value: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Value'
+        },
+        min_subtotal_amount_minor: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Min Subtotal Amount Minor',
+            default: 0
+        },
+        max_redemptions: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Max Redemptions'
+        },
+        valid_from: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid From'
+        },
+        valid_until: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid Until'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active',
+            default: true
+        }
+    },
+    type: 'object',
+    required: ['code', 'type', 'value'],
+    title: 'CouponCreate',
+    description: 'Create a coupon.'
+} as const;
+
+export const CouponPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        code: {
+            type: 'string',
+            title: 'Code'
+        },
+        type: {
+            '$ref': '#/components/schemas/CouponType'
+        },
+        value: {
+            type: 'integer',
+            title: 'Value'
+        },
+        min_subtotal_amount_minor: {
+            type: 'integer',
+            title: 'Min Subtotal Amount Minor'
+        },
+        max_redemptions: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Max Redemptions'
+        },
+        valid_from: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid From'
+        },
+        valid_until: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid Until'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'code', 'type', 'value', 'min_subtotal_amount_minor', 'max_redemptions', 'valid_from', 'valid_until', 'is_active', 'created_at'],
+    title: 'CouponPublic',
+    description: 'A coupon as returned by the panel.'
+} as const;
+
+export const CouponTypeSchema = {
+    type: 'string',
+    enum: ['percentage', 'fixed'],
+    title: 'CouponType',
+    description: `How a coupon's \`\`value\`\` is interpreted (doc 09).
+
+\`\`percentage\`\` — \`\`value\`\` is a percent (1..100) off the subtotal.
+\`\`fixed\`\` — \`\`value\`\` is a fixed amount (minor units, store currency) off.`
+} as const;
+
+export const CouponUpdateSchema = {
+    properties: {
+        code: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 64
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Code'
+        },
+        type: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CouponType'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        value: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Value'
+        },
+        min_subtotal_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Min Subtotal Amount Minor'
+        },
+        max_redemptions: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Max Redemptions'
+        },
+        valid_from: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid From'
+        },
+        valid_until: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Valid Until'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    title: 'CouponUpdate',
+    description: 'Partial update of a coupon (only set fields apply).'
 } as const;
 
 export const CustomerAddressPublicSchema = {

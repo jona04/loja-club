@@ -35,10 +35,19 @@ class CartItemPublic(SQLModel):
 
 
 class CartPublic(SQLModel):
-    """A cart with its items and computed subtotal."""
+    """A cart with its items, subtotal and the applied coupon (if any)."""
 
     id: uuid.UUID
     currency: str
     item_count: int
     subtotal_amount_minor: int
+    coupon_code: str | None
+    discount_amount_minor: int
+    total_amount_minor: int
     items: list[CartItemPublic]
+
+
+class ApplyCouponInput(SQLModel):
+    """Apply a coupon code to the cart."""
+
+    code: str = Field(max_length=64)

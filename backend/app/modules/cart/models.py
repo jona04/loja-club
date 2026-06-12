@@ -41,6 +41,7 @@ class CartCart(
         default=None, foreign_key="customer_profiles.id", index=True
     )
     status: CartStatus = Field(default=CartStatus.active)
+    coupon_code: str | None = Field(default=None, max_length=64)
 
 
 class CartItem(

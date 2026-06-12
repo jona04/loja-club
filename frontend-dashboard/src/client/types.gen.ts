@@ -28,6 +28,13 @@ export type AddressInput = {
 };
 
 /**
+ * Apply a coupon code to the cart.
+ */
+export type ApplyCouponInput = {
+    code: string;
+};
+
+/**
  * Payload to create a plan definition.
  */
 export type BillingPlanCreate = {
@@ -125,13 +132,16 @@ export type CartItemPublic = {
 };
 
 /**
- * A cart with its items and computed subtotal.
+ * A cart with its items, subtotal and the applied coupon (if any).
  */
 export type CartPublic = {
     id: string;
     currency: string;
     item_count: number;
     subtotal_amount_minor: number;
+    coupon_code: (string | null);
+    discount_amount_minor: number;
+    total_amount_minor: number;
     items: Array<CartItemPublic>;
 };
 
@@ -304,6 +314,58 @@ export type ContentPageUpdate = {
     title?: (string | null);
     body?: (string | null);
     is_published?: (boolean | null);
+};
+
+/**
+ * Create a coupon.
+ */
+export type CouponCreate = {
+    code: string;
+    type: CouponType;
+    value: number;
+    min_subtotal_amount_minor?: number;
+    max_redemptions?: (number | null);
+    valid_from?: (string | null);
+    valid_until?: (string | null);
+    is_active?: boolean;
+};
+
+/**
+ * A coupon as returned by the panel.
+ */
+export type CouponPublic = {
+    id: string;
+    code: string;
+    type: CouponType;
+    value: number;
+    min_subtotal_amount_minor: number;
+    max_redemptions: (number | null);
+    valid_from: (string | null);
+    valid_until: (string | null);
+    is_active: boolean;
+    created_at: string;
+};
+
+/**
+ * How a coupon's ``value`` is interpreted (doc 09).
+ *
+ * ``percentage`` — ``value`` is a percent (1..100) off the subtotal.
+ * ``fixed`` — ``value`` is a fixed amount (minor units, store currency) off.
+ */
+export type CouponType = 'percentage' | 'fixed';
+
+/**
+ * Partial update of a coupon (only set fields apply).
+ */
+export type CouponUpdate = {
+    code?: (string | null);
+    type?: (CouponType | null);
+    value?: (number | null);
+    min_subtotal_amount_minor?: (number | null);
+    max_redemptions?: (number | null);
+    valid_from?: (string | null);
+    valid_until?: (string | null);
+    is_active?: (boolean | null);
 };
 
 /**
@@ -1290,6 +1352,14 @@ export type CartRemoveItemData = {
 
 export type CartRemoveItemResponse = (CartPublic);
 
+export type CartApplyCouponData = {
+    requestBody: ApplyCouponInput;
+};
+
+export type CartApplyCouponResponse = (CartPublic);
+
+export type CartRemoveCouponResponse = (CartPublic);
+
 export type CatalogListProductsData = {
     limit?: number;
     skip?: number;
@@ -1629,7 +1699,39 @@ export type CustomersGetCustomerData = {
 
 export type CustomersGetCustomerResponse = (CustomerDetail);
 
+export type DiscountsListCouponsData = {
+    storeId: string;
+};
+
+export type DiscountsListCouponsResponse = (Array<CouponPublic>);
+
+export type DiscountsCreateCouponData = {
+    requestBody: CouponCreate;
+    storeId: string;
+};
+
+export type DiscountsCreateCouponResponse = (CouponPublic);
+
+export type DiscountsUpdateCouponData = {
+    couponId: string;
+    requestBody: CouponUpdate;
+    storeId: string;
+};
+
+export type DiscountsUpdateCouponResponse = (CouponPublic);
+
+export type DiscountsDeleteCouponData = {
+    couponId: string;
+    storeId: string;
+};
+
+export type DiscountsDeleteCouponResponse = (void);
+
 export type HealthHealthResponse = ({
+    [key: string]: (string);
+});
+
+export type HealthHealthDbResponse = ({
     [key: string]: (string);
 });
 

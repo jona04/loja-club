@@ -22,6 +22,7 @@ from app.modules.checkout.models import CheckoutSession
 from app.modules.checkout.schemas import CheckoutInput, PoliciesUpdate
 from app.modules.customers import services as customer_services
 from app.modules.customers.models import CustomerGuestSession
+from app.modules.discounts import services as discount_services
 from app.modules.orders import services as order_services
 from app.modules.orders.models import Order
 from app.modules.payments.gateway import get_gateway
@@ -113,6 +114,13 @@ def submit_checkout(
         address=data.address,
     )
     method = _get_active_method(session, store_id, data.shipping_method_id)
+    subtotal = cart_services.to_public(session=session, cart=cart).subtotal_amount_minor
+    coupon, discount = discount_services.quote_discount(
+        session=session,
+        store_id=store_id,
+        code=cart.coupon_code,
+        subtotal_amount_minor=subtotal,
+    )
     checkout = CheckoutSession(
         store_id=store_id,
         cart_id=cart.id,
@@ -127,7 +135,16 @@ def submit_checkout(
         customer=customer,
         address=data.address,
         shipping_method=method,
+        discount_amount_minor=discount,
     )
+    if coupon is not None:
+        discount_services.record_redemption(
+            session=session,
+            store_id=store_id,
+            coupon_id=coupon.id,
+            order_id=order.id,
+            customer_id=customer.id,
+        )
     checkout.status = CheckoutStatus.completed
     checkout.order_id = order.id
     session.add(checkout)
