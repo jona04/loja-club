@@ -4,7 +4,7 @@ title: Frete — métodos MVP (retirada/combinada/fixo)
 phase: 6
 etapa: "Etapa 1 — Módulo shipping (frete)"
 area: SHIP
-status: todo
+status: done
 depends_on: []
 blocks: [P6-CHK-01]
 tests: [integration]
@@ -43,14 +43,15 @@ O checkout precisa de opções de entrega. **MVP fino:** retirada local, entrega
 - **Cobrir:** CRUD gated `shipping.update` (viewer não escreve); leitura pública só dos **ativos**; `private_delivery` marca "combinada"; isolamento por loja.
 
 ## Definition of Done
-- [ ] `shipping_methods` + índice + migration (`alembic check` vazio).
-- [ ] CRUD gated + leitura pública (ativos) consumida pelo checkout.
-- [ ] `private_delivery` com aviso de "combinada após a compra".
-- [ ] **Modos de falha mapeados** (loja sem nenhum método ativo → checkout exige ao menos retirada/combinada) → tratado/Follow-up.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] `shipping_methods` + índice + migration (`alembic check` vazio).
+- [x] CRUD gated + leitura pública (ativos) consumida pelo checkout.
+- [x] `private_delivery` com aviso de "combinada após a compra".
+- [x] **Modos de falha mapeados** (fixo sem preço → 422; método inexistente → 404; loja sem método ativo → o checkout exige um, em `P6-CHK-01`) → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - Zonas/tarifas movidas pra `P6-SHIP-02` (MVP fino primeiro).
+- **Implementação:** `shipping_methods` (soft delete) + enum `ShippingMethodType` + índice `store_id+type+is_active`. CRUD em `/stores/{id}/shipping/methods` gated `shipping.view/create/update/delete`; leitura pública em `GET /storefront/shipping-methods` (host-resolved, só ativos). Validação: `fixed_shipping` exige `price_amount_minor` (422). **Sem moeda por método** — os valores são na moeda da loja (single-currency, INV-G3), pareados com `store.currency` no checkout. A aplicação da regra "free acima do mínimo" + o aviso de `private_delivery` no checkout são do `P6-CHK-01`/`P6-SF-01`. Migration `50108c983547`. 5 testes, módulo 100%.
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **`shipping.private_delivery.update` órfã** — o CRUD usa `shipping.create/update/delete` (genérico, cobre `private_delivery`); a permissão `shipping.private_delivery.update` não é lida por nenhuma rota. Decidir se vira ação própria (config da entrega combinada / regras de região no `P6-SHIP-02`) ou remover do catálogo. Origem: `P6-SHIP-01`.

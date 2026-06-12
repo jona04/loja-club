@@ -484,6 +484,61 @@ export type ProductUpdate = {
 export type ProductVariantStatus = 'active' | 'archived';
 
 /**
+ * Fields accepted when creating a shipping method.
+ */
+export type ShippingMethodCreate = {
+    type: ShippingMethodType;
+    name: string;
+    description?: (string | null);
+    is_active?: boolean;
+    price_amount_minor?: (number | null);
+    min_order_amount_minor?: (number | null);
+};
+
+/**
+ * Public representation of a shipping method (panel + checkout).
+ */
+export type ShippingMethodPublic = {
+    type: ShippingMethodType;
+    name: string;
+    description?: (string | null);
+    is_active?: boolean;
+    /**
+     * Flat fee (minor units) for fixed_shipping
+     */
+    price_amount_minor?: (number | null);
+    /**
+     * Minimum order (minor units) for free_shipping
+     */
+    min_order_amount_minor?: (number | null);
+    id: string;
+    store_id: string;
+};
+
+/**
+ * A store's shipping/delivery option offered at checkout (doc 11).
+ *
+ * - ``fixed_shipping``: a flat shipping fee (``price_amount_minor``).
+ * - ``free_shipping``: free, optionally above a minimum order
+ * (``min_order_amount_minor``).
+ * - ``local_pickup``: the customer picks the order up; no fee.
+ * - ``private_delivery``: delivery arranged with the store after the purchase
+ * (no automatic price/ETA — the checkout/order makes that clear).
+ */
+export type ShippingMethodType = 'fixed_shipping' | 'free_shipping' | 'local_pickup' | 'private_delivery';
+
+/**
+ * Partial update for a shipping method (``type`` is immutable).
+ */
+export type ShippingMethodUpdate = {
+    name?: (string | null);
+    description?: (string | null);
+    is_active?: (boolean | null);
+    price_amount_minor?: (number | null);
+    min_order_amount_minor?: (number | null);
+};
+
+/**
  * A store's admin detail: identity + settings + members.
  *
  * Orders/volume/webhooks/commissions are **not** included here yet — those
@@ -1372,6 +1427,34 @@ export type PrivateCreateUserData = {
 
 export type PrivateCreateUserResponse = (UserPublic);
 
+export type ShippingListMethodsData = {
+    storeId: string;
+};
+
+export type ShippingListMethodsResponse = (Array<ShippingMethodPublic>);
+
+export type ShippingCreateMethodData = {
+    requestBody: ShippingMethodCreate;
+    storeId: string;
+};
+
+export type ShippingCreateMethodResponse = (ShippingMethodPublic);
+
+export type ShippingUpdateMethodData = {
+    methodId: string;
+    requestBody: ShippingMethodUpdate;
+    storeId: string;
+};
+
+export type ShippingUpdateMethodResponse = (ShippingMethodPublic);
+
+export type ShippingDeleteMethodData = {
+    methodId: string;
+    storeId: string;
+};
+
+export type ShippingDeleteMethodResponse = (void);
+
 export type StorefrontGetHomeResponse = (StorefrontHome);
 
 export type StorefrontListCategoriesResponse = (Array<CategoryPublic>);
@@ -1395,6 +1478,8 @@ export type StorefrontGetPageData = {
 };
 
 export type StorefrontGetPageResponse = (ContentPagePublic);
+
+export type StorefrontListShippingMethodsResponse = (Array<ShippingMethodPublic>);
 
 export type StoresCreateStoreData = {
     requestBody: StoreCreate;

@@ -1667,6 +1667,215 @@ export const ProductVariantStatusSchema = {
     description: 'Lifecycle status of a product variant.'
 } as const;
 
+export const ShippingMethodCreateSchema = {
+    properties: {
+        type: {
+            '$ref': '#/components/schemas/ShippingMethodType'
+        },
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 500
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active',
+            default: true
+        },
+        price_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Amount Minor'
+        },
+        min_order_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Min Order Amount Minor'
+        }
+    },
+    type: 'object',
+    required: ['type', 'name'],
+    title: 'ShippingMethodCreate',
+    description: 'Fields accepted when creating a shipping method.'
+} as const;
+
+export const ShippingMethodPublicSchema = {
+    properties: {
+        type: {
+            '$ref': '#/components/schemas/ShippingMethodType'
+        },
+        name: {
+            type: 'string',
+            maxLength: 255,
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 500
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active',
+            default: true
+        },
+        price_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Amount Minor',
+            description: 'Flat fee (minor units) for fixed_shipping'
+        },
+        min_order_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Min Order Amount Minor',
+            description: 'Minimum order (minor units) for free_shipping'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        store_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Store Id'
+        }
+    },
+    type: 'object',
+    required: ['type', 'name', 'id', 'store_id'],
+    title: 'ShippingMethodPublic',
+    description: 'Public representation of a shipping method (panel + checkout).'
+} as const;
+
+export const ShippingMethodTypeSchema = {
+    type: 'string',
+    enum: ['fixed_shipping', 'free_shipping', 'local_pickup', 'private_delivery'],
+    title: 'ShippingMethodType',
+    description: `A store's shipping/delivery option offered at checkout (doc 11).
+
+- \`\`fixed_shipping\`\`: a flat shipping fee (\`\`price_amount_minor\`\`).
+- \`\`free_shipping\`\`: free, optionally above a minimum order
+  (\`\`min_order_amount_minor\`\`).
+- \`\`local_pickup\`\`: the customer picks the order up; no fee.
+- \`\`private_delivery\`\`: delivery arranged with the store after the purchase
+  (no automatic price/ETA — the checkout/order makes that clear).`
+} as const;
+
+export const ShippingMethodUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 500
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        },
+        price_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Price Amount Minor'
+        },
+        min_order_amount_minor: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Min Order Amount Minor'
+        }
+    },
+    type: 'object',
+    title: 'ShippingMethodUpdate',
+    description: 'Partial update for a shipping method (``type`` is immutable).'
+} as const;
+
 export const StoreAdminDetailSchema = {
     properties: {
         id: {
