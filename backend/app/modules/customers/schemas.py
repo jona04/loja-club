@@ -8,7 +8,9 @@ class AddressInput(SQLModel):
 
     recipient_name: str | None = Field(default=None, max_length=255)
     line1: str = Field(max_length=255)
+    number: str | None = Field(default=None, max_length=32)
     line2: str | None = Field(default=None, max_length=255)
+    neighborhood: str | None = Field(default=None, max_length=255)
     city: str = Field(max_length=255)
     state: str | None = Field(default=None, max_length=255)
     postal_code: str | None = Field(default=None, max_length=32)

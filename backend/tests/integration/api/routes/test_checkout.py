@@ -11,7 +11,7 @@ from app.modules.customers.models import CustomerProfile
 from app.modules.domains.enums import DomainStatus
 from app.modules.domains.models import DomainHost
 from app.modules.orders.enums import OrderStatus
-from app.modules.orders.models import Order
+from app.modules.orders.models import Order, OrderAddress
 from app.modules.shipping.enums import ShippingMethodType
 from app.modules.shipping.models import ShippingMethod
 from app.modules.stores.enums import StoreStatus
@@ -85,7 +85,16 @@ def _body(method_id: uuid.UUID) -> dict[str, object]:
             "phone": "(86) 99999-0000",
             "region": "BR",
         },
-        "address": {"line1": "Rua A", "city": "SP", "country": "BR"},
+        "address": {
+            "line1": "Rua A",
+            "number": "123",
+            "line2": "Apto 4",
+            "neighborhood": "Centro",
+            "city": "SP",
+            "state": "SP",
+            "postal_code": "01000-000",
+            "country": "BR",
+        },
         "shipping_method_id": str(method_id),
     }
 
@@ -124,6 +133,14 @@ def test_checkout_creates_pending_order(client: TestClient, db: Session) -> None
 
     order = db.exec(select(Order).where(Order.store_id == store.id)).one()
     assert order.status == OrderStatus.pending_payment  # not paid automatically
+
+    addr = db.exec(select(OrderAddress).where(OrderAddress.order_id == order.id)).one()
+    assert (addr.number, addr.neighborhood, addr.postal_code, addr.state) == (
+        "123",
+        "Centro",
+        "01000-000",
+        "SP",
+    )
 
 
 def test_empty_cart_checkout_is_422(client: TestClient, db: Session) -> None:

@@ -165,6 +165,38 @@ def test_address_added_and_deduped(db: Session) -> None:
     assert {a.line1 for a in addrs} == {"Rua A", "Rua B"}
 
 
+def test_address_full_fields_persist_and_dedup(db: Session) -> None:
+    store = _store(db, "cust-addr-full")
+    full: dict[str, Any] = {
+        "line1": "Rua A",
+        "number": "123",
+        "line2": "Apto 4",
+        "neighborhood": "Centro",
+        "state": "SP",
+        "postal_code": "01000-000",
+    }
+    c = _cust(db, store, name="Ana", email="ana@x.com", address=_addr(**full))
+    _cust(db, store, name="Ana", email="ana@x.com", address=_addr(**full))  # identical
+    # Only the neighborhood differs → it is a distinct address.
+    _cust(
+        db,
+        store,
+        name="Ana",
+        email="ana@x.com",
+        address=_addr(**{**full, "neighborhood": "Jardins"}),
+    )
+    addrs = db.exec(
+        select(CustomerAddress).where(CustomerAddress.customer_id == c.id)
+    ).all()
+    assert len(addrs) == 2
+    stored = next(a for a in addrs if a.neighborhood == "Centro")
+    assert (stored.number, stored.line2, stored.postal_code) == (
+        "123",
+        "Apto 4",
+        "01000-000",
+    )
+
+
 # --- guest sessions ---
 
 

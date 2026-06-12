@@ -30,7 +30,9 @@ def _same_address(stored: CustomerAddress, given: AddressInput) -> bool:
     return (
         stored.recipient_name,
         stored.line1,
+        stored.number,
         stored.line2,
+        stored.neighborhood,
         stored.city,
         stored.state,
         stored.postal_code,
@@ -38,7 +40,9 @@ def _same_address(stored: CustomerAddress, given: AddressInput) -> bool:
     ) == (
         given.recipient_name,
         given.line1,
+        given.number,
         given.line2,
+        given.neighborhood,
         given.city,
         given.state,
         given.postal_code,

@@ -10,6 +10,7 @@ import type { ReactNode } from "react"
 import type {
   Category,
   Paginated,
+  ShippingMethodPublic,
   StorefrontHome,
   StorefrontProduct,
   StorefrontStore,
@@ -44,10 +45,18 @@ export interface ShellProps {
   children: ReactNode
 }
 
+/** Props for a template's single-page checkout + inline confirmation. */
+export interface CheckoutProps {
+  store: StorefrontStore
+  methods: ShippingMethodPublic[]
+  locale: string
+}
+
 /** A template's component tree (one per template id). */
 export interface Template {
   Home: (props: HomeProps) => ReactNode
   Category: (props: CategoryProps) => ReactNode
   Product: (props: ProductProps) => ReactNode
   Shell: (props: ShellProps) => ReactNode | Promise<ReactNode>
+  Checkout: (props: CheckoutProps) => ReactNode
 }

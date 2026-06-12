@@ -51,6 +51,18 @@ export const AddressInputSchema = {
             maxLength: 255,
             title: 'Line1'
         },
+        number: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 32
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Number'
+        },
         line2: {
             anyOf: [
                 {
@@ -62,6 +74,18 @@ export const AddressInputSchema = {
                 }
             ],
             title: 'Line2'
+        },
+        neighborhood: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Neighborhood'
         },
         city: {
             type: 'string',

@@ -15,7 +15,9 @@ export type AddItemInput = {
 export type AddressInput = {
     recipient_name?: (string | null);
     line1: string;
+    number?: (string | null);
     line2?: (string | null);
+    neighborhood?: (string | null);
     city: string;
     state?: (string | null);
     postal_code?: (string | null);
