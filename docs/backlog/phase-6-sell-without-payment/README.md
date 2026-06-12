@@ -36,7 +36,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 | 7 | [P6-SF-01](./P6-SF-01-storefront-cart-checkout.md) | Vitrine: carrinho real + checkout/confirmação (3 templates) | ✅ done | P6-CART-01, P6-CHK-01 |
 | 8 | [P6-ORD-02](./P6-ORD-02-orders-panel.md) | Painel de pedidos | ✅ done | P6-ORD-01 |
 | 9 | [P6-CUST-02](./P6-CUST-02-customers-panel.md) | Painel de clientes | ✅ done | P6-CUST-01 |
-| 10 | [P6-NOTIF-01](./P6-NOTIF-01-order-emails.md) | E-mails de pedido (worker) + health + E2E do marco | todo | P6-ORD-01, P6-CHK-01 |
+| 10 | [P6-NOTIF-01](./P6-NOTIF-01-order-emails.md) | E-mails de pedido (worker) + health + E2E do marco | ✅ done | P6-ORD-01, P6-CHK-01 |
 | 11 | [P6-DISC-01](./P6-DISC-01-coupons.md) | Cupons (**fast-follow**) | todo | P6-CART-01 |
 | 12 | [P6-SHIP-02](./P6-SHIP-02-shipping-zones.md) | Frete completo: zonas/tarifas/regras (**fast-follow**) | todo | P6-SHIP-01 |
 | 13 | [P6-SF-02](./P6-SF-02-storefront-variants.md) | Seleção de variação na vitrine (**fast-follow**) | todo | P6-CART-01 |
@@ -80,6 +80,9 @@ Fast-follow: P6-DISC-01 (cupons) · P6-SHIP-02 (zonas/tarifas) · P6-SF-02 (vari
 - [ ] **e2e Playwright do painel de clientes** — fluxo "acha cliente → vê histórico" coberto por integração + vitest, não por Playwright. Origem: `P6-CUST-02`.
 - [ ] **Busca de cliente por telefone formatado** — telefone em E.164; busca crua não casa "(86)"/espaços; normalizar termo (só dígitos). Origem: `P6-CUST-02`.
 - [ ] **`customers.export`/`customers.delete` (LGPD)** — permissões existem, sem rota/UI; cruza com `customer_consents`. Origem: `P6-CUST-02`.
+- [ ] **Playwright do marco (browser + Mailcatcher)** — fluxo completo no navegador bloqueado pela infra de e2e do storefront (`P5-SF-01`); coberto por integração. Origem: `P6-NOTIF-01`.
+- [ ] **Compilar MJML no pipeline** — `build/*.html` de pedido são autorais; rodar o CLI do mjml a partir de `src/*.mjml`. Origem: `P6-NOTIF-01`.
+- [ ] **E-mails de status (enviado/entregue) + branding** — só "pedido criado"/"novo pedido" nesta fase. Origem: `P6-NOTIF-01`.
 - [x] **Steppers de quantidade + remover no checkout** ✅ `P6-SF-01` — resumo do pedido editável (via `cart.setQty/remove`) nos 3 templates, fiel aos designs.
 - [ ] **`shipping.private_delivery.update` órfã** — o CRUD de frete usa `shipping.create/update/delete`; a permissão `shipping.private_delivery.update` não é lida por rota. Virar ação própria (`P6-SHIP-02`) ou remover do catálogo. Origem: `P6-SHIP-01`.
 - [ ] **Token seguro p/ continuar a compra (cross-device)** — adiado; recuperação no mesmo navegador já funciona pelo cookie; cross-device cruza com o fluxo de código da Fase 8. Origem: `P6-CART-01`.

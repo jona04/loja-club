@@ -18,6 +18,7 @@ from app.modules.checkout.schemas import (
 )
 from app.modules.customers.deps import guest_session
 from app.modules.customers.models import CustomerGuestSession
+from app.modules.notifications import services as notification_services
 from app.modules.orders import services as order_services
 from app.modules.orders.schemas import OrderPublic
 from app.modules.stores.models import StoreSettings
@@ -30,11 +31,16 @@ public_router = APIRouter(prefix="/storefront/checkout", tags=["checkout"])
 
 
 @public_router.post("", response_model=OrderPublic)
-def submit_checkout(
+async def submit_checkout(
     guest: GuestSession, data: CheckoutInput, session: SessionDep
 ) -> OrderPublic:
-    """Place the order from the cart (no login, no gateway) and return it."""
+    """Place the order from the cart (no login, no gateway) and return it.
+
+    After the order is persisted, the customer + merchant emails are enqueued to
+    the worker (best-effort; never blocks the order).
+    """
     order = services.submit_checkout(session=session, guest=guest, data=data)
+    await notification_services.dispatch_order_emails(session=session, order=order)
     return order_services.order_to_public(session=session, order=order)
 
 
