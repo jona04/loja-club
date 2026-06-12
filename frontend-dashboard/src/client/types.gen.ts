@@ -412,6 +412,53 @@ export type NewPassword = {
 };
 
 /**
+ * The delivery address snapshotted on an order.
+ */
+export type OrderAddressPublic = {
+    recipient_name: (string | null);
+    line1: string;
+    number: (string | null);
+    line2: (string | null);
+    neighborhood: (string | null);
+    city: string;
+    state: (string | null);
+    postal_code: (string | null);
+    country: string;
+};
+
+/**
+ * The customer behind an order (for contact + WhatsApp handoff).
+ */
+export type OrderCustomerPublic = {
+    id: string;
+    name: string;
+    email: (string | null);
+    phone_e164: (string | null);
+};
+
+/**
+ * The full order, for the panel detail (customer, address, history, notes).
+ */
+export type OrderDetail = {
+    id: string;
+    order_number: number;
+    status: OrderStatus;
+    currency: string;
+    subtotal_amount_minor: number;
+    shipping_amount_minor: number;
+    discount_amount_minor: number;
+    total_amount_minor: number;
+    shipping_method_type: (ShippingMethodType | null);
+    shipping_method_name: (string | null);
+    created_at: string;
+    customer: (OrderCustomerPublic | null);
+    address: (OrderAddressPublic | null);
+    items: Array<OrderItemPublic>;
+    status_history: Array<OrderStatusHistoryPublic>;
+    notes: Array<OrderNotePublic>;
+};
+
+/**
  * A purchased line (frozen name/price).
  */
 export type OrderItemPublic = {
@@ -423,6 +470,23 @@ export type OrderItemPublic = {
     unit_price_amount_minor: number;
     unit_price_currency: string;
     line_total_amount_minor: number;
+};
+
+/**
+ * Add an internal note to an order.
+ */
+export type OrderNoteCreate = {
+    body: string;
+};
+
+/**
+ * An internal note written on an order by the merchant.
+ */
+export type OrderNotePublic = {
+    id: string;
+    body: string;
+    author_user_id: (string | null);
+    created_at: string;
 };
 
 /**
@@ -452,6 +516,36 @@ export type OrderPublic = {
  */
 export type OrderStatus = 'pending_payment' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'canceled';
 
+/**
+ * One status transition in an order's history.
+ */
+export type OrderStatusHistoryPublic = {
+    status: OrderStatus;
+    note: (string | null);
+    created_at: string;
+};
+
+/**
+ * Move an order to the next operational status.
+ */
+export type OrderStatusUpdate = {
+    status: OrderStatus;
+};
+
+/**
+ * A row in the panel orders list (number + status + total + customer).
+ */
+export type OrderSummary = {
+    id: string;
+    order_number: number;
+    status: OrderStatus;
+    currency: string;
+    total_amount_minor: number;
+    item_count: number;
+    customer_name: (string | null);
+    created_at: string;
+};
+
 export type Page_BillingPlanPublic_ = {
     data: Array<BillingPlanPublic>;
     count: number;
@@ -459,6 +553,11 @@ export type Page_BillingPlanPublic_ = {
 
 export type Page_CategoryPublic_ = {
     data: Array<CategoryPublic>;
+    count: number;
+};
+
+export type Page_OrderSummary_ = {
+    data: Array<OrderSummary>;
     count: number;
 };
 
@@ -1497,6 +1596,45 @@ export type MediaUploadMediaData = {
 };
 
 export type MediaUploadMediaResponse = (MediaPublic);
+
+export type OrdersListOrdersData = {
+    limit?: number;
+    skip?: number;
+    status?: (OrderStatus | null);
+    storeId: string;
+};
+
+export type OrdersListOrdersResponse = (Page_OrderSummary_);
+
+export type OrdersGetOrderData = {
+    orderId: string;
+    storeId: string;
+};
+
+export type OrdersGetOrderResponse = (OrderDetail);
+
+export type OrdersUpdateStatusData = {
+    orderId: string;
+    requestBody: OrderStatusUpdate;
+    storeId: string;
+};
+
+export type OrdersUpdateStatusResponse = (OrderDetail);
+
+export type OrdersCancelOrderData = {
+    orderId: string;
+    storeId: string;
+};
+
+export type OrdersCancelOrderResponse = (OrderDetail);
+
+export type OrdersAddNoteData = {
+    orderId: string;
+    requestBody: OrderNoteCreate;
+    storeId: string;
+};
+
+export type OrdersAddNoteResponse = (OrderNotePublic);
 
 export type PlatformAdminGetPlatformMeResponse = (PlatformMe);
 

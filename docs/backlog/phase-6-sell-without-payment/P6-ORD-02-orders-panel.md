@@ -4,7 +4,7 @@ title: Painel de pedidos (lista/detalhe/marcar-pago/cancelar)
 phase: 6
 etapa: "Etapa 6 — orders (painel)"
 area: ORD
-status: todo
+status: done
 depends_on: [P6-ORD-01]
 blocks: []
 tests: [integration, e2e]
@@ -44,14 +44,19 @@ O lojista precisa ver e operar os pedidos: lista, detalhe, **marcar pago manualm
 - **Cobrir:** integração — gating `orders.*`, marcar-pago, cancelar devolve estoque, isolamento. e2e — lojista vê o pedido e marca pago.
 
 ## Definition of Done
-- [ ] Rotas do painel gated `orders.*` (lista c/ nº + detalhe + status + nota).
-- [ ] Marcar pago manual + cancelar (restock).
-- [ ] Tela + menu (gated `orders.view`).
-- [ ] **Modos de falha mapeados** (transição de status inválida; cancelar já entregue; pedido de outra loja) → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Rotas do painel gated `orders.*` (lista c/ nº + detalhe + status + nota).
+- [x] Marcar pago manual + cancelar (restock).
+- [x] Tela + menu (gated `orders.view`).
+- [x] **Modos de falha mapeados** (transição de status inválida → 409; cancelar já entregue → 409 `cannot_cancel`; pedido de outra loja → 404) → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- (preencher ao implementar.)
+- **Backend:** rotas `/stores/{id}/orders` (`orders/routes.py`) — `GET` lista `Page[OrderSummary]` (filtro `?status=`, nº/cliente/total/itens/data, newest-first) gated `orders.view`; `GET /{id}` detalhe `OrderDetail` (cliente + endereço + itens + histórico + notas); `PATCH /{id}/status` (transição **um passo** pelo chain `_FORWARD`; "marcar pago" = `→paid`) gated `orders.update_status`; `POST /{id}/cancel` → `cancel_order` (**restock**) gated `orders.cancel`; `POST /{id}/notes` gated `orders.add_note` (autor = usuário atual). Serviços novos em `orders/services.py` (`list_orders`/`get_order`/`get_order_detail`/`set_status`/`add_note`); schemas novos. Permissões já existiam no catálogo (doc 08) — sem mudança de seed.
+- **Status:** mantido o **forward de 1 passo** (`pending_payment→paid→processing→shipped→delivered`); cancelar é rota própria (não entra no `set_status`). Transição inválida = **409 `invalid_transition`**.
+- **Frontend:** `routes/_layout/orders.tsx` (lista + filtro + diálogo de detalhe com ações de status/cancelar/nota + **handoff de WhatsApp** via `phone_e164`) + entrada "Pedidos" no `menu.ts` (gated `orders.view`). Client OpenAPI regenerado (`OrdersService`). Teste de componente `orders.test.tsx` (lista + gating do "Marcar pago").
+- **Pré-existente corrigido:** `store-layout.test.tsx` checava `name: "Salvar"` mas o botão virou "Salvar template e aparência" (refactor de UX anterior) — asserção atualizada (não é desta task, mas estava vermelha).
 
 ## Follow-ups
-- [ ] — nenhum (preencher ao implementar).
+- [ ] **e2e Playwright do painel de pedidos** — o fluxo (lojista vê o pedido → marca pago) está coberto por integração (backend) + teste de componente (vitest), **não** por Playwright; falta seedar um pedido no e2e e cobrir ao vivo. Origem: `P6-ORD-02`.
+- [ ] **Exportar pedidos (`orders.export`)** — permissão existe no catálogo, sem rota/botão ainda. Origem: `P6-ORD-02`.
+- [ ] **Paginação do detalhe (histórico/notas longos)** — detalhe carrega histórico/notas inteiros; ok no MVP, paginar se crescer. Origem: `P6-ORD-02`.

@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CartGetCartResponse, CartAddItemData, CartAddItemResponse, CartUpdateItemData, CartUpdateItemResponse, CartRemoveItemData, CartRemoveItemResponse, CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, CheckoutGetPoliciesData, CheckoutGetPoliciesResponse, CheckoutUpdatePoliciesData, CheckoutUpdatePoliciesResponse, CheckoutSubmitCheckoutData, CheckoutSubmitCheckoutResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, ContentListPagesData, ContentListPagesResponse, ContentCreatePageData, ContentCreatePageResponse, ContentUpdatePageData, ContentUpdatePageResponse, ContentDeletePageData, ContentDeletePageResponse, ContentListBannersData, ContentListBannersResponse, ContentCreateBannerData, ContentCreateBannerResponse, ContentUpdateBannerData, ContentUpdateBannerResponse, ContentDeleteBannerData, ContentDeleteBannerResponse, ContentListMenusData, ContentListMenusResponse, ContentCreateMenuData, ContentCreateMenuResponse, ContentUpdateMenuData, ContentUpdateMenuResponse, ContentDeleteMenuData, ContentDeleteMenuResponse, ContentAddMenuItemData, ContentAddMenuItemResponse, ContentUpdateMenuItemData, ContentUpdateMenuItemResponse, ContentDeleteMenuItemData, ContentDeleteMenuItemResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PrivateCreateUserData, PrivateCreateUserResponse, ShippingListMethodsData, ShippingListMethodsResponse, ShippingCreateMethodData, ShippingCreateMethodResponse, ShippingUpdateMethodData, ShippingUpdateMethodResponse, ShippingDeleteMethodData, ShippingDeleteMethodResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StorefrontListShippingMethodsResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CartGetCartResponse, CartAddItemData, CartAddItemResponse, CartUpdateItemData, CartUpdateItemResponse, CartRemoveItemData, CartRemoveItemResponse, CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, CheckoutGetPoliciesData, CheckoutGetPoliciesResponse, CheckoutUpdatePoliciesData, CheckoutUpdatePoliciesResponse, CheckoutSubmitCheckoutData, CheckoutSubmitCheckoutResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, ContentListPagesData, ContentListPagesResponse, ContentCreatePageData, ContentCreatePageResponse, ContentUpdatePageData, ContentUpdatePageResponse, ContentDeletePageData, ContentDeletePageResponse, ContentListBannersData, ContentListBannersResponse, ContentCreateBannerData, ContentCreateBannerResponse, ContentUpdateBannerData, ContentUpdateBannerResponse, ContentDeleteBannerData, ContentDeleteBannerResponse, ContentListMenusData, ContentListMenusResponse, ContentCreateMenuData, ContentCreateMenuResponse, ContentUpdateMenuData, ContentUpdateMenuResponse, ContentDeleteMenuData, ContentDeleteMenuResponse, ContentAddMenuItemData, ContentAddMenuItemResponse, ContentUpdateMenuItemData, ContentUpdateMenuItemResponse, ContentDeleteMenuItemData, ContentDeleteMenuItemResponse, HealthHealthResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, OrdersListOrdersData, OrdersListOrdersResponse, OrdersGetOrderData, OrdersGetOrderResponse, OrdersUpdateStatusData, OrdersUpdateStatusResponse, OrdersCancelOrderData, OrdersCancelOrderResponse, OrdersAddNoteData, OrdersAddNoteResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PrivateCreateUserData, PrivateCreateUserResponse, ShippingListMethodsData, ShippingListMethodsResponse, ShippingCreateMethodData, ShippingCreateMethodResponse, ShippingUpdateMethodData, ShippingUpdateMethodResponse, ShippingDeleteMethodData, ShippingDeleteMethodResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StorefrontListShippingMethodsResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CartService {
     /**
@@ -1331,6 +1331,135 @@ export class MediaService {
             },
             formData: data.formData,
             mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class OrdersService {
+    /**
+     * List Orders
+     * List the store's orders (newest first), optionally filtered by status.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.status
+     * @param data.skip
+     * @param data.limit
+     * @returns Page_OrderSummary_ Successful Response
+     * @throws ApiError
+     */
+    public static listOrders(data: OrdersListOrdersData): CancelablePromise<OrdersListOrdersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/orders',
+            path: {
+                store_id: data.storeId
+            },
+            query: {
+                status: data.status,
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Order
+     * Get an order's full detail (customer, address, items, history, notes).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.orderId
+     * @returns OrderDetail Successful Response
+     * @throws ApiError
+     */
+    public static getOrder(data: OrdersGetOrderData): CancelablePromise<OrdersGetOrderResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/stores/{store_id}/orders/{order_id}',
+            path: {
+                store_id: data.storeId,
+                order_id: data.orderId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update Status
+     * Advance the order one step (e.g. mark payment received: → ``paid``).
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.orderId
+     * @param data.requestBody
+     * @returns OrderDetail Successful Response
+     * @throws ApiError
+     */
+    public static updateStatus(data: OrdersUpdateStatusData): CancelablePromise<OrdersUpdateStatusResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/stores/{store_id}/orders/{order_id}/status',
+            path: {
+                store_id: data.storeId,
+                order_id: data.orderId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Cancel Order
+     * Cancel an order (when allowed), giving its stock back.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.orderId
+     * @returns OrderDetail Successful Response
+     * @throws ApiError
+     */
+    public static cancelOrder(data: OrdersCancelOrderData): CancelablePromise<OrdersCancelOrderResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/orders/{order_id}/cancel',
+            path: {
+                store_id: data.storeId,
+                order_id: data.orderId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Add Note
+     * Write an internal note on the order.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.orderId
+     * @param data.requestBody
+     * @returns OrderNotePublic Successful Response
+     * @throws ApiError
+     */
+    public static addNote(data: OrdersAddNoteData): CancelablePromise<OrdersAddNoteResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/orders/{order_id}/notes',
+            path: {
+                store_id: data.storeId,
+                order_id: data.orderId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: 'Validation Error'
             }

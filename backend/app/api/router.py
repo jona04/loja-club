@@ -12,6 +12,7 @@ from app.modules.checkout.routes import public_router as checkout_public_router
 from app.modules.checkout.routes import router as checkout_router
 from app.modules.content.routes import router as content_router
 from app.modules.media.routes import router as media_router
+from app.modules.orders.routes import router as orders_router
 from app.modules.platform_admin.routes import router as platform_admin_router
 from app.modules.shipping.routes import router as shipping_router
 from app.modules.storefront.routes import router as storefront_router
@@ -27,6 +28,7 @@ api_router.include_router(checkout_router)
 api_router.include_router(checkout_public_router)
 api_router.include_router(content_router)
 api_router.include_router(media_router)
+api_router.include_router(orders_router)
 api_router.include_router(platform_admin_router)
 api_router.include_router(shipping_router)
 api_router.include_router(storefront_router)

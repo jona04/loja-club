@@ -1475,6 +1475,241 @@ export const NewPasswordSchema = {
     description: 'Password-reset payload (token + new password).'
 } as const;
 
+export const OrderAddressPublicSchema = {
+    properties: {
+        recipient_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Recipient Name'
+        },
+        line1: {
+            type: 'string',
+            title: 'Line1'
+        },
+        number: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Number'
+        },
+        line2: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Line2'
+        },
+        neighborhood: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Neighborhood'
+        },
+        city: {
+            type: 'string',
+            title: 'City'
+        },
+        state: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'State'
+        },
+        postal_code: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Postal Code'
+        },
+        country: {
+            type: 'string',
+            title: 'Country'
+        }
+    },
+    type: 'object',
+    required: ['recipient_name', 'line1', 'number', 'line2', 'neighborhood', 'city', 'state', 'postal_code', 'country'],
+    title: 'OrderAddressPublic',
+    description: 'The delivery address snapshotted on an order.'
+} as const;
+
+export const OrderCustomerPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone_e164: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone E164'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'email', 'phone_e164'],
+    title: 'OrderCustomerPublic',
+    description: 'The customer behind an order (for contact + WhatsApp handoff).'
+} as const;
+
+export const OrderDetailSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        order_number: {
+            type: 'integer',
+            title: 'Order Number'
+        },
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        currency: {
+            type: 'string',
+            title: 'Currency'
+        },
+        subtotal_amount_minor: {
+            type: 'integer',
+            title: 'Subtotal Amount Minor'
+        },
+        shipping_amount_minor: {
+            type: 'integer',
+            title: 'Shipping Amount Minor'
+        },
+        discount_amount_minor: {
+            type: 'integer',
+            title: 'Discount Amount Minor'
+        },
+        total_amount_minor: {
+            type: 'integer',
+            title: 'Total Amount Minor'
+        },
+        shipping_method_type: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/ShippingMethodType'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        shipping_method_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Shipping Method Name'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        customer: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/OrderCustomerPublic'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        address: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/OrderAddressPublic'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        items: {
+            items: {
+                '$ref': '#/components/schemas/OrderItemPublic'
+            },
+            type: 'array',
+            title: 'Items'
+        },
+        status_history: {
+            items: {
+                '$ref': '#/components/schemas/OrderStatusHistoryPublic'
+            },
+            type: 'array',
+            title: 'Status History'
+        },
+        notes: {
+            items: {
+                '$ref': '#/components/schemas/OrderNotePublic'
+            },
+            type: 'array',
+            title: 'Notes'
+        }
+    },
+    type: 'object',
+    required: ['id', 'order_number', 'status', 'currency', 'subtotal_amount_minor', 'shipping_amount_minor', 'discount_amount_minor', 'total_amount_minor', 'shipping_method_type', 'shipping_method_name', 'created_at', 'customer', 'address', 'items', 'status_history', 'notes'],
+    title: 'OrderDetail',
+    description: 'The full order, for the panel detail (customer, address, history, notes).'
+} as const;
+
 export const OrderItemPublicSchema = {
     properties: {
         id: {
@@ -1524,6 +1759,54 @@ export const OrderItemPublicSchema = {
     required: ['id', 'product_id', 'variant_id', 'name', 'quantity', 'unit_price_amount_minor', 'unit_price_currency', 'line_total_amount_minor'],
     title: 'OrderItemPublic',
     description: 'A purchased line (frozen name/price).'
+} as const;
+
+export const OrderNoteCreateSchema = {
+    properties: {
+        body: {
+            type: 'string',
+            title: 'Body'
+        }
+    },
+    type: 'object',
+    required: ['body'],
+    title: 'OrderNoteCreate',
+    description: 'Add an internal note to an order.'
+} as const;
+
+export const OrderNotePublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        body: {
+            type: 'string',
+            title: 'Body'
+        },
+        author_user_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Author User Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'body', 'author_user_id', 'created_at'],
+    title: 'OrderNotePublic',
+    description: 'An internal note written on an order by the merchant.'
 } as const;
 
 export const OrderPublicSchema = {
@@ -1607,6 +1890,95 @@ The payment statuses (\`\`payment_failed\`\`/\`\`refunded\`\`/\`\`chargeback\`\`
 with the gateway in Fase 8 — none is created here.`
 } as const;
 
+export const OrderStatusHistoryPublicSchema = {
+    properties: {
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        note: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Note'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['status', 'note', 'created_at'],
+    title: 'OrderStatusHistoryPublic',
+    description: "One status transition in an order's history."
+} as const;
+
+export const OrderStatusUpdateSchema = {
+    properties: {
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        }
+    },
+    type: 'object',
+    required: ['status'],
+    title: 'OrderStatusUpdate',
+    description: 'Move an order to the next operational status.'
+} as const;
+
+export const OrderSummarySchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        order_number: {
+            type: 'integer',
+            title: 'Order Number'
+        },
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        currency: {
+            type: 'string',
+            title: 'Currency'
+        },
+        total_amount_minor: {
+            type: 'integer',
+            title: 'Total Amount Minor'
+        },
+        item_count: {
+            type: 'integer',
+            title: 'Item Count'
+        },
+        customer_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Customer Name'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'order_number', 'status', 'currency', 'total_amount_minor', 'item_count', 'customer_name', 'created_at'],
+    title: 'OrderSummary',
+    description: 'A row in the panel orders list (number + status + total + customer).'
+} as const;
+
 export const Page_BillingPlanPublic_Schema = {
     properties: {
         data: {
@@ -1643,6 +2015,25 @@ export const Page_CategoryPublic_Schema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'Page[CategoryPublic]'
+} as const;
+
+export const Page_OrderSummary_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/OrderSummary'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[OrderSummary]'
 } as const;
 
 export const Page_ProductPublic_Schema = {
