@@ -108,7 +108,7 @@ Funcionalidades (Fase 7):
 
 Funcionalidades:
 
-- listar pedidos;
+- listar pedidos (cada um com o **número do pedido** sequencial por loja);
 - filtrar por status;
 - filtrar por data;
 - ver detalhe do pedido;
@@ -116,10 +116,11 @@ Funcionalidades:
 - ver itens comprados;
 - ver personalização aprovada, quando houver;
 - ver pagamento;
+- **marcar pagamento recebido manualmente** (`pending_payment → paid`) — enquanto não há gateway (Fase 6); nenhum pedido vira pago sozinho;
 - atualizar status operacional;
 - adicionar nota interna;
-- cancelar pedido quando permitido;
-- solicitar/processar reembolso se permitido;
+- cancelar pedido quando permitido (**devolve o estoque**);
+- solicitar/processar reembolso se permitido *(reembolso real = Fase 8)*;
 - ver histórico de status.
 
 ## Personalizações

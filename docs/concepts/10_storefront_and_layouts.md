@@ -243,7 +243,7 @@ Deve mostrar:
 - botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
 
-> **Fase 3 V1:** a página é **informativa** (imagem/nome/preço/descrição), **sem ação de compra** — carrinho/checkout/entrega chegam na **Fase 6**. O único elemento de WhatsApp na vitrine é um **botão flutuante** de contato (em toda a loja) que redireciona pro WhatsApp web; usa `whatsapp_number` de `store_settings`. Variações, disponibilidade e relacionados = follow-up; `Personalizar` = Fase 7.
+> **Faseamento:** na Fase 3 a página é **informativa** (imagem/nome/preço/descrição). A **ação de compra** (adicionar ao carrinho), a **disponibilidade** (estoque) e a **seleção de variação** chegam na **Fase 6** (venda sem pagamento) — o `cart_item`/`order_item` guarda a **variação escolhida**, e a vitrine precisa expor variações + estoque no `StorefrontProduct` (hoje só imagem/nome/preço/descrição). **Produtos relacionados** = follow-up; **`Personalizar`** = Fase 7. O botão flutuante de WhatsApp (contato, em toda a loja, `whatsapp_number`) já existe desde a Fase 3.
 
 Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
 O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
@@ -315,6 +315,7 @@ Deve mostrar:
 Deve mostrar:
 
 - itens;
+- **variação escolhida** (quando o produto tiver variações);
 - quantidades;
 - subtotal;
 - cupom;
@@ -326,6 +327,8 @@ Deve mostrar:
 O carrinho deve funcionar sem login.
 Antes do checkout, ele fica associado a uma sessão anônima com cookie seguro e validade de 30 dias.
 Se o cliente voltar no mesmo navegador, o carrinho deve ser restaurado.
+
+> **Carrinho de servidor (Fase 6):** o carrinho real vive em `cart_carts`/`cart_items` (servidor), chaveado pelo `guest_session_id` do cookie. Na Fase 3 a vitrine usa um carrinho **client** (localStorage) como placeholder; a Fase 6 o substitui pelo carrinho de servidor — drawer e checkout passam a ler a **mesma** fonte.
 
 Depois que o cliente informar e-mail ou telefone, a loja pode enviar link seguro para continuar compra.
 
@@ -352,6 +355,8 @@ Quando o cliente escolher entrega combinada, o checkout deve mostrar uma mensage
 ```text
 A loja entrará em contato após a compra para combinar a entrega.
 ```
+
+> **Sem gateway (Fase 6):** na venda sem pagamento, o checkout **cria o pedido pendente** e segue direto para a **confirmação** — sem redirecionar/integrar gateway nem esperar webhook (isso é a Fase 8). A confirmação mostra o **número do pedido**, as **políticas da loja** (troca/devolução/privacidade) e um **handoff por WhatsApp** com a mensagem pré-preenchida (pedido + itens) para combinar o pagamento. Ver [11 — Venda sem gateway (MVP local — Fase 6)](11_checkout_payments_and_split.md).
 
 ## Decisão canônica
 

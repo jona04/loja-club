@@ -10,13 +10,40 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 - Cliente navega, adiciona ao carrinho e finaliza checkout **sem login**.
 - Cliente é **identificado por e-mail/telefone normalizados** com deduplicação e primeiro-nome-vence.
-- Pedido criado como `pending_payment`; preço congelado.
+- Pedido criado como `pending_payment`; **preço congelado**, **estoque decrementado** e **número do pedido** sequencial por loja.
+- Pagamento **combinado fora da plataforma**: confirmação com **handoff por WhatsApp** (mensagem pré-preenchida com nº do pedido + itens); lojista **marca pago manualmente** (nenhum pedido vira pago sozinho).
 - Lojista vê o pedido no painel; cliente e lojista recebem e-mail (Mailcatcher).
 - **Tudo rodando 100% local** no Docker Compose; isolamento multi-tenant testado.
+
+## Sequência (MVP fino primeiro)
+
+> Prioridade: **receber um pedido o quanto antes** (lançar ASAP; pagamento por último — [doc 17](../concepts/17_v1_roadmap.md)).
+>
+> 1. **Núcleo vendável:** `customers` (dedup) → `cart` (servidor) → `checkout` → `orders` → e-mail/WhatsApp. Frete começa só com **retirada / combinada / frete fixo** (sem zonas/tarifas).
+> 2. **Fast-follow** (depois que o núcleo vende): **cupons** (Etapa 2), **zonas/tarifas de frete** (Etapa 1 completa) e **seleção de variação** na vitrine.
+>
+> Gateway/split/webhook = **Fase 8**. Aqui o checkout para no **pedido pendente** + confirmação (ver [doc 11 — Venda sem gateway](../concepts/11_checkout_payments_and_split.md)).
+
+## Pré-requisitos adiantados (de follow-ups abertos)
+
+- [ ] **Vitrine expõe variações + disponibilidade** (doc 10 §Página de produto; follow-up `P3-SF-01`/`P3-SF-02`): `StorefrontProduct` passa a trazer variações + estoque; o produto deixa escolher a variação e o `cart_item` guarda `variant_id`. *(Necessário só quando a seleção de variação entrar — fast-follow.)*
+- [ ] **Índice único de estoque** `(store_id, product_id, variant_id)` (follow-up `P2-CAT-02`): pré-requisito da baixa de estoque confiável (evita linha duplicada/corrida de upsert). Doc [07](../concepts/07_database_strategy.md).
+- [ ] **Políticas da loja (troca/devolução/privacidade)** (follow-up `P1` — carimbado "Fase 6/checkout", `checkout.policies.*`): configuração no painel + exibição/link no checkout. Doc [09](../concepts/09_merchant_dashboard.md)/[11](../concepts/11_checkout_payments_and_split.md).
+
+---
+
+## Etapa 0 — Catálogo: tipo de produto + portão do add-to-cart
+
+> **Costura para a [Fase 7](./phase-7-3d-products.md):** o add-to-cart precisa saber se o produto vai direto ao carrinho ou exige personalização. Adiantado pra cá (default `image`) pra Fase 7 só **ativar**, sem migration nem retrofit do serviço de carrinho.
+
+- [ ] Adicionar **`type`** (`image|image_3d|image_3d_customizable`, default `image`) ao `catalog_products` (migration; `alembic check` vazio). Doc [07](../concepts/07_database_strategy.md)/[22](../concepts/22_product_customization_3d.md).
+- [ ] **Portão do add-to-cart** type-aware: `image`/`image_3d` vão direto; `image_3d_customizable` exige sessão `approved`. Na Fase 6 todo produto é `image` (no-op), mas o portão já existe pra Fase 7 plugar. Doc [11](../concepts/11_checkout_payments_and_split.md)/[22](../concepts/22_product_customization_3d.md).
 
 ---
 
 ## Etapa 1 — Módulo `shipping` (frete) — antes do carrinho
+
+> **MVP fino:** começar só com **retirada local**, **entrega combinada** (`private_delivery`) e **frete fixo** — o suficiente pro checkout funcionar. **Zonas/tarifas/regras** por cidade/região (`shipping_zones`/`shipping_rates`/`shipping_method_rules`) = **fast-follow**.
 
 ### Modelos (com `store_id`)
 - [ ] `shipping_methods`: `type` (`fixed_shipping|free_shipping|local_pickup|private_delivery`), `is_active`, nome, descrição exibida no checkout. Doc [07](../concepts/07_database_strategy.md)/[11](../concepts/11_checkout_payments_and_split.md).
@@ -31,6 +58,8 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 ## Etapa 2 — Módulo `discounts` (cupons) — antes do carrinho
 
+> **Fast-follow:** não bloqueia o núcleo vendável. Entra depois que cart→checkout→pedido fecha. (O carrinho já reserva o ponto de "aplicar cupom".)
+
 - [ ] `discount_coupons` (`store_id`, `code` único quando ativo, `type` `percentual|fixo`, validade, limite de uso, pedido mínimo, status). `discount_coupon_redemptions`. Doc [07](../concepts/07_database_strategy.md)/[09](../concepts/09_merchant_dashboard.md).
 - [ ] CRUD + serviço de validação/aplicação (consumido pelo carrinho). Doc [20](../concepts/20_api_contracts_todo.md).
 - [ ] Índice `discount_coupons.store_id+code` único quando ativo. Doc [07](../concepts/07_database_strategy.md).
@@ -40,6 +69,7 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 ## Etapa 3 — Módulo `customers` (identidade + dedup, escopo MVP)
 
 > Apenas guest + dedup nesta fase. Login por código/senha/Google e área do cliente são **Fase 8**. Doc [23](../concepts/23_customer_identity_and_guest_checkout.md).
+> **Costura p/ Fase 7:** `create_or_update_customer` é um **serviço público do módulo** (não embutido na rota de checkout) — a **personalização assistida** da Fase 7 o chama do **painel** (lojista pré-cadastra o cliente). Doc [22](../concepts/22_product_customization_3d.md).
 
 ### Modelos (com `store_id`)
 - [ ] `customer_profiles`: `store_id`, `name`, `email` (normalizado), `phone_e164`, timestamps, soft delete. Índices únicos `store_id+email` e `store_id+phone_e164` quando existirem. Doc [23](../concepts/23_customer_identity_and_guest_checkout.md)/[07](../concepts/07_database_strategy.md).
@@ -62,9 +92,11 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 ## Etapa 4 — Módulo `cart` (carrinho)
 
+> **Carrinho de servidor substitui o client:** a vitrine hoje tem um carrinho **client** (localStorage, placeholder da Fase 3). Esta etapa o troca pelo carrinho de **servidor** (`cart_carts`, chaveado pelo cookie `guest_session_id`); **drawer e checkout passam a ler a mesma fonte**.
+
 ### Modelos (com `store_id`)
 - [ ] `cart_carts`: `guest_session_id`|`customer_id`, `status`; índices `store_id+guest_session_id+status`, `store_id+customer_id+status`. Doc [07](../concepts/07_database_strategy.md).
-- [ ] `cart_items`. (O `customization_cart_items` — liga o item à sessão de personalização aprovada — é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [07](../concepts/07_database_strategy.md).
+- [ ] `cart_items`: produto, **`variant_id`** (quando o produto tiver variação), quantidade, preço unitário. (O `customization_cart_items` — liga o item à sessão de personalização aprovada — é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [07](../concepts/07_database_strategy.md).
 
 ### Rotas/serviço (doc [20](../concepts/20_api_contracts_todo.md))
 - [ ] Criar carrinho; recuperar por sessão anônima; recuperar por token seguro; adicionar item; alterar quantidade; remover; aplicar cupom; resumo (subtotal); validar estoque. Doc [11](../concepts/11_checkout_payments_and_split.md)/[10](../concepts/10_storefront_and_layouts.md).
@@ -79,6 +111,8 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 
 ## Etapa 5 — Módulo `checkout`
 
+> **Costuras p/ Fase 7:** a criação do pedido congela **por item** (preço + `variant_id`) num passo **extensível** — a Fase 7 pluga aí o congelamento da personalização (`customization_order_items`); a validação do checkout é uma **lista composável** de checks (estoque/valores agora; + "item `image_3d_customizable` tem sessão `approved`" depois). Doc [11](../concepts/11_checkout_payments_and_split.md)/[22](../concepts/22_product_customization_3d.md).
+
 ### Modelo
 - [ ] `checkout_sessions`: `store_id`, `cart_id`, `status`, `expires_at` (≈24h). Índices `store_id+cart_id+status`, `expires_at+status`. Doc [07](../concepts/07_database_strategy.md)/[23](../concepts/23_customer_identity_and_guest_checkout.md).
 
@@ -86,28 +120,30 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 - [ ] Coletar dados do cliente (nome, e-mail, telefone, **seletor de país** para o telefone) sem senha.
 - [ ] `create_or_update_customer` (dedup) + endereço.
 - [ ] Selecionar método de entrega (inclui `private_delivery` com aviso).
+- [ ] **Exibir/linkar as políticas da loja** (troca/devolução/privacidade) no checkout (`checkout.policies.*`). Doc [09](../concepts/09_merchant_dashboard.md)/[11](../concepts/11_checkout_payments_and_split.md).
 - [ ] Revisão; validar estoque e valores.
-- [ ] Criar **pedido `pending_payment`**; **congelar preços**. (O **congelamento de personalização** em `customization_order_items` é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [11](../concepts/11_checkout_payments_and_split.md).
-- [ ] **Pagamento combinado fora da plataforma**: mensagem pós-compra explicando como será combinado (Pix/transferência/WhatsApp/entrega combinada).
+- [ ] Criar **pedido `pending_payment`**: **congelar preços** (+ `variant_id`), **decrementar estoque** (`catalog_inventory_items`) e gerar **`order_number` sequencial por loja**. **Sem gateway** — o fluxo para aqui e segue pra confirmação (passos de gateway/webhook = Fase 8). (O **congelamento de personalização** em `customization_order_items` é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [11](../concepts/11_checkout_payments_and_split.md).
+- [ ] **Confirmação + pagamento combinado fora da plataforma**: tela/e-mail com o **nº do pedido**, resumo e instruções; **handoff por WhatsApp** = botão que abre o WhatsApp da loja (`whatsapp_number`) com **mensagem pré-preenchida** (pedido + itens) para combinar o pagamento. Doc [11](../concepts/11_checkout_payments_and_split.md)/[10](../concepts/10_storefront_and_layouts.md).
 - [ ] **Preparar o ponto de integração do gateway** (interface no `payments`, sem implementar) para a Fase 8. Doc [17](../concepts/17_v1_roadmap.md).
 - [ ] Não exigir senha/cadastro. Doc [11](../concepts/11_checkout_payments_and_split.md).
 
 ### Frontend (storefront)
-- [ ] Checkout **single-page** (itens + contato c/ seletor de país + endereço + entrega + resumo) + **confirmação**, **nos 3 templates** (Aurora/Bazar/Studio) — designs prontos em `docs/design/templates/<nome>/` (`P3-TPL-*`); o **drawer** de mini-carrinho vem dos templates. Doc [10](../concepts/10_storefront_and_layouts.md)/[11](../concepts/11_checkout_payments_and_split.md).
+- [ ] Checkout **single-page** (itens + contato c/ seletor de país + endereço + entrega + **políticas da loja** + resumo) + **confirmação**, **nos 3 templates** (Aurora/Bazar/Studio) — designs prontos em `docs/design/templates/<nome>/` (`P3-TPL-*`); o **drawer** de mini-carrinho vem dos templates. A **confirmação** mostra o **nº do pedido** + o **botão de WhatsApp** (msg pré-preenchida). Doc [10](../concepts/10_storefront_and_layouts.md)/[11](../concepts/11_checkout_payments_and_split.md).
 
 ---
 
 ## Etapa 6 — Módulo `orders` (pedidos)
 
 ### Modelos (com `store_id`)
-- [ ] `order_orders`: status (`draft|pending_payment|paid|payment_failed|processing|shipped|delivered|canceled|refunded|chargeback`), total, frete, desconto, método de entrega, `customer_id`, `guest_session_id`. Doc [07](../concepts/07_database_strategy.md)/[11](../concepts/11_checkout_payments_and_split.md).
-- [ ] `order_items`; `order_addresses`; `order_status_history`; `order_notes`; `order_fulfillments` (básico); `order_refunds` (stub). (O `customization_order_items` — personalização congelada — é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [07](../concepts/07_database_strategy.md).
-- [ ] Índices: `store_id+created_at`, `store_id+status`, `store_id+customer_id`, `order_items.store_id+order_id`, `order_status_history.store_id+order_id+created_at`. Doc [07](../concepts/07_database_strategy.md).
+- [ ] `order_orders`: **`order_number` (sequencial por loja)**, status, total, frete, desconto, método de entrega, `customer_id`, `guest_session_id`. **Status da Fase 6** (operacionais, todos lidos em código): `pending_payment → paid (manual) → processing → shipped → delivered`, + `canceled`. Os de pagamento (`payment_failed|refunded|chargeback`) entram com o gateway na **[Fase 8](./phase-8-customer-account-and-payments.md)** — não criar status que ninguém lê. Doc [07](../concepts/07_database_strategy.md)/[11](../concepts/11_checkout_payments_and_split.md).
+- [ ] `order_items` (congela preço **e** `variant_id` na compra); `order_addresses`; `order_status_history`; `order_notes`; `order_fulfillments` (básico); `order_refunds` (stub). (O `customization_order_items` — personalização congelada — é da **[Fase 7](./phase-7-3d-products.md)**.) Doc [07](../concepts/07_database_strategy.md).
+- [ ] Índices: `store_id+order_number` único, `store_id+created_at`, `store_id+status`, `store_id+customer_id`, `order_items.store_id+order_id`, `order_status_history.store_id+order_id+created_at`. Doc [07](../concepts/07_database_strategy.md).
 
 ### Rotas/serviço + Frontend (painel) — doc [09](../concepts/09_merchant_dashboard.md)/[22](../concepts/22_product_customization_3d.md)
 - [ ] Lista (filtro por status/data), detalhe, cliente, itens, notas internas, alterar status operacional.
-- [ ] **Marcar pagamento recebido manualmente** (enquanto não há gateway). Doc [17](../concepts/17_v1_roadmap.md).
-- [ ] Cancelar quando permitido. (Reembolso real fica para a Fase 8.)
+- [ ] Lista mostra o **número do pedido**; detalhe mostra o **handoff de WhatsApp** pra falar com o cliente.
+- [ ] **Marcar pagamento recebido manualmente** (`pending_payment → paid`, enquanto não há gateway). Doc [17](../concepts/17_v1_roadmap.md).
+- [ ] Cancelar quando permitido (**devolve o estoque** ao `catalog_inventory_items`). (Reembolso real fica para a Fase 8.)
 
 ---
 
@@ -132,8 +168,9 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 ## Testes (doc [16](../concepts/16_testing_strategy.md))
 - [ ] Compra sem login; carrinho recuperado no mesmo navegador; recuperação por token.
 - [ ] **Dedup**: mesmo e-mail/telefone cai no mesmo customer; primeiro-nome-vence; conflito resolve por e-mail.
-- [ ] Carrinho cria pedido `pending_payment`; **preço congelado**.
-- [ ] Estoque validado.
+- [ ] Carrinho cria pedido `pending_payment`; **preço congelado** (+ `variant_id`).
+- [ ] **Estoque:** validado no checkout; **decrementado** ao criar pedido; **devolvido** ao cancelar.
+- [ ] **Número do pedido** sequencial e único por loja.
 - [ ] Pedido não vira pago sozinho (sem gateway: fica `pending_payment` até marcação manual).
 - [ ] Isolamento multi-tenant em pedidos/clientes/carrinhos.
 - [ ] E2E do fluxo completo do marco (criar conta → loja → produto → carrinho → checkout → pedido → painel). Doc [16](../concepts/16_testing_strategy.md).

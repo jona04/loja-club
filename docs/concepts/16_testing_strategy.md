@@ -69,8 +69,8 @@ Testar:
 
 Testar:
 
-- produto simples não exige personalização;
-- produto `customizable_3d` exige sessão aprovada para ir ao checkout;
+- produto `image` não exige personalização;
+- produto `image_3d_customizable` exige sessão aprovada para ir ao checkout;
 - cliente consegue iniciar sessão;
 - estado da sessão é salvo;
 - upload de arte valida tipo/tamanho;

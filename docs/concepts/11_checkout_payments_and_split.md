@@ -83,6 +83,31 @@ Esse pedido precisa registrar:
 - total;
 - status.
 
+## Venda sem gateway (MVP local — Fase 6)
+
+Antes de o gateway entrar (Fase 8), a V1 **vende sem pagamento online**. O checkout vai até o **pedido pendente** e para — não há chamada de gateway, split nem webhook. O pagamento é **combinado fora da plataforma**.
+
+Diferenças em relação ao fluxo com gateway:
+
+- o fluxo de checkout termina em **criar pedido `pending_payment`** (passos 1–9); os passos de gateway/webhook (10–16) **não rodam**;
+- **número do pedido:** todo pedido recebe um identificador **sequencial por loja** (ex.: `#1001`), exibido ao cliente e ao lojista (confirmação, e-mail, painel) — é a referência que ambos usam para combinar entrega/pagamento;
+- **baixa de estoque:** ao criar o pedido, o estoque dos itens é **decrementado** em `catalog_inventory_items`; **cancelar** o pedido **devolve** o estoque. Sem reserva intermediária no V1 — valida + decrementa na criação (a unicidade `store_id+product_id+variant_id` evita linha duplicada e corrida de upsert);
+- **pagamento combinado fora da plataforma:** a confirmação explica como combinar (Pix/transferência/WhatsApp/entrega combinada). O caminho primário é um **handoff por WhatsApp**: um botão que abre o WhatsApp da loja (`whatsapp_number` de `store_settings`) com mensagem **pré-preenchida** contendo o **número do pedido** e o resumo dos itens, para o cliente combinar o pagamento direto com a loja;
+- **marcar pago manualmente:** enquanto não há gateway, o lojista marca o pagamento como recebido no painel (`pending_payment → paid`). **Nenhum pedido vira pago sozinho**;
+- **políticas da loja:** o checkout exibe/linka as políticas de **troca/devolução/privacidade** da loja (`checkout.policies.*`);
+- **ponto de integração do gateway:** o módulo de pagamento expõe a **interface** (sem implementar) para a Fase 8 plugar o gateway aqui.
+
+### Status do pedido nesta fase
+
+Sem pagamento online, os status que a Fase 6 usa são operacionais:
+
+```text
+pending_payment → paid (marcado manualmente) → processing → shipped → delivered
+                → canceled (quando permitido; devolve estoque)
+```
+
+Os status de gateway (`payment_failed`, `refunded`, `chargeback`) entram com o pagamento na **Fase 8**. Todo status precisa ser **lido em código** — a Fase 6 não cria status que ninguém usa.
+
 ## Produtos personalizáveis no checkout
 
 Produtos personalizáveis em 3D só podem avançar para checkout quando a personalização estiver aprovada.
@@ -90,7 +115,7 @@ Produtos personalizáveis em 3D só podem avançar para checkout quando a person
 Regra:
 
 ```text
-cart_item de produto customizable_3d exige customization_session status approved
+cart_item de produto image_3d_customizable exige customization_session status approved
 ```
 
 Ao criar o pedido, o sistema deve copiar a personalização para o item do pedido.

@@ -134,6 +134,8 @@ Exemplos:
 | `catalog_inventory_items` | Estoque |
 | `catalog_collections` | Vitrines/coleções |
 
+`catalog_products` tem um **`type`** (`image|image_3d|image_3d_customizable`, default `image`) — nasce na **Fase 6** (todo produto é `image`) e gateia o add-to-cart (`image_3d_customizable` exige sessão `approved`); o modelo 3D + editor são a **Fase 7**. Ver [22 — Tipo de produto](./22_product_customization_3d.md).
+
 ### Personalização 3D
 
 > **Fase 7 (Produtos 3D).** Os modelos 3D são **gerados pelo lojista via API de terceiros** e ficam **por loja** (`store_id`) — não há biblioteca global da plataforma; `customization_3d_models`/`_versions` têm `store_id`. Ver [Fase 7](../backlog/phase-7-3d-products.md).
@@ -195,6 +197,8 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 | `cart_items` | Itens do carrinho |
 | `checkout_sessions` | Sessões de checkout |
 
+`cart_items` guarda o **`variant_id`** quando o produto comprado tiver variação (a vitrine seleciona a variação na página de produto).
+
 ### Pedidos
 
 | Tabela | Função |
@@ -207,6 +211,8 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 | `order_notes` | Notas internas |
 | `order_fulfillments` | Entrega/envio |
 | `order_refunds` | Reembolsos |
+
+`order_orders` tem um **`order_number` sequencial por loja** (`store_id + order_number` único) — referência que cliente e lojista usam (confirmação/e-mail/painel). `order_items` congela preço **e** `variant_id` na compra. Criar o pedido **decrementa** `catalog_inventory_items`; **cancelar** devolve o estoque (ver [11 — Venda sem gateway](./11_checkout_payments_and_split.md)).
 
 ### Pagamentos
 
@@ -320,7 +326,7 @@ A performance depende muito dos índices compostos com `store_id`.
 | `catalog_product_images` | `store_id + product_id + position` |
 | `catalog_categories` | `store_id + slug` único quando ativo |
 | `catalog_product_categories` | `product_id + category_id` único |
-| `catalog_inventory_items` | `store_id + product_id + variant_id` |
+| `catalog_inventory_items` | `store_id + product_id + variant_id` **único** |
 | `catalog_collections` | `store_id + slug` único quando ativo |
 | `customization_product_settings` | `store_id + product_id` único |
 | `customization_sessions` | `store_id + product_id + status` |
@@ -346,6 +352,7 @@ A performance depende muito dos índices compostos com `store_id`.
 | `order_orders` | `store_id + created_at` |
 | `order_orders` | `store_id + status` |
 | `order_orders` | `store_id + customer_id` |
+| `order_orders` | `store_id + order_number` único |
 | `order_items` | `store_id + order_id` |
 | `order_status_history` | `store_id + order_id + created_at` |
 | `payment_transactions` | `store_id + gateway_transaction_id` |

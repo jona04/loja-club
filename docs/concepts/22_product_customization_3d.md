@@ -72,22 +72,29 @@ O lojista gera o GLB a partir de uma imagem/descrição do seu produto e o vincu
 
 Os modelos são **por loja** (gerados pelo lojista via API). Na **Fase 7** qualquer lojista cria/personaliza; na **Fase 8** a personalização fica restrita a **planos pagos**.
 
-## Produto personalizável
+## Tipo de produto
 
-Um produto pode ser:
+Um produto tem um `type` (em `catalog_products`, default `image`):
 
 ```text
-simple
-customizable_3d
+image                  # produto comum (fotos), pode ter variações, vai direto ao carrinho
+image_3d               # tem modelo 3D para visualização, sem personalização do cliente
+image_3d_customizable  # tem modelo 3D personalizável: editor + aprovação antes do carrinho
 ```
 
-Produto `simple`:
+Produto `image`:
 
 - usa fotos normais;
 - pode ter variações;
 - vai direto para carrinho.
 
-Produto `customizable_3d`:
+Produto `image_3d`:
+
+- usa fotos normais na listagem;
+- mostra o modelo 3D para visualização;
+- vai direto para carrinho (sem personalização).
+
+Produto `image_3d_customizable`:
 
 - usa fotos normais na listagem;
 - tem botão de personalização;
@@ -95,6 +102,8 @@ Produto `customizable_3d`:
 - permite upload de arte;
 - salva sessão de personalização;
 - exige aprovação visual antes de adicionar ao carrinho.
+
+> **Faseamento:** o campo `type` nasce na **Fase 6** (default `image`), com o **portão do add-to-cart** — `image`/`image_3d` vão direto ao carrinho; `image_3d_customizable` exige sessão `approved`. A geração do modelo 3D (via API) e o editor são a **Fase 7**.
 
 ## Parâmetros de personalização
 

@@ -8,7 +8,7 @@ Docs de referência: [22](../concepts/22_product_customization_3d.md), [07](../c
 
 ## Definition of Done da fase
 
-- Produto pode ser **`image`**, **`image_3d`** ou **`image_3d_customizable`** (campo `type` no `catalog_products`).
+- Produto pode ser **`image`**, **`image_3d`** ou **`image_3d_customizable`** — o campo `type` no `catalog_products` **já existe desde a Fase 6** (default `image`); a Fase 7 **ativa** os tipos 3D ao vincular o modelo.
 - O lojista **gera um modelo 3D via API** a partir de uma imagem/descrição; o GLB fica no storage da loja (S3/CloudFront) e é vinculado ao produto.
 - Cliente personaliza no **editor 3D do storefront** (Three.js): arte, cor, texto, posição/escala/rotação, preview, autosave e **aprovação** antes do carrinho.
 - Personalização aprovada é **congelada no pedido** (cópia própria; não depende da sessão viva).
@@ -23,8 +23,8 @@ Docs de referência: [22](../concepts/22_product_customization_3d.md), [07](../c
 - [ ] Decisão fechada do provedor (Meshy/Tripo3D/Hyper3D) registrada no doc [18](../concepts/18_open_decisions.md).
 
 ## Etapa 2 — Catálogo: tipo de produto 3D
-- [ ] Adicionar `type` (`image|image_3d|image_3d_customizable`) ao `catalog_products` (migration). Doc [07](../concepts/07_database_strategy.md)/[22](../concepts/22_product_customization_3d.md).
-- [ ] Vincular produto ao modelo 3D gerado (config por produto).
+> O campo `type` (`image|image_3d|image_3d_customizable`) **nasce na Fase 6** (`P6-CAT-01`, default `image` + portão do add-to-cart). Aqui a Fase 7 **ativa** os tipos 3D.
+- [ ] Vincular produto ao **modelo 3D gerado** (config por produto) e permitir marcar o produto como `image_3d`/`image_3d_customizable`. Doc [07](../concepts/07_database_strategy.md)/[22](../concepts/22_product_customization_3d.md).
 
 ## Etapa 3 — Modelos por loja + versões + config
 - [ ] `customization_3d_models` (por loja), `customization_3d_model_versions` (GLB, parâmetros, áreas, limites), `customization_product_settings` (permite cor?, observações de produção). Doc [07](../concepts/07_database_strategy.md).
