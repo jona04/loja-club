@@ -11,6 +11,7 @@ import app.models  # noqa: F401
 import app.modules.accounts.models  # noqa: F401
 import app.modules.audit.models  # noqa: F401
 import app.modules.billing.models  # noqa: F401
+import app.modules.cart.models  # noqa: F401
 import app.modules.catalog.models  # noqa: F401
 import app.modules.content.models  # noqa: F401
 import app.modules.customers.models  # noqa: F401
