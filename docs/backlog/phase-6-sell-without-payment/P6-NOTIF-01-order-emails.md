@@ -57,6 +57,7 @@ Fecha o marco: cliente e lojista recebem e-mail ao criar pedido (no **worker**, 
 - **Best-effort:** `notifications.services.dispatch_order_emails` engloba render+enqueue num `try/except` (loga e engole) — uma falha de fila **nunca** derruba o checkout (o pedido é a fonte da verdade).
 - **Destinatário do lojista:** `store_settings.contact_email`; senão **e-mail do dono** (membership `owner` → `User.email`).
 - **Templates:** `email-templates/src/order_placed.mjml`/`order_received.mjml` (fonte) + `build/*.html` (Jinja: `store_name`/`order_number`/loop de itens/`total`). O `build/*.html` é **autoral** (CLI do mjml não roda no pipeline) — ver follow-up.
+- **Fix de dev (config):** o serviço `worker` não era estendido no `compose.override.yml` → herdava o SMTP prod-like do `.env` (`587` + `TLS`) e o envio ao **Mailcatcher** falhava **silencioso** (`SMTPResponse status_code=None`; `send_email` loga mas não levanta). Corrigido: bloco `worker:` no override com `SMTP_HOST=mailcatcher`/`SMTP_PORT=1025`/`SMTP_TLS=false` (igual ao backend). Sem isso os e-mails enfileiravam + processavam, mas não chegavam.
 
 ## Follow-ups
 - [ ] **Playwright do marco (browser + Mailcatcher)** — o fluxo completo no navegador (criar conta no painel → loja → produto → vitrine → checkout → e-mail no Mailcatcher) depende da infra de e2e do storefront (bloqueio `P5-SF-01`). Coberto por integração por ora. Origem: `P6-NOTIF-01`.

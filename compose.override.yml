@@ -90,6 +90,16 @@ services:
       SMTP_TLS: "false"
       EMAILS_FROM_EMAIL: "noreply@example.com"
 
+  worker:
+    # Dev: deliver enqueued emails to Mailcatcher (plain SMTP on 1025, no TLS).
+    # Without this the worker inherits the prod-like .env (587 + TLS) and the
+    # send fails silently against Mailcatcher.
+    environment:
+      SMTP_HOST: "mailcatcher"
+      SMTP_PORT: "1025"
+      SMTP_TLS: "false"
+      EMAILS_FROM_EMAIL: "noreply@example.com"
+
   mailcatcher:
     image: schickling/mailcatcher
     ports:
