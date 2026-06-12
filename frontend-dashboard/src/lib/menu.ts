@@ -7,6 +7,7 @@ import {
   Palette,
   Settings,
   ShoppingCart,
+  Truck,
   Users,
 } from "lucide-react"
 
@@ -38,6 +39,12 @@ export const MENU_MODULES: MenuModule[] = [
     path: "/customers",
     icon: Contact,
     permission: "customers.view",
+  },
+  {
+    title: "Frete",
+    path: "/shipping",
+    icon: Truck,
+    permission: "shipping.view",
   },
   {
     title: "Layout",

@@ -19,6 +19,7 @@ import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
 import { Route as LayoutStoreSettingsRouteImport } from './routes/_layout/store-settings'
 import { Route as LayoutStoreLayoutRouteImport } from './routes/_layout/store-layout'
 import { Route as LayoutStoreContentRouteImport } from './routes/_layout/store-content'
+import { Route as LayoutShippingRouteImport } from './routes/_layout/shipping'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutProductsRouteImport } from './routes/_layout/products'
 import { Route as LayoutOrdersRouteImport } from './routes/_layout/orders'
@@ -73,6 +74,11 @@ const LayoutStoreContentRoute = LayoutStoreContentRouteImport.update({
   path: '/store-content',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutShippingRoute = LayoutShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof LayoutOrdersRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/shipping': typeof LayoutShippingRoute
   '/store-content': typeof LayoutStoreContentRoute
   '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/orders': typeof LayoutOrdersRoute
   '/products': typeof LayoutProductsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/shipping': typeof LayoutShippingRoute
   '/store-content': typeof LayoutStoreContentRoute
   '/store-layout': typeof LayoutStoreLayoutRoute
   '/store-settings': typeof LayoutStoreSettingsRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/_layout/orders': typeof LayoutOrdersRoute
   '/_layout/products': typeof LayoutProductsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/shipping': typeof LayoutShippingRoute
   '/_layout/store-content': typeof LayoutStoreContentRoute
   '/_layout/store-layout': typeof LayoutStoreLayoutRoute
   '/_layout/store-settings': typeof LayoutStoreSettingsRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/products'
     | '/settings'
+    | '/shipping'
     | '/store-content'
     | '/store-layout'
     | '/store-settings'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/products'
     | '/settings'
+    | '/shipping'
     | '/store-content'
     | '/store-layout'
     | '/store-settings'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/_layout/orders'
     | '/_layout/products'
     | '/_layout/settings'
+    | '/_layout/shipping'
     | '/_layout/store-content'
     | '/_layout/store-layout'
     | '/_layout/store-settings'
@@ -270,6 +282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutStoreContentRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/shipping': {
+      id: '/_layout/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof LayoutShippingRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -306,6 +325,7 @@ interface LayoutRouteChildren {
   LayoutOrdersRoute: typeof LayoutOrdersRoute
   LayoutProductsRoute: typeof LayoutProductsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutShippingRoute: typeof LayoutShippingRoute
   LayoutStoreContentRoute: typeof LayoutStoreContentRoute
   LayoutStoreLayoutRoute: typeof LayoutStoreLayoutRoute
   LayoutStoreSettingsRoute: typeof LayoutStoreSettingsRoute
@@ -318,6 +338,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutOrdersRoute: LayoutOrdersRoute,
   LayoutProductsRoute: LayoutProductsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutShippingRoute: LayoutShippingRoute,
   LayoutStoreContentRoute: LayoutStoreContentRoute,
   LayoutStoreLayoutRoute: LayoutStoreLayoutRoute,
   LayoutStoreSettingsRoute: LayoutStoreSettingsRoute,
