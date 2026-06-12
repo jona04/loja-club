@@ -40,7 +40,7 @@ import { handleError } from "@/utils"
 export const Route = createFileRoute("/_layout/products")({
   component: ProductsRoute,
   head: () => ({
-    meta: [{ title: "Produtos - Loja Club" }],
+    meta: [{ title: "Produtos - Kriar" }],
   }),
 })
 

@@ -1,0 +1,23 @@
+<mjml>
+  <mj-body background-color="#f5f5f5">
+    <mj-section background-color="#ffffff" border-radius="8px" padding="32px">
+      <mj-column>
+        <mj-text font-size="22px" color="#111111" font-weight="bold">Novo pedido #{{ order_number }}</mj-text>
+        <mj-text color="#555555"><strong>{{ store_name }}</strong> recebeu um novo pedido de <strong>{{ customer_name }}</strong>.</mj-text>
+        <mj-table>
+          {% for item in items %}
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #eeeeee;">{{ item.quantity }}x {{ item.name }}</td>
+            <td style="padding:8px 0;border-bottom:1px solid #eeeeee;text-align:right;">{{ item.line_total }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td style="padding:12px 0;font-weight:bold;">Total</td>
+            <td style="padding:12px 0;text-align:right;font-weight:bold;">{{ total }}</td>
+          </tr>
+        </mj-table>
+        <mj-text color="#555555">Abra o painel para ver os detalhes e marcar o pagamento recebido.</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

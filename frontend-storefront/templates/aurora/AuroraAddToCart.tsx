@@ -16,7 +16,6 @@ import { useCart } from "@/lib/cart"
 export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
   const cart = useCart()
   const [qty, setQty] = useState(1)
-  const image = product.images[0]?.url ?? null
 
   return (
     <>
@@ -50,20 +49,9 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
       <div className="mt-4 flex flex-col gap-4">
         <button
           type="button"
-          onClick={() =>
-            cart.add(
-              {
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                priceAmountMinor: product.price_amount_minor,
-                priceCurrency: product.price_currency,
-                image,
-              },
-              qty,
-            )
-          }
-          className="w-full rounded-sm bg-brand-900 py-4 text-base font-medium text-white shadow-sm transition-colors hover:bg-black"
+          disabled={cart.loading}
+          onClick={() => cart.add(product.id, qty)}
+          className="w-full rounded-sm bg-brand-900 py-4 text-base font-medium text-white shadow-sm transition-colors hover:bg-black disabled:opacity-60"
         >
           Adicionar ao carrinho
         </button>

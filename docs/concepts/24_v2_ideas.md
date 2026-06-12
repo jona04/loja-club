@@ -4,7 +4,7 @@ Este documento guarda ideias importantes que não entram na V1.
 
 ## Layout com IA
 
-Na V2, a Loja Club pode permitir criação e alteração de layout da loja com IA.
+Na V2, a Kriar pode permitir criação e alteração de layout da loja com IA.
 
 Objetivo:
 

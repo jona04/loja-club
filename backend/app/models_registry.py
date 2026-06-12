@@ -11,11 +11,17 @@ import app.models  # noqa: F401
 import app.modules.accounts.models  # noqa: F401
 import app.modules.audit.models  # noqa: F401
 import app.modules.billing.models  # noqa: F401
+import app.modules.cart.models  # noqa: F401
 import app.modules.catalog.models  # noqa: F401
+import app.modules.checkout.models  # noqa: F401
 import app.modules.content.models  # noqa: F401
+import app.modules.customers.models  # noqa: F401
+import app.modules.discounts.models  # noqa: F401
 import app.modules.domains.models  # noqa: F401
 import app.modules.media.models  # noqa: F401
+import app.modules.orders.models  # noqa: F401
 import app.modules.platform_admin.models  # noqa: F401
+import app.modules.shipping.models  # noqa: F401
 import app.modules.stores.models  # noqa: F401
 
 __all__ = ["SQLModel"]

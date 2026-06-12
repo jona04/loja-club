@@ -12,8 +12,8 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Loja Club",
-  description: "Storefront público das lojas Loja Club.",
+  title: "Kriar",
+  description: "Storefront público das lojas Kriar.",
 }
 
 /**

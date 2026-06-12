@@ -35,12 +35,16 @@ describe("StoreLayoutScreen permission gating", () => {
   it("disables saving without layout.update", () => {
     activeStore.mockReturnValue({ ...base, permissions: [] })
     render(<StoreLayoutScreen />, { wrapper })
-    expect(screen.getByRole("button", { name: "Salvar" })).toBeDisabled()
+    expect(
+      screen.getByRole("button", { name: "Salvar template e aparência" }),
+    ).toBeDisabled()
   })
 
   it("enables saving with layout.update", () => {
     activeStore.mockReturnValue({ ...base, permissions: ["layout.update"] })
     render(<StoreLayoutScreen />, { wrapper })
-    expect(screen.getByRole("button", { name: "Salvar" })).not.toBeDisabled()
+    expect(
+      screen.getByRole("button", { name: "Salvar template e aparência" }),
+    ).not.toBeDisabled()
   })
 })

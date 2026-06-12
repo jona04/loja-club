@@ -13,7 +13,7 @@ tests: [integration]
 # P0-MOD-03 — Remover exemplo `items`
 
 ## Contexto
-O template traz um CRUD de exemplo (`Item`) que não faz parte da Loja Club. Removê-lo limpa o backend e o frontend antes de construir o catálogo real.
+O template traz um CRUD de exemplo (`Item`) que não faz parte da Kriar. Removê-lo limpa o backend e o frontend antes de construir o catálogo real.
 
 ## Docs de referência
 - [04 — FastAPI Template Adaptation](../../concepts/04_fastapi_template_adaptation.md)

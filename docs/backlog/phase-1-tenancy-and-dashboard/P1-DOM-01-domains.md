@@ -13,7 +13,7 @@ tests: [integration]
 # P1-DOM-01 — Módulo `domains`: `domain_hosts` + subdomínio automático + cache
 
 ## Contexto
-Toda loja recebe um **subdomínio automático** (`{slug}.loja.club`) e é resolvida pelo `Host` (doc [06](../../concepts/06_multitenancy_and_domains.md)). Esta task cria o módulo `domains` (modelo + serviço + rotas + cache). A resolução por `Host` em si fica no `tenancy` (`P1-TEN-01`), que consome este módulo.
+Toda loja recebe um **subdomínio automático** (`{slug}.kriar.shop`) e é resolvida pelo `Host` (doc [06](../../concepts/06_multitenancy_and_domains.md)). Esta task cria o módulo `domains` (modelo + serviço + rotas + cache). A resolução por `Host` em si fica no `tenancy` (`P1-TEN-01`), que consome este módulo.
 
 ## Docs de referência
 - [06 — Multitenancy and Domains](../../concepts/06_multitenancy_and_domains.md) (tabela `domain_hosts`, subdomínio, cache, wildcard)

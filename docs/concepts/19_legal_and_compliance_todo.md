@@ -2,8 +2,8 @@
 
 <!--
 Este documento ainda precisa ser desenvolvido com apoio jurídico.
-Ele deve conter as regras legais, regulatórias e contratuais da Loja Club.
-A Loja Club não deve reter valores dos lojistas. O gateway fará o split.
+Ele deve conter as regras legais, regulatórias e contratuais da Kriar.
+A Kriar não deve reter valores dos lojistas. O gateway fará o split.
 Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídico/regulatório.
 -->
 
@@ -23,17 +23,17 @@ Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídic
 - Política de arte enviada pelo cliente.
 - Política de produção personalizada.
 - Política de uso aceitável.
-- Definição de que a Loja Club é plataforma tecnológica, não vendedora.
+- Definição de que a Kriar é plataforma tecnológica, não vendedora.
 - Definição de que o lojista é o vendedor oficial.
 - Definição de que o gateway processa pagamentos.
-- Definição de que a Loja Club não retém saldo dos lojistas.
+- Definição de que a Kriar não retém saldo dos lojistas.
 - Regras de bloqueio por fraude ou risco.
 - Regras de inadimplência da mensalidade.
 - Regras de cancelamento de plano.
 
 ## Pontos importantes já decididos
 
-A Loja Club:
+A Kriar:
 
 - fornece tecnologia;
 - fornece painel;

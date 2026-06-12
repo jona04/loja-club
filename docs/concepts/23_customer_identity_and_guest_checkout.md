@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A Loja Club deve permitir que o cliente final compre sem criar conta.
+A Kriar deve permitir que o cliente final compre sem criar conta.
 
 Isso é importante para conversão. O cliente de uma loja pequena, gráfica ou empresa de brindes não deve ser obrigado a passar por cadastro antes de comprar ou personalizar um produto.
 
@@ -20,13 +20,13 @@ Existem três grupos diferentes e eles não devem ser misturados.
 
 | Tipo | Onde atua | Exemplo | Tabela principal |
 |---|---|---|---|
-| Admin Loja Club | Admin interno da plataforma | equipe Loja Club | `account_users` + `platform_admin_roles` |
+| Admin Kriar | Admin interno da plataforma | equipe Kriar | `account_users` + `platform_admin_roles` |
 | Lojista/equipe | Painel da loja | owner, admin, support, catalog | `account_users` + `store_members` |
 | Cliente final | Storefront da loja | comprador da loja | `customer_profiles` |
 
 ## User da plataforma
 
-`account_users` representa quem acessa sistemas autenticados da Loja Club:
+`account_users` representa quem acessa sistemas autenticados da Kriar:
 
 - admin interno;
 - dono da loja;
@@ -238,7 +238,7 @@ Quando uma sessão expirar, ela deve ser marcada como `expired` (soft delete/sta
 |---|---|---|---|
 | Visitante anônimo | Não | sessão/cookie | carrinho e personalização antes do checkout |
 | Customer | Opcional (código, senha ou Google) | sim, por loja | comprador final, pedidos, histórico, perfil |
-| User | Sim | sim, global | lojista, equipe e admin Loja Club |
+| User | Sim | sim, global | lojista, equipe e admin Kriar |
 
 ## O que é necessário para o MVP (dev local)
 

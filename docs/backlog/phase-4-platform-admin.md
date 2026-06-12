@@ -1,12 +1,12 @@
 # Fase 4 — Admin do SaaS (dev local)
 
-> Objetivo: a equipe Loja Club ganha o **admin da plataforma** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). Fase **enxuta, antes do lançamento** — só o essencial pra operar e pra alimentar a **[Fase 5](./phase-5-store-configuration.md)**. Segurança/observabilidade plenas, CI/CD e beta são a **[Fase 9](./phase-9-platform-ops-and-production.md)**.
+> Objetivo: a equipe Kriar ganha o **admin da plataforma** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). Fase **enxuta, antes do lançamento** — só o essencial pra operar e pra alimentar a **[Fase 5](./phase-5-store-configuration.md)**. Segurança/observabilidade plenas, CI/CD e beta são a **[Fase 9](./phase-9-platform-ops-and-dev-deploy.md)**.
 
 Docs de referência: [25](../concepts/25_platform_admin.md) (admin), [26](../concepts/26_template_system.md) (templates), [05](../concepts/05_frontend_architecture.md), [08](../concepts/08_modules_and_permissions.md), [06](../concepts/06_multitenancy_and_domains.md)/[12](../concepts/12_aws_infrastructure_and_deployment.md) (Traefik/host), [13](../concepts/13_performance_cache_and_cdn.md) (CDN), [09](../concepts/09_merchant_dashboard.md), [07](../concepts/07_database_strategy.md), [14](../concepts/14_security_strategy.md), [15](../concepts/15_observability_and_operations.md).
 
 > **Decomposta em tasks** — ver [`phase-4-platform-admin/`](./phase-4-platform-admin/README.md) (**9 tasks**, 3 etapas). O detalhe e o status oficial estão no README da pasta.
 
-> **Nota:** o admin **opera** a plataforma; **segurança/observabilidade plenas, CI/CD e beta** ficam na [Fase 9](./phase-9-platform-ops-and-production.md). O **billing real** dos planos é a [Fase 8](./phase-8-customer-account-and-payments.md) — aqui planos são **seed/stub**. A integração da **API de geração 3D** no admin depende da [Fase 7](./phase-7-3d-products.md).
+> **Nota:** o admin **opera** a plataforma; **segurança/observabilidade plenas, CI/CD e beta** ficam na [Fase 9](./phase-9-platform-ops-and-dev-deploy.md). O **billing real** dos planos é a [Fase 8](./phase-8-customer-account-and-payments.md) — aqui planos são **seed/stub**. A integração da **API de geração 3D** no admin depende da [Fase 7](./phase-7-3d-products.md).
 
 ## Definition of Done da fase
 - Admin em `admin.${DOMAIN}` (Traefik/host) com login + **papéis globais** (`platform.*`); o `is_superuser` é substituído.

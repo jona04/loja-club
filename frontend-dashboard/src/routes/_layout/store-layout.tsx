@@ -22,7 +22,7 @@ import { handleError } from "@/utils"
 export const Route = createFileRoute("/_layout/store-layout")({
   component: StoreLayoutRoute,
   head: () => ({
-    meta: [{ title: "Layout da Loja - Loja Club" }],
+    meta: [{ title: "Layout da Loja - Kriar" }],
   }),
 })
 

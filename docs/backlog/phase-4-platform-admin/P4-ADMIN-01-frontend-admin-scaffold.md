@@ -13,7 +13,7 @@ tests: [e2e]
 # P4-ADMIN-01 — `frontend-admin` (scaffold + Traefik + login)
 
 ## Contexto
-A equipe Loja Club precisa de um painel **separado** do painel do lojista, em `admin.${DOMAIN}`, autenticado pelos papéis `platform.*` (`P4-PLAT-01`).
+A equipe Kriar precisa de um painel **separado** do painel do lojista, em `admin.${DOMAIN}`, autenticado pelos papéis `platform.*` (`P4-PLAT-01`).
 
 ## Docs de referência
 - [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md)

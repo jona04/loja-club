@@ -12,7 +12,11 @@ from sqlalchemy import JSON, Column, Index, text
 from sqlmodel import Field, SQLModel
 
 from app.db.base import SoftDeleteMixin, StoreScopedMixin, TimestampMixin, UUIDMixin
-from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
+from app.modules.catalog.enums import (
+    ProductStatus,
+    ProductType,
+    ProductVariantStatus,
+)
 
 
 class ProductBase(SQLModel):
@@ -21,6 +25,7 @@ class ProductBase(SQLModel):
     name: str = Field(max_length=255)
     slug: str = Field(max_length=255)
     description: str | None = Field(default=None)
+    type: ProductType = Field(default=ProductType.image)
     status: ProductStatus = Field(default=ProductStatus.draft)
     price_amount_minor: int = Field(ge=0, description="Price in minor units (INV-D4)")
     price_currency: str = Field(max_length=3, description="ISO 4217 currency code")
@@ -172,6 +177,8 @@ class InventoryItem(
             "store_id",
             "product_id",
             "variant_id",
+            unique=True,
+            postgresql_nulls_not_distinct=True,
         ),
     )
 

@@ -1,6 +1,6 @@
 """rename user table to account_users
 
-Renames the template's ``user`` table to ``account_users`` (Loja Club naming).
+Renames the template's ``user`` table to ``account_users`` (Kriar naming).
 
 Revision ID: b1c2d3e4f5a6
 Revises: f0a1b2c3d4e5

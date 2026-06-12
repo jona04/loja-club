@@ -20,6 +20,65 @@ export interface StorefrontStore {
   description: string | null
   logo_url: string | null
   whatsapp_number: string | null
+  return_policy: string | null
+  exchange_policy: string | null
+  privacy_policy: string | null
+}
+
+export interface CartItemPublic {
+  id: string
+  product_id: string
+  variant_id: string | null
+  name: string
+  slug: string
+  image_url: string | null
+  quantity: number
+  unit_price_amount_minor: number
+  unit_price_currency: string
+  line_total_amount_minor: number
+}
+
+export interface CartPublic {
+  id: string
+  currency: string
+  item_count: number
+  subtotal_amount_minor: number
+  items: CartItemPublic[]
+}
+
+export interface ShippingMethodPublic {
+  id: string
+  type: string
+  name: string
+  description: string | null
+  is_active: boolean
+  price_amount_minor: number | null
+  min_order_amount_minor: number | null
+}
+
+export interface OrderItemPublic {
+  id: string
+  product_id: string
+  variant_id: string | null
+  name: string
+  quantity: number
+  unit_price_amount_minor: number
+  unit_price_currency: string
+  line_total_amount_minor: number
+}
+
+export interface OrderPublic {
+  id: string
+  order_number: number
+  status: string
+  currency: string
+  subtotal_amount_minor: number
+  shipping_amount_minor: number
+  discount_amount_minor: number
+  total_amount_minor: number
+  shipping_method_type: string | null
+  shipping_method_name: string | null
+  items: OrderItemPublic[]
 }
 
 export interface StorefrontTheme {
@@ -148,5 +207,9 @@ export const listProducts = (
       ? `/products?category=${encodeURIComponent(category)}`
       : "/products",
   )
+
+/** Fetch the host store's active shipping methods (for the checkout). */
+export const getShippingMethods = (): Promise<ShippingMethodPublic[]> =>
+  apiGet<ShippingMethodPublic[]>("/shipping-methods")
 
 export { formatPrice, whatsappLink } from "@/lib/format"

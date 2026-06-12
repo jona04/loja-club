@@ -19,7 +19,7 @@ Existem três grupos diferentes:
 
 | Tipo | Descrição | Acesso |
 |---|---|---|
-| Admin Loja Club | Equipe interna da plataforma | `frontend-admin` |
+| Admin Kriar | Equipe interna da plataforma | `frontend-admin` |
 | Lojista/equipe | Usuários que operam uma loja | `frontend-dashboard` |
 | Cliente final | Comprador da loja | `frontend-storefront` |
 
@@ -479,7 +479,7 @@ Quando uma permissão nova for criada, este mapa precisa ser atualizado junto.
 
 ## Permissões globais do admin da plataforma
 
-Admins internos da Loja Club terão permissões globais.
+Admins internos da Kriar terão permissões globais.
 
 Exemplos:
 

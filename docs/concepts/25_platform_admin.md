@@ -1,10 +1,10 @@
 # 25 — Admin do SaaS (plataforma)
 
-> Como a equipe **Loja Club** opera a plataforma. Complementa o doc [08](./08_modules_and_permissions.md) (permissões) e [09](./09_merchant_dashboard.md) (painel do lojista). O backlog é a **[Fase 4](../backlog/phase-4-platform-admin.md)** (admin, antes do lançamento) + o que sobra na **[Fase 9](../backlog/phase-9-platform-ops-and-production.md)** (segurança/CI-CD/beta).
+> Como a equipe **Kriar** opera a plataforma. Complementa o doc [08](./08_modules_and_permissions.md) (permissões) e [09](./09_merchant_dashboard.md) (painel do lojista). O backlog é a **[Fase 4](../backlog/phase-4-platform-admin.md)** (admin, antes do lançamento) + o que sobra nas **Fases 9–11** (deploy/ops na [9](../backlog/phase-9-platform-ops-and-dev-deploy.md), segurança geral na [10](../backlog/phase-10-followups-and-hardening.md), beta na [11](../backlog/phase-11-production.md)).
 
 ## Por que existe (e por que antes do lançamento)
 
-O admin é a ferramenta interna da plataforma — separada do painel do lojista. Foi **puxado pra antes do lançamento** porque o lojista precisa **escolher e personalizar templates** ([Fase 5](../backlog/phase-5-store-configuration.md)), e os templates precisam estar **registrados pela plataforma** (thumbnail no CDN + settings schema; o **import das imagens**, a **loja-demo** e o **preview navegável** são a [Fase 5](../backlog/phase-5-store-configuration.md)). Sem o admin, isso fica hardcoded. As demais funções de operação (segurança, observabilidade, CI/CD, beta) seguem depois (Fase 9).
+O admin é a ferramenta interna da plataforma — separada do painel do lojista. Foi **puxado pra antes do lançamento** porque o lojista precisa **escolher e personalizar templates** ([Fase 5](../backlog/phase-5-store-configuration.md)), e os templates precisam estar **registrados pela plataforma** (thumbnail no CDN + settings schema; o **import das imagens**, a **loja-demo** e o **preview navegável** são a [Fase 5](../backlog/phase-5-store-configuration.md)). Sem o admin, isso fica hardcoded. As demais funções de operação seguem depois: deploy/CI-CD/ops na **Fase 9**, segurança geral na **Fase 10**, beta na **Fase 11**.
 
 ## `frontend-admin` (projeto separado)
 
@@ -15,7 +15,7 @@ O admin é a ferramenta interna da plataforma — separada do painel do lojista.
 
 - Papéis **globais** (não por loja): `platform_owner | platform_ops | platform_finance | platform_support | platform_catalog`. Doc [08](./08_modules_and_permissions.md).
 - `platform_admin_roles` no banco; o `is_superuser` do template (Fase 1) é **substituído** por esse modelo. Doc [07](./07_database_strategy.md).
-- Toda ação sensível do admin é **auditada** (mínimo na Fase 4; hardening na Fase 9). Doc [14](./14_security_strategy.md)/[15](./15_observability_and_operations.md).
+- Toda ação sensível do admin é **auditada** (mínimo na Fase 4; módulo `audit` + hardening na Fase 10). Doc [14](./14_security_strategy.md)/[15](./15_observability_and_operations.md).
 - O `frontend-admin` descobre o usuário logado + se é admin via **`GET /platform/me`** (devolve o usuário + `platform_roles`; vazio = não-admin → acesso negado).
 
 ## Escopo antes do lançamento (Fase 4)
@@ -29,11 +29,12 @@ O admin é a ferramenta interna da plataforma — separada do painel do lojista.
 
 Um template tem **código** (componentes React + os **manifestos** `settings-schema.json` e `demo.json` no `frontend-storefront`) **e dados** (metadados, assets, conteúdo demo, valores por loja). O **schema vem do código** (seedado no deploy) — o admin **não autora os campos**, o que evita divergência schema↔código. O admin gerencia a parte **operável**: **registrar**, subir o **thumbnail**, **disparar o import** das imagens pro CDN, montar a **loja-demo** e **ativar/desativar**. Um template **genuinamente novo** exige deploy do storefront (código + manifestos) — o passo-a-passo está no doc [27](./27_template_authoring_guide.md). *(Import/demo/preview são entregues na [Fase 5](../backlog/phase-5-store-configuration.md).)*
 
-## Fora do escopo da Fase 4 (fica para a Fase 9)
+## Fora do escopo da Fase 4 (fica para as Fases 9–12)
 
-- Segurança/observabilidade completas (audit hardening, Sentry, rate limit, URLs assinadas, backups, alertas).
-- CI/CD e deploy automatizado; beta com lojas reais.
-- **Config da API de geração 3D** no admin — depende da **[Fase 7](../backlog/phase-7-3d-products.md)**.
+- **Deploy dev na AWS + CI/CD + ops mínimo** → [Fase 9](../backlog/phase-9-platform-ops-and-dev-deploy.md).
+- **Segurança/observabilidade completas** (audit, hardening, retenção, restore) → [Fase 10](../backlog/phase-10-followups-and-hardening.md).
+- **Beta com lojas reais** + produção → [Fase 11](../backlog/phase-11-production.md).
+- **Habilitar/desabilitar modelos do catálogo 3D** (admin) → [Fase 7](../backlog/phase-7-3d-products.md); **config da API de geração 3D** → [Fase 12](../backlog/phase-12-merchant-3d-generation.md).
 
 ## Telas (referência)
 

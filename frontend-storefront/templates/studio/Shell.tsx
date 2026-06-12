@@ -50,7 +50,7 @@ export async function StudioShell({
         <footer className="border-t border-gray-200 bg-white py-8">
           <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-3 px-4 text-xs text-gray-500 sm:flex-row lg:px-8">
             <p>
-              © {new Date().getFullYear()} {name}. Plataforma Loja Club.
+              © {new Date().getFullYear()} {name}. Plataforma Kriar.
             </p>
             {footerContact ? (
               <p className="whitespace-pre-line text-center">{footerContact}</p>

@@ -58,7 +58,7 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (do
 
 ## Reconciliações da fase (registrar conforme surgirem)
 
-- **3D é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md).** O **lojista gera o modelo via API 3rd-party** (Meshy/Tripo3D/Hyper3D); não há catálogo 3D da plataforma. Decompõe em tasks quando chegar a fase.
+- **3D é a [Fase 7 — Produtos 3D](../phase-7-3d-products.md).** Os modelos vêm do **catálogo da plataforma** (via seed; o lojista escolhe); a **geração pelo lojista** (GLB via API 3rd-party — Meshy/Tripo3D/Hyper3D) é a [Fase 12](../phase-12-merchant-3d-generation.md). Decompõe em tasks quando chegar a fase.
 - **Produto = imagem.** O campo `type` (`image`/`image_3d`/`image_3d_customizable`) entra na **Fase 7** (migration no `catalog_products`).
 - **Storage real (sem MinIO):** S3 + CloudFront de verdade desde o dev local (DEC-8); testes com `moto` + smoke real (`P2-MEDIA-01`).
 - **Pillow** para thumbnails: registrar a decisão de lib nas Fundações ao implementar `P2-MEDIA-02`.
@@ -71,7 +71,7 @@ P2-MEDIA-01 (done) → P2-CAT-01 (done) → P2-MEDIA-02 (done) → P2-CAT-02 (do
 - [ ] **Worker falho** (`generate_variants`) não marca `status=failed` + sem retry. Origem: `P2-MEDIA-02`.
 - [ ] **Tamanho do upload validado após `file.read()`** (risco de memória) — checar antes via `Content-Length`/streaming. Origem: `P2-MEDIA-02`.
 - [ ] **Race no slug** → `IntegrityError` vira 500 em vez de 409 (tratar no service). Origem: `P2-CAT-02`.
-- [ ] **Estoque sem índice único** `(store_id, product_id, variant_id)` → upsert pode duplicar linha. Origem: `P2-CAT-02`.
+- [x] **Estoque sem índice único** `(store_id, product_id, variant_id)` → upsert pode duplicar linha. ✅ `P6-ORD-01` (índice único + `nulls_not_distinct` p/ a linha product-level com `variant_id` NULL). Origem: `P2-CAT-02`.
 - [ ] **Archive de produto não cascateia** para variações/imagens/estoque (órfãos ativos). Origem: `P2-CAT-02`.
 - [ ] **Lazy-init de client sem lock** (`storage._s3_client`, `queue._get_pool`, INV-F6): 1ª chamada concorrente pode criar 2 clients/pools (um descartado) — **benigno**; `close_pool` engole `RuntimeError` cross-loop **só em teste**. Origem: refactor INV-F6 (`P2-MEDIA-01`/`P0-CFG-04`).
 - [ ] **Preço com expoente da moeda** (INV-G1) — a tela assume 2 casas. Origem: `P2-FE-01`.

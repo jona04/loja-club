@@ -1,7 +1,7 @@
 # Design System TODO
 
 <!--
-Este documento será usado para definir padrões visuais da Loja Club.
+Este documento será usado para definir padrões visuais da Kriar.
 A V1 usará Tailwind e shadcn/ui no painel, aproveitando o Full Stack FastAPI Template.
 O storefront terá 2 templates iniciais.
 -->
@@ -21,7 +21,7 @@ Definir padrões visuais para:
 
 Itens a definir:
 
-- paleta da Loja Club;
+- paleta da Kriar;
 - logo;
 - sidebar;
 - topbar;
@@ -128,7 +128,7 @@ Templates necessários:
 
 ## TODO
 
-- [ ] Definir identidade visual da Loja Club.
+- [ ] Definir identidade visual da Kriar.
 - [ ] Definir componentes padrão do painel.
 - [ ] Criar mockups do painel.
 - [ ] Criar mockups dos 2 templates públicos.

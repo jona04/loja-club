@@ -1,6 +1,6 @@
-# Documentação conceitual — Loja Club
+# Documentação conceitual — Kriar
 
-Os **docs conceituais** da Loja Club V1 — produto, arquitetura, negócio, banco, segurança, etc. (01 a 27). São a **fonte de verdade** das decisões: o código imita a lógica daqui (regra de ouro). Português por enquanto; nomes de arquivo em inglês.
+Os **docs conceituais** da Kriar V1 — produto, arquitetura, negócio, banco, segurança, marca, etc. (01 a 29). São a **fonte de verdade** das decisões: o código imita a lógica daqui (regra de ouro). Português por enquanto; nomes de arquivo em inglês.
 
 > **Backlog acionável** (tasks por fase): [`../backlog/`](../backlog/README.md) · **Designs** dos templates (uxpilot): [`../design/`](../design/) · **Visão geral**: [`../README.md`](../README.md).
 
@@ -33,3 +33,5 @@ Os **docs conceituais** da Loja Club V1 — produto, arquitetura, negócio, banc
 25. [Platform Admin](./25_platform_admin.md)
 26. [Template System](./26_template_system.md)
 27. [Template Authoring Guide](./27_template_authoring_guide.md)
+28. [Kriar Brand](./28_kriar_brand.md)
+29. [Kriar Landing Page](./29_kriar_landing_page.md)

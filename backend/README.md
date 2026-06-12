@@ -1,4 +1,4 @@
-# Loja Club — Backend
+# Kriar — Backend
 
 FastAPI **modular monolith**: SQLModel + Alembic over PostgreSQL, Redis for
 cache/locks/queue, an **arq** worker for background jobs, and AWS S3/CloudFront

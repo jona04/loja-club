@@ -1,6 +1,6 @@
 # Fase 0 — Fundação (dev local)
 
-> Objetivo: projeto com a cara da Loja Club, com Redis, esqueleto modular e o exemplo `items` removido, pronto para construir os domínios reais.
+> Objetivo: projeto com a cara da Kriar, com Redis, esqueleto modular e o exemplo `items` removido, pronto para construir os domínios reais.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [03](../../concepts/03_system_architecture.md), [04](../../concepts/04_fastapi_template_adaptation.md), [07](../../concepts/07_database_strategy.md), [16](../../concepts/16_testing_strategy.md).
 
@@ -8,7 +8,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 ## Definition of Done da fase
 
-- `docker compose watch` sobe backend, frontend, db, **redis**, traefik com branding Loja Club.
+- `docker compose watch` sobe backend, frontend, db, **redis**, traefik com branding Kriar.
 - `app/modules/` existe com mixins base e convenção de módulos.
 - Base **global** pronta: tipo `Money` (valor + moeda ISO 4217), UTC; **nada assume Brasil**.
 - `Item` removido; `User` migrado para o módulo `accounts` como tabela `account_users`.
@@ -20,7 +20,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 | # | ID | Task | Status | Depende de |
 |---|---|---|---|---|
-| 1 | [P0-CFG-01](./P0-CFG-01-branding.md) | Branding Loja Club | done | — |
+| 1 | [P0-CFG-01](./P0-CFG-01-branding.md) | Branding Kriar | done | — |
 | 2 | [P0-TEST-01](./P0-TEST-01-testing-foundation.md) | Fundação de testes (layout, isolamento, mocks, vitest) | done | — |
 | 3 | [P0-CFG-02](./P0-CFG-02-env-config.md) | Variáveis de ambiente e domínio de dev | done | — |
 | 4 | [P0-CFG-03](./P0-CFG-03-redis.md) | Redis (cache/locks/fila leve) | done | P0-CFG-02 |

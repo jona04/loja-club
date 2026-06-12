@@ -1,10 +1,13 @@
 import {
+  Contact,
   FileText,
   LayoutDashboard,
   type LucideIcon,
   Package,
   Palette,
   Settings,
+  ShoppingCart,
+  Truck,
   Users,
 } from "lucide-react"
 
@@ -24,6 +27,24 @@ export const MENU_MODULES: MenuModule[] = [
     path: "/products",
     icon: Package,
     permission: "catalog.product.view",
+  },
+  {
+    title: "Pedidos",
+    path: "/orders",
+    icon: ShoppingCart,
+    permission: "orders.view",
+  },
+  {
+    title: "Clientes",
+    path: "/customers",
+    icon: Contact,
+    permission: "customers.view",
+  },
+  {
+    title: "Frete",
+    path: "/shipping",
+    icon: Truck,
+    permission: "shipping.view",
   },
   {
     title: "Layout",

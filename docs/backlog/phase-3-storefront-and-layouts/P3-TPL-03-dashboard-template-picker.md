@@ -31,7 +31,7 @@ A tela "Layout da Loja" (`P3-FE-02`) evolui pra mostrar a **lista de templates c
 
 ## Fora de escopo (o que NÃO entra)
 - **Preview ao vivo** (render real da loja com o template) → futuro.
-- **Admin (loja.club) pra cadastrar/gerenciar templates** → Fase 4.
+- **Admin (kriar.shop) pra cadastrar/gerenciar templates** → Fase 4.
 - **Personalização por template** (editar textos de chrome, ligar/desligar blocos, cores do tema) → **[`P3-TPL-04`](./P3-TPL-04-template-settings-schema.md)** (schema-driven).
 
 ## Arquivos a criar/alterar

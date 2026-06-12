@@ -7,7 +7,7 @@ O painel do lojista será o principal ambiente de gestão da loja.
 URL:
 
 ```text
-app.loja.club
+app.kriar.shop
 ```
 
 Ele deve permitir que o lojista configure e opere toda a loja sem precisar de suporte técnico.
@@ -93,22 +93,26 @@ Funcionalidades:
 
 > **Por enquanto o produto é só imagem.** A personalização 3D entra na **Fase 7 (Produtos 3D)**; na **Fase 8** fica restrita a planos pagos. Ver [Fase 7](../backlog/phase-7-3d-products.md).
 
-Na Fase 7, o lojista **gera o próprio modelo 3D via API de terceiros** (Meshy/Tripo3D/Hyper3D) a partir de uma imagem/descrição do produto — **não há catálogo da plataforma**. O modelo é **por loja**.
+Na Fase 7, o lojista **escolhe um modelo do catálogo público da plataforma** (modelos prontos, via seed; o admin habilita/desabilita) e vincula ao produto. A **geração do próprio modelo** (GLB via API + mapear a área) é a **[Fase 12](../backlog/phase-12-merchant-3d-generation.md)**.
 
 Funcionalidades (Fase 7):
 
 - habilitar/desabilitar personalização;
-- **gerar o modelo 3D via API** (a partir de imagem/descrição);
+- **escolher um modelo do catálogo da plataforma** e vincular ao produto;
 - definir se a cor do produto pode ser alterada;
 - definir observações de produção;
 - ver preview básico do modelo;
 - manter imagens tradicionais para listagem e fallback.
 
+Funcionalidades (Fase 12 — gerar o próprio modelo):
+
+- **gerar o modelo 3D via API** (a partir de imagem/descrição) + **mapear a área personalizável** pelo painel (recurso premium).
+
 ## Pedidos
 
 Funcionalidades:
 
-- listar pedidos;
+- listar pedidos (cada um com o **número do pedido** sequencial por loja);
 - filtrar por status;
 - filtrar por data;
 - ver detalhe do pedido;
@@ -116,10 +120,11 @@ Funcionalidades:
 - ver itens comprados;
 - ver personalização aprovada, quando houver;
 - ver pagamento;
+- **marcar pagamento recebido manualmente** (`pending_payment → paid`) — enquanto não há gateway (Fase 6); nenhum pedido vira pago sozinho;
 - atualizar status operacional;
 - adicionar nota interna;
-- cancelar pedido quando permitido;
-- solicitar/processar reembolso se permitido;
+- cancelar pedido quando permitido (**devolve o estoque**);
+- solicitar/processar reembolso se permitido *(reembolso real = Fase 8)*;
 - ver histórico de status.
 
 ## Personalizações
@@ -176,7 +181,7 @@ Funcionalidades:
 - ver chargebacks/disputas;
 - ver informações de repasse fornecidas pelo gateway.
 
-A Loja Club não reterá dinheiro. O painel apenas exibirá informações retornadas pelo gateway.
+A Kriar não reterá dinheiro. O painel apenas exibirá informações retornadas pelo gateway.
 
 ## Frete
 

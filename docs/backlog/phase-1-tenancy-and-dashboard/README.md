@@ -1,6 +1,6 @@
 # Fase 1 — Multi-tenancy e painel base
 
-> Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.loja.club`, seleciona loja ativa e vê um menu controlado por permissões.
+> Objetivo: usuário cria loja com dados isolados por `store_id`, recebe subdomínio automático, entra no painel `app.kriar.shop`, seleciona loja ativa e vê um menu controlado por permissões.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [06](../../concepts/06_multitenancy_and_domains.md), [08](../../concepts/08_modules_and_permissions.md), [09](../../concepts/09_merchant_dashboard.md), [05](../../concepts/05_frontend_architecture.md), [07](../../concepts/07_database_strategy.md), [14](../../concepts/14_security_strategy.md), [16](../../concepts/16_testing_strategy.md), [20](../../concepts/20_api_contracts_todo.md).
 
@@ -8,7 +8,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 
 ## Definition of Done da fase
 
-- Usuário cria loja → `store_stores` + `store_members` (owner) + `domain_hosts` (`{slug}.loja.club`).
+- Usuário cria loja → `store_stores` + `store_members` (owner) + `domain_hosts` (`{slug}.kriar.shop`).
 - Resolução por `Host` retorna o `store_id` correto; host inexistente/inativo → "loja não encontrada", sem vazar dado interno.
 - **Guard central de tenant**: nenhum recurso comercial é buscado só por id (sempre `store_id + id`); autorização sempre no backend.
 - **Padrão de API travado** (response/erro/paginação/headers de tenant) e reusado pelos endpoints.
@@ -74,5 +74,5 @@ P1-API-01 → P1-ACCT-01 → P1-STORE-01 → P1-PERM-01 → P1-PERM-02 → P1-DO
 - [ ] **Onboarding de loja completo** (checklist) — hoje só o CTA mínimo de criar loja. Origem: `P1-DASH-02`. *Quando:* fase posterior.
 - [ ] **E2E do painel** (Configurações salvar; Equipe convidar/alterar papel/remover) — escrever e rodar ao vivo (com o Playwright da DASH-02). Origem: `P1-DASH-03`. *Quando:* com o stack de pé.
 - [ ] **Campo de redes sociais (`social_links`)** no form de Configurações (é dict; fora do MVP). Origem: `P1-DASH-03`. *Quando:* quando o storefront exibir redes.
-- [ ] **Políticas básicas da loja** (devolução/troca/privacidade) — doc [09](../../concepts/09_merchant_dashboard.md) lista em Configurações, mas é escopo de checkout (`checkout.policies.*`). Origem: vistoria da Fase 1. *Quando:* Fase 6 (checkout).
+- [x] **Políticas básicas da loja** (devolução/troca/privacidade) — doc [09](../../concepts/09_merchant_dashboard.md) lista em Configurações, mas é escopo de checkout (`checkout.policies.*`). ✅ `P6-CHK-01` (campos em `store_settings` + rota painel gated `checkout.policies.update` + exibição no checkout via `StorefrontStore`). Origem: vistoria da Fase 1.
 - [x] **Limpeza do ruído de `alembic autogenerate`** — `_MixinProbe` isolado em `MetaData()` próprio + índice `ix_user_email`→`ix_account_users_email` (migration `c2d3e4f5a6b7`); autogenerate volta a vir vazio. Origem: `P1-STORE-01`. *(feito)*

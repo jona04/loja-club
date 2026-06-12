@@ -13,7 +13,7 @@ tests: none
 # P1-DASH-01 — Infra do painel (`frontend-dashboard`, Traefik `app.`)
 
 ## Contexto
-O painel do lojista mora em `app.loja.club` e é o frontend React/Vite do template reaproveitado como **`frontend-dashboard`** (doc [05](../../concepts/05_frontend_architecture.md)/[09](../../concepts/09_merchant_dashboard.md)). Esta task ajusta roteamento/infra e limpa resíduos do template antes de construir as telas.
+O painel do lojista mora em `app.kriar.shop` e é o frontend React/Vite do template reaproveitado como **`frontend-dashboard`** (doc [05](../../concepts/05_frontend_architecture.md)/[09](../../concepts/09_merchant_dashboard.md)). Esta task ajusta roteamento/infra e limpa resíduos do template antes de construir as telas.
 
 ## Docs de referência
 - [05 — Frontend Architecture](../../concepts/05_frontend_architecture.md) (três frontends; URLs)

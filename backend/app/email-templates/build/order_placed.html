@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#333333;">
+    <table align="center" width="600" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;width:100%;background:#ffffff;border-radius:8px;">
+      <tr>
+        <td style="padding:32px;">
+          <h1 style="margin:0 0 16px;font-size:22px;color:#111111;">Pedido recebido!</h1>
+          <p style="margin:0 0 8px;color:#555555;line-height:1.5;">
+            Obrigado pela sua compra em <strong>{{ store_name }}</strong>.
+          </p>
+          <p style="margin:0 0 16px;color:#555555;line-height:1.5;">
+            Recebemos o seu pedido <strong>#{{ order_number }}</strong>.
+          </p>
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin:8px 0 16px;">
+            {% for item in items %}
+            <tr>
+              <td style="padding:8px 0;border-bottom:1px solid #eeeeee;color:#333333;">{{ item.quantity }}x {{ item.name }}</td>
+              <td style="padding:8px 0;border-bottom:1px solid #eeeeee;text-align:right;color:#333333;">{{ item.line_total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td style="padding:12px 0;font-weight:bold;color:#111111;">Total</td>
+              <td style="padding:12px 0;text-align:right;font-weight:bold;color:#111111;">{{ total }}</td>
+            </tr>
+          </table>
+          <p style="margin:0;color:#555555;line-height:1.5;">
+            A loja vai entrar em contato para combinar o pagamento e a entrega.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

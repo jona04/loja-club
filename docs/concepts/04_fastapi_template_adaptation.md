@@ -2,7 +2,7 @@
 
 ## Base escolhida
 
-A Loja Club V1 será construída a partir do **Full Stack FastAPI Template** oficial.
+A Kriar V1 será construída a partir do **Full Stack FastAPI Template** oficial.
 
 O template já traz uma base full-stack com:
 
@@ -56,7 +56,7 @@ Do template original, vamos manter:
 
 ## O que será alterado
 
-O template original é genérico. A Loja Club precisa de uma estrutura de SaaS multi-tenant.
+O template original é genérico. A Kriar precisa de uma estrutura de SaaS multi-tenant.
 
 Alterações principais:
 
@@ -156,7 +156,7 @@ Ele já vem com:
 
 A loja pública deve ser um frontend separado.
 
-O admin interno da Loja Club também deve ser um frontend separado do painel do lojista.
+O admin interno da Kriar também deve ser um frontend separado do painel do lojista.
 Ele pode reaproveitar componentes, client OpenAPI e padrões visuais, mas não deve morar no mesmo projeto do dashboard.
 
 ## Traefik no template
@@ -168,7 +168,7 @@ O Traefik será mantido para:
 - beta barato em EC2;
 - roteamento por subdomínio;
 - simulação de URLs reais;
-- roteamento de `api`, `app`, `admin` e `*.loja.club`.
+- roteamento de `api`, `app`, `admin` e `*.kriar.shop`.
 
 Em produção AWS mais robusta, Traefik pode ser substituído por ALB/CloudFront/ACM.
 
@@ -182,7 +182,7 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 - ferramentas de debug;
 - endpoints internos sem autenticação.
 
-## Estratégia de migração do template para Loja Club
+## Estratégia de migração do template para Kriar
 
 1. Criar projeto a partir do template.
 2. Ajustar nome, domínio, envs e branding.
@@ -204,4 +204,4 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 
 ## Decisão canônica
 
-A Loja Club será construída com FastAPI usando o template como base, mas o template será profundamente adaptado para um SaaS multi-tenant de ecommerce.
+A Kriar será construída com FastAPI usando o template como base, mas o template será profundamente adaptado para um SaaS multi-tenant de ecommerce.
