@@ -254,11 +254,11 @@ O editor deve permitir personalização do produto usando modelo 3D.
 
 Recursos (Fase 7 — editor 3D do storefront):
 
-- carregar o modelo 3D do lojista (gerado via API);
-- upload de imagem/arte pelo cliente;
-- escrever nomes e frases dentro da area personalizável;
-- quando houver escrita permitir editar fonte, cores, tamanho e etc;
-- escolha de cor do produto quando o modelo permitir;
+- carregar o modelo 3D **do catálogo da plataforma** (versão escolhida, CDN);
+- **dois painéis**: edição 2D na área imprimível + preview 3D ao vivo (girar/zoom/mover) — doc [30 §2](./30_3d_customization_technical_design.md);
+- upload de imagem/arte (raster) pelo cliente;
+- escrever nomes e frases dentro da área personalizável;
+- quando houver escrita, editar fonte, **cor do texto**, tamanho etc;
 - mover arte e escrita dentro da área imprimível;
 - ajustar escala;
 - ajustar rotação;

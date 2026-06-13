@@ -152,6 +152,11 @@ Exemplos:
 | `customization_cart_items` | Personalização aprovada no carrinho |
 | `customization_order_items` | Cópia congelada da personalização no pedido |
 
+Campos do **catálogo da plataforma** (Fase 7, **sem `store_id`**) — detalhe e JSONs no doc [30](./30_3d_customization_technical_design.md):
+
+- `platform_3d_models`: `name`, `category`, `slug`, `is_active` (+ soft delete).
+- `platform_3d_model_versions`: `model_id` (FK), `version` (int), `glb_url` (CDN), `printable_areas` (JSON — projetor/retângulo/limites por área), `text_config` (JSON — fontes/limites de texto), `art_limits` (JSON — mimes/tamanho/dimensão mín), `is_active`. **GLB imutável** (novo GLB = nova versão); **área/limites editáveis no admin** dentro da versão.
+
 Campos importantes em `customization_sessions`:
 
 ```text
@@ -160,17 +165,17 @@ product_id
 guest_session_id
 customer_id
 cart_id
-model_id
-model_version_id
+platform_3d_model_version_id   # versão fixada do catálogo (Fase 12 acrescenta o modelo da loja)
 status
 state_json
-preview_url
-approved_snapshot_url
+snapshot_key                   # privado (URL assinada); copiado pro pedido ao congelar
+created_by                     # usuário da loja na personalização assistida (senão nulo)
+public_token                   # link público read-only da assistida
 expires_at
 approved_at
 ```
 
-O `state_json` guarda parâmetros como cor, posição, escala, rotação, imagem aplicada, textos e área utilizada.
+O `state_json` guarda as **camadas** (imagem e texto), posição/escala/rotação e a área usada — schema canônico no doc [30 §4](./30_3d_customization_technical_design.md) (a **cor do produto** fica fora da V1).
 O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `customization_order_items`.
 
 Sessões de personalização expiram em 30 dias quando não viram pedido.
@@ -330,11 +335,15 @@ A performance depende muito dos índices compostos com `store_id`.
 | `catalog_product_categories` | `product_id + category_id` único |
 | `catalog_inventory_items` | `store_id + product_id + variant_id` **único** |
 | `catalog_collections` | `store_id + slug` único quando ativo |
+| `platform_3d_models` | `slug` único quando ativo |
+| `platform_3d_models` | `category` |
+| `platform_3d_model_versions` | `model_id + version` único |
 | `customization_product_settings` | `store_id + product_id` único |
 | `customization_sessions` | `store_id + product_id + status` |
 | `customization_sessions` | `store_id + guest_session_id + status` |
 | `customization_sessions` | `store_id + customer_id + status` |
 | `customization_sessions` | `expires_at + status` |
+| `customization_sessions` | `public_token` único quando existir |
 | `customization_uploads` | `store_id + customization_session_id` |
 | `customization_cart_items` | `store_id + cart_item_id` único |
 | `customization_order_items` | `store_id + order_id` |

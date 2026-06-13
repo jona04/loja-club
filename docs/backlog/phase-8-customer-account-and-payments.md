@@ -39,7 +39,7 @@ Docs de referência: [23](../concepts/23_customer_identity_and_guest_checkout.md
 - [ ] solicitar código; verificar código; login senha; Google start/callback; logout; `me`.
 - [ ] recuperar carrinho/pedido por código (cross-device) — completa o que ficou na Fase 6. Doc [23](../concepts/23_customer_identity_and_guest_checkout.md).
 - [ ] área do cliente: histórico de pedidos, endereços (CRUD), personalizações, **editar perfil (inclui nome)**. Editar exige autenticação. Doc [23](../concepts/23_customer_identity_and_guest_checkout.md).
-- [ ] **Ver/aprovar personalização criada pelo lojista:** o cliente loga com o e-mail/telefone pré-cadastrado e **vê/aprova** a personalização que o lojista montou por ele (doc [22](../concepts/22_product_customization_3d.md)); aprovar segue o fluxo normal (carrinho/checkout). **Acesso (login vs link público) = decisão em aberto** ([18](../concepts/18_open_decisions.md)).
+- [ ] **Ver/aprovar personalização criada pelo lojista (na conta):** além do **link público + confirmação de contato** já entregue na Fase 7 (doc [30 §9](../concepts/30_3d_customization_technical_design.md)), o cliente **logado** vê/aprova suas personalizações na **área do cliente**; aprovar segue o fluxo normal (carrinho/checkout). Doc [22](../concepts/22_product_customization_3d.md)/[23](../concepts/23_customer_identity_and_guest_checkout.md).
 
 ### Frontend (storefront, Next.js)
 - [ ] Modal/área de login (código, senha, Google); área do cliente (histórico, endereços, perfil). Doc [05](../concepts/05_frontend_architecture.md)/[21](../concepts/21_design_system_todo.md).

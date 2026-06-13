@@ -1,6 +1,6 @@
 # Documentação conceitual — Kriar
 
-Os **docs conceituais** da Kriar V1 — produto, arquitetura, negócio, banco, segurança, marca, etc. (01 a 29). São a **fonte de verdade** das decisões: o código imita a lógica daqui (regra de ouro). Português por enquanto; nomes de arquivo em inglês.
+Os **docs conceituais** da Kriar V1 — produto, arquitetura, negócio, banco, segurança, marca, etc. (01 a 30). São a **fonte de verdade** das decisões: o código imita a lógica daqui (regra de ouro). Português por enquanto; nomes de arquivo em inglês.
 
 > **Backlog acionável** (tasks por fase): [`../backlog/`](../backlog/README.md) · **Designs** dos templates (uxpilot): [`../design/`](../design/) · **Visão geral**: [`../README.md`](../README.md).
 
@@ -35,3 +35,4 @@ Os **docs conceituais** da Kriar V1 — produto, arquitetura, negócio, banco, s
 27. [Template Authoring Guide](./27_template_authoring_guide.md)
 28. [Kriar Brand](./28_kriar_brand.md)
 29. [Kriar Landing Page](./29_kriar_landing_page.md)
+30. [Design Técnico — Personalização 3D](./30_3d_customization_technical_design.md)

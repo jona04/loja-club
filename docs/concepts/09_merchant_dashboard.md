@@ -99,7 +99,6 @@ Funcionalidades (Fase 7):
 
 - habilitar/desabilitar personalização;
 - **escolher um modelo do catálogo da plataforma** e vincular ao produto;
-- definir se a cor do produto pode ser alterada;
 - definir observações de produção;
 - ver preview básico do modelo;
 - manter imagens tradicionais para listagem e fallback.
