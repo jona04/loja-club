@@ -35,6 +35,34 @@ export type ApplyCouponInput = {
 };
 
 /**
+ * Request (panel) to assemble a session on a customer's behalf (doc 30 §9).
+ */
+export type AssistedSessionCreate = {
+    product_id: string;
+    name: string;
+    email?: (string | null);
+    phone?: (string | null);
+    region?: (string | null);
+};
+
+/**
+ * An assisted session plus its shareable read-only public token.
+ */
+export type AssistedSessionPublic = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    snapshot_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+    public_token: string;
+};
+
+/**
  * Payload to create a plan definition.
  */
 export type BillingPlanCreate = {
@@ -95,6 +123,21 @@ export type BillingPlanUpdate = {
     commission_bps?: (number | null);
     description?: (string | null);
     is_active?: (boolean | null);
+};
+
+export type Body_customization_approve_public_session = {
+    snapshot: string;
+    email?: (string | null);
+    phone?: (string | null);
+    region?: (string | null);
+};
+
+export type Body_customization_approve_session = {
+    snapshot: string;
+};
+
+export type Body_customization_upload_art = {
+    file: string;
 };
 
 export type Body_login_login_access_token = {
@@ -420,6 +463,22 @@ export type CustomerSummary = {
     created_at: string;
 };
 
+/**
+ * Lifecycle of a customer's 3D customization session (doc 30 §4).
+ *
+ * - ``draft``: being edited; autosave writes the ``state_json`` here.
+ * - ``approved``: the customer approved a snapshot; frozen for editing, ready
+ * to add to the cart.
+ * - ``added_to_cart``: an approved session that is in a cart.
+ * - ``ordered``: copied (frozen) into a placed order (terminal).
+ * - ``abandoned``: explicitly given up by the customer.
+ * - ``expired``: aged past ``expires_at`` and swept by the worker (terminal).
+ *
+ * Editing (autosave/upload) is allowed only in ``draft``; ``approved`` and
+ * beyond are immutable. Deleting a session is a soft delete, never a status.
+ */
+export type CustomizationSessionStatus = 'draft' | 'approved' | 'added_to_cart' | 'ordered' | 'abandoned' | 'expired';
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -465,6 +524,16 @@ export type InventoryPublic = {
 export type InventorySet = {
     variant_id?: (string | null);
     quantity: number;
+};
+
+/**
+ * A layer's placement, normalized [0..1] inside the printable UV region.
+ */
+export type LayerTransform = {
+    x: number;
+    y: number;
+    scale: number;
+    rotation_deg?: number;
 };
 
 /**
@@ -941,6 +1010,29 @@ export type ProductUpdate = {
 export type ProductVariantStatus = 'active' | 'archived';
 
 /**
+ * A customization session as the editor (or a read-only viewer) sees it.
+ */
+export type SessionPublic = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    snapshot_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+};
+
+/**
+ * Request to start (or resume) a customization session for a product.
+ */
+export type SessionStart = {
+    product_id: string;
+};
+
+/**
  * Fields accepted when creating a shipping method.
  */
 export type ShippingMethodCreate = {
@@ -993,6 +1085,45 @@ export type ShippingMethodUpdate = {
     is_active?: (boolean | null);
     price_amount_minor?: (number | null);
     min_order_amount_minor?: (number | null);
+};
+
+/**
+ * The full editor state (doc 30 §4): pinned model + ordered layers.
+ *
+ * Structural shape only; the version-specific rules (allowed fonts, area ids,
+ * per-area layer caps, referenced uploads) are enforced in the service against
+ * the pinned version — never trusting the client.
+ */
+export type StateJson = {
+    schema_version?: number;
+    model: StateModelRef;
+    layers?: Array<StateLayer>;
+};
+
+/**
+ * One layer of the editor state: a raster image or a text run.
+ */
+export type StateLayer = {
+    id: string;
+    kind: 'image' | 'text';
+    area_id: string;
+    z?: number;
+    transform: LayerTransform;
+    upload_id?: (string | null);
+    text?: (string | null);
+    font?: (string | null);
+    font_size?: (number | null);
+    color?: (string | null);
+};
+
+export type kind = 'image' | 'text';
+
+/**
+ * The catalog model + pinned version the state was built against.
+ */
+export type StateModelRef = {
+    model_id: string;
+    version_id: string;
 };
 
 /**
@@ -1324,6 +1455,19 @@ export type UpdateItemInput = {
 export type UpdatePassword = {
     current_password: string;
     new_password: string;
+};
+
+/**
+ * A customer upload, with a short-lived presigned read URL.
+ */
+export type UploadPublic = {
+    id: string;
+    mime: string;
+    size_bytes: number;
+    width: (number | null);
+    height: (number | null);
+    url: string;
+    low_resolution?: boolean;
 };
 
 /**
@@ -1827,6 +1971,59 @@ export type CustomizationUnlinkProductModelData = {
 };
 
 export type CustomizationUnlinkProductModelResponse = (void);
+
+export type CustomizationCreateAssistedSessionData = {
+    requestBody: AssistedSessionCreate;
+    storeId: string;
+};
+
+export type CustomizationCreateAssistedSessionResponse = (AssistedSessionPublic);
+
+export type CustomizationStartSessionData = {
+    requestBody: SessionStart;
+};
+
+export type CustomizationStartSessionResponse = (SessionPublic);
+
+export type CustomizationGetSessionData = {
+    sessionId: string;
+};
+
+export type CustomizationGetSessionResponse = (SessionPublic);
+
+export type CustomizationAutosaveSessionData = {
+    requestBody: StateJson;
+    sessionId: string;
+};
+
+export type CustomizationAutosaveSessionResponse = (SessionPublic);
+
+export type CustomizationUploadArtData = {
+    formData: Body_customization_upload_art;
+    sessionId: string;
+};
+
+export type CustomizationUploadArtResponse = (UploadPublic);
+
+export type CustomizationApproveSessionData = {
+    formData: Body_customization_approve_session;
+    sessionId: string;
+};
+
+export type CustomizationApproveSessionResponse = (SessionPublic);
+
+export type CustomizationViewPublicSessionData = {
+    token: string;
+};
+
+export type CustomizationViewPublicSessionResponse = (SessionPublic);
+
+export type CustomizationApprovePublicSessionData = {
+    formData: Body_customization_approve_public_session;
+    token: string;
+};
+
+export type CustomizationApprovePublicSessionResponse = (SessionPublic);
 
 export type DCatalogListModelsResponse = (Array<Platform3DModelPublic>);
 

@@ -3,7 +3,10 @@
 SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/concepts/`; **backlog acionável** em `docs/backlog/`; **invariantes e decisões** em `docs/backlog/_foundations-and-bottlenecks.md`.
 
 ## Regra de ouro
-O código imita a lógica dos docs — **não inventar lógica de negócio nova**. Se uma limitação técnica impedir seguir o doc, atualizar o `.md` para refletir o código; **nunca** deixar doc e código divergentes.
+O código imita a lógica dos docs — **não inventar lógica de negócio nova**. Se uma limitação técnica impedir seguir o doc, atualizar o `.md` para refletir o código; **nunca** deixar doc e código divergentes. **Fonte de verdade = o doc em `docs/concepts/`, nunca a task**: se algo foi inventado/decidido ao implementar (incl. valores), tem que subir pro doc conceitual — task/README/memória só apontam.
+
+## Configuração e números mágicos
+**Todo número mágico, constante de config, default ou valor de tabela de configuração** (TTL, agendamento, limite, tamanho, porta, etc.) — no código **ou** em tabela — **tem que estar em [`docs/concepts/31_configuration_and_constants.md`](docs/concepts/31_configuration_and_constants.md)** (registro único; vira config em banco no futuro). Ao adicionar/alterar o valor no código, atualizar essa doc **na mesma mudança**. Enums também entram lá.
 
 ## Git (importante)
 **Nunca** executar operações de git que alterem estado: sem `commit`, `push`, `branch`, `checkout`/`switch`, `merge`, `reset`, `rebase`, `stash`. **O usuário gerencia o git.** Implementar **sempre na branch atual** (a que estiver checada) — não criar nem trocar de branch. Rodar git (mesmo só-leitura, como `git status`/`git diff`) **apenas se o usuário pedir**.

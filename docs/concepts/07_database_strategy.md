@@ -164,22 +164,21 @@ store_id
 product_id
 guest_session_id
 customer_id
-cart_id
 platform_3d_model_version_id   # versão fixada do catálogo (Fase 12 acrescenta o modelo da loja)
 status
 state_json
 snapshot_key                   # privado (URL assinada); copiado pro pedido ao congelar
-created_by                     # usuário da loja na personalização assistida (senão nulo)
-public_token                   # link público read-only da assistida
+created_by_user_id             # usuário da loja na personalização assistida (senão nulo)
+public_token                   # link público read-only da assistida (token opaco; ver doc 30 §9)
 expires_at
 approved_at
 ```
 
 O `state_json` guarda as **camadas** (imagem e texto), posição/escala/rotação e a área usada — schema canônico no doc [30 §4](./30_3d_customization_technical_design.md) (a **cor do produto** fica fora da V1).
-O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `customization_order_items`.
+O vínculo com carrinho/pedido **não** fica na sessão: a personalização aprovada é copiada para `customization_cart_items` e, no pedido, para `customization_order_items` (congelamento — **P7-ORD-01**), pra o pedido não depender da sessão viva.
 
-Sessões de personalização expiram em 30 dias quando não viram pedido.
-Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio.
+Sessões de personalização expiram em 30 dias quando não viram pedido (TTL + agendamento da varredura em [31 §4](./31_configuration_and_constants.md)).
+Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio. A expiração é aplicada **também no acesso** (uma sessão vencida responde **410** em autosave/upload/aprovar/link público); o worker só faz a **faxina** (tira das listagens), então a regra não depende da hora em que ele roda.
 
 ### Cliente final
 

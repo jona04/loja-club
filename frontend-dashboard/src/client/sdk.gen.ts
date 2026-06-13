@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CartGetCartResponse, CartAddItemData, CartAddItemResponse, CartUpdateItemData, CartUpdateItemResponse, CartRemoveItemData, CartRemoveItemResponse, CartApplyCouponData, CartApplyCouponResponse, CartRemoveCouponResponse, CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, CheckoutGetPoliciesData, CheckoutGetPoliciesResponse, CheckoutUpdatePoliciesData, CheckoutUpdatePoliciesResponse, CheckoutSubmitCheckoutData, CheckoutSubmitCheckoutResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, ContentListPagesData, ContentListPagesResponse, ContentCreatePageData, ContentCreatePageResponse, ContentUpdatePageData, ContentUpdatePageResponse, ContentDeletePageData, ContentDeletePageResponse, ContentListBannersData, ContentListBannersResponse, ContentCreateBannerData, ContentCreateBannerResponse, ContentUpdateBannerData, ContentUpdateBannerResponse, ContentDeleteBannerData, ContentDeleteBannerResponse, ContentListMenusData, ContentListMenusResponse, ContentCreateMenuData, ContentCreateMenuResponse, ContentUpdateMenuData, ContentUpdateMenuResponse, ContentDeleteMenuData, ContentDeleteMenuResponse, ContentAddMenuItemData, ContentAddMenuItemResponse, ContentUpdateMenuItemData, ContentUpdateMenuItemResponse, ContentDeleteMenuItemData, ContentDeleteMenuItemResponse, CustomersListCustomersData, CustomersListCustomersResponse, CustomersGetCustomerData, CustomersGetCustomerResponse, CustomizationGetProductModelData, CustomizationGetProductModelResponse, CustomizationLinkProductModelData, CustomizationLinkProductModelResponse, CustomizationUnlinkProductModelData, CustomizationUnlinkProductModelResponse, DCatalogListModelsResponse, DiscountsListCouponsData, DiscountsListCouponsResponse, DiscountsCreateCouponData, DiscountsCreateCouponResponse, DiscountsUpdateCouponData, DiscountsUpdateCouponResponse, DiscountsDeleteCouponData, DiscountsDeleteCouponResponse, HealthHealthResponse, HealthHealthDbResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, OrdersListOrdersData, OrdersListOrdersResponse, OrdersGetOrderData, OrdersGetOrderResponse, OrdersUpdateStatusData, OrdersUpdateStatusResponse, OrdersCancelOrderData, OrdersCancelOrderResponse, OrdersAddNoteData, OrdersAddNoteResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PlatformAdminList3dModelsResponse, PlatformAdminUpdate3dModelData, PlatformAdminUpdate3dModelResponse, PlatformAdminUpdate3dModelVersionData, PlatformAdminUpdate3dModelVersionResponse, PrivateCreateUserData, PrivateCreateUserResponse, ShippingListMethodsData, ShippingListMethodsResponse, ShippingCreateMethodData, ShippingCreateMethodResponse, ShippingUpdateMethodData, ShippingUpdateMethodResponse, ShippingDeleteMethodData, ShippingDeleteMethodResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StorefrontListShippingMethodsResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { CartGetCartResponse, CartAddItemData, CartAddItemResponse, CartUpdateItemData, CartUpdateItemResponse, CartRemoveItemData, CartRemoveItemResponse, CartApplyCouponData, CartApplyCouponResponse, CartRemoveCouponResponse, CatalogListProductsData, CatalogListProductsResponse, CatalogCreateProductData, CatalogCreateProductResponse, CatalogGetProductData, CatalogGetProductResponse, CatalogUpdateProductData, CatalogUpdateProductResponse, CatalogDeleteProductData, CatalogDeleteProductResponse, CatalogPublishProductData, CatalogPublishProductResponse, CatalogArchiveProductData, CatalogArchiveProductResponse, CatalogListCategoriesData, CatalogListCategoriesResponse, CatalogCreateCategoryData, CatalogCreateCategoryResponse, CatalogUpdateCategoryData, CatalogUpdateCategoryResponse, CatalogDeleteCategoryData, CatalogDeleteCategoryResponse, CatalogListVariantsData, CatalogListVariantsResponse, CatalogCreateVariantData, CatalogCreateVariantResponse, CatalogUpdateVariantData, CatalogUpdateVariantResponse, CatalogDeleteVariantData, CatalogDeleteVariantResponse, CatalogListImagesData, CatalogListImagesResponse, CatalogAttachImageData, CatalogAttachImageResponse, CatalogRemoveImageData, CatalogRemoveImageResponse, CatalogGetInventoryData, CatalogGetInventoryResponse, CatalogSetInventoryData, CatalogSetInventoryResponse, CheckoutGetPoliciesData, CheckoutGetPoliciesResponse, CheckoutUpdatePoliciesData, CheckoutUpdatePoliciesResponse, CheckoutSubmitCheckoutData, CheckoutSubmitCheckoutResponse, ContentListTemplatesData, ContentListTemplatesResponse, ContentGetLayoutData, ContentGetLayoutResponse, ContentUpdateLayoutData, ContentUpdateLayoutResponse, ContentGetLayoutSettingsData, ContentGetLayoutSettingsResponse, ContentUpdateLayoutSettingsData, ContentUpdateLayoutSettingsResponse, ContentResetLayoutSettingsData, ContentResetLayoutSettingsResponse, ContentListMyTemplatesData, ContentListMyTemplatesResponse, ContentListPagesData, ContentListPagesResponse, ContentCreatePageData, ContentCreatePageResponse, ContentUpdatePageData, ContentUpdatePageResponse, ContentDeletePageData, ContentDeletePageResponse, ContentListBannersData, ContentListBannersResponse, ContentCreateBannerData, ContentCreateBannerResponse, ContentUpdateBannerData, ContentUpdateBannerResponse, ContentDeleteBannerData, ContentDeleteBannerResponse, ContentListMenusData, ContentListMenusResponse, ContentCreateMenuData, ContentCreateMenuResponse, ContentUpdateMenuData, ContentUpdateMenuResponse, ContentDeleteMenuData, ContentDeleteMenuResponse, ContentAddMenuItemData, ContentAddMenuItemResponse, ContentUpdateMenuItemData, ContentUpdateMenuItemResponse, ContentDeleteMenuItemData, ContentDeleteMenuItemResponse, CustomersListCustomersData, CustomersListCustomersResponse, CustomersGetCustomerData, CustomersGetCustomerResponse, CustomizationGetProductModelData, CustomizationGetProductModelResponse, CustomizationLinkProductModelData, CustomizationLinkProductModelResponse, CustomizationUnlinkProductModelData, CustomizationUnlinkProductModelResponse, CustomizationCreateAssistedSessionData, CustomizationCreateAssistedSessionResponse, CustomizationStartSessionData, CustomizationStartSessionResponse, CustomizationGetSessionData, CustomizationGetSessionResponse, CustomizationAutosaveSessionData, CustomizationAutosaveSessionResponse, CustomizationUploadArtData, CustomizationUploadArtResponse, CustomizationApproveSessionData, CustomizationApproveSessionResponse, CustomizationViewPublicSessionData, CustomizationViewPublicSessionResponse, CustomizationApprovePublicSessionData, CustomizationApprovePublicSessionResponse, DCatalogListModelsResponse, DiscountsListCouponsData, DiscountsListCouponsResponse, DiscountsCreateCouponData, DiscountsCreateCouponResponse, DiscountsUpdateCouponData, DiscountsUpdateCouponResponse, DiscountsDeleteCouponData, DiscountsDeleteCouponResponse, HealthHealthResponse, HealthHealthDbResponse, HealthHealthRedisResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, MediaUploadMediaData, MediaUploadMediaResponse, OrdersListOrdersData, OrdersListOrdersResponse, OrdersGetOrderData, OrdersGetOrderResponse, OrdersUpdateStatusData, OrdersUpdateStatusResponse, OrdersCancelOrderData, OrdersCancelOrderResponse, OrdersAddNoteData, OrdersAddNoteResponse, PlatformAdminGetPlatformMeResponse, PlatformAdminListStoresData, PlatformAdminListStoresResponse, PlatformAdminGetStoreData, PlatformAdminGetStoreResponse, PlatformAdminBlockStoreData, PlatformAdminBlockStoreResponse, PlatformAdminUnblockStoreData, PlatformAdminUnblockStoreResponse, PlatformAdminListUsersData, PlatformAdminListUsersResponse, PlatformAdminGetUserData, PlatformAdminGetUserResponse, PlatformAdminImpersonateUserData, PlatformAdminImpersonateUserResponse, PlatformAdminListPlansData, PlatformAdminListPlansResponse, PlatformAdminCreatePlanData, PlatformAdminCreatePlanResponse, PlatformAdminGetPlanData, PlatformAdminGetPlanResponse, PlatformAdminUpdatePlanData, PlatformAdminUpdatePlanResponse, PlatformAdminDeletePlanData, PlatformAdminDeletePlanResponse, PlatformAdminListTemplatesResponse, PlatformAdminCreateTemplateData, PlatformAdminCreateTemplateResponse, PlatformAdminGetTemplateData, PlatformAdminGetTemplateResponse, PlatformAdminUpdateTemplateData, PlatformAdminUpdateTemplateResponse, PlatformAdminUploadTemplateThumbnailData, PlatformAdminUploadTemplateThumbnailResponse, PlatformAdminList3dModelsResponse, PlatformAdminUpdate3dModelData, PlatformAdminUpdate3dModelResponse, PlatformAdminUpdate3dModelVersionData, PlatformAdminUpdate3dModelVersionResponse, PrivateCreateUserData, PrivateCreateUserResponse, ShippingListMethodsData, ShippingListMethodsResponse, ShippingCreateMethodData, ShippingCreateMethodResponse, ShippingUpdateMethodData, ShippingUpdateMethodResponse, ShippingDeleteMethodData, ShippingDeleteMethodResponse, StorefrontGetHomeResponse, StorefrontListCategoriesResponse, StorefrontListProductsData, StorefrontListProductsResponse, StorefrontGetProductData, StorefrontGetProductResponse, StorefrontGetPageData, StorefrontGetPageResponse, StorefrontListShippingMethodsResponse, StoresCreateStoreData, StoresCreateStoreResponse, StoresListMyStoresData, StoresListMyStoresResponse, StoresGetStoreData, StoresGetStoreResponse, StoresGetMyMembershipData, StoresGetMyMembershipResponse, StoresGetStoreSettingsData, StoresGetStoreSettingsResponse, StoresUpdateStoreSettingsData, StoresUpdateStoreSettingsResponse, StoresPublishStoreData, StoresPublishStoreResponse, StoresPauseStoreData, StoresPauseStoreResponse, StoresListStoreMembersData, StoresListStoreMembersResponse, StoresInviteStoreMemberData, StoresInviteStoreMemberResponse, StoresUpdateStoreMemberRoleData, StoresUpdateStoreMemberRoleResponse, StoresRemoveStoreMemberData, StoresRemoveStoreMemberResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class CartService {
     /**
@@ -1326,6 +1326,188 @@ export class CustomizationService {
                 store_id: data.storeId,
                 product_id: data.productId
             },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Assisted Session
+     * Assemble a session for a customer and return its public link token.
+     * @param data The data for the request.
+     * @param data.storeId
+     * @param data.requestBody
+     * @returns AssistedSessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static createAssistedSession(data: CustomizationCreateAssistedSessionData): CancelablePromise<CustomizationCreateAssistedSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/stores/{store_id}/customizations/assisted',
+            path: {
+                store_id: data.storeId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Start Session
+     * Start (or resume) the guest's customization session for a product.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static startSession(data: CustomizationStartSessionData): CancelablePromise<CustomizationStartSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/storefront/customizations',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Session
+     * Return the guest's customization session.
+     * @param data The data for the request.
+     * @param data.sessionId
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static getSession(data: CustomizationGetSessionData): CancelablePromise<CustomizationGetSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/customizations/{session_id}',
+            path: {
+                session_id: data.sessionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Autosave Session
+     * Autosave the editor state (validated against the pinned version).
+     * @param data The data for the request.
+     * @param data.sessionId
+     * @param data.requestBody
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static autosaveSession(data: CustomizationAutosaveSessionData): CancelablePromise<CustomizationAutosaveSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/storefront/customizations/{session_id}/state',
+            path: {
+                session_id: data.sessionId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Upload Art
+     * Upload raster art to the session (stored privately, presigned back).
+     * @param data The data for the request.
+     * @param data.sessionId
+     * @param data.formData
+     * @returns UploadPublic Successful Response
+     * @throws ApiError
+     */
+    public static uploadArt(data: CustomizationUploadArtData): CancelablePromise<CustomizationUploadArtResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/storefront/customizations/{session_id}/uploads',
+            path: {
+                session_id: data.sessionId
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Approve Session
+     * Approve the session with the client-side snapshot (freezes it).
+     * @param data The data for the request.
+     * @param data.sessionId
+     * @param data.formData
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static approveSession(data: CustomizationApproveSessionData): CancelablePromise<CustomizationApproveSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/storefront/customizations/{session_id}/approve',
+            path: {
+                session_id: data.sessionId
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * View Public Session
+     * Open a shared session read-only via its public token.
+     * @param data The data for the request.
+     * @param data.token
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static viewPublicSession(data: CustomizationViewPublicSessionData): CancelablePromise<CustomizationViewPublicSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storefront/p/{token}',
+            path: {
+                token: data.token
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Approve Public Session
+     * Approve a shared session after confirming the pre-registered contact.
+     * @param data The data for the request.
+     * @param data.token
+     * @param data.formData
+     * @returns SessionPublic Successful Response
+     * @throws ApiError
+     */
+    public static approvePublicSession(data: CustomizationApprovePublicSessionData): CancelablePromise<CustomizationApprovePublicSessionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/storefront/p/{token}/approve',
+            path: {
+                token: data.token
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
             errors: {
                 422: 'Validation Error'
             }

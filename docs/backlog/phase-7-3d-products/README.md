@@ -29,7 +29,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | 2 | [P7-CAT-01](./P7-CAT-01-platform-3d-catalog.md) | Catálogo 3D da plataforma: tabelas + seed da caneca | ✅ done | P7-ASSET-01 |
 | 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + **editor visual 3D** da área imprimível | ✅ done | P7-CAT-01 |
 | 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | ✅ done | P7-CAT-01 |
-| 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | todo | P7-PROD-01 |
+| 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | ✅ done | P7-PROD-01 |
 | 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | todo | P7-SESS-01, P7-CAT-01 |
 | 7 | [P7-EDITOR-02](./P7-EDITOR-02-layers-approval-snapshot.md) | Editor: camadas (imagem+texto) + aprovação + snapshot + link público | todo | P7-EDITOR-01 |
 | 8 | [P7-ORD-01](./P7-ORD-01-freeze-customization-in-order.md) | Carrinho/pedido: congelar a personalização | todo | P7-SESS-01, P7-EDITOR-02 |
@@ -75,3 +75,7 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Arte vetorial (SVG/PDF)** — V1 é só raster. Origem: `P7-EDITOR-02`.
 - [ ] **Múltiplas faces/áreas** (ex.: camiseta frente/verso) — a caneca usa 1 área. Origem: `P7-CAT-01`.
 - [ ] **e2e Playwright do fluxo de personalização** (browser) → depende da infra `P3-SF-03`. Origem: `P7-EDITOR-02`.
+- [ ] **Limpeza de arquivos (S3) de sessões expiradas** mantendo histórico de negócio — política de retenção. Origem: `P7-SESS-01`.
+- [ ] **Anti-abuso no endpoint público** (rate limit do `public_token`) — hardening (Fase 10). Origem: `P7-SESS-01`.
+- [ ] **Strip de metadados/re-encode da imagem** no upload (hoje só valida mime/tamanho/decode + nome próprio). Origem: `P7-SESS-01`.
+- [ ] **Status de arte/produção** (`received…production_done`) no **item do pedido** — criar onde é lido. Origem: `P7-SESS-01` → `P7-ORD-01`/`P7-OPS-01`.

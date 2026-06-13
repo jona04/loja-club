@@ -172,7 +172,7 @@ As tabelas já estão nomeadas no doc [07](./07_database_strategy.md). O design 
 - **`platform_3d_models`** (sem `store_id`): `name`, `category`, `slug`, `is_active`, soft delete.
 - **`platform_3d_model_versions`**: `model_id` (FK), `version` (int), `glb_url` (CDN), `printable_areas` (JSON, §3), `text_config` (JSON: fontes permitidas, tamanho min/máx), `art_limits` (JSON: mimes, tamanho máx, dimensão mín), `is_active`. *(Recolor é follow-up: quando voltar, entra `color_palette` aqui — §12.)*
 - **`customization_product_settings`** (por loja): `product_id` → `platform_3d_model_id` (escolhido do catálogo) + observações de produção.
-- **`customization_sessions`**: campos do doc 07 + `state_json` (§4), `platform_3d_model_version_id`, `status`, `guest_session_id`, `customer_id?`, `created_by?` (usuário da loja na assistida), `snapshot_key?`, `expires_at`, `public_token?` (§9).
+- **`customization_sessions`**: campos do doc 07 + `state_json` (§4), `platform_3d_model_version_id`, `status`, `guest_session_id`, `customer_id?`, `created_by_user_id?` (usuário da loja na assistida), `snapshot_key?`, `approved_at?`, `expires_at`, `public_token?` (§9).
 - **`customization_uploads`**: `customization_session_id`, `store_id`, `key` (privado), `mime`, `size_bytes`, `width`/`height`.
 - **`customization_cart_items`** / **`customization_order_items`**: cópia congelada (§7).
 
@@ -181,7 +181,7 @@ As tabelas já estão nomeadas no doc [07](./07_database_strategy.md). O design 
 ## 9. Personalização assistida + link público
 
 - O lojista cria a sessão com `created_by` = usuário da loja, pré-cadastrando o cliente por contato (`create_or_update_customer`, normaliza e-mail/telefone — Fase 6).
-- A sessão ganha um **`public_token`** assinado e expirável (escopo = aquela sessão, **read-only**). O link `/p/<token>` abre a personalização **sem login** — o cliente vê e **compartilha**.
+- A sessão ganha um **`public_token`** opaco e inadivinhável (`secrets.token_urlsafe`), expirável pelo `expires_at` da sessão (escopo = aquela sessão, **read-only**). O link `/p/<token>` abre a personalização **sem login** — o cliente vê e **compartilha**.
 - **Aprovar/comprar** pelo link exige **confirmar o contato** (digitar o e-mail/telefone pré-cadastrado) — sem conta (a conta é Fase 8). Confirmado o contato, segue o fluxo normal (carrinho/checkout) pelas mesmas regras de aprovação/congelamento.
 - O token **não** expõe arquivos originais por URL pública permanente — o preview vem por URL assinada de curta duração.
 

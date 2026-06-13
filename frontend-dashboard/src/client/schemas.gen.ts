@@ -143,6 +143,119 @@ export const ApplyCouponInputSchema = {
     description: 'Apply a coupon code to the cart.'
 } as const;
 
+export const AssistedSessionCreateSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone'
+        },
+        region: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Region'
+        }
+    },
+    type: 'object',
+    required: ['product_id', 'name'],
+    title: 'AssistedSessionCreate',
+    description: "Request (panel) to assemble a session on a customer's behalf (doc 30 §9)."
+} as const;
+
+export const AssistedSessionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        public_token: {
+            type: 'string',
+            title: 'Public Token'
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'snapshot_url', 'expires_at', 'approved_at', 'public_token'],
+    title: 'AssistedSessionPublic',
+    description: 'An assisted session plus its shareable read-only public token.'
+} as const;
+
 export const BillingPlanCreateSchema = {
     properties: {
         key: {
@@ -335,6 +448,78 @@ export const BillingPlanUpdateSchema = {
     type: 'object',
     title: 'BillingPlanUpdate',
     description: 'Patch payload for a plan definition (unset fields are ignored).'
+} as const;
+
+export const Body_customization_approve_public_sessionSchema = {
+    properties: {
+        snapshot: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Snapshot'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone'
+        },
+        region: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Region'
+        }
+    },
+    type: 'object',
+    required: ['snapshot'],
+    title: 'Body_customization-approve_public_session'
+} as const;
+
+export const Body_customization_approve_sessionSchema = {
+    properties: {
+        snapshot: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Snapshot'
+        }
+    },
+    type: 'object',
+    required: ['snapshot'],
+    title: 'Body_customization-approve_session'
+} as const;
+
+export const Body_customization_upload_artSchema = {
+    properties: {
+        file: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'File'
+        }
+    },
+    type: 'object',
+    required: ['file'],
+    title: 'Body_customization-upload_art'
 } as const;
 
 export const Body_login_login_access_tokenSchema = {
@@ -1694,6 +1879,24 @@ export const CustomerSummarySchema = {
     description: 'A row in the panel customers list.'
 } as const;
 
+export const CustomizationSessionStatusSchema = {
+    type: 'string',
+    enum: ['draft', 'approved', 'added_to_cart', 'ordered', 'abandoned', 'expired'],
+    title: 'CustomizationSessionStatus',
+    description: `Lifecycle of a customer's 3D customization session (doc 30 §4).
+
+- \`\`draft\`\`: being edited; autosave writes the \`\`state_json\`\` here.
+- \`\`approved\`\`: the customer approved a snapshot; frozen for editing, ready
+  to add to the cart.
+- \`\`added_to_cart\`\`: an approved session that is in a cart.
+- \`\`ordered\`\`: copied (frozen) into a placed order (terminal).
+- \`\`abandoned\`\`: explicitly given up by the customer.
+- \`\`expired\`\`: aged past \`\`expires_at\`\` and swept by the worker (terminal).
+
+Editing (autosave/upload) is allowed only in \`\`draft\`\`; \`\`approved\`\` and
+beyond are immutable. Deleting a session is a soft delete, never a status.`
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -1846,6 +2049,32 @@ export const InventorySetSchema = {
     required: ['quantity'],
     title: 'InventorySet',
     description: 'Set the stock quantity for a product (optionally a specific variant).'
+} as const;
+
+export const LayerTransformSchema = {
+    properties: {
+        x: {
+            type: 'number',
+            title: 'X'
+        },
+        y: {
+            type: 'number',
+            title: 'Y'
+        },
+        scale: {
+            type: 'number',
+            title: 'Scale'
+        },
+        rotation_deg: {
+            type: 'number',
+            title: 'Rotation Deg',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['x', 'y', 'scale'],
+    title: 'LayerTransform',
+    description: "A layer's placement, normalized [0..1] inside the printable UV region."
 } as const;
 
 export const MediaPublicSchema = {
@@ -3435,6 +3664,78 @@ export const ProductVariantStatusSchema = {
     description: 'Lifecycle status of a product variant.'
 } as const;
 
+export const SessionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'snapshot_url', 'expires_at', 'approved_at'],
+    title: 'SessionPublic',
+    description: 'A customization session as the editor (or a read-only viewer) sees it.'
+} as const;
+
+export const SessionStartSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        }
+    },
+    type: 'object',
+    required: ['product_id'],
+    title: 'SessionStart',
+    description: 'Request to start (or resume) a customization session for a product.'
+} as const;
+
 export const ShippingMethodCreateSchema = {
     properties: {
         type: {
@@ -3642,6 +3943,140 @@ export const ShippingMethodUpdateSchema = {
     type: 'object',
     title: 'ShippingMethodUpdate',
     description: 'Partial update for a shipping method (``type`` is immutable).'
+} as const;
+
+export const StateJsonSchema = {
+    properties: {
+        schema_version: {
+            type: 'integer',
+            title: 'Schema Version',
+            default: 1
+        },
+        model: {
+            '$ref': '#/components/schemas/StateModelRef'
+        },
+        layers: {
+            items: {
+                '$ref': '#/components/schemas/StateLayer'
+            },
+            type: 'array',
+            title: 'Layers',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['model'],
+    title: 'StateJson',
+    description: `The full editor state (doc 30 §4): pinned model + ordered layers.
+
+Structural shape only; the version-specific rules (allowed fonts, area ids,
+per-area layer caps, referenced uploads) are enforced in the service against
+the pinned version — never trusting the client.`
+} as const;
+
+export const StateLayerSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            title: 'Id'
+        },
+        kind: {
+            type: 'string',
+            enum: ['image', 'text'],
+            title: 'Kind'
+        },
+        area_id: {
+            type: 'string',
+            title: 'Area Id'
+        },
+        z: {
+            type: 'integer',
+            title: 'Z',
+            default: 0
+        },
+        transform: {
+            '$ref': '#/components/schemas/LayerTransform'
+        },
+        upload_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Upload Id'
+        },
+        text: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Text'
+        },
+        font: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font'
+        },
+        font_size: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font Size'
+        },
+        color: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Color'
+        }
+    },
+    type: 'object',
+    required: ['id', 'kind', 'area_id', 'transform'],
+    title: 'StateLayer',
+    description: 'One layer of the editor state: a raster image or a text run.'
+} as const;
+
+export const StateModelRefSchema = {
+    properties: {
+        model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Model Id'
+        },
+        version_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Version Id'
+        }
+    },
+    type: 'object',
+    required: ['model_id', 'version_id'],
+    title: 'StateModelRef',
+    description: 'The catalog model + pinned version the state was built against.'
 } as const;
 
 export const StoreAdminDetailSchema = {
@@ -4907,6 +5342,59 @@ export const UpdatePasswordSchema = {
     required: ['current_password', 'new_password'],
     title: 'UpdatePassword',
     description: 'Self password-change payload.'
+} as const;
+
+export const UploadPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        mime: {
+            type: 'string',
+            title: 'Mime'
+        },
+        size_bytes: {
+            type: 'integer',
+            title: 'Size Bytes'
+        },
+        width: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Width'
+        },
+        height: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Height'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        low_resolution: {
+            type: 'boolean',
+            title: 'Low Resolution',
+            default: false
+        }
+    },
+    type: 'object',
+    required: ['id', 'mime', 'size_bytes', 'width', 'height', 'url'],
+    title: 'UploadPublic',
+    description: 'A customer upload, with a short-lived presigned read URL.'
 } as const;
 
 export const UserCreateSchema = {

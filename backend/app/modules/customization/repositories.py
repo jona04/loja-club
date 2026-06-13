@@ -1,15 +1,25 @@
 """Data access and seed for the platform 3D catalog."""
 
 import uuid
+from datetime import datetime
 
 from sqlmodel import Session, col, select
 
+from app.modules.customization.enums import CustomizationSessionStatus
 from app.modules.customization.models import (
     CustomizationProductSettings,
+    CustomizationSession,
+    CustomizationUpload,
     Platform3DModel,
     Platform3DModelVersion,
 )
 from app.modules.customization.storage import model_glb_url
+
+# Statuses that age out: still-open sessions that were never carried/ordered.
+_EXPIRABLE_STATUSES = (
+    CustomizationSessionStatus.draft,
+    CustomizationSessionStatus.approved,
+)
 
 MUG_SLUG = "ceramic-mug"
 
@@ -146,6 +156,129 @@ def get_product_settings(
             col(CustomizationProductSettings.deleted_at).is_(None),
         )
     ).first()
+
+
+def get_session(
+    *, session: Session, store_id: uuid.UUID, session_id: uuid.UUID
+) -> CustomizationSession | None:
+    """Return a store's customization session by id (non-deleted).
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        session_id: The customization session id.
+
+    Returns:
+        The session, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(CustomizationSession).where(
+            CustomizationSession.id == session_id,
+            CustomizationSession.store_id == store_id,
+            col(CustomizationSession.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def get_guest_draft(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    product_id: uuid.UUID,
+    guest_session_id: str,
+) -> CustomizationSession | None:
+    """Return a guest's open draft session for a product, if any.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        product_id: The product being customized.
+        guest_session_id: The guest browser's session id.
+
+    Returns:
+        The most recent open draft, or ``None``.
+    """
+    return session.exec(
+        select(CustomizationSession)
+        .where(
+            CustomizationSession.store_id == store_id,
+            CustomizationSession.product_id == product_id,
+            CustomizationSession.guest_session_id == guest_session_id,
+            CustomizationSession.status == CustomizationSessionStatus.draft,
+            col(CustomizationSession.deleted_at).is_(None),
+        )
+        .order_by(col(CustomizationSession.created_at).desc())
+    ).first()
+
+
+def get_session_by_token(
+    *, session: Session, public_token: str
+) -> CustomizationSession | None:
+    """Return a session by its public token (global lookup, non-deleted).
+
+    Not store-scoped: the unguessable token is the credential. Expiry is checked
+    by the caller.
+
+    Args:
+        session: Active database session.
+        public_token: The session's public token.
+
+    Returns:
+        The session, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(CustomizationSession).where(
+            CustomizationSession.public_token == public_token,
+            col(CustomizationSession.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_session_uploads(
+    *, session: Session, session_id: uuid.UUID
+) -> list[CustomizationUpload]:
+    """Return a session's non-deleted uploads, oldest first.
+
+    Args:
+        session: Active database session.
+        session_id: The customization session id.
+
+    Returns:
+        The session's uploads.
+    """
+    return list(
+        session.exec(
+            select(CustomizationUpload)
+            .where(
+                CustomizationUpload.customization_session_id == session_id,
+                col(CustomizationUpload.deleted_at).is_(None),
+            )
+            .order_by(col(CustomizationUpload.created_at))
+        ).all()
+    )
+
+
+def list_expirable_sessions(
+    *, session: Session, now: datetime
+) -> list[CustomizationSession]:
+    """Return open sessions whose ``expires_at`` has passed (to be swept).
+
+    Args:
+        session: Active database session.
+        now: The current time.
+
+    Returns:
+        Non-deleted sessions in an expirable status past their expiry.
+    """
+    return list(
+        session.exec(
+            select(CustomizationSession).where(
+                col(CustomizationSession.status).in_(_EXPIRABLE_STATUSES),
+                CustomizationSession.expires_at < now,
+                col(CustomizationSession.deleted_at).is_(None),
+            )
+        ).all()
+    )
 
 
 def seed_platform_3d_models(*, session: Session) -> None:

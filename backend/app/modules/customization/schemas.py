@@ -1,10 +1,14 @@
 """DTOs for the platform 3D catalog (merchant-facing browse)."""
 
 import uuid
+from datetime import datetime
+from typing import Literal
 
+from pydantic import field_validator
 from sqlmodel import SQLModel
 
 from app.modules.catalog.enums import ProductType
+from app.modules.customization.enums import CustomizationSessionStatus
 
 
 class Platform3DModelVersionPublic(SQLModel):
@@ -86,3 +90,123 @@ class ProductModelSettingsPublic(SQLModel):
     model_slug: str
     model_category: str
     production_notes: str | None
+
+
+# --- Customization sessions (doc 30 §4) ---
+
+
+class LayerTransform(SQLModel):
+    """A layer's placement, normalized [0..1] inside the printable UV region."""
+
+    x: float
+    y: float
+    scale: float
+    rotation_deg: float = 0.0
+
+
+class StateLayer(SQLModel):
+    """One layer of the editor state: a raster image or a text run."""
+
+    id: str
+    kind: Literal["image", "text"]
+    area_id: str
+    z: int = 0
+    transform: LayerTransform
+    # image layers reference a private upload:
+    upload_id: uuid.UUID | None = None
+    # text layers carry their content + style:
+    text: str | None = None
+    font: str | None = None
+    font_size: int | None = None
+    color: str | None = None
+
+
+class StateModelRef(SQLModel):
+    """The catalog model + pinned version the state was built against."""
+
+    model_id: uuid.UUID
+    version_id: uuid.UUID
+
+
+class StateJson(SQLModel):
+    """The full editor state (doc 30 §4): pinned model + ordered layers.
+
+    Structural shape only; the version-specific rules (allowed fonts, area ids,
+    per-area layer caps, referenced uploads) are enforced in the service against
+    the pinned version — never trusting the client.
+    """
+
+    schema_version: int = 1
+    model: StateModelRef
+    layers: list[StateLayer] = []
+
+
+class SessionStart(SQLModel):
+    """Request to start (or resume) a customization session for a product."""
+
+    product_id: uuid.UUID
+
+
+class UploadPublic(SQLModel):
+    """A customer upload, with a short-lived presigned read URL."""
+
+    id: uuid.UUID
+    mime: str
+    size_bytes: int
+    width: int | None
+    height: int | None
+    url: str
+    low_resolution: bool = False
+
+
+class SessionPublic(SQLModel):
+    """A customization session as the editor (or a read-only viewer) sees it."""
+
+    id: uuid.UUID
+    product_id: uuid.UUID
+    status: CustomizationSessionStatus
+    state_json: dict[str, object]
+    version: Platform3DModelVersionPublic
+    snapshot_url: str | None
+    expires_at: datetime
+    approved_at: datetime | None
+
+
+class AssistedSessionCreate(SQLModel):
+    """Request (panel) to assemble a session on a customer's behalf (doc 30 §9)."""
+
+    product_id: uuid.UUID
+    name: str
+    email: str | None = None
+    phone: str | None = None
+    region: str | None = None
+
+
+class AssistedSessionPublic(SessionPublic):
+    """An assisted session plus its shareable read-only public token."""
+
+    public_token: str
+
+
+class ContactConfirm(SQLModel):
+    """The contact a public-link approver types to prove who they are."""
+
+    email: str | None = None
+    phone: str | None = None
+    region: str | None = None
+
+    @field_validator("email", "phone", "region")
+    @classmethod
+    def _blank_to_none(cls, value: str | None) -> str | None:
+        """Treat empty/whitespace form fields as absent.
+
+        Args:
+            value: The raw field value.
+
+        Returns:
+            ``None`` when blank, else the stripped value.
+        """
+        if value is None:
+            return None
+        stripped = value.strip()
+        return stripped or None

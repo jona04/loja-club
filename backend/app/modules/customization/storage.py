@@ -6,6 +6,8 @@ URL is always derivable from ``slug`` + ``version``. The seed and the upload CLI
 path — so the stored ``glb_url`` and the uploaded object can't diverge.
 """
 
+import uuid
+
 from app.core import storage
 
 
@@ -33,3 +35,19 @@ def model_glb_url(slug: str, version: int) -> str:
         The CDN URL of the model's GLB.
     """
     return storage.public_url(model_glb_key(slug, version))
+
+
+def customization_upload_key(
+    store_id: uuid.UUID, session_id: uuid.UUID, filename: str
+) -> str:
+    """Return the private S3 key for a customer's uploaded art (doc 30 §6).
+
+    Args:
+        store_id: The owning store (top-level isolation prefix).
+        session_id: The customization session the upload belongs to.
+        filename: The object's leaf name (already sanitized by the caller).
+
+    Returns:
+        The key ``private/{store_id}/customizations/{session_id}/{filename}``.
+    """
+    return f"private/{store_id}/customizations/{session_id}/{filename}"

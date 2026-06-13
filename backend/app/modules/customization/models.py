@@ -9,8 +9,9 @@ merchant-generated models are a separate path.
 """
 
 import uuid
+from datetime import datetime
 
-from sqlalchemy import JSON, Column, Index, text
+from sqlalchemy import JSON, Column, DateTime, Index, text
 from sqlmodel import Field, SQLModel
 
 from app.db.base import (
@@ -19,6 +20,7 @@ from app.db.base import (
     TimestampMixin,
     UUIDMixin,
 )
+from app.modules.customization.enums import CustomizationSessionStatus
 
 
 class Platform3DModelBase(SQLModel):
@@ -147,3 +149,110 @@ class CustomizationProductSettings(
     platform_3d_model_id: uuid.UUID = Field(
         foreign_key="platform_3d_models.id", index=True
     )
+
+
+class CustomizationSession(
+    UUIDMixin,
+    TimestampMixin,
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    table=True,
+):
+    """A customer's in-progress (or frozen) 3D customization of a product.
+
+    Holds the editor ``state_json`` (doc 30 §4) against a **pinned** catalog
+    version. Owned either by a guest browser (``guest_session_id``) or assembled
+    by the store (``created_by_user_id`` + ``customer_id``, assisted flow); the
+    assisted session also carries a read-only ``public_token`` for a shareable
+    link. ``snapshot_key`` is the approved client-side PNG (doc 30 §5). Sessions
+    expire 30 days after creation (swept to ``expired`` by the worker).
+    """
+
+    __tablename__ = "customization_sessions"
+    __table_args__ = (
+        Index(
+            "ix_customization_sessions_store_product_status",
+            "store_id",
+            "product_id",
+            "status",
+        ),
+        Index(
+            "ix_customization_sessions_store_guest_status",
+            "store_id",
+            "guest_session_id",
+            "status",
+        ),
+        Index(
+            "ix_customization_sessions_store_customer_status",
+            "store_id",
+            "customer_id",
+            "status",
+        ),
+        Index("ix_customization_sessions_expires_status", "expires_at", "status"),
+        Index(
+            "ix_customization_sessions_public_token",
+            "public_token",
+            unique=True,
+            postgresql_where=text("public_token IS NOT NULL AND deleted_at IS NULL"),
+        ),
+    )
+
+    product_id: uuid.UUID = Field(foreign_key="catalog_products.id", index=True)
+    platform_3d_model_version_id: uuid.UUID = Field(
+        foreign_key="platform_3d_model_versions.id", index=True
+    )
+    state_json: dict[str, object] = Field(
+        default_factory=dict,
+        sa_column=Column(JSON),
+        description="The editor state (doc 30 §4): pinned model + layers",
+    )
+    status: CustomizationSessionStatus = Field(default=CustomizationSessionStatus.draft)
+    guest_session_id: str | None = Field(default=None, max_length=64)
+    customer_id: uuid.UUID | None = Field(
+        default=None, foreign_key="customer_profiles.id"
+    )
+    created_by_user_id: uuid.UUID | None = Field(
+        default=None, description="Store user who assembled an assisted session"
+    )
+    snapshot_key: str | None = Field(default=None, max_length=500)
+    public_token: str | None = Field(default=None, max_length=64)
+    expires_at: datetime = Field(
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    approved_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+
+
+class CustomizationUpload(
+    UUIDMixin,
+    TimestampMixin,
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    table=True,
+):
+    """A raster asset a customer uploaded for a session (private, doc 30 §6).
+
+    Stored under ``private/<store_id>/customizations/<session_id>/...`` and only
+    ever served via a short-lived presigned URL. Layers in ``state_json``
+    reference it by id.
+    """
+
+    __tablename__ = "customization_uploads"
+    __table_args__ = (
+        Index(
+            "ix_customization_uploads_store_session",
+            "store_id",
+            "customization_session_id",
+        ),
+    )
+
+    customization_session_id: uuid.UUID = Field(
+        foreign_key="customization_sessions.id", index=True
+    )
+    key: str = Field(max_length=500, description="Private S3 object key")
+    mime: str = Field(max_length=100)
+    size_bytes: int = Field(ge=0)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
