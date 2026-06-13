@@ -2,7 +2,7 @@
 
 ## Decisão principal
 
-A Loja Club não vai reter dinheiro.
+A Kriar não vai reter dinheiro.
 
 O gateway de pagamento será responsável por:
 
@@ -11,7 +11,7 @@ O gateway de pagamento será responsável por:
 - aplicar antifraude, se houver;
 - fazer split;
 - repassar a parte do lojista;
-- repassar a comissão da Loja Club;
+- repassar a comissão da Kriar;
 - lidar com cadastro financeiro do recebedor.
 
 ## Gateways candidatos
@@ -34,11 +34,11 @@ Exemplo:
 ```text
 Venda: R$ 100,00
 Taxa do gateway: R$ 4,00
-Comissão Loja Club: R$ 3,00
+Comissão Kriar: R$ 3,00
 Lojista: R$ 93,00
 ```
 
-A comissão da Loja Club será definida pelo plano da loja.
+A comissão da Kriar será definida pelo plano da loja.
 
 ## Fluxo de checkout
 
@@ -62,7 +62,7 @@ A comissão da Loja Club será definida pelo plano da loja.
 
 ## Pedido pendente
 
-Antes de chamar o gateway, a Loja Club deve criar um pedido com status:
+Antes de chamar o gateway, a Kriar deve criar um pedido com status:
 
 ```text
 pending_payment
@@ -83,6 +83,31 @@ Esse pedido precisa registrar:
 - total;
 - status.
 
+## Venda sem gateway (MVP local — Fase 6)
+
+Antes de o gateway entrar (Fase 8), a V1 **vende sem pagamento online**. O checkout vai até o **pedido pendente** e para — não há chamada de gateway, split nem webhook. O pagamento é **combinado fora da plataforma**.
+
+Diferenças em relação ao fluxo com gateway:
+
+- o fluxo de checkout termina em **criar pedido `pending_payment`** (passos 1–9); os passos de gateway/webhook (10–16) **não rodam**;
+- **número do pedido:** todo pedido recebe um identificador **sequencial por loja** (ex.: `#1001`), exibido ao cliente e ao lojista (confirmação, e-mail, painel) — é a referência que ambos usam para combinar entrega/pagamento;
+- **baixa de estoque:** ao criar o pedido, o estoque dos itens é **decrementado** em `catalog_inventory_items`; **cancelar** o pedido **devolve** o estoque. Sem reserva intermediária no V1 — valida + decrementa na criação (a unicidade `store_id+product_id+variant_id` evita linha duplicada e corrida de upsert);
+- **pagamento combinado fora da plataforma:** a confirmação explica como combinar (Pix/transferência/WhatsApp/entrega combinada). O caminho primário é um **handoff por WhatsApp**: um botão que abre o WhatsApp da loja (`whatsapp_number` de `store_settings`) com mensagem **pré-preenchida** contendo o **número do pedido** e o resumo dos itens, para o cliente combinar o pagamento direto com a loja;
+- **marcar pago manualmente:** enquanto não há gateway, o lojista marca o pagamento como recebido no painel (`pending_payment → paid`). **Nenhum pedido vira pago sozinho**;
+- **políticas da loja:** o checkout exibe/linka as políticas de **troca/devolução/privacidade** da loja (`checkout.policies.*`);
+- **ponto de integração do gateway:** o módulo de pagamento expõe a **interface** (sem implementar) para a Fase 8 plugar o gateway aqui.
+
+### Status do pedido nesta fase
+
+Sem pagamento online, os status que a Fase 6 usa são operacionais:
+
+```text
+pending_payment → paid (marcado manualmente) → processing → shipped → delivered
+                → canceled (quando permitido; devolve estoque)
+```
+
+Os status de gateway (`payment_failed`, `refunded`, `chargeback`) entram com o pagamento na **Fase 8**. Todo status precisa ser **lido em código** — a Fase 6 não cria status que ninguém usa.
+
 ## Produtos personalizáveis no checkout
 
 Produtos personalizáveis em 3D só podem avançar para checkout quando a personalização estiver aprovada.
@@ -90,7 +115,7 @@ Produtos personalizáveis em 3D só podem avançar para checkout quando a person
 Regra:
 
 ```text
-cart_item de produto customizable_3d exige customization_session status approved
+cart_item de produto image_3d_customizable exige customization_session status approved
 ```
 
 Ao criar o pedido, o sistema deve copiar a personalização para o item do pedido.
@@ -134,7 +159,7 @@ Regras:
 - pode ser limitada por cidade, região ou estado;
 - o checkout deve informar que a entrega será combinada após a compra;
 - o pedido deve registrar que a entrega depende de contato com a loja;
-- a Loja Club não calcula automaticamente preço, prazo ou disponibilidade de aplicativos;
+- a Kriar não calcula automaticamente preço, prazo ou disponibilidade de aplicativos;
 - a responsabilidade pela entrega continua sendo do lojista.
 
 Essa opção permite vendas locais com mais flexibilidade, especialmente para lojas físicas que atendem clientes próximos.
@@ -245,7 +270,7 @@ A V1 deve tentar suportar:
 
 Cartão parcelado pode ser suportado, mas deve ser configurado com cuidado por causa das taxas.
 
-## Comissão da Loja Club
+## Comissão da Kriar
 
 A comissão deve vir do plano.
 
@@ -276,7 +301,7 @@ Regras:
 
 Chargeback é risco comercial do lojista.
 
-A Loja Club pode:
+A Kriar pode:
 
 - registrar o evento;
 - exibir alerta;
@@ -306,9 +331,9 @@ Todo webhook deve validar:
 | Arte personalizada enviada pelo cliente | Cliente/lojista, conforme termos |
 | Produção diferente da arte aprovada | Lojista |
 | Entrega combinada não realizada | Lojista |
-| Checkout da plataforma fora do ar | Loja Club |
-| Erro técnico no sistema | Loja Club |
+| Checkout da plataforma fora do ar | Kriar |
+| Erro técnico no sistema | Kriar |
 
 ## Decisão canônica
 
-A V1 usará gateway com split. A Loja Club não reterá valores. O checkout criará pedido pendente, congelará personalizações aprovadas, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.
+A V1 usará gateway com split. A Kriar não reterá valores. O checkout criará pedido pendente, congelará personalizações aprovadas, enviará a cobrança ao gateway e só marcará pagamento como confirmado após webhook validado e idempotente.

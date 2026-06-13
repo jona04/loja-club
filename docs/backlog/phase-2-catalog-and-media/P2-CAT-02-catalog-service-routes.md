@@ -65,5 +65,5 @@ Endpoints do painel para o catálogo, sob `/api/v1/stores/{store_id}/...`, com g
 
 ## Follow-ups
 - [ ] **Race no slug:** o pré-check (`active_slug_exists`) tem janela de corrida → dois creates simultâneos com o mesmo slug → o 2º estoura `IntegrityError` (índice parcial) como **500**, não 409. Tratar `IntegrityError` no service → 409. Origem: P2-CAT-02.
-- [ ] **Estoque sem unique:** índice `(store_id, product_id, variant_id)` é **não-único** (doc 07) → upsert de `set_inventory` tem corrida que pode criar **linhas duplicadas** de estoque. Avaliar índice parcial único + tratamento. Origem: P2-CAT-02.
+- [x] **Estoque sem unique:** índice `(store_id, product_id, variant_id)` era **não-único** → upsert de `set_inventory` com corrida que podia criar **linhas duplicadas**. ✅ `P6-ORD-01` (índice único + `nulls_not_distinct` p/ a linha product-level com `variant_id` NULL). Origem: P2-CAT-02.
 - [ ] **Delete não cascateia:** deletar produto **não** soft-deleta variações/imagens/estoque (ficam órfãos). Decidir cascata (soft-delete filhos) ou ignorar conscientemente. Origem: P2-CAT-02.

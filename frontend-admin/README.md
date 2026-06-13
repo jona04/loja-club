@@ -1,6 +1,6 @@
-# Loja Club — Frontend (platform admin)
+# Kriar — Frontend (platform admin)
 
-The internal admin used by the Loja Club team to operate the platform, built with
+The internal admin used by the Kriar team to operate the platform, built with
 [Vite](https://vitejs.dev/), [React](https://react.dev/),
 [TypeScript](https://www.typescriptlang.org/),
 [TanStack Query + Router](https://tanstack.com/), Tailwind CSS and shadcn/Radix.

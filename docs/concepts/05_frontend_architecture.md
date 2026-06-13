@@ -2,7 +2,7 @@
 
 ## Decisão principal
 
-A Loja Club terá três áreas de frontend:
+A Kriar terá três áreas de frontend:
 
 1. Loja pública dos lojistas.
 2. Painel do lojista.
@@ -18,7 +18,7 @@ frontend-storefront
 
 O `frontend-dashboard` atende apenas o painel do lojista.
 
-O `frontend-admin` atende apenas o admin interno da Loja Club.
+O `frontend-admin` atende apenas o admin interno da Kriar.
 
 O `frontend-storefront` atende as lojas públicas dos lojistas.
 
@@ -26,11 +26,11 @@ O `frontend-storefront` atende as lojas públicas dos lojistas.
 
 | Frontend | URL | Função |
 |---|---|---|
-| Site institucional | `loja.club` / `www.loja.club` | Página da própria Loja Club |
-| Dashboard | `app.loja.club` | Painel do lojista |
-| Admin | `admin.loja.club` | Admin interno da plataforma |
-| Storefront | `*.loja.club` | Lojas públicas |
-| API | `api.loja.club` | Backend FastAPI |
+| Site institucional | `kriar.shop` / `www.kriar.shop` | Página da própria Kriar |
+| Dashboard | `app.kriar.shop` | Painel do lojista |
+| Admin | `admin.kriar.shop` | Admin interno da plataforma |
+| Storefront | `*.kriar.shop` | Lojas públicas |
+| API | `api.kriar.shop` | Backend FastAPI |
 
 ## Frontend dashboard
 
@@ -39,7 +39,7 @@ O dashboard é o painel usado pelo lojista.
 URL:
 
 ```text
-app.loja.club
+app.kriar.shop
 ```
 
 Tecnologia recomendada:
@@ -74,12 +74,12 @@ Responsabilidades:
 
 ## Admin interno
 
-O admin interno é o painel usado pela equipe Loja Club para operar a plataforma.
+O admin interno é o painel usado pela equipe Kriar para operar a plataforma.
 
 URL:
 
 ```text
-admin.loja.club
+admin.kriar.shop
 ```
 
 Na V1, o admin deve ser um projeto separado:
@@ -93,10 +93,10 @@ Ele pode reutilizar componentes, client OpenAPI e padrões visuais do painel do 
 Exemplo:
 
 ```text
-admin.loja.club/stores
-admin.loja.club/platform-users
-admin.loja.club/webhooks
-admin.loja.club/plans
+admin.kriar.shop/stores
+admin.kriar.shop/platform-users
+admin.kriar.shop/webhooks
+admin.kriar.shop/plans
 ```
 
 Responsabilidades:
@@ -120,8 +120,8 @@ O storefront é a loja pública do lojista.
 URLs:
 
 ```text
-minhaloja.loja.club
-empresaexemplo.loja.club
+minhaloja.kriar.shop
+empresaexemplo.kriar.shop
 www.dominio-do-lojista.com.br
 ```
 
@@ -190,12 +190,12 @@ frontend-storefront -> ECS/Fargate
 Todos os frontends conversam com:
 
 ```text
-api.loja.club
+api.kriar.shop
 ```
 
 O dashboard usa autenticação do usuário.
 
-O admin interno usa autenticação de usuários internos da Loja Club e permissões globais da plataforma.
+O admin interno usa autenticação de usuários internos da Kriar e permissões globais da plataforma.
 
 O storefront público usa APIs públicas, identificando a loja pelo domínio da requisição.
 Carrinho e personalização podem funcionar sem login usando sessão anônima com validade.
@@ -257,7 +257,7 @@ Plano
 
 ## Admin e auditoria
 
-Quando um usuário interno da Loja Club acessar dados de uma loja por suporte, isso deve gerar registro de auditoria.
+Quando um usuário interno da Kriar acessar dados de uma loja por suporte, isso deve gerar registro de auditoria.
 
 Exemplo:
 
@@ -285,4 +285,4 @@ Quando o pedido for criado, a personalização aprovada deve ficar congelada no 
 
 ## Decisão canônica
 
-A V1 terá `frontend-dashboard`, `frontend-admin` e `frontend-storefront` separados. O painel do lojista não deve morar no mesmo projeto frontend do admin da Loja Club.
+A V1 terá `frontend-dashboard`, `frontend-admin` e `frontend-storefront` separados. O painel do lojista não deve morar no mesmo projeto frontend do admin da Kriar.

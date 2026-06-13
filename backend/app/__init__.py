@@ -1,1 +1,1 @@
-"""Loja Club backend application package."""
+"""Kriar backend application package."""

@@ -1,6 +1,6 @@
 """drop item table
 
-Removes the FastAPI template's ``items`` example, which is not part of Loja Club.
+Removes the FastAPI template's ``items`` example, which is not part of Kriar.
 
 Revision ID: f0a1b2c3d4e5
 Revises: fe56fa70289e

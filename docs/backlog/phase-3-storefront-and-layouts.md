@@ -1,6 +1,6 @@
 # Fase 3 — Storefront público e layouts
 
-> Objetivo: loja pública abre em `nomedaloja.loja.club` com o template escolhido; produtos (de imagem) e categorias renderizam; lojista troca o template e a loja pública muda. O **editor 3D + personalização** é a **[Fase 7](./phase-7-3d-products.md)**.
+> Objetivo: loja pública abre em `nomedaloja.kriar.shop` com o template escolhido; produtos (de imagem) e categorias renderizam; lojista troca o template e a loja pública muda. O **editor 3D + personalização** é a **[Fase 7](./phase-7-3d-products.md)**.
 
 Docs de referência: [05](../concepts/05_frontend_architecture.md), [10](../concepts/10_storefront_and_layouts.md), [22](../concepts/22_product_customization_3d.md), [13](../concepts/13_performance_cache_and_cdn.md), [21](../concepts/21_design_system_todo.md), [16](../concepts/16_testing_strategy.md).
 

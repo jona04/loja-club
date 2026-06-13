@@ -57,6 +57,9 @@ class StoreSettingsBase(SQLModel):
     contact_phone: str | None = Field(default=None, max_length=32)
     whatsapp_number: str | None = Field(default=None, max_length=32)
     address: str | None = Field(default=None)
+    return_policy: str | None = Field(default=None)
+    exchange_policy: str | None = Field(default=None)
+    privacy_policy: str | None = Field(default=None)
 
 
 class StoreSettings(

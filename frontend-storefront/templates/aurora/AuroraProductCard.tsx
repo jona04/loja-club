@@ -45,18 +45,9 @@ export function AuroraProductCard({
         <div className="absolute inset-x-0 bottom-0 hidden translate-y-4 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block">
           <button
             type="button"
-            onClick={() =>
-              cart.add({
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                subtitle: subtitle ?? undefined,
-                priceAmountMinor: product.price_amount_minor,
-                priceCurrency: product.price_currency,
-                image,
-              })
-            }
-            className="w-full rounded-sm bg-white/95 py-3 text-sm font-medium text-brand-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-brand-900 hover:text-white"
+            disabled={cart.loading}
+            onClick={() => cart.add(product.id)}
+            className="w-full rounded-sm bg-white/95 py-3 text-sm font-medium text-brand-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-brand-900 hover:text-white disabled:opacity-60"
           >
             Adicionar
           </button>

@@ -15,7 +15,7 @@ import { handleError } from "@/utils"
 export const Route = createFileRoute("/_layout/store-settings")({
   component: StoreSettingsRoute,
   head: () => ({
-    meta: [{ title: "Configurações - Loja Club" }],
+    meta: [{ title: "Configurações - Kriar" }],
   }),
 })
 

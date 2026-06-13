@@ -27,7 +27,7 @@ O admin da plataforma precisa de autorização **global** (não por loja). Subst
 - **Papéis globais** `platform_owner|platform_ops|platform_finance|platform_support|platform_catalog` com o **mapa papel→permissão do doc [08](../../concepts/08_modules_and_permissions.md) §500-508** (seed). *(`platform.3d_models.*` é seedado aqui, mas só exercido na [Fase 7](../phase-7-3d-products.md).)*
 - `platform_admin_roles` (`user_id` ↔ papel global; doc [07](../../concepts/07_database_strategy.md)/[25](../../concepts/25_platform_admin.md)) + dependência **`require_platform_permission`** (parente **global** de `require_permission`/`P1-PERM-03`, sem `store_id`).
 - **Migrar `account_users.is_superuser`**: superuser → `platform_owner` (data migration) e remover `is_superuser` do código de autorização.
-- **Auditoria mínima** — introduz a tabela **`audit_logs`** (doc [07](../../concepts/07_database_strategy.md)/[15](../../concepts/15_observability_and_operations.md)) + um helper pra registrar ação sensível (ator/ação/alvo), consumido pelas tasks de operação. É o **mínimo** da Fase 4; a [Fase 9](../phase-9-platform-ops-and-production.md) **estende** (`account_login_events`, `audit_security_events`, retenção, hardening).
+- **Auditoria mínima** — introduz a tabela **`audit_logs`** (doc [07](../../concepts/07_database_strategy.md)/[15](../../concepts/15_observability_and_operations.md)) + um helper pra registrar ação sensível (ator/ação/alvo), consumido pelas tasks de operação. É o **mínimo** da Fase 4; a [Fase 9](../phase-9-platform-ops-and-dev-deploy.md) **estende** (`account_login_events`, `audit_security_events`, retenção, hardening).
 
 ## Fora de escopo (o que NÃO entra)
 - Telas (`frontend-admin`) → `P4-ADMIN-01`/`P4-ADMIN-02`.
@@ -62,7 +62,7 @@ O admin da plataforma precisa de autorização **global** (não por loja). Subst
 
 ## Notas / Reconciliações
 - Herdado de `P0-MOD-04`/`P1-*`: o MVP usava `is_superuser`; os papéis `platform.*` (doc 08) o substituem (anotado desde a Fase 1).
-- **`audit_logs` nasce aqui** (mínimo, p/ as ações do admin); a [Fase 9](../phase-9-platform-ops-and-production.md) acrescenta `account_login_events`/`audit_security_events` + retenção/hardening (doc [07](../../concepts/07_database_strategy.md)/[15](../../concepts/15_observability_and_operations.md)).
+- **`audit_logs` nasce aqui** (mínimo, p/ as ações do admin); a [Fase 9](../phase-9-platform-ops-and-dev-deploy.md) acrescenta `account_login_events`/`audit_security_events` + retenção/hardening (doc [07](../../concepts/07_database_strategy.md)/[15](../../concepts/15_observability_and_operations.md)).
 - `require_platform_permission` é o **parente global** de `require_permission` (`P1-PERM-03`) — mesmo padrão, sem `store_id`.
 - **Storage leve (decisão de impl):** o doc [07](../../concepts/07_database_strategy.md) define só `platform_admin_roles` — então o **catálogo/mapa fica em código** (`permissions.py`), sem tabelas `platform_permissions`/`platform_role_permissions` (diferente da loja). `require_platform_permission` resolve os papéis no DB e checa o mapa em código.
 

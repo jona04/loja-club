@@ -1,6 +1,6 @@
 # Fase 4 — Admin do SaaS
 
-> Objetivo: a equipe Loja Club ganha o **admin da plataforma** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a **[Fase 5](../phase-5-store-configuration.md)**.
+> Objetivo: a equipe Kriar ganha o **admin da plataforma** (`frontend-admin` em `admin.${DOMAIN}` + módulo `platform_admin`) pra operar lojas/planos/usuários **e cadastrar templates** (registro + thumbnail no CDN + schema). **Antes do lançamento** — alimenta a **[Fase 5](../phase-5-store-configuration.md)**.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [25](../../concepts/25_platform_admin.md), [26](../../concepts/26_template_system.md), [05](../../concepts/05_frontend_architecture.md), [08](../../concepts/08_modules_and_permissions.md), [06](../../concepts/06_multitenancy_and_domains.md)/[12](../../concepts/12_aws_infrastructure_and_deployment.md), [13](../../concepts/13_performance_cache_and_cdn.md), [07](../../concepts/07_database_strategy.md), [14](../../concepts/14_security_strategy.md), [16](../../concepts/16_testing_strategy.md).
 
@@ -12,7 +12,7 @@ Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md
 - Admin **registra/gerencia templates**: metadados + **thumbnail no CDN** + **schema** (vindo do código). *(Import de imagens, loja-demo por template e preview navegável = [Fase 5](../phase-5-store-configuration.md).)*
 - Toda ação sensível **auditada** (mínimo).
 
-> **Fora desta fase:** segurança/observabilidade plenas, CI/CD e beta = **[Fase 9](../phase-9-platform-ops-and-production.md)**; **billing real** dos planos = **[Fase 8](../phase-8-customer-account-and-payments.md)**; integração da **API 3D** no admin = **[Fase 7](../phase-7-3d-products.md)**.
+> **Fora desta fase:** segurança/observabilidade plenas, CI/CD e beta = **[Fase 9](../phase-9-platform-ops-and-dev-deploy.md)**; **billing real** dos planos = **[Fase 8](../phase-8-customer-account-and-payments.md)**; integração da **API 3D** no admin = **[Fase 7](../phase-7-3d-products.md)**.
 
 ## Construído sobre as Fases 0–3 (não recriar)
 - **Permissões/papéis em banco** (`P1-PERM-01/02`): `platform.*` segue o mesmo padrão de seed (porém **global**, sem `store_id`).

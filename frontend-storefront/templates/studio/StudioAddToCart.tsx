@@ -16,7 +16,6 @@ import { useCart } from "@/lib/cart"
 export function StudioAddToCart({ product }: { product: StorefrontProduct }) {
   const cart = useCart()
   const [qty, setQty] = useState(1)
-  const image = product.images[0]?.url ?? null
 
   return (
     <div className="flex flex-col gap-3">
@@ -42,20 +41,9 @@ export function StudioAddToCart({ product }: { product: StorefrontProduct }) {
         </div>
         <button
           type="button"
-          onClick={() =>
-            cart.add(
-              {
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                priceAmountMinor: product.price_amount_minor,
-                priceCurrency: product.price_currency,
-                image,
-              },
-              qty,
-            )
-          }
-          className="flex-1 rounded-md bg-black py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+          disabled={cart.loading}
+          onClick={() => cart.add(product.id, qty)}
+          className="flex-1 rounded-md bg-black py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-60"
         >
           Adicionar ao carrinho
         </button>

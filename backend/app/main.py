@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
+from sqlmodel import Session, select
 from starlette.middleware.cors import CORSMiddleware
 
 from app import models_registry  # noqa: F401  registers all models on the metadata
@@ -15,7 +16,7 @@ from app.core.api import register_exception_handlers
 from app.core.cache import close as close_redis
 from app.core.cache import get_redis
 from app.core.config import settings
-from app.core.db import dispose_engine
+from app.core.db import dispose_engine, engine
 from app.core.queue import close_pool
 
 
@@ -86,6 +87,20 @@ def health() -> dict[str, str]:
     Returns:
         A small JSON payload ``{"status": "ok"}``.
     """
+    return {"status": "ok"}
+
+
+@app.get("/health/db", tags=["health"])
+def health_db() -> dict[str, str]:
+    """Readiness check for the database.
+
+    Runs ``SELECT 1``; raises (HTTP 500) if the database is unreachable.
+
+    Returns:
+        A small JSON payload ``{"status": "ok"}`` when the database responds.
+    """
+    with Session(engine) as session:
+        session.exec(select(1)).one()
     return {"status": "ok"}
 
 

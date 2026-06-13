@@ -60,7 +60,7 @@ O template é integração-pesado (Pytest contra Postgres real, limpeza por `del
 - Lib de teste backend = **`pytest`** (DEC-12, já no template); front = **`vitest`** (DEC-9).
 - **Smoke** (app sobe / `/health` / OpenAPI) entra como teste de **integração raso** (§10), **não** é teste manual. O template já tem readiness no `backend_pre_start.py` (`select 1`) e o healthcheck do compose — reaproveitar.
 - O `conftest.py` foi reescrito para **rollback por teste** (DEC-10), substituindo o `delete` de fim de sessão do template.
-- **Implementado:** banco da Loja Club em `localhost:5442`; pytest local roda com `POSTGRES_PORT=5442`. Tabelas via `SQLModel.metadata.create_all` (banco de teste descartável), não migrations.
+- **Implementado:** banco da Kriar em `localhost:5442`; pytest local roda com `POSTGRES_PORT=5442`. Tabelas via `SQLModel.metadata.create_all` (banco de teste descartável), não migrations.
 - Estrutura: `tests/unit/` (sem DB) e `tests/integration/` (DB real, rollback por teste); testes do template movidos para cá.
 - Frontend: `vitest`+Testing Library instalados via **npm** (bun indisponível na máquina); unit = `src/**/*.test.tsx`, E2E segue em `tests/*.spec.ts` (Playwright).
 - Gate `lint.sh` cobre só `app/` (testes não são type-checked) — estender depois se quisermos.

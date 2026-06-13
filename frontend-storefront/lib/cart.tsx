@@ -3,65 +3,77 @@
 import {
   createContext,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react"
 
-/** A line in the (client-side) cart. The real cart/order is Fase 4. */
+import type { CartPublic } from "@/lib/api"
+import {
+  addToCart,
+  getCart,
+  removeCartItem,
+  updateCartItem,
+} from "@/lib/cart-actions"
+
+/** A cart line in the shape the template headers/drawers render. */
 export interface CartItem {
   id: string
   slug: string
   name: string
   subtitle?: string
+  image: string | null
   priceAmountMinor: number
   priceCurrency: string
-  image: string | null
   qty: number
 }
 
 interface CartState {
+  cart: CartPublic | null
   items: CartItem[]
+  count: number
+  subtotalMinor: number
+  currency: string
   isOpen: boolean
+  loading: boolean
+  error: string | null
   open: () => void
   close: () => void
-  add: (item: Omit<CartItem, "qty">, qty?: number) => void
-  remove: (id: string) => void
-  setQty: (id: string, qty: number) => void
-  clear: () => void
-  subtotalMinor: number
-  count: number
+  add: (productId: string, quantity?: number) => Promise<void>
+  setQty: (itemId: string, quantity: number) => Promise<void>
+  remove: (itemId: string) => Promise<void>
+  refresh: () => Promise<void>
 }
 
 const CartContext = createContext<CartState | null>(null)
-const STORAGE_KEY = "loja-club-cart"
 
 /**
- * Client-side cart provider (localStorage-backed). Holds the items and the
- * drawer open state; the real cart/checkout is Fase 4.
+ * Server-cart provider: the cart lives in the backend (keyed by the guest
+ * cookie). Mutations go through Server Actions and replace the cart with the
+ * result. Exposes a render-ready view (`items`/`count`/`subtotalMinor`) so the
+ * template headers/drawers stay unchanged.
  *
  * @param children - The subtree that can read/mutate the cart.
  * @returns The provider wrapping its children.
  */
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [cart, setCart] = useState<CartPublic | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) {
-        setItems(JSON.parse(raw))
-      }
+      setCart(await getCart())
     } catch {
-      // Corrupt/blocked storage — start empty.
+      // Keep the current cart on a transient read failure.
     }
   }, [])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
-  }, [items])
+    void refresh()
+  }, [refresh])
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : ""
@@ -70,44 +82,57 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [isOpen])
 
-  const value = useMemo<CartState>(() => {
-    const add = (item: Omit<CartItem, "qty">, qty = 1) => {
-      setItems((cur) => {
-        const found = cur.find((i) => i.id === item.id)
-        if (found) {
-          return cur.map((i) =>
-            i.id === item.id ? { ...i, qty: i.qty + qty } : i,
-          )
-        }
-        return [...cur, { ...item, qty }]
-      })
-      setIsOpen(true)
+  const run = async (
+    action: () => Promise<CartPublic>,
+    openOnDone = false,
+  ): Promise<void> => {
+    setLoading(true)
+    setError(null)
+    try {
+      setCart(await action())
+      if (openOnDone) {
+        setIsOpen(true)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Algo deu errado.")
+    } finally {
+      setLoading(false)
     }
-    const remove = (id: string) =>
-      setItems((cur) => cur.filter((i) => i.id !== id))
-    const setQty = (id: string, qty: number) =>
-      setItems((cur) =>
-        cur.map((i) => (i.id === id ? { ...i, qty: Math.max(1, qty) } : i)),
-      )
-    return {
-      items,
-      isOpen,
-      open: () => setIsOpen(true),
-      close: () => setIsOpen(false),
-      add,
-      remove,
-      setQty,
-      clear: () => setItems([]),
-      subtotalMinor: items.reduce((s, i) => s + i.priceAmountMinor * i.qty, 0),
-      count: items.reduce((s, i) => s + i.qty, 0),
-    }
-  }, [items, isOpen])
+  }
+
+  const items: CartItem[] = (cart?.items ?? []).map((line) => ({
+    id: line.id,
+    slug: line.slug,
+    name: line.name,
+    image: line.image_url,
+    priceAmountMinor: line.unit_price_amount_minor,
+    priceCurrency: line.unit_price_currency,
+    qty: line.quantity,
+  }))
+
+  const value: CartState = {
+    cart,
+    items,
+    count: cart?.item_count ?? 0,
+    subtotalMinor: cart?.subtotal_amount_minor ?? 0,
+    currency: cart?.currency ?? "BRL",
+    isOpen,
+    loading,
+    error,
+    open: () => setIsOpen(true),
+    close: () => setIsOpen(false),
+    add: (productId, quantity = 1) =>
+      run(() => addToCart(productId, quantity), true),
+    setQty: (itemId, quantity) => run(() => updateCartItem(itemId, quantity)),
+    remove: (itemId) => run(() => removeCartItem(itemId)),
+    refresh,
+  }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
 
 /**
- * Read/mutate the client cart.
+ * Read/mutate the server cart.
  *
  * @returns The cart state and actions.
  * @throws If used outside a {@link CartProvider}.

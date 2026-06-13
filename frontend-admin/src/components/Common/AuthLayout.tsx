@@ -8,7 +8,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         <span className="text-xs font-semibold uppercase tracking-widest text-amber-600">
           Ambiente interno
         </span>
-        <span className="text-lg font-bold">Loja Club · Admin</span>
+        <span className="text-lg font-bold">Kriar · Admin</span>
       </div>
       <div className="w-full max-w-sm rounded-xl border bg-background p-6 shadow-sm">
         {children}

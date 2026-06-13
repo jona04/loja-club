@@ -13,6 +13,9 @@ from app.core.api import Page, PageParams, pagination_params
 from app.modules.catalog.schemas import CategoryPublic
 from app.modules.content.models import ContentPage
 from app.modules.content.schemas import ContentPagePublic
+from app.modules.shipping import services as shipping_services
+from app.modules.shipping.models import ShippingMethod
+from app.modules.shipping.schemas import ShippingMethodPublic
 from app.modules.storefront import services
 from app.modules.storefront.deps import get_published_store
 from app.modules.storefront.schemas import StorefrontHome, StorefrontProduct
@@ -62,3 +65,11 @@ def get_product(
 def get_page(store: PublishedStore, slug: str, session: SessionDep) -> ContentPage:
     """Return a published editorial page by slug."""
     return services.get_page(session=session, store=store, slug=slug)
+
+
+@router.get("/shipping-methods", response_model=list[ShippingMethodPublic])
+def list_shipping_methods(
+    store: PublishedStore, session: SessionDep
+) -> list[ShippingMethod]:
+    """List the store's active shipping methods (for checkout)."""
+    return shipping_services.list_active_methods(session=session, store_id=store.id)

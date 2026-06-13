@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A Loja Club precisa suportar várias lojas usando a mesma infraestrutura, sem ficar lenta.
+A Kriar precisa suportar várias lojas usando a mesma infraestrutura, sem ficar lenta.
 
 A performance virá de:
 

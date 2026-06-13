@@ -2,14 +2,16 @@
 
 > **Escopo (ver [Fase 7 — Produtos 3D](../backlog/phase-7-3d-products.md)):**
 > - **O 3D é a Fase 7.** A Fase 2 (catálogo) entrega **só imagem**; o 3D e o 3D personalizável vêm na **Fase 7 (Produtos 3D)**.
-> - **Os modelos 3D são gerados pelo lojista**, via **API de terceiros** (image/text → GLB): candidatos **Meshy / Tripo3D / Hyper3D** (decisão no doc [18](./18_open_decisions.md)). Os modelos são **por loja** (`store_id`); não há catálogo 3D da plataforma.
-> - **Personalização restrita a plano pago = Fase 8:** na Fase 7 qualquer lojista personaliza (livre); na **Fase 8** (planos/pagamentos) só lojista com **plano pago** personaliza (sem plano grátis).
+> - **Dois caminhos pros modelos 3D:**
+>   - **Catálogo da plataforma (Fase 7 — padrão):** a Kriar disponibiliza modelos GLB personalizáveis **prontos** (caneca, camiseta…), **populados por seed** pelo dev (rápido/barato; o lojista não gera GLB de item comum). O **admin só habilita/desabilita**; o lojista **escolhe** do catálogo público.
+>   - **Gerado pelo lojista ([Fase 12](../backlog/phase-12-merchant-3d-generation.md) — avançado):** o lojista **gera o próprio GLB via API de terceiros** (image/text → GLB): candidatos **Meshy / Tripo3D / Hyper3D** (decisão no doc [18](./18_open_decisions.md)), por loja (`store_id`), e **mapeia a área personalizável pelo painel**.
+> - **Personalização restrita a plano pago = Fase 8:** na Fase 7 qualquer lojista personaliza (livre, com o catálogo); na **Fase 8** (planos/pagamentos) a personalização fica restrita a **plano pago** (e a geração própria, Fase 12, também é premium).
 >
-> Este doc descreve a experiência (sessão, aprovação, congelar no pedido), com o **modelo gerado pelo lojista via API**.
+> Este doc descreve a experiência (sessão, aprovação, congelar no pedido), válida pros **dois caminhos** — muda só a **origem do modelo** (catálogo da plataforma vs gerado pela loja).
 
 ## Objetivo
 
-A Loja Club V1 não deve começar como uma plataforma genérica igual a qualquer ecommerce.
+A Kriar V1 não deve começar como uma plataforma genérica igual a qualquer ecommerce.
 
 O foco inicial será atender empresas de:
 
@@ -20,11 +22,11 @@ O foco inicial será atender empresas de:
 
 Essas lojas precisam vender produtos que o cliente consegue personalizar antes da compra, como canecas, squeezes, camisas, ecobags, placas, adesivos e itens similares.
 
-O diferencial da Loja Club será permitir que o cliente personalize o produto no storefront usando uma experiência 3D, aprove o resultado visual e envie essa personalização para o lojista junto com o pedido.
+O diferencial da Kriar será permitir que o cliente personalize o produto no storefront usando uma experiência 3D, aprove o resultado visual e envie essa personalização para o lojista junto com o pedido.
 
 ## Decisão principal
 
-A personalização 3D é um diferencial da Loja Club, mas entra na **Fase 7** (a Fase 2 de catálogo entrega só imagem). Ela **não substitui** o ecommerce comum: produtos com apenas foto/descrição/preço/variações continuam sendo o padrão.
+A personalização 3D é um diferencial da Kriar, mas entra na **Fase 7** (a Fase 2 de catálogo entrega só imagem). Ela **não substitui** o ecommerce comum: produtos com apenas foto/descrição/preço/variações continuam sendo o padrão.
 
 Tipos de produto (a partir da Fase 7): **imagem**; **imagem + 3D** (foto opcional); **imagem + 3D personalizável** (foto opcional).
 
@@ -55,9 +57,12 @@ Se no futuro aparecer uma lib melhor para um caso específico, ela pode ser aval
 
 ## Modelos 3D
 
-**Os modelos 3D são gerados pelo próprio lojista, via API de terceiros** (image/text → GLB) — candidatos **Meshy**, **Tripo3D**, **Hyper3D** (decisão no doc [18](./18_open_decisions.md)). **Não há mais biblioteca/catálogo 3D da plataforma**; os modelos são **por loja** (`store_id`).
+Há **dois caminhos** pra origem do modelo (a experiência de personalização é a mesma):
 
-O lojista gera o GLB a partir de uma imagem/descrição do seu produto e o vincula ao produto do catálogo. Exemplos de produtos típicos:
+- **Catálogo da plataforma (Fase 7 — padrão):** modelos GLB personalizáveis **prontos**, da Kriar, **populados por seed** (com a área imprimível já definida); o **admin habilita/desabilita** e o lojista **escolhe** do catálogo público. Evita que cada lojista gere o GLB de um item comum.
+- **Gerado pelo lojista ([Fase 12](../backlog/phase-12-merchant-3d-generation.md) — avançado):** o lojista **gera o próprio GLB via API de terceiros** (image/text → GLB) — candidatos **Meshy**, **Tripo3D**, **Hyper3D** (decisão no doc [18](./18_open_decisions.md)) — **por loja** (`store_id`), e **mapeia a área personalizável pelo painel**.
+
+Exemplos de produtos típicos (no catálogo da plataforma ou gerados pela loja):
 
 - caneca;
 - squeeze;
@@ -70,24 +75,31 @@ O lojista gera o GLB a partir de uma imagem/descrição do seu produto e o vincu
 - banner;
 - adesivo.
 
-Os modelos são **por loja** (gerados pelo lojista via API). Na **Fase 7** qualquer lojista cria/personaliza; na **Fase 8** a personalização fica restrita a **planos pagos**.
+Na **Fase 7** o lojista personaliza usando o **catálogo da plataforma** (livre); na **Fase 8** a personalização fica restrita a **planos pagos**; a **geração do próprio modelo** (Fase 12) é recurso premium.
 
-## Produto personalizável
+## Tipo de produto
 
-Um produto pode ser:
+Um produto tem um `type` (em `catalog_products`, default `image`):
 
 ```text
-simple
-customizable_3d
+image                  # produto comum (fotos), pode ter variações, vai direto ao carrinho
+image_3d               # tem modelo 3D para visualização, sem personalização do cliente
+image_3d_customizable  # tem modelo 3D personalizável: editor + aprovação antes do carrinho
 ```
 
-Produto `simple`:
+Produto `image`:
 
 - usa fotos normais;
 - pode ter variações;
 - vai direto para carrinho.
 
-Produto `customizable_3d`:
+Produto `image_3d`:
+
+- usa fotos normais na listagem;
+- mostra o modelo 3D para visualização;
+- vai direto para carrinho (sem personalização).
+
+Produto `image_3d_customizable`:
 
 - usa fotos normais na listagem;
 - tem botão de personalização;
@@ -95,6 +107,8 @@ Produto `customizable_3d`:
 - permite upload de arte;
 - salva sessão de personalização;
 - exige aprovação visual antes de adicionar ao carrinho.
+
+> **Faseamento:** o campo `type` nasce na **Fase 6** (default `image`), com o **portão do add-to-cart** — `image`/`image_3d` vão direto ao carrinho; `image_3d_customizable` exige sessão `approved`. O **catálogo de modelos da plataforma + o editor** são a **Fase 7**; a **geração do modelo pelo lojista (via API) + mapear a área** são a **Fase 12**.
 
 ## Parâmetros de personalização
 
@@ -268,17 +282,16 @@ Status de arte sugeridos:
 | `in_production` | Em produção |
 | `production_done` | Produção finalizada |
 
-## Admin da Loja Club
+## Admin da Kriar
 
-**Não há mais biblioteca de modelos 3D da plataforma.** Quem gera e gerencia os modelos é o **lojista**, via API de terceiros (Fase 7).
+**A plataforma mantém um catálogo público de modelos 3D** (Fase 7), **populado por seed** pelo dev (com a área imprimível já definida — não há CRUD complexo no admin). O admin, no que toca a 3D, cuida de:
 
-O admin da plataforma, no que toca a 3D, cuida só da **integração**:
-
-- configurar a API de geração 3D (provedor/chaves, limites de uso);
+- **habilitar/desabilitar** modelos do catálogo (visibilidade pro lojista) + preview;
+- (**Fase 12**) configurar a **API de geração 3D** (provedor/chaves, limites de uso) pro caminho em que o **lojista gera o próprio GLB**;
 - moderar conteúdo/abuso, se necessário;
 - (Fase 8) amarrar a capacidade de personalizar ao **plano pago**.
 
-A qualidade do modelo gerado é responsabilidade do lojista (a API + os limites do produto ajudam).
+Os modelos do catálogo são curados via seed; quando o lojista gera o próprio (Fase 12), a qualidade é responsabilidade dele (a API + os limites do produto ajudam).
 
 ## Storefront
 
@@ -365,5 +378,5 @@ Não entram na V1:
 
 ## Decisão canônica
 
-A Loja Club nasce como **ecommerce comum** (catálogo só imagem) e ganha **personalização 3D na Fase 7**. O foco comercial inicial é brindes, gráficas e comunicação visual.
-Os modelos 3D são **gerados pelo lojista via API de terceiros** (não pela Loja Club) e ficam **por loja**; o cliente final aprova uma personalização salva no carrinho e **congelada no pedido**. Na **Fase 8**, a personalização fica restrita a **planos pagos** (sem plano grátis).
+A Kriar nasce como **ecommerce comum** (catálogo só imagem) e ganha **personalização 3D na Fase 7**. O foco comercial inicial é brindes, gráficas e comunicação visual.
+Os modelos 3D vêm do **catálogo da plataforma** (Fase 7, via seed) ou são **gerados pelo lojista via API** (Fase 12, por loja); o cliente final aprova uma personalização salva no carrinho e **congelada no pedido**. Na **Fase 8**, a personalização fica restrita a **planos pagos** (sem plano grátis).

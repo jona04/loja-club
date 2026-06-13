@@ -13,6 +13,7 @@ from arq.connections import ArqRedis, RedisSettings
 
 from app.core.config import settings
 from app.modules.media.tasks import generate_image_variants
+from app.modules.notifications.tasks import send_order_email
 
 
 def _redis_settings() -> RedisSettings:
@@ -85,5 +86,5 @@ async def dummy_task(ctx: dict[str, Any], marker: str) -> str:
 class WorkerSettings:
     """arq worker configuration (registered functions + Redis connection)."""
 
-    functions = [dummy_task, generate_image_variants]
+    functions = [dummy_task, generate_image_variants, send_order_email]
     redis_settings = _redis_settings()

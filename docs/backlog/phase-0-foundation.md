@@ -1,6 +1,6 @@
 # Fase 0 — Fundação (dev local)
 
-> Objetivo: projeto com a cara da Loja Club (branding, config, domínio de dev, Redis e fila), refatorado para a **convenção modular** (`app/modules/*` com mixins base e tipo `Money` global), com o exemplo `items` removido e o `User` migrado para o módulo `accounts` — pronto para construir os domínios reais.
+> Objetivo: projeto com a cara da Kriar (branding, config, domínio de dev, Redis e fila), refatorado para a **convenção modular** (`app/modules/*` com mixins base e tipo `Money` global), com o exemplo `items` removido e o `User` migrado para o módulo `accounts` — pronto para construir os domínios reais.
 
 Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md), [03](../concepts/03_system_architecture.md), [04](../concepts/04_fastapi_template_adaptation.md), [07](../concepts/07_database_strategy.md), [16](../concepts/16_testing_strategy.md).
 
@@ -8,7 +8,7 @@ Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md)
 
 ## Definition of Done da fase
 
-- [x] `docker compose watch` sobe backend, frontend, db, **redis**, traefik com branding Loja Club.
+- [x] `docker compose watch` sobe backend, frontend, db, **redis**, traefik com branding Kriar.
 - [x] `app/modules/` existe com mixins base e convenção de módulos.
 - [x] Base **global** pronta: tipo `Money` (valor + moeda ISO 4217), UTC; **nada assume Brasil**.
 - [x] `Item` removido; `User` migrado para o módulo `accounts` como tabela `account_users`.
@@ -21,7 +21,7 @@ Docs de referência: [Fundações & Gargalos](./_foundations-and-bottlenecks.md)
 ## Etapa 1 — Fundação do projeto
 
 ### Branding e identidade ([P0-CFG-01](./phase-0-foundation/P0-CFG-01-branding.md))
-- [x] `PROJECT_NAME`/`STACK_NAME` e branding do frontend para Loja Club (sai o "Full Stack FastAPI Project").
+- [x] `PROJECT_NAME`/`STACK_NAME` e branding do frontend para Kriar (sai o "Full Stack FastAPI Project").
 
 ### Variáveis de ambiente e domínio de dev ([P0-CFG-02](./phase-0-foundation/P0-CFG-02-env-config.md))
 - [x] `.env` com segredos fortes, `DOMAIN=localhost`, `PLATFORM_DEFAULT_CURRENCY`/`PLATFORM_DEFAULT_LOCALE`, CORS para `app.`/`admin.`.

@@ -2,13 +2,13 @@
 
 ## Decisão principal
 
-A Loja Club V1 será construída como um **monólito modular em FastAPI**, usando o **Full Stack FastAPI Template** como base.
+A Kriar V1 será construída como um **monólito modular em FastAPI**, usando o **Full Stack FastAPI Template** como base.
 
 O sistema será multi-tenant: várias lojas dentro da mesma plataforma, usando uma infraestrutura central e um banco compartilhado com separação por `store_id`.
 
 Existem três identidades diferentes:
 
-- admin interno da Loja Club;
+- admin interno da Kriar;
 - lojista/equipe da loja;
 - cliente final da loja.
 
@@ -40,7 +40,7 @@ A arquitetura terá:
 |---|---|
 | `backend-api` | API principal FastAPI |
 | `frontend-dashboard` | Painel do lojista |
-| `frontend-admin` | Admin interno da Loja Club |
+| `frontend-admin` | Admin interno da Kriar |
 | `frontend-storefront` | Loja pública dos lojistas |
 | `worker` | Tarefas assíncronas |
 | `scheduler` | Tarefas agendadas |
@@ -54,22 +54,22 @@ A arquitetura terá:
 
 | URL | Responsabilidade |
 |---|---|
-| `loja.club` | Site institucional da Loja Club |
-| `www.loja.club` | Site institucional da Loja Club |
-| `api.loja.club` | Backend FastAPI |
-| `app.loja.club` | Painel do lojista |
-| `admin.loja.club` | Admin interno da plataforma |
-| `*.loja.club` | Lojas públicas dos lojistas |
+| `kriar.shop` | Site institucional da Kriar |
+| `www.kriar.shop` | Site institucional da Kriar |
+| `api.kriar.shop` | Backend FastAPI |
+| `app.kriar.shop` | Painel do lojista |
+| `admin.kriar.shop` | Admin interno da plataforma |
+| `*.kriar.shop` | Lojas públicas dos lojistas |
 
 Exemplos de lojas:
 
-- `brindesfortaleza.loja.club`
-- `presentescriativos.loja.club`
-- `empresaexemplo.loja.club`
+- `brindesfortaleza.kriar.shop`
+- `presentescriativos.kriar.shop`
+- `empresaexemplo.kriar.shop`
 
-## Produção com AWS (pós-V1)
+## Produção com AWS (Fase 11)
 
-A produção robusta vem **depois** da V1. A sugestão é:
+A produção robusta é a **Fase 11**. A sugestão é:
 
 - ECS/Fargate para containers;
 - ALB para balanceamento;
@@ -83,9 +83,9 @@ A produção robusta vem **depois** da V1. A sugestão é:
 - Sentry para erros;
 - SES para e-mails (enviados pelo worker — INV-F5).
 
-## Dev na AWS (V1 — Fases 8–9)
+## Dev na AWS (Fases 9–10)
 
-A V1 inteira é ambiente de **dev**. As Fases 0–7 rodam **local**; as Fases 8–9 sobem o sistema na AWS com **EC2**:
+As Fases 0–8 rodam **local**; as **Fases 9–10** sobem o sistema na AWS com **EC2** (dev online):
 
 - EC2;
 - Docker Compose;
@@ -132,7 +132,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `customers` | clientes finais, guest sessions e histórico por loja |
 | `shipping` | frete e entrega |
 | `discounts` | cupons |
-| `billing` | planos e cobrança da Loja Club |
+| `billing` | planos e cobrança da Kriar |
 | `notifications` | e-mails e notificações (enfileirados no worker — INV-F5) |
 | `audit` | logs de auditoria |
 | `platform_admin` | administração interna |
@@ -149,8 +149,8 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 7. Plano da loja e permissão do usuário são camadas diferentes.
 8. A loja pública é resolvida pelo domínio/subdomínio.
 9. O checkout deve ser confirmado por webhook, não apenas pelo retorno visual do cliente.
-10. A Loja Club não deve armazenar cartão.
-11. A Loja Club não deve reter dinheiro de lojista.
+10. A Kriar não deve armazenar cartão.
+11. A Kriar não deve reter dinheiro de lojista.
 12. Arquivos e imagens devem ficar fora do backend, em storage próprio.
 13. Imagens públicas devem ser entregues por CDN.
 14. Modelos 3D e artes enviadas por clientes devem ficar em storage próprio, com controle de acesso.

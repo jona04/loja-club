@@ -48,10 +48,10 @@ function Layout() {
   return (
     <div className="flex min-h-svh flex-col">
       <div className="bg-amber-500 px-4 py-1 text-center text-xs font-semibold uppercase tracking-widest text-amber-950">
-        Ambiente interno · Admin da plataforma Loja Club
+        Ambiente interno · Admin da plataforma Kriar
       </div>
       <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background px-4">
-        <span className="font-bold">Loja Club · Admin</span>
+        <span className="font-bold">Kriar · Admin</span>
         <nav className="ml-4 hidden gap-4 text-sm sm:flex">
           <Link
             to="/stores"

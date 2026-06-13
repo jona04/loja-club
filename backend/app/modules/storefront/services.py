@@ -70,6 +70,9 @@ def _store_public(store: Store, settings: StoreSettings | None) -> StorefrontSto
         description=settings.description if settings else None,
         logo_url=settings.logo_url if settings else None,
         whatsapp_number=settings.whatsapp_number if settings else None,
+        return_policy=settings.return_policy if settings else None,
+        exchange_policy=settings.exchange_policy if settings else None,
+        privacy_policy=settings.privacy_policy if settings else None,
     )
 
 

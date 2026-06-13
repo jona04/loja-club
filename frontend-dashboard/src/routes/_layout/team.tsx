@@ -37,7 +37,7 @@ import { handleError } from "@/utils"
 export const Route = createFileRoute("/_layout/team")({
   component: TeamRoute,
   head: () => ({
-    meta: [{ title: "Equipe - Loja Club" }],
+    meta: [{ title: "Equipe - Kriar" }],
   }),
 })
 

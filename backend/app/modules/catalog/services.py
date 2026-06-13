@@ -13,7 +13,7 @@ from app.core.api import AppError
 from app.core.cache import cache_delete
 from app.db.base import get_datetime_utc
 from app.modules.catalog import repositories as repo
-from app.modules.catalog.enums import ProductStatus
+from app.modules.catalog.enums import ProductStatus, ProductType
 from app.modules.catalog.models import (
     Category,
     InventoryItem,
@@ -37,6 +37,35 @@ from app.modules.media.models import MediaFile
 from app.modules.stores.models import Store
 from app.modules.stores.services import slugify
 from app.modules.tenancy.services import get_store_scoped
+
+
+def assert_addable_to_cart(
+    product: Product, *, has_approved_customization: bool = False
+) -> None:
+    """Enforce the add-to-cart gate for a product's ``type`` (doc 22/11).
+
+    ``image``/``image_3d`` go straight to the cart. An ``image_3d_customizable``
+    product requires an **approved** customization session before it can be
+    added (Fase 7) — in Fase 6 there are none, so it is refused. The keyword
+    argument is the seam the cart uses in Fase 7 to signal an approved session.
+
+    Args:
+        product: The product being added to a cart.
+        has_approved_customization: Whether an approved customization session
+            backs this add (passed by the cart in Fase 7; always ``False`` now).
+
+    Raises:
+        AppError: 422 if the product needs an approved customization it lacks.
+    """
+    if (
+        product.type == ProductType.image_3d_customizable
+        and not has_approved_customization
+    ):
+        raise AppError(
+            "customization_required",
+            "This product must be customized and approved before adding to the cart",
+            status_code=422,
+        )
 
 
 def _resolve_slug(

@@ -4,7 +4,7 @@
 > Os prompts de cada template estão em [`prompts/`](prompts/) (`aurora.md`, `bazar.md`, `studio.md`) e **devem seguir este guia**.
 
 ## O que é
-A vitrine pública (storefront) de uma loja de e-commerce na plataforma Loja Club. O cliente final **navega, compra sem login** e finaliza o pedido. Por enquanto **sem pagamento online** (o pedido é registrado; a loja contata depois). Nicho inicial: brindes/gráficas (3D personalizável vem na Fase 5).
+A vitrine pública (storefront) de uma loja de e-commerce na plataforma Kriar. O cliente final **navega, compra sem login** e finaliza o pedido. Por enquanto **sem pagamento online** (o pedido é registrado; a loja contata depois). Nicho inicial: brindes/gráficas (3D personalizável vem na Fase 5).
 
 ## O contrato (3 camadas)
 | Camada | Igual entre templates? | O quê |
@@ -55,7 +55,7 @@ Defaults dos templates atuais:
 > Neutro de estética; a aparência + os blocos vêm em cada prompt de tela.
 
 ```
-Projeto: a vitrine pública (storefront) de uma loja de e-commerce na plataforma Loja Club. O cliente final navega, escolhe produtos e finaliza o pedido SEM criar conta. Por enquanto NÃO há pagamento online — o pedido é registrado e a loja entra em contato depois.
+Projeto: a vitrine pública (storefront) de uma loja de e-commerce na plataforma Kriar. O cliente final navega, escolhe produtos e finaliza o pedido SEM criar conta. Por enquanto NÃO há pagamento online — o pedido é registrado e a loja entra em contato depois.
 
 Tecnologia: HTML + Tailwind CSS, responsivo (mobile-first), pt-BR, sample data realista (produtos, preços em R$, categorias, imagens placeholder). Cada tela é um arquivo independente (sem navegação entre páginas por JS).
 

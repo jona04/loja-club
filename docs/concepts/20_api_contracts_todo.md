@@ -15,7 +15,7 @@ Por enquanto, ele lista os grupos de endpoints necessários para a V1.
 - recuperação de senha;
 - refresh token, se aplicável.
 
-Auth é para `account_users`: admin Loja Club, lojista e equipe.
+Auth é para `account_users`: admin Kriar, lojista e equipe.
 Cliente final não precisa usar login na V1.
 
 ### Guest Session

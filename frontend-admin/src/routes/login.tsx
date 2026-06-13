@@ -33,7 +33,7 @@ export const Route = createFileRoute("/login")({
     }
   },
   head: () => ({
-    meta: [{ title: "Entrar — Loja Club Admin" }],
+    meta: [{ title: "Entrar — Kriar Admin" }],
   }),
 })
 
@@ -61,7 +61,7 @@ function Login() {
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-xl font-bold">Entrar no admin</h1>
             <p className="text-sm text-muted-foreground">
-              Acesso restrito à equipe Loja Club.
+              Acesso restrito à equipe Kriar.
             </p>
           </div>
 
@@ -75,7 +75,7 @@ function Login() {
                   <FormControl>
                     <Input
                       data-testid="email-input"
-                      placeholder="voce@loja.club"
+                      placeholder="voce@kriar.shop"
                       type="email"
                       {...field}
                     />

@@ -10,9 +10,9 @@ Decisão fechada: usar arq (async, baseado em Redis).
 
 Motivos: async (casa com o backend), Redis já presente, leve e com cron embutido. Ver também `docs/backlog/_foundations-and-bottlenecks.md` (DEC-3).
 
-## API de geração de modelos 3D (Fase 7)
+## API de geração de modelos 3D (Fase 12)
 
-O 3D é a **Fase 7** e os modelos são **gerados pelo lojista via API de terceiros** (image/text → GLB), não pela plataforma.
+O 3D da **Fase 7** usa o **catálogo da plataforma** (modelos via seed) — não precisa de API de geração. A **geração pelo lojista** (image/text → GLB) é a **Fase 12** e é o que depende desta decisão.
 
 Candidatos a avaliar:
 
@@ -71,18 +71,18 @@ Opções:
 
 Recomendação (decidido):
 
-- **toda a V1 é dev**: Fases 0–7 local; Fases 8–9 online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
-- **produção robusta (pós-V1)**: ECS/Fargate + ALB + RDS.
+- **dev**: Fases 0–8 local; **Fase 9** dev online na AWS com **EC2 + Docker Compose + Traefik + RDS**;
+- **produção robusta (Fase 11)**: ECS/Fargate + ALB + RDS.
 
 Decisão:
 
 ```text
-V1 = dev em EC2 (Fases 8–9). ECS/Fargate fica para a produção pós-V1.
+Dev online = EC2 (Fase 9). ECS/Fargate fica para a produção (Fase 11).
 ```
 
 ## Domínio próprio na V1
 
-Subdomínio `*.loja.club` será obrigatório na V1.
+Subdomínio `*.kriar.shop` será obrigatório na V1.
 
 Domínio próprio pode ser:
 
@@ -154,7 +154,7 @@ A V1 deve incluir personalização 3D de produtos com Three.js.
 
 Escopo definido:
 
-- modelos 3D criados pela Loja Club;
+- modelos 3D criados pela Kriar;
 - lojista vincula modelo ao produto;
 - cliente envia arte e personaliza no storefront;
 - sessão fica salva;
