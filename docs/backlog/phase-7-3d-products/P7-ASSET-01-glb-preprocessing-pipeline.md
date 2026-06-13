@@ -4,7 +4,7 @@ title: Pipeline de pré-processamento do GLB (4K→web) + CDN
 phase: 7
 etapa: "Etapa 1 — Catálogo público de modelos 3D (plataforma, via seed)"
 area: ASSET
-status: todo
+status: done
 depends_on: []
 blocks: [P7-CAT-01]
 tests: [unit]
@@ -45,12 +45,15 @@ O GLB de origem **vem sempre em 4K** (texturas 4096²) — a caneca crua tem **~
 - **Cobrir:** unit — rodar a otimização num GLB de fixture reduz tamanho, mantém GLB **válido** e texturas ≤ alvo (sem depender da rede; upload é mockado).
 
 ## Definition of Done
-- [ ] Caneca otimizada (**poucos MB**) no CDN sob chave versionada; comando **reproduzível** a partir de `glb-models/`.
-- [ ] **Modos de falha mapeados** — GLB inválido/corrompido → erro claro; textura sem downscale → falha o gate; upload falho → não registra a versão. → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Caneca otimizada (**1.14 MB**, perfil balanceado) no CDN sob chave versionada; comando **reproduzível** a partir de `glb-models/`. URL: `https://dsqh10bjdo174.cloudfront.net/public/3d-models/ceramic-mug/v1/model.glb` (HTTP 200, `model/gltf-binary`).
+- [x] **Modos de falha mapeados** — GLB inválido → `io.readBinary` lança → CLI sai !=0; textura/transform falho → lança; upload falho → `SystemExit`, nada é "registrado" (o registro é o seed do `P7-CAT-01`). → tratados.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
 - O pré-processamento é **automatizável (CLI)**, sem Blender; só a **área imprimível** (`P7-CAT-01`) é manual/visual. Doc [30 §1](../../concepts/30_3d_customization_technical_design.md).
+- **Implementação:** otimizador Node em [`scripts/glb/`](../../../scripts/glb/) (isolado do workspace bun: `package.json`/`node_modules` próprios) — `optimize-glb.mjs` (gltf-transform: `dedup`+`weld`+opcional `simplify`+`prune`+`textureCompress` resize+**Draco**) + teste `node --test` **verde**. Upload em [`backend/scripts/upload_glb.py`](../../../backend/scripts/upload_glb.py) reusando `app.core.storage.upload_fileobj` → key `public/3d-models/<slug>/v<N>/model.glb`. `prune()` dobra textura **sólida** em `baseColorFactor` (esperado).
+- **Medições na caneca real (54 MB):** sem simplify → **4.24 MB** (1.95M tris, tex 2048); `--simplify 0.15` → **1.14 MB** (292k tris); `--simplify 0.08` → **0.76 MB** (156k tris).
+- **v1 publicado (decisão do usuário = balanceado):** `node optimize-glb.mjs ../../glb-models/ceramic-mug-3d-model.glb dist/ceramic-mug.glb --texture-size 2048 --simplify 0.15` → `uv run python scripts/upload_glb.py ../scripts/glb/dist/ceramic-mug.glb ceramic-mug 1`. **Live no CDN** (1.14 MB, 292k tris). O `P7-CAT-01` semeia essa URL em `platform_3d_model_versions.glb_url`.
 
 ## Follow-ups
 - [ ] **Disparar a otimização pelo admin** (upload na UI → pipeline → CDN) em vez de script local — *Quando:* quando o admin ganhar upload de GLB (cruza com Fase 12). → README da fase.
