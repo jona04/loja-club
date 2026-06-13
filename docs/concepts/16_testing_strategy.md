@@ -182,7 +182,7 @@ Testes **não** podem poluir o banco principal de **dev**:
 
 Mockar integrações externas em testes:
 
-- gateway de pagamento;
+- provider de pagamento;
 - S3;
 - e-mail;
 - DNS;

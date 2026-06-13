@@ -44,7 +44,7 @@ A primeira tela deve mostrar:
 - pedidos recentes;
 - pedidos aguardando ação;
 - status da loja;
-- status do pagamento/gateway;
+- status do pagamento/Kriar Pay;
 - produtos ativos;
 - personalizações recentes;
 - alertas importantes;
@@ -166,21 +166,55 @@ Funcionalidades:
 - configurar mensagem pós-compra;
 - definir campos obrigatórios;
 - visualizar status dos métodos de pagamento;
-- orientar conexão com gateway.
+- orientar ativação do Kriar Pay.
 
 ## Pagamentos
 
 Funcionalidades:
 
-- conectar conta do lojista ao gateway;
+- configurar **Kriar Pay**;
+- ativar o **Kriar Pay Nativo** (Asaas BaaS — Fase 8);
+- futuramente conectar conta Mercado Pago (Fase 13);
 - exibir status da conta;
 - exibir métodos ativos;
 - ver transações;
 - ver problemas de pagamento;
 - ver chargebacks/disputas;
-- ver informações de repasse fornecidas pelo gateway.
+- ver informações de repasse fornecidas pelo provider.
 
-A Kriar não reterá dinheiro. O painel apenas exibirá informações retornadas pelo gateway.
+A Kriar não reterá dinheiro. O painel apenas exibirá informações retornadas pelo provider de pagamento.
+
+### UX multi-provider
+
+O lojista deve enxergar uma área consistente:
+
+```text
+Pagamentos
+Status da conta
+Vendas recebidas
+Pagamentos pendentes
+Taxas e comissão da Kriar
+Transações
+Repasses / detalhes do provider
+Configurações de recebimento
+```
+
+A tela não deve ser implementada como "tela do Asaas" ou "tela do Mercado Pago". O backend retorna o provider ativo e suas capabilities; o frontend renderiza blocos conforme o que aquela conta suporta.
+
+Exemplos:
+
+| Loja | Provider | UX esperada |
+|---|---|---|
+| Loja A | `asaas_baas` | Kriar Pay Nativo: gestão financeira mais completa dentro da Kriar |
+| Loja B | `mercado_pago` | Conta conectada: vendas/status/comissão na Kriar + link para detalhes externos quando necessário |
+
+Regra:
+
+```text
+Mesma navegação de Pagamentos; blocos internos variam por capability.
+```
+
+Se `can_show_balance=true`, exibir card de saldo/valores disponíveis. Se `needs_external_dashboard=true`, exibir ação para abrir o painel externo do provider em vez de prometer gestão completa dentro da Kriar.
 
 ## Frete
 

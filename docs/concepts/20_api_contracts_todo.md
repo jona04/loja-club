@@ -129,10 +129,12 @@ Cliente final não precisa usar login na V1.
 
 ### Payments
 
-- conectar conta;
+- configurar Kriar Pay Nativo;
+- conectar conta de provider externo (Fase 13);
 - obter status da conta;
+- obter capabilities do provider ativo;
 - listar transações;
-- webhook do gateway;
+- webhook do provider;
 - reprocessar webhook interno;
 - reembolso.
 

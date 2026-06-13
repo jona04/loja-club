@@ -133,17 +133,27 @@
       "name": "frontend-storefront",
       "version": "0.0.0",
       "dependencies": {
+        "@react-three/drei": "^10.7.7",
+        "@react-three/fiber": "^9.6.1",
         "next": "^15.5.4",
         "react": "^19.1.1",
         "react-dom": "^19.2.3",
+        "three": "^0.184.0",
       },
       "devDependencies": {
         "@tailwindcss/postcss": "^4.2.1",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.3.2",
         "@types/node": "^25.5.0",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
+        "@types/three": "^0.184.1",
+        "@vitejs/plugin-react-swc": "^4.2.3",
+        "jsdom": "^29.1.1",
         "tailwindcss": "^4.2.1",
         "typescript": "^5.9.3",
+        "vitest": "^4.1.8",
       },
     },
   },
@@ -1337,8 +1347,6 @@
     "c12/pathe": ["pathe@1.1.2", "", {}, "sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ=="],
 
     "frontend-dashboard/tailwindcss": ["tailwindcss@4.2.1", "", {}, "sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw=="],
-
-    "frontend-storefront/tailwindcss": ["tailwindcss@4.2.1", "", {}, "sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw=="],
 
     "fs-minipass/minipass": ["minipass@3.3.6", "", { "dependencies": { "yallist": "^4.0.0" } }, "sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw=="],
 

@@ -40,7 +40,7 @@ Campos úteis:
 - status code;
 - latency;
 - error type;
-- gateway;
+- provider de pagamento;
 - order id;
 - payment transaction id.
 - customization session id.
@@ -73,7 +73,7 @@ O health check público pode ser simples. Health checks internos podem validar d
 - pedidos pendentes;
 - pagamentos aprovados;
 - pagamentos recusados;
-- falhas ao chamar gateway;
+- falhas ao chamar provider de pagamento;
 - tempo entre pedido e confirmação.
 
 ### Personalização 3D
@@ -147,7 +147,7 @@ Exemplos:
 - alteração de preço;
 - alteração de modelo 3D vinculado ao produto;
 - acesso a arquivo de personalização;
-- alteração de gateway;
+- alteração de provider de pagamento;
 - reembolso;
 - cancelamento de pedido;
 - bloqueio de loja;
@@ -163,7 +163,7 @@ O admin interno deve permitir investigar:
 - últimos pedidos;
 - últimas personalizações;
 - últimos webhooks;
-- status do gateway;
+- status do provider de pagamento;
 - logs de erro relevantes;
 - ações recentes da equipe.
 

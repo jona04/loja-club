@@ -6,11 +6,11 @@ Construir uma primeira versão da Kriar capaz de operar lojas reais.
 
 A V1 deve ser completa, mas sem complexidade desnecessária.
 
-> **Ambientes.** As Fases **0–8** rodam **local** (na máquina do dev); a **Fase 9** sobe o sistema **no ar na AWS, em EC2** (ainda **dev**); a **Fase 10** consolida (follow-ups + segurança); a **Fase 11** é a **produção robusta** (ECS/Fargate + ALB). A **Fase 12** dá ao lojista a geração do próprio 3D. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
+> **Ambientes.** As Fases **0–8** rodam **local** (na máquina do dev); a **Fase 9** sobe o sistema **no ar na AWS, em EC2** (ainda **dev**); a **Fase 10** consolida (follow-ups + segurança); a **Fase 11** é a **produção robusta** (ECS/Fargate + ALB). A **Fase 12** dá ao lojista a geração do próprio 3D. A **Fase 13** evolui pagamentos para multi-provider com Mercado Pago. Ver [AWS Infrastructure and Deployment](./12_aws_infrastructure_and_deployment.md).
 
-A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração de pagamento/split para o final** (Fase 8) e o **deploy** logo depois (Fase 9).
+A prioridade é ter o **sistema funcionando local o quanto antes** (fim da Fase 6), deixando a **integração inicial de pagamento/split** para a Fase 8 (**Kriar Pay Nativo com Asaas BaaS**) e o **deploy** logo depois (Fase 9).
 
-Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por gateway é que fica para depois.
+Enquanto o provider não entra, o pagamento é **combinado diretamente entre loja e cliente** (Pix manual, transferência, link, WhatsApp ou entrega combinada). O checkout já cria o pedido como `pending_payment`; só a confirmação automática por provider é que fica para depois.
 
 ## Como ler este roadmap
 
@@ -19,8 +19,8 @@ Enquanto o gateway não entra, o pagamento é **combinado diretamente entre loja
 - Os arquivos (imagens, modelos 3D, artes) usam **AWS S3 + CloudFront reais desde o dev local** (sem MinIO).
 - O **marco do MVP (dev local)** acontece ao fim da Fase 6, **antes** de pagamentos e do deploy.
 - **Frete e cupons** foram movidos para **antes do carrinho**, porque carrinho e checkout dependem deles.
-- **Conta do cliente, pagamento e billing** = Fase 8 (local); **deploy dev na AWS** = Fase 9; **produção** = Fase 11.
-- Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com pagamento/split)**.
+- **Conta do cliente, Kriar Pay Nativo e billing** = Fase 8 (local); **deploy dev na AWS** = Fase 9; **produção** = Fase 11; **Mercado Pago/multi-provider** = Fase 13.
+- Há dois critérios de conclusão no fim do documento: o do **MVP (dev local)** e o da **V1 completa (dev online na AWS, com Kriar Pay Nativo/split)**. A Fase 13 é evolução multi-provider, não bloqueia a primeira validação com lojistas.
 - **Etapas — canônico vs trilha:** a decomposição **canônica** (com tarefas) é a do **[backlog](../backlog/README.md)** (`phase-N-*.md`, etapas **locais 1..N** por fase). Aqui o roadmap é a **trilha de alto nível** e pode **agrupar** etapas mais grosso (e em ordem **narrativa**, não de dependência) — a contagem por fase pode diferir do backlog.
 
 ---
@@ -228,9 +228,9 @@ Lojista personaliza o template pelo painel; a vitrine reflete.
 
 ## Fase 6 — Venda sem pagamento online (dev local)
 
-> Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem o gateway**.
+> Objetivo da fase: a loja roda **100% local** e já **recebe pedidos sem pagamento online**.
 > O checkout cria o pedido como `pending_payment` e o pagamento é combinado fora da plataforma
-> (Pix/transferência/WhatsApp/entrega combinada) até o gateway entrar na Fase 8.
+> (Pix/transferência/WhatsApp/entrega combinada) até o provider entrar na Fase 8.
 
 ### Etapa 1 — Frete e cupons (base)
 
@@ -296,7 +296,7 @@ Entregas:
 - congelamento da personalização aprovada;
 - sessão de checkout;
 - **pagamento combinado fora da plataforma** (Pix manual/transferência/WhatsApp), com mensagem pós-compra explicando como o pagamento será combinado;
-- **ponto de integração do gateway preparado, mas ainda não conectado** (entra na Fase 8).
+- **ponto de integração do provider preparado, mas ainda não conectado** (entra na Fase 8).
 
 Resultado:
 
@@ -319,7 +319,7 @@ Entregas:
 - status de arte/produção;
 - notas internas;
 - alteração de status operacional;
-- marcação manual de pagamento recebido (enquanto não há gateway);
+- marcação manual de pagamento recebido (enquanto não há provider);
 - cancelamento, se permitido.
 
 Resultado:
@@ -417,9 +417,9 @@ Cliente personaliza, em 3D, um produto cujo modelo veio do catálogo da platafor
 
 ---
 
-## Fase 8 — Conta do cliente, pagamentos e billing (dev local)
+## Fase 8 — Conta do cliente, Kriar Pay Nativo e billing (dev local)
 
-> Conta do cliente, gateway com **split**, **billing** e **pagamento em 2 etapas** — **construído e testado local** (webhooks **mockados**). O **deploy dev na AWS** (que destrava os webhooks reais) é a **Fase 9**. Detalhe em [`backlog/phase-8-customer-account-and-payments.md`](../backlog/phase-8-customer-account-and-payments.md).
+> Conta do cliente, **Kriar Pay Nativo** com **Asaas BaaS**, **billing** e **pagamento em 2 etapas** — **construído e testado local** (webhooks **mockados**). O módulo `payments` já nasce multi-provider, mas a Fase 8 implementa apenas `asaas_baas`; **Mercado Pago fica para a Fase 13**. O **deploy dev na AWS** (que destrava os webhooks reais) é a **Fase 9**. Detalhe em [`backlog/phase-8-customer-account-and-payments.md`](../backlog/phase-8-customer-account-and-payments.md).
 
 ### Etapa 1 — Conta e login do cliente
 
@@ -443,25 +443,26 @@ Resultado:
 Cliente entra por código, senha ou Google, vê o histórico e edita o perfil, sem perder o que comprou como convidado.
 ```
 
-### Etapa 2 — Pagamentos e split
+### Etapa 2 — Kriar Pay Nativo e split
 
 Entregas:
 
-- escolha e integração com o gateway (decisão pendente: Pagar.me / Mercado Pago / Asaas — ver `18_open_decisions.md`);
-- criação de recebedor/subconta;
+- camada `PaymentProvider` com registry e capabilities, sem acoplar checkout/painel a um provider único;
+- integração inicial com **Asaas BaaS** como `asaas_baas`;
+- criação de subconta/recebedor Asaas;
 - payment account por loja;
 - criação de transação;
 - split automático;
 - webhook assinado + idempotência (**contra mock** local; real na Fase 9);
 - status de pagamento;
 - atualização de pedido por webhook;
-- substituir o "pagamento combinado" pelo gateway no checkout;
+- substituir o "pagamento combinado" pelo Kriar Pay Nativo no checkout;
 - testes de webhook (mock).
 
 Resultado:
 
 ```text
-Cliente paga, gateway divide valores e pedido é atualizado por webhook (validado contra mock; real na Fase 9).
+Cliente paga via Kriar Pay Nativo, Asaas divide valores e pedido é atualizado por webhook (validado contra mock; real na Fase 9).
 ```
 
 ### Etapa 3 — Pagamento em 2 etapas (sinal + saldo na entrega)
@@ -470,7 +471,7 @@ Entregas:
 
 - ativar/desativar a modalidade por loja + **percentual do sinal** (default 50%) — config no painel;
 - **opção no checkout**: "pagar tudo agora" ou "sinal de X% agora + saldo na entrega" (mostra os valores);
-- modelo: `order.payment_plan` (`full|deposit_balance`) + `deposit_amount`/`balance_amount`; o **sinal** vira transação no gateway (com split), o **saldo** é marcado recebido na entrega;
+- modelo: `order.payment_plan` (`full|deposit_balance`) + `deposit_amount`/`balance_amount`; o **sinal** vira transação no provider (com split), o **saldo** é marcado recebido na entrega;
 - **status próprio** `payment_status` `pending→deposit_paid→paid`, visível pra **cliente** (confirmação/área), **lojista** (painel + "marcar saldo recebido") e **admin** (operação).
 
 Resultado:
@@ -519,7 +520,7 @@ Entregas:
 
 Entregas:
 
-- apontar o gateway pra URL pública; **validar webhook real** (assinatura + idempotência); confirmar transação/pedido/split de ponta a ponta;
+- apontar o Asaas BaaS pra URL pública; **validar webhook real** (assinatura + idempotência); confirmar transação/pedido/split de ponta a ponta;
 - conferir o **pagamento em 2 etapas** online.
 
 ### Etapa 3 — CI/CD
@@ -605,6 +606,27 @@ O lojista cria o próprio modelo 3D e define a área personalizável, sem depend
 
 ---
 
+## Fase 13 — Kriar Pay multi-provider + Mercado Pago
+
+> Evolução do `payments` depois do Kriar Pay Nativo: manter Asaas BaaS como caminho nativo, adicionar **Mercado Pago** como provider conectado via OAuth e endurecer a coexistência de providers. Detalhe em [`backlog/phase-13-multiprovider-payments.md`](../backlog/phase-13-multiprovider-payments.md).
+
+Entregas:
+
+- abstração de provider revisada com capabilities estáveis para o frontend;
+- Mercado Pago como conta conectada (`requires_oauth_connection`, `needs_external_dashboard`);
+- checkout usando o provider ativo da loja sem mudar carrinho/pedido;
+- webhooks, reembolsos, chargebacks e relatórios financeiros convivendo por provider;
+- regras para troca de provider ativo sem reescrever histórico;
+- admin da plataforma acompanhando providers, credenciais, erros e webhooks.
+
+Resultado:
+
+```text
+A Kriar mantém uma UX única de pagamentos, mas permite Asaas BaaS nativo e Mercado Pago conectado conforme a necessidade da loja.
+```
+
+---
+
 ## Critério do MVP (dev local, sem pagamento)
 
 O MVP está pronto (rodando local) quando:
@@ -625,13 +647,13 @@ O MVP está pronto (rodando local) quando:
 - cliente e lojista recebem e-mail do pedido;
 - isolamento multi-tenant está testado.
 
-## Critério de V1 completa (dev online na AWS, com pagamento/split)
+## Critério de V1 completa (dev online na AWS, com Kriar Pay Nativo/split)
 
 A V1 está completa quando, além de tudo acima:
 
 - sistema está **no ar na AWS (EC2)**, em ambiente dev;
 - cliente pode entrar na área do cliente (código, senha ou Google) e editar o perfil, com sincronização guest ↔ conta;
-- pagamento é processado pelo gateway;
+- pagamento é processado pelo Kriar Pay Nativo/Asaas BaaS;
 - webhook confirma pedido;
 - split é aplicado;
 - comissão da Kriar é registrada;
@@ -640,3 +662,13 @@ A V1 está completa quando, além de tudo acima:
 - segurança e observabilidade mínimas estão no ar;
 - CI/CD faz deploy automatizado para o EC2;
 - beta validado com lojistas reais.
+
+## Critério de evolução multi-provider
+
+A evolução multi-provider está pronta quando:
+
+- Mercado Pago pode ser conectado por uma loja sem mudar o fluxo de carrinho/pedido;
+- o painel de Pagamentos renderiza recursos por capabilities;
+- o histórico financeiro preserva o provider usado em cada transação;
+- Asaas BaaS e Mercado Pago coexistem sem duplicar telas ou regras de checkout;
+- a Kriar continua sem reter saldo de lojista.

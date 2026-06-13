@@ -140,7 +140,7 @@ Pilares públicos:
 
 1. **Criar a loja**: conta, loja, subdomínio, domínio próprio, identidade básica, templates, preview e publicação.
 2. **Montar a vitrine**: produtos, categorias, imagens, variações, preços, estoque e produtos em destaque.
-3. **Vender**: carrinho, checkout, cupons, entrega, WhatsApp, Pix/pagamento combinado no MVP e gateway com split depois.
+3. **Vender**: carrinho, checkout, cupons, entrega, WhatsApp, Pix/pagamento combinado no MVP e Kriar Pay com split depois.
 4. **Operar**: pedidos, clientes, histórico, status, notas internas, pagamentos, frete, relatórios, equipe, permissões e plano.
 5. **Personalizar**: produtos 3D, upload de arte, sessão salva, aprovação visual, snapshot congelado no pedido e acompanhamento da produção.
 6. **Acelerar com IA**: geração de modelos 3D, melhorias futuras de layout, textos, imagens, chatbot e outras ações que consumam créditos.

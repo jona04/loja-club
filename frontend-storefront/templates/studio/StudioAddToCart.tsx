@@ -1,9 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 
 import type { StorefrontProduct } from "@/lib/api"
 import { useCart } from "@/lib/cart"
+import { isCustomizable } from "@/lib/product"
 
 /**
  * Studio product actions (faithful to the template): a quantity stepper, the
@@ -48,12 +50,14 @@ export function StudioAddToCart({ product }: { product: StorefrontProduct }) {
           Adicionar ao carrinho
         </button>
       </div>
-      <button
-        type="button"
-        className="flex items-center justify-center gap-2 rounded-md border border-gray-300 py-3.5 text-sm font-medium text-gray-700 transition-colors hover:border-black hover:text-black"
-      >
-        <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
-      </button>
+      {isCustomizable(product) && (
+        <Link
+          href={`/products/${product.slug}/personalizar`}
+          className="flex items-center justify-center gap-2 rounded-md border border-gray-300 py-3.5 text-sm font-medium text-gray-700 transition-colors hover:border-black hover:text-black"
+        >
+          <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
+        </Link>
+      )}
     </div>
   )
 }

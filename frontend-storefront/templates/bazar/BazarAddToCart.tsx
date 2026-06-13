@@ -1,9 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 
 import type { StorefrontProduct } from "@/lib/api"
 import { useCart } from "@/lib/cart"
+import { isCustomizable } from "@/lib/product"
 
 /**
  * Bazar product actions (faithful to the template): a quantity stepper + a bold
@@ -48,12 +50,14 @@ export function BazarAddToCart({ product }: { product: StorefrontProduct }) {
           Adicionar ao carrinho
         </button>
       </div>
-      <button
-        type="button"
-        className="flex items-center justify-center gap-2 rounded-xl border-2 border-gray-200 py-4 font-bold text-gray-700 transition hover:border-indigo-600 hover:text-indigo-600"
-      >
-        <i className="fa-solid fa-cube" /> Personalizar em 3D
-      </button>
+      {isCustomizable(product) && (
+        <Link
+          href={`/products/${product.slug}/personalizar`}
+          className="flex items-center justify-center gap-2 rounded-xl border-2 border-gray-200 py-4 font-bold text-gray-700 transition hover:border-indigo-600 hover:text-indigo-600"
+        >
+          <i className="fa-solid fa-cube" /> Personalizar em 3D
+        </Link>
+      )}
     </div>
   )
 }

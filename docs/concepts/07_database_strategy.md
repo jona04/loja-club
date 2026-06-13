@@ -224,11 +224,31 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 
 | Tabela | Função |
 |---|---|
-| `payment_accounts` | Conta/recebedor do lojista |
+| `payment_accounts` | Conta/recebedor do lojista no provider ativo |
 | `payment_transactions` | Transações |
-| `payment_webhooks` | Eventos recebidos do gateway |
+| `payment_webhooks` | Eventos recebidos do provider |
 | `payment_split_rules` | Regras de comissão |
 | `payment_chargebacks` | Contestação/chargeback |
+
+`payment_accounts` deve nascer multi-provider, mesmo que a Fase 8 implemente só `asaas_baas`.
+
+Campos importantes:
+
+```text
+store_id
+provider                 # asaas_baas | mercado_pago | ...
+mode                     # native | connected
+provider_account_id
+provider_wallet_id       # quando o provider tiver carteira/wallet
+status                   # pending | active | blocked | rejected
+kyc_status
+capabilities             # JSON cacheado para a UX do painel
+external_dashboard_url
+provider_credentials_ref # referência segura para API key/token, não o segredo em texto puro
+metadata
+```
+
+O histórico de transações preserva o provider usado no momento da venda. Trocar o provider ativo da loja não reescreve pedidos antigos.
 
 ### Layout e conteúdo
 
@@ -365,8 +385,8 @@ A performance depende muito dos índices compostos com `store_id`.
 | `order_orders` | `store_id + order_number` único |
 | `order_items` | `store_id + order_id` |
 | `order_status_history` | `store_id + order_id + created_at` |
-| `payment_transactions` | `store_id + gateway_transaction_id` |
-| `payment_webhooks` | `gateway_event_id` único |
+| `payment_transactions` | `store_id + provider + gateway_transaction_id` |
+| `payment_webhooks` | `provider + gateway_event_id` único |
 | `shipping_methods` | `store_id + type + is_active` |
 | `shipping_rates` | `store_id + shipping_method_id` |
 | `discount_coupons` | `store_id + code` único quando ativo |

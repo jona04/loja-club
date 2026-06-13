@@ -81,7 +81,7 @@ O cliente final deve conseguir:
 7. Adicionar ao carrinho.
 8. Finalizar compra.
 9. Escolher forma de entrega.
-10. Pagar via gateway.
+10. Pagar via Kriar Pay/provider.
 11. Receber confirmação de pedido.
 12. Se escolher entrega combinada, manter contato com a loja para combinar o envio.
 13. Usar WhatsApp da loja para tirar dúvidas quando disponível.
@@ -111,7 +111,7 @@ A V1 deve incluir:
 - painel do lojista;
 - carrinho;
 - checkout;
-- gateway com split;
+- Kriar Pay/provider com split;
 - pedidos;
 - clientes;
 - compra sem login obrigatório;

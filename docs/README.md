@@ -14,10 +14,10 @@ Português por enquanto; nomes de pasta/arquivo em inglês.
 - Construída sobre o **Full Stack FastAPI Template**; backend = **monólito modular em FastAPI**; banco = **PostgreSQL** (compartilhado, com `store_id` nas tabelas comerciais).
 - Três frontends separados: **`frontend-storefront`** (loja pública), **`frontend-dashboard`** (painel do lojista) e **`frontend-admin`** (admin da plataforma).
 - Subdomínios via **wildcard DNS** + resolução da loja pelo `Host`.
-- O gateway de pagamento faz o **split**; a Kriar **não retém dinheiro** dos lojistas.
+- O provider de pagamento faz o **split**; a Kriar **não retém dinheiro** dos lojistas. A entrada é **Kriar Pay Nativo com Asaas BaaS** (Fase 8); **Mercado Pago** entra depois como provider conectado (Fase 13).
 - **Templates prontos** (Aurora/Bazar/Studio) para as lojas públicas — o lojista **escolhe e personaliza**, sem montar layout livre; trocar de template não quebra o fluxo de compra.
 - **Personalização 3D** = **Fase 7**: modelos do **catálogo da plataforma** (via seed; o lojista escolhe). A **geração pelo lojista** (GLB via API de terceiros) é a **Fase 12**.
 - O cliente final compra e personaliza **sem login obrigatório**; carrinhos/sessões anônimas têm validade.
 - **Soft delete / status arquivado** em vez de delete físico para registros de negócio.
 - Um usuário pode gerenciar várias lojas; uma loja pode ter vários usuários (papéis/permissões por loja).
-- **Ambientes:** Fases 0–8 rodam **local** (com S3/CloudFront reais); Fases 9–10 sobem na AWS com **EC2** + Docker Compose + Traefik (dev online); **produção robusta** (ECS/Fargate) é a **Fase 11**.
+- **Ambientes:** Fases 0–8 rodam **local** (com S3/CloudFront reais); Fases 9–10 sobem na AWS com **EC2** + Docker Compose + Traefik (dev online); **produção robusta** (ECS/Fargate) é a **Fase 11**; Fases 12–13 são evoluções pós-base produtiva.

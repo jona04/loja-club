@@ -1,6 +1,6 @@
 # Fase 6 — Venda sem pagamento online (dev local)
 
-> Objetivo: a loja recebe **pedidos reais sem gateway**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela o preço, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); o deploy na AWS é a Fase 8.
+> Objetivo: a loja recebe **pedidos reais sem pagamento online**. Checkout cria pedido `pending_payment`, identifica o cliente por e-mail/telefone (sem login), congela o preço, e o pagamento é combinado fora da plataforma. **Tudo rodando 100% local** (Docker Compose); Kriar Pay Nativo entra na Fase 8 e o deploy na AWS é a Fase 9.
 
 Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts/09_merchant_dashboard.md), [10](../concepts/10_storefront_and_layouts.md), [11](../concepts/11_checkout_payments_and_split.md), [13](../concepts/13_performance_cache_and_cdn.md), [15](../concepts/15_observability_and_operations.md), [22](../concepts/22_product_customization_3d.md), [23](../concepts/23_customer_identity_and_guest_checkout.md), [12](../concepts/12_aws_infrastructure_and_deployment.md), [16](../concepts/16_testing_strategy.md).
 
@@ -22,7 +22,7 @@ Docs de referência: [07](../concepts/07_database_strategy.md), [09](../concepts
 > 1. **Núcleo vendável:** `customers` (dedup) → `cart` (servidor) → `checkout` → `orders` → e-mail/WhatsApp. Frete começa só com **retirada / combinada / frete fixo** (sem zonas/tarifas).
 > 2. **Fast-follow** (depois que o núcleo vende): **cupons** (Etapa 2, ✅ `P6-DISC-01`). **Zonas/tarifas de frete** e **seleção de variação na vitrine** **saíram da Fase 6** → **Fase 8 (Etapa 5)** e **Fase 7 (Etapa 8)** respectivamente (não eram do MVP de vender).
 >
-> Gateway/split/webhook = **Fase 8**. Aqui o checkout para no **pedido pendente** + confirmação (ver [doc 11 — Venda sem gateway](../concepts/11_checkout_payments_and_split.md)).
+> Kriar Pay Nativo/split/webhook mockado = **Fase 8**; webhook real online = **Fase 9**. Aqui o checkout para no **pedido pendente** + confirmação (ver [doc 11 — Venda sem gateway](../concepts/11_checkout_payments_and_split.md)).
 
 ## Pré-requisitos adiantados (de follow-ups abertos)
 

@@ -6,7 +6,7 @@ Docs de referência: [12](../concepts/12_aws_infrastructure_and_deployment.md), 
 
 ## Definition of Done da fase
 - Loja pública, painel, **admin** e API no ar por domínio público com **HTTPS** (ambiente **dev**, EC2).
-- **Webhooks reais** alcançáveis → os pagamentos da Fase 8 (gateway/split) passam a rodar de verdade.
+- **Webhooks reais** alcançáveis → os pagamentos da Fase 8 (Kriar Pay Nativo/Asaas BaaS/split) passam a rodar de verdade.
 - **CI/CD** faz deploy automatizado para o EC2 (dev online) a cada merge.
 - **Mínimo** de segurança/observabilidade no ar pra operar (Sentry, health, alertas básicos, segredos em SSM, HTTPS/headers/CORS, rate limit nos endpoints sensíveis).
 
@@ -39,8 +39,8 @@ Docs de referência: [12](../concepts/12_aws_infrastructure_and_deployment.md), 
 ## Etapa 2 — Go-live dos pagamentos (webhook real)
 
 > A Fase 8 construiu o `payments` contra **mock**. Com o sistema no ar, os webhooks reais passam a chegar. Doc [11](../concepts/11_checkout_payments_and_split.md)/[14](../concepts/14_security_strategy.md).
-- [ ] Apontar o gateway para a URL pública; **validar assinatura/origem + idempotência** dos webhooks reais; confirmar transação + pedido + split de ponta a ponta.
-- [ ] Conferir o **pagamento em 2 etapas** (sinal no gateway + saldo marcado na entrega) no ambiente online.
+- [ ] Apontar o provider Asaas BaaS para a URL pública; **validar assinatura/origem + idempotência** dos webhooks reais; confirmar transação + pedido + split de ponta a ponta.
+- [ ] Conferir o **pagamento em 2 etapas** (sinal no provider + saldo marcado na entrega) no ambiente online.
 
 ---
 

@@ -3,7 +3,7 @@
 <!--
 Este documento ainda precisa ser desenvolvido com apoio jurídico.
 Ele deve conter as regras legais, regulatórias e contratuais da Kriar.
-A Kriar não deve reter valores dos lojistas. O gateway fará o split.
+A Kriar não deve reter valores dos lojistas. O provider de pagamento fará o split.
 Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídico/regulatório.
 -->
 
@@ -25,7 +25,7 @@ Mesmo assim, é necessário estruturar termos claros para reduzir risco jurídic
 - Política de uso aceitável.
 - Definição de que a Kriar é plataforma tecnológica, não vendedora.
 - Definição de que o lojista é o vendedor oficial.
-- Definição de que o gateway processa pagamentos.
+- Definição de que o provider de pagamento processa pagamentos.
 - Definição de que a Kriar não retém saldo dos lojistas.
 - Regras de bloqueio por fraude ou risco.
 - Regras de inadimplência da mensalidade.
@@ -38,7 +38,7 @@ A Kriar:
 - fornece tecnologia;
 - fornece painel;
 - fornece infraestrutura de loja;
-- integra checkout ao gateway;
+- integra checkout ao provider de pagamento;
 - recebe comissão via split;
 - fornece biblioteca de modelos 3D;
 - fornece ferramenta de personalização visual;
@@ -71,7 +71,7 @@ O cliente final:
 - responde pelo direito de uso das imagens, logos ou marcas que enviar, conforme termos;
 - deve conferir dados e arte antes de confirmar o pedido.
 
-O gateway:
+O provider de pagamento:
 
 - processa o pagamento;
 - faz split;
@@ -82,7 +82,7 @@ O gateway:
 ## TODO
 
 - [ ] Consultar advogado sobre termos de marketplace/SaaS.
-- [ ] Validar risco regulatório com split via gateway.
+- [ ] Validar risco regulatório com split via provider de pagamento.
 - [ ] Escrever termos do lojista.
 - [ ] Escrever termos do comprador final.
 - [ ] Escrever política de privacidade.

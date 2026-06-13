@@ -9,6 +9,8 @@ import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { cache } from "react"
 
+import type { ProductType } from "@/lib/product"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8800"
 
 export interface StorefrontStore {
@@ -101,6 +103,7 @@ export interface StorefrontProduct {
   slug: string
   name: string
   description: string | null
+  type: ProductType
   price_amount_minor: number
   price_currency: string
   is_featured: boolean

@@ -1,6 +1,6 @@
 # Fase 6 — Venda sem pagamento online (dev local)
 
-> Objetivo: a loja recebe **pedidos reais sem gateway** — checkout **sem login**, cliente identificado por e-mail/telefone (dedup), pedido `pending_payment` com **preço congelado + estoque decrementado + número do pedido**, e **pagamento combinado fora da plataforma** (handoff por **WhatsApp**). **Tudo 100% local**; deploy + gateway = **Fase 8**.
+> Objetivo: a loja recebe **pedidos reais sem pagamento online** — checkout **sem login**, cliente identificado por e-mail/telefone (dedup), pedido `pending_payment` com **preço congelado + estoque decrementado + número do pedido**, e **pagamento combinado fora da plataforma** (handoff por **WhatsApp**). **Tudo 100% local**; Kriar Pay Nativo = **Fase 8**; deploy/webhooks reais = **Fase 9**.
 
 Docs de referência: [Fundações & Gargalos](../_foundations-and-bottlenecks.md), [11](../../concepts/11_checkout_payments_and_split.md), [23](../../concepts/23_customer_identity_and_guest_checkout.md), [07](../../concepts/07_database_strategy.md), [10](../../concepts/10_storefront_and_layouts.md), [09](../../concepts/09_merchant_dashboard.md), [22](../../concepts/22_product_customization_3d.md), [16](../../concepts/16_testing_strategy.md), [20](../../concepts/20_api_contracts_todo.md).
 

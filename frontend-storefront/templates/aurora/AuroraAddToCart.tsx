@@ -1,9 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 
 import type { StorefrontProduct } from "@/lib/api"
 import { useCart } from "@/lib/cart"
+import { isCustomizable } from "@/lib/product"
 
 /**
  * Aurora product actions (faithful to the template): a quantity stepper, the
@@ -55,12 +57,14 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
         >
           Adicionar ao carrinho
         </button>
-        <button
-          type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white py-4 text-sm font-medium text-brand-900 transition-colors hover:bg-gray-50"
-        >
-          <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
-        </button>
+        {isCustomizable(product) && (
+          <Link
+            href={`/products/${product.slug}/personalizar`}
+            className="flex w-full items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white py-4 text-sm font-medium text-brand-900 transition-colors hover:bg-gray-50"
+          >
+            <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
+          </Link>
+        )}
       </div>
     </>
   )

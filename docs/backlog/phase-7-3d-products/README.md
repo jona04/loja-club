@@ -30,7 +30,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + **editor visual 3D** da área imprimível | ✅ done | P7-CAT-01 |
 | 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | ✅ done | P7-CAT-01 |
 | 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | ✅ done | P7-PROD-01 |
-| 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | todo | P7-SESS-01, P7-CAT-01 |
+| 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | ✅ done | P7-SESS-01, P7-CAT-01 |
 | 7 | [P7-EDITOR-02](./P7-EDITOR-02-layers-approval-snapshot.md) | Editor: camadas (imagem+texto) + aprovação + snapshot + link público | todo | P7-EDITOR-01 |
 | 8 | [P7-ORD-01](./P7-ORD-01-freeze-customization-in-order.md) | Carrinho/pedido: congelar a personalização | todo | P7-SESS-01, P7-EDITOR-02 |
 | 9 | [P7-OPS-01](./P7-OPS-01-merchant-operate-and-assisted.md) | Painel lojista: operar personalizações + montar assistida | todo | P7-SESS-01 |
@@ -79,3 +79,7 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Anti-abuso no endpoint público** (rate limit do `public_token`) — hardening (Fase 10). Origem: `P7-SESS-01`.
 - [ ] **Strip de metadados/re-encode da imagem** no upload (hoje só valida mime/tamanho/decode + nome próprio). Origem: `P7-SESS-01`.
 - [ ] **Status de arte/produção** (`received…production_done`) no **item do pedido** — criar onde é lido. Origem: `P7-SESS-01` → `P7-ORD-01`/`P7-OPS-01`.
+- [ ] **`dispose` de texturas/geometrias** no editor ao fechar/trocar (perf mobile). Origem: `P7-EDITOR-01`.
+- [ ] **Chrome do template no editor** — `/personalizar` é standalone; aplicar o `Shell` do template ativo. Origem: `P7-EDITOR-01`.
+- [ ] **Painel 2D proporcional à superfície** no storefront (`computeUnwrapAspect`, como o admin). Origem: `P7-EDITOR-01` → `P7-EDITOR-02`.
+- [ ] **Sessão expirada no autosave → oferecer clonar** (hoje só mostra o 410). Origem: `P7-EDITOR-01`.

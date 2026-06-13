@@ -68,6 +68,7 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | Upload: **`image/png`, `image/jpeg`** | `sessions._DEFAULT_MIMES` / `art_limits.mimes` | const + seed/DB | Tipos aceitos (raster). |
 | Upload: **dimensão mín. 300 px** | `sessions._DEFAULT_MIN_DIMENSION` / `art_limits.min_dimension` | const + seed/DB | Abaixo disso = **aviso** de baixa resolução (não bloqueia). |
 | Snapshot de aprovação = **PNG** | `sessions.SNAPSHOT_MIME` | const | Foto do canvas no approve (doc 30 §5). |
+| Autosave do editor = **800 ms** (debounce) | `frontend-storefront/lib/use-customizer.AUTOSAVE_DEBOUNCE_MS` | const | Espera após a última edição antes de salvar o `state_json`. |
 
 **Seed/DB da caneca** (`platform_3d_model_versions`, **editável no admin** — `P7-ADM-01`):
 
@@ -124,5 +125,9 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | `DomainStatus` | `domains/enums.py` | `pending`, `active`, `failed`, `blocked` |
 | `SslStatus` | `domains/enums.py` | `pending`, `issued`, `failed` |
 | `PlatformRole` | `platform_admin/enums.py` | `platform_owner`, `platform_ops`, `platform_finance`, `platform_support`, `platform_catalog` |
+| `PaymentProvider` | `payments/enums.py` | `asaas_baas`, `mercado_pago` (`pagarme` futuro) |
+| `PaymentAccountMode` | `payments/enums.py` | `native`, `connected` |
+| `PaymentAccountStatus` | `payments/enums.py` | `pending`, `active`, `blocked`, `rejected` |
+| `PaymentStatus` | `payments/enums.py` | `created`, `pending`, `authorized`, `paid`, `refused`, `canceled`, `refunded`, `chargeback` |
 
 > **Permissões de loja** (catálogo + mapa papel→permissão) **não** ficam aqui: fonte = [08](./08_modules_and_permissions.md) e `stores/permissions.py`.

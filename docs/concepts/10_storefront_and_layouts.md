@@ -344,7 +344,7 @@ Deve:
 - permitir entrega combinada quando habilitada pela loja;
 - criar pedido pendente;
 - anexar personalização aprovada ao pedido;
-- redirecionar ou integrar gateway;
+- redirecionar ou integrar provider de pagamento;
 - aguardar confirmação por webhook.
 
 Checkout não deve exigir senha ou cadastro prévio.
@@ -356,7 +356,7 @@ Quando o cliente escolher entrega combinada, o checkout deve mostrar uma mensage
 A loja entrará em contato após a compra para combinar a entrega.
 ```
 
-> **Sem gateway (Fase 6):** na venda sem pagamento, o checkout **cria o pedido pendente** e segue direto para a **confirmação** — sem redirecionar/integrar gateway nem esperar webhook (isso é a Fase 8). A confirmação mostra o **número do pedido**, as **políticas da loja** (troca/devolução/privacidade) e um **handoff por WhatsApp** com a mensagem pré-preenchida (pedido + itens) para combinar o pagamento. Ver [11 — Venda sem gateway (MVP local — Fase 6)](11_checkout_payments_and_split.md).
+> **Sem pagamento online (Fase 6):** na venda sem pagamento, o checkout **cria o pedido pendente** e segue direto para a **confirmação** — sem redirecionar/integrar provider nem esperar webhook (isso é a Fase 8). A confirmação mostra o **número do pedido**, as **políticas da loja** (troca/devolução/privacidade) e um **handoff por WhatsApp** com a mensagem pré-preenchida (pedido + itens) para combinar o pagamento. Ver [11 — Venda sem gateway (MVP local — Fase 6)](11_checkout_payments_and_split.md).
 
 ## Decisão canônica
 
