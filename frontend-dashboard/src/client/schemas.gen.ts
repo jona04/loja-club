@@ -3181,6 +3181,79 @@ export const ProductCreateSchema = {
     description: 'Fields accepted when creating a product (status starts as ``draft``).'
 } as const;
 
+export const ProductModelLinkSchema = {
+    properties: {
+        platform_3d_model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Platform 3D Model Id'
+        },
+        type: {
+            '$ref': '#/components/schemas/ProductType'
+        },
+        production_notes: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Production Notes'
+        }
+    },
+    type: 'object',
+    required: ['platform_3d_model_id', 'type'],
+    title: 'ProductModelLink',
+    description: 'Request to link a product to a catalog 3D model (merchant choice).'
+} as const;
+
+export const ProductModelSettingsPublicSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        type: {
+            '$ref': '#/components/schemas/ProductType'
+        },
+        platform_3d_model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Platform 3D Model Id'
+        },
+        model_name: {
+            type: 'string',
+            title: 'Model Name'
+        },
+        model_slug: {
+            type: 'string',
+            title: 'Model Slug'
+        },
+        model_category: {
+            type: 'string',
+            title: 'Model Category'
+        },
+        production_notes: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Production Notes'
+        }
+    },
+    type: 'object',
+    required: ['product_id', 'type', 'platform_3d_model_id', 'model_name', 'model_slug', 'model_category', 'production_notes'],
+    title: 'ProductModelSettingsPublic',
+    description: "A product's current 3D-model link, for the merchant panel."
+} as const;
+
 export const ProductPublicSchema = {
     properties: {
         name: {

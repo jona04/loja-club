@@ -853,6 +853,28 @@ export type ProductCreate = {
 };
 
 /**
+ * Request to link a product to a catalog 3D model (merchant choice).
+ */
+export type ProductModelLink = {
+    platform_3d_model_id: string;
+    type: ProductType;
+    production_notes?: (string | null);
+};
+
+/**
+ * A product's current 3D-model link, for the merchant panel.
+ */
+export type ProductModelSettingsPublic = {
+    product_id: string;
+    type: ProductType;
+    platform_3d_model_id: string;
+    model_name: string;
+    model_slug: string;
+    model_category: string;
+    production_notes: (string | null);
+};
+
+/**
  * Public representation of a product.
  */
 export type ProductPublic = {
@@ -1783,6 +1805,28 @@ export type CustomersGetCustomerData = {
 };
 
 export type CustomersGetCustomerResponse = (CustomerDetail);
+
+export type CustomizationGetProductModelData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CustomizationGetProductModelResponse = ((ProductModelSettingsPublic | null));
+
+export type CustomizationLinkProductModelData = {
+    productId: string;
+    requestBody: ProductModelLink;
+    storeId: string;
+};
+
+export type CustomizationLinkProductModelResponse = (ProductModelSettingsPublic);
+
+export type CustomizationUnlinkProductModelData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CustomizationUnlinkProductModelResponse = (void);
 
 export type DCatalogListModelsResponse = (Array<Platform3DModelPublic>);
 

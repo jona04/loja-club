@@ -5,8 +5,15 @@ import uuid
 from sqlmodel import Session
 
 from app.core.api import AppError
+from app.db.base import get_datetime_utc
+from app.modules.catalog.enums import ProductType
+from app.modules.catalog.services import get_product
 from app.modules.customization import repositories
-from app.modules.customization.models import Platform3DModelVersion
+from app.modules.customization.models import (
+    CustomizationProductSettings,
+    Platform3DModel,
+    Platform3DModelVersion,
+)
 from app.modules.customization.schemas import (
     Platform3DModelAdmin,
     Platform3DModelPublic,
@@ -14,7 +21,13 @@ from app.modules.customization.schemas import (
     Platform3DModelVersionAdmin,
     Platform3DModelVersionPublic,
     Platform3DModelVersionUpdate,
+    ProductModelLink,
+    ProductModelSettingsPublic,
 )
+
+# A product linked to a 3D model must be one of the 3D types; ``image`` means
+# "no 3D model", so it cannot carry a link.
+_LINKABLE_TYPES = {ProductType.image_3d, ProductType.image_3d_customizable}
 
 
 def list_catalog(*, session: Session) -> list[Platform3DModelPublic]:
@@ -194,3 +207,170 @@ def update_version(
     session.commit()
     session.refresh(version)
     return _to_version_admin(version)
+
+
+def _to_settings_public(
+    *,
+    settings: CustomizationProductSettings,
+    model: Platform3DModel,
+    product_type: ProductType,
+) -> ProductModelSettingsPublic:
+    """Map a settings row + its catalog model to the panel DTO.
+
+    Args:
+        settings: The persisted product-model link.
+        model: The linked catalog model (for display fields).
+        product_type: The product's current type.
+
+    Returns:
+        The panel DTO describing the product's 3D-model link.
+    """
+    return ProductModelSettingsPublic(
+        product_id=settings.product_id,
+        type=product_type,
+        platform_3d_model_id=settings.platform_3d_model_id,
+        model_name=model.name,
+        model_slug=model.slug,
+        model_category=model.category,
+        production_notes=settings.production_notes,
+    )
+
+
+def get_product_model(
+    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
+) -> ProductModelSettingsPublic | None:
+    """Return a product's current 3D-model link, or ``None`` if unlinked.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product whose link to read.
+
+    Returns:
+        The link DTO, or ``None`` if the product has no active link.
+
+    Raises:
+        AppError: 404 if the product does not exist in the store.
+    """
+    product = get_product(session=session, store_id=store_id, product_id=product_id)
+    settings = repositories.get_product_settings(
+        session=session, store_id=store_id, product_id=product_id
+    )
+    if settings is None:
+        return None
+    model = repositories.get_model(
+        session=session, model_id=settings.platform_3d_model_id
+    )
+    if model is None:  # pragma: no cover — FK guarantees the model exists
+        return None
+    return _to_settings_public(
+        settings=settings, model=model, product_type=product.type
+    )
+
+
+def link_product_model(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    product_id: uuid.UUID,
+    payload: ProductModelLink,
+) -> ProductModelSettingsPublic:
+    """Link a product to an active catalog model and set its 3D ``type``.
+
+    Idempotent per product: re-linking updates the chosen model/notes (one
+    active settings row per product). Only an **active** catalog model with an
+    active version can be linked.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product to link.
+        payload: The chosen model, the product ``type`` and production notes.
+
+    Returns:
+        The resulting link DTO.
+
+    Raises:
+        AppError: 404 if the product is missing; 422 if ``type`` is not a 3D
+            type, or the model is missing/disabled/has no active version.
+    """
+    product = get_product(session=session, store_id=store_id, product_id=product_id)
+    if payload.type not in _LINKABLE_TYPES:
+        raise AppError(
+            "invalid_product_type",
+            "A linked product must be 'image_3d' or 'image_3d_customizable'.",
+            status_code=422,
+        )
+    model = repositories.get_model(
+        session=session, model_id=payload.platform_3d_model_id
+    )
+    if model is None or not model.is_active:
+        raise AppError(
+            "model_not_linkable",
+            "The chosen 3D model is unavailable.",
+            status_code=422,
+        )
+    if repositories.get_active_version(session=session, model_id=model.id) is None:
+        raise AppError(
+            "model_not_linkable",
+            "The chosen 3D model has no active version.",
+            status_code=422,
+        )
+
+    settings = repositories.get_product_settings(
+        session=session, store_id=store_id, product_id=product_id
+    )
+    if settings is None:
+        settings = CustomizationProductSettings(
+            store_id=store_id,
+            product_id=product_id,
+            platform_3d_model_id=model.id,
+            production_notes=payload.production_notes,
+        )
+    else:
+        settings.platform_3d_model_id = model.id
+        settings.production_notes = payload.production_notes
+    product.type = payload.type
+    session.add(settings)
+    session.add(product)
+    session.commit()
+    session.refresh(settings)
+    return _to_settings_public(
+        settings=settings, model=model, product_type=product.type
+    )
+
+
+def unlink_product_model(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    product_id: uuid.UUID,
+    unlinked_by: uuid.UUID,
+) -> None:
+    """Unlink a product's 3D model: soft-delete the link, revert ``type``.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product to unlink.
+        unlinked_by: The acting member's user id (recorded on the soft delete).
+
+    Raises:
+        AppError: 404 if the product is missing, or 404 if it has no active link.
+    """
+    product = get_product(session=session, store_id=store_id, product_id=product_id)
+    settings = repositories.get_product_settings(
+        session=session, store_id=store_id, product_id=product_id
+    )
+    if settings is None:
+        raise AppError(
+            "product_model_not_linked",
+            "This product has no 3D model linked.",
+            status_code=404,
+        )
+    settings.deleted_at = get_datetime_utc()
+    settings.deleted_by_user_id = unlinked_by
+    product.type = ProductType.image
+    session.add(settings)
+    session.add(product)
+    session.commit()

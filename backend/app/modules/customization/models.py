@@ -13,7 +13,12 @@ import uuid
 from sqlalchemy import JSON, Column, Index, text
 from sqlmodel import Field, SQLModel
 
-from app.db.base import SoftDeleteMixin, TimestampMixin, UUIDMixin
+from app.db.base import (
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    TimestampMixin,
+    UUIDMixin,
+)
 
 
 class Platform3DModelBase(SQLModel):
@@ -57,7 +62,7 @@ class Platform3DModelVersionBase(SQLModel):
     printable_areas: list[dict[str, object]] = Field(
         default_factory=list,
         sa_column=Column(JSON),
-        description="Decal projector + rectangle and limits, per printable area",
+        description="UV region (rectangle) + limits, per printable area",
     )
     text_config: dict[str, object] = Field(
         default_factory=dict,
@@ -97,3 +102,48 @@ class Platform3DModelVersion(
     )
 
     model_id: uuid.UUID = Field(foreign_key="platform_3d_models.id", index=True)
+
+
+class CustomizationProductSettingsBase(SQLModel):
+    """Shared fields for a product's 3D-model link."""
+
+    production_notes: str | None = Field(
+        default=None,
+        max_length=2000,
+        description="Merchant notes for production (e.g. print placement hints)",
+    )
+
+
+class CustomizationProductSettings(
+    UUIDMixin,
+    TimestampMixin,
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    CustomizationProductSettingsBase,
+    table=True,
+):
+    """Links a store's product to a catalog 3D model (the merchant's choice).
+
+    One active row per product (partial unique index on ``store_id +
+    product_id`` where ``deleted_at IS NULL``): linking upserts it and sets the
+    product's ``type`` (``image_3d`` / ``image_3d_customizable``); unlinking
+    soft-deletes it and reverts ``type`` to ``image``. The chosen model is the
+    platform catalog model; the storefront editor resolves the model to use from
+    here.
+    """
+
+    __tablename__ = "customization_product_settings"
+    __table_args__ = (
+        Index(
+            "ix_customization_product_settings_store_product",
+            "store_id",
+            "product_id",
+            unique=True,
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
+    product_id: uuid.UUID = Field(foreign_key="catalog_products.id", index=True)
+    platform_3d_model_id: uuid.UUID = Field(
+        foreign_key="platform_3d_models.id", index=True
+    )

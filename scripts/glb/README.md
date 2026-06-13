@@ -9,9 +9,10 @@ Pipeline that turns a heavy **4K source GLB** (e.g. a Tripo3D export, ~56 MB) in
 ```bash
 cd scripts/glb
 npm install                     # once
-# mug (cylindrical product): simplify + clean cylindrical UV for the print:
+# mug (cylindrical product): simplify + clean cylindrical UV for the print
+# (the published v1 — ~2 MB, 491k tris):
 node optimize-glb.mjs ../../glb-models/ceramic-mug-3d-model.glb dist/mug.glb \
-  --texture-size 2048 --simplify 0.15 --cylindrical-uv
+  --texture-size 2048 --simplify 0.25 --cylindrical-uv
 ```
 
 Pipeline: `dedup` + `weld` + (optional) `simplify` + (optional) **`--cylindrical-uv`** + downscale textures to a max edge + **Draco**. Texture **format is kept** (only resized). Prints size/triangle/texture before→after.

@@ -5,6 +5,7 @@ import uuid
 from sqlmodel import Session, col, select
 
 from app.modules.customization.models import (
+    CustomizationProductSettings,
     Platform3DModel,
     Platform3DModelVersion,
 )
@@ -122,6 +123,28 @@ def get_active_version(
             col(Platform3DModelVersion.deleted_at).is_(None),
         )
         .order_by(col(Platform3DModelVersion.version).desc())
+    ).first()
+
+
+def get_product_settings(
+    *, session: Session, store_id: uuid.UUID, product_id: uuid.UUID
+) -> CustomizationProductSettings | None:
+    """Return a product's active (non-deleted) 3D-model link, if any.
+
+    Args:
+        session: Active database session.
+        store_id: The active store id.
+        product_id: The product whose link to fetch.
+
+    Returns:
+        The settings row, or ``None`` if the product has no active link.
+    """
+    return session.exec(
+        select(CustomizationProductSettings).where(
+            CustomizationProductSettings.store_id == store_id,
+            CustomizationProductSettings.product_id == product_id,
+            col(CustomizationProductSettings.deleted_at).is_(None),
+        )
     ).first()
 
 

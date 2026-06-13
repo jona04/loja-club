@@ -28,7 +28,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | 1 | [P7-ASSET-01](./P7-ASSET-01-glb-preprocessing-pipeline.md) | Pipeline de pré-processamento do GLB (4K→web, Draco) + CDN | ✅ done | — |
 | 2 | [P7-CAT-01](./P7-CAT-01-platform-3d-catalog.md) | Catálogo 3D da plataforma: tabelas + seed da caneca | ✅ done | P7-ASSET-01 |
 | 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + **editor visual 3D** da área imprimível | ✅ done | P7-CAT-01 |
-| 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | todo | P7-CAT-01 |
+| 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | ✅ done | P7-CAT-01 |
 | 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | todo | P7-PROD-01 |
 | 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | todo | P7-SESS-01, P7-CAT-01 |
 | 7 | [P7-EDITOR-02](./P7-EDITOR-02-layers-approval-snapshot.md) | Editor: camadas (imagem+texto) + aprovação + snapshot + link público | todo | P7-EDITOR-01 |
@@ -67,6 +67,10 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Calibrar a região de UV imprimível da caneca** (o seed traz um retângulo placeholder) — fazer **visualmente** no admin (picker 2D de UV + preview 3D na superfície + Salvar). Origem: `P7-CAT-01`/`P7-ADM-01`.
 - [ ] **Aspecto da arte do cliente no editor da vitrine** — o admin já mostra o picker nas proporções reais da superfície (`onAspect`/`computeUnwrapAspect`); o **editor do storefront** deve enquadrar o canvas de upload no **aspecto físico da `uv_rect`** (`(Δu·circunferência) ÷ (Δv·altura)`), pra o cliente mandar arte na proporção certa (a faixa da caneca é ~2:1, não quadrada). Origem: `P7-ADM-01` → `P7-EDITOR-02`.
 - [ ] **Múltiplas áreas imprimíveis** (camiseta frente/verso) — caneca usa 1; schema suporta N. Origem: `P7-CAT-01`.
+- [ ] **Modelo vinculado desativado depois** — desativar um modelo/versão no admin não desfaz os vínculos existentes (`customization_product_settings`); o editor da vitrine não resolve o GLB. Avisar/bloquear/fallback. Origem: `P7-PROD-01`.
+- [ ] **Excluir produto não desvincula** — soft delete do produto deixa a settings órfã (inofensiva; recriar não conflita). Limpar no delete por consistência. Origem: `P7-PROD-01`.
+- [ ] **Preview do modelo na tela de produto** do painel (polir a UX de seleção). Origem: `P7-PROD-01`.
+- [ ] **e2e Playwright do vínculo** (escolher → vincular → tipo muda → desvincular) → depende da infra de e2e do painel. Origem: `P7-PROD-01`.
 - [ ] **Recolor do produto** (paleta + material nomeado + seletor) — fora da V1 (doc [30 §12](../../concepts/30_3d_customization_technical_design.md)). Origem: `P7-EDITOR-02`.
 - [ ] **Arte vetorial (SVG/PDF)** — V1 é só raster. Origem: `P7-EDITOR-02`.
 - [ ] **Múltiplas faces/áreas** (ex.: camiseta frente/verso) — a caneca usa 1 área. Origem: `P7-CAT-01`.

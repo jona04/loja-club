@@ -4,6 +4,8 @@ import uuid
 
 from sqlmodel import SQLModel
 
+from app.modules.catalog.enums import ProductType
+
 
 class Platform3DModelVersionPublic(SQLModel):
     """The active version of a catalog model, as exposed to the merchant."""
@@ -64,3 +66,23 @@ class Platform3DModelVersionUpdate(SQLModel):
     text_config: dict[str, object] | None = None
     art_limits: dict[str, object] | None = None
     is_active: bool | None = None
+
+
+class ProductModelLink(SQLModel):
+    """Request to link a product to a catalog 3D model (merchant choice)."""
+
+    platform_3d_model_id: uuid.UUID
+    type: ProductType
+    production_notes: str | None = None
+
+
+class ProductModelSettingsPublic(SQLModel):
+    """A product's current 3D-model link, for the merchant panel."""
+
+    product_id: uuid.UUID
+    type: ProductType
+    platform_3d_model_id: uuid.UUID
+    model_name: str
+    model_slug: str
+    model_category: str
+    production_notes: str | None
