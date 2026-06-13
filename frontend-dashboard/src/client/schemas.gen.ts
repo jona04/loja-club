@@ -2704,6 +2704,265 @@ export const Page_VariantPublic_Schema = {
     title: 'Page[VariantPublic]'
 } as const;
 
+export const Platform3DModelAdminSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        category: {
+            type: 'string',
+            title: 'Category'
+        },
+        slug: {
+            type: 'string',
+            title: 'Slug'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        },
+        active_version: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/Platform3DModelVersionAdmin'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'category', 'slug', 'is_active', 'active_version'],
+    title: 'Platform3DModelAdmin',
+    description: 'A catalog model for the admin (includes ``is_active`` + active version).'
+} as const;
+
+export const Platform3DModelPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        category: {
+            type: 'string',
+            title: 'Category'
+        },
+        slug: {
+            type: 'string',
+            title: 'Slug'
+        },
+        active_version: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'category', 'slug', 'active_version'],
+    title: 'Platform3DModelPublic',
+    description: 'A catalog model plus its active version (or ``None`` if none active).'
+} as const;
+
+export const Platform3DModelUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        category: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Category'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    title: 'Platform3DModelUpdate',
+    description: "Partial update of a catalog model's metadata/visibility."
+} as const;
+
+export const Platform3DModelVersionAdminSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        version: {
+            type: 'integer',
+            title: 'Version'
+        },
+        glb_url: {
+            type: 'string',
+            title: 'Glb Url'
+        },
+        printable_areas: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Printable Areas'
+        },
+        text_config: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Text Config'
+        },
+        art_limits: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Art Limits'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    required: ['id', 'version', 'glb_url', 'printable_areas', 'text_config', 'art_limits', 'is_active'],
+    title: 'Platform3DModelVersionAdmin',
+    description: 'A model version as seen by the admin (includes ``is_active``).'
+} as const;
+
+export const Platform3DModelVersionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        version: {
+            type: 'integer',
+            title: 'Version'
+        },
+        glb_url: {
+            type: 'string',
+            title: 'Glb Url'
+        },
+        printable_areas: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Printable Areas'
+        },
+        text_config: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Text Config'
+        },
+        art_limits: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Art Limits'
+        }
+    },
+    type: 'object',
+    required: ['id', 'version', 'glb_url', 'printable_areas', 'text_config', 'art_limits'],
+    title: 'Platform3DModelVersionPublic',
+    description: 'The active version of a catalog model, as exposed to the merchant.'
+} as const;
+
+export const Platform3DModelVersionUpdateSchema = {
+    properties: {
+        printable_areas: {
+            anyOf: [
+                {
+                    items: {
+                        additionalProperties: true,
+                        type: 'object'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Printable Areas'
+        },
+        text_config: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Text Config'
+        },
+        art_limits: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Art Limits'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    title: 'Platform3DModelVersionUpdate',
+    description: "Partial update of a version's editor parameters/visibility."
+} as const;
+
 export const PlatformMeSchema = {
     properties: {
         id: {

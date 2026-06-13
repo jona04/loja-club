@@ -12,20 +12,15 @@ from app.modules.customization.storage import model_glb_url
 
 MUG_SLUG = "ceramic-mug"
 
-# Initial front printable area for the mug. Coordinates are calibrated visually
-# in the admin; the seed only provides a starting value.
+# Initial front printable area for the mug, as a region of the model's UV space
+# (0..1). The GLB carries a clean cylindrical UV channel (added in pre-processing
+# via `--cylindrical-uv`), so the art follows the real surface; a UV rectangle
+# maps to a continuous band. Calibrated visually in the admin; this is just the
+# starting value (a front band that avoids the back seam).
 _MUG_FRONT_AREA: dict[str, object] = {
     "id": "front",
     "label": "Frente",
-    "target_mesh": None,
-    "projector": {
-        "position": [0.0, 0.05, 0.041],
-        "normal": [0.0, 0.0, 1.0],
-        "up": [0.0, 1.0, 0.0],
-        "size_m": [0.18, 0.085],
-    },
-    "size_cm": [18.0, 8.5],
-    "aspect_ratio": 2.1,
+    "uv_rect": {"u0": 0.2, "v0": 0.3, "u1": 0.8, "v1": 0.7},
     "max_layers": 5,
 }
 
@@ -49,6 +44,62 @@ def list_active_models(*, session: Session) -> list[Platform3DModel]:
             .order_by(col(Platform3DModel.created_at))
         ).all()
     )
+
+
+def list_all_models(*, session: Session) -> list[Platform3DModel]:
+    """List all non-deleted catalog models (active and inactive), oldest first.
+
+    Args:
+        session: Active database session.
+
+    Returns:
+        Every non-deleted catalog model (for admin governance).
+    """
+    return list(
+        session.exec(
+            select(Platform3DModel)
+            .where(col(Platform3DModel.deleted_at).is_(None))
+            .order_by(col(Platform3DModel.created_at))
+        ).all()
+    )
+
+
+def get_model(*, session: Session, model_id: uuid.UUID) -> Platform3DModel | None:
+    """Return a non-deleted catalog model by id.
+
+    Args:
+        session: Active database session.
+        model_id: The catalog model's id.
+
+    Returns:
+        The model, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(Platform3DModel).where(
+            Platform3DModel.id == model_id,
+            col(Platform3DModel.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def get_version(
+    *, session: Session, version_id: uuid.UUID
+) -> Platform3DModelVersion | None:
+    """Return a non-deleted model version by id.
+
+    Args:
+        session: Active database session.
+        version_id: The version's id.
+
+    Returns:
+        The version, or ``None`` if missing/deleted.
+    """
+    return session.exec(
+        select(Platform3DModelVersion).where(
+            Platform3DModelVersion.id == version_id,
+            col(Platform3DModelVersion.deleted_at).is_(None),
+        )
+    ).first()
 
 
 def get_active_version(

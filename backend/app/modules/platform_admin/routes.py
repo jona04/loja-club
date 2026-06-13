@@ -18,6 +18,13 @@ from app.modules.billing.schemas import (
     BillingPlanUpdate,
 )
 from app.modules.content.models import ContentThemeTemplate
+from app.modules.customization import services as customization_services
+from app.modules.customization.schemas import (
+    Platform3DModelAdmin,
+    Platform3DModelUpdate,
+    Platform3DModelVersionAdmin,
+    Platform3DModelVersionUpdate,
+)
 from app.modules.platform_admin import services
 from app.modules.platform_admin.deps import require_platform_permission
 from app.modules.platform_admin.repositories import user_platform_roles
@@ -278,4 +285,44 @@ async def upload_template_thumbnail(
         template_id=template_id,
         data=data,
         content_type=file.content_type or "application/octet-stream",
+    )
+
+
+@router.get(
+    "/3d-models",
+    response_model=list[Platform3DModelAdmin],
+    dependencies=[Depends(require_platform_permission("platform.3d_models.view"))],
+)
+def list_3d_models(session: SessionDep) -> list[Platform3DModelAdmin]:
+    """List the 3D catalog models (active and inactive)."""
+    return customization_services.list_models_admin(session=session)
+
+
+@router.patch(
+    "/3d-models/{model_id}",
+    response_model=Platform3DModelAdmin,
+    dependencies=[Depends(require_platform_permission("platform.3d_models.manage"))],
+)
+def update_3d_model(
+    model_id: uuid.UUID, payload: Platform3DModelUpdate, session: SessionDep
+) -> Platform3DModelAdmin:
+    """Enable/disable or edit a 3D catalog model."""
+    return customization_services.update_model(
+        session=session, model_id=model_id, payload=payload
+    )
+
+
+@router.patch(
+    "/3d-models/versions/{version_id}",
+    response_model=Platform3DModelVersionAdmin,
+    dependencies=[Depends(require_platform_permission("platform.3d_models.manage"))],
+)
+def update_3d_model_version(
+    version_id: uuid.UUID,
+    payload: Platform3DModelVersionUpdate,
+    session: SessionDep,
+) -> Platform3DModelVersionAdmin:
+    """Edit a version's printable areas / text / art limits (or visibility)."""
+    return customization_services.update_version(
+        session=session, version_id=version_id, payload=payload
     )

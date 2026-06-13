@@ -716,6 +716,91 @@ export type Page_VariantPublic_ = {
 };
 
 /**
+ * A catalog model for the admin (includes ``is_active`` + active version).
+ */
+export type Platform3DModelAdmin = {
+    id: string;
+    name: string;
+    category: string;
+    slug: string;
+    is_active: boolean;
+    active_version: (Platform3DModelVersionAdmin | null);
+};
+
+/**
+ * A catalog model plus its active version (or ``None`` if none active).
+ */
+export type Platform3DModelPublic = {
+    id: string;
+    name: string;
+    category: string;
+    slug: string;
+    active_version: (Platform3DModelVersionPublic | null);
+};
+
+/**
+ * Partial update of a catalog model's metadata/visibility.
+ */
+export type Platform3DModelUpdate = {
+    name?: (string | null);
+    category?: (string | null);
+    is_active?: (boolean | null);
+};
+
+/**
+ * A model version as seen by the admin (includes ``is_active``).
+ */
+export type Platform3DModelVersionAdmin = {
+    id: string;
+    version: number;
+    glb_url: string;
+    printable_areas: Array<{
+        [key: string]: unknown;
+    }>;
+    text_config: {
+        [key: string]: unknown;
+    };
+    art_limits: {
+        [key: string]: unknown;
+    };
+    is_active: boolean;
+};
+
+/**
+ * The active version of a catalog model, as exposed to the merchant.
+ */
+export type Platform3DModelVersionPublic = {
+    id: string;
+    version: number;
+    glb_url: string;
+    printable_areas: Array<{
+        [key: string]: unknown;
+    }>;
+    text_config: {
+        [key: string]: unknown;
+    };
+    art_limits: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * Partial update of a version's editor parameters/visibility.
+ */
+export type Platform3DModelVersionUpdate = {
+    printable_areas?: (Array<{
+    [key: string]: unknown;
+}> | null);
+    text_config?: ({
+    [key: string]: unknown;
+} | null);
+    art_limits?: ({
+    [key: string]: unknown;
+} | null);
+    is_active?: (boolean | null);
+};
+
+/**
  * The signed-in user and their platform roles (empty if not an admin).
  */
 export type PlatformMe = {
@@ -1699,6 +1784,8 @@ export type CustomersGetCustomerData = {
 
 export type CustomersGetCustomerResponse = (CustomerDetail);
 
+export type DCatalogListModelsResponse = (Array<Platform3DModelPublic>);
+
 export type DiscountsListCouponsData = {
     storeId: string;
 };
@@ -1918,6 +2005,22 @@ export type PlatformAdminUploadTemplateThumbnailData = {
 };
 
 export type PlatformAdminUploadTemplateThumbnailResponse = (ThemeTemplateAdminPublic);
+
+export type PlatformAdminList3dModelsResponse = (Array<Platform3DModelAdmin>);
+
+export type PlatformAdminUpdate3dModelData = {
+    modelId: string;
+    requestBody: Platform3DModelUpdate;
+};
+
+export type PlatformAdminUpdate3dModelResponse = (Platform3DModelAdmin);
+
+export type PlatformAdminUpdate3dModelVersionData = {
+    requestBody: Platform3DModelVersionUpdate;
+    versionId: string;
+};
+
+export type PlatformAdminUpdate3dModelVersionResponse = (Platform3DModelVersionAdmin);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;

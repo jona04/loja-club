@@ -19,8 +19,9 @@ O **conteúdo** do editor: aplicar **imagem** e **texto** como camadas (decal) d
 - [30 — §2 Camadas/decal / §4 state_json / §5 Snapshot / §9 Link público](../../concepts/30_3d_customization_technical_design.md)
 
 ## Escopo (o que ENTRA)
-- **Camada imagem:** upload raster (PNG/JPG) → **decal** projetado na área; transform (mover/escalar/rotacionar) **dentro do retângulo**; z-order.
-- **Camada texto:** conteúdo + **fonte** (conjunto fechado) + **cor do texto** + tamanho → canvas→textura → decal.
+> A arte é **composta numa textura na região de UV** da área e **mapeada pela UV do GLB** → cola na superfície real (enrola na caneca, acompanha dobras). Não é projeção (doc [30 §3](../../concepts/30_3d_customization_technical_design.md)).
+- **Camada imagem:** upload raster (PNG/JPG) → composta na **região de UV**; transform (mover/escalar/rotacionar) **dentro da região**; z-order.
+- **Camada texto:** conteúdo + **fonte** (conjunto fechado) + **cor do texto** + tamanho → canvas → composto na **região de UV**.
 - **Aprovação:** habilita com ≥1 camada válida; **gera o snapshot** (canvas → PNG, doc [30 §5](../../concepts/30_3d_customization_technical_design.md)) → envia + chama `aprovar` (`P7-SESS-01`).
 - **Link público read-only** (`/p/<token>`): reusa o editor em modo leitura; **aprovar** pede **confirmação de contato** (sem conta).
 

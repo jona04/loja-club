@@ -55,10 +55,10 @@ A plataforma mantém um **catálogo público de modelos 3D** (sem `store_id`), p
 ## Notas / Reconciliações
 - Campos/índices conferem com o doc [07](../../concepts/07_database_strategy.md).
 - **Implementação:** módulo `app/modules/customization/` (`models`/`storage`/`schemas`/`repositories`/`services`/`routes`) — platform-owned (sem `store_id`). Rota `GET /api/v1/3d-catalog/models` (autenticada). Seed da caneca em `init_db`. 7 testes de integração ✅.
-- **Slug = fonte única (resolve a observação):** o `glb_url` é **derivado** de `slug`+`version` por `customization.storage.model_glb_key/url`, e o **mesmo helper** é usado no `backend/scripts/upload_glb.py` (`P7-ASSET-01`) — impossível o caminho do CDN divergir do catálogo. Verificado: a URL semeada == objeto live (HTTP 200, 1.14 MB). O **slug é único** entre ativos (índice parcial `WHERE deleted_at IS NULL`).
-- **Área imprimível semeada = valor inicial** (projetor frontal placeholder); calibração visual fica no admin (`P7-ADM-01`).
+- **Slug = fonte única (resolve a observação):** o `glb_url` é **derivado** de `slug`+`version` por `customization.storage.model_glb_key/url`, e o **mesmo helper** é usado no `backend/scripts/upload_glb.py` (`P7-ASSET-01`) — impossível o caminho do CDN divergir do catálogo. Verificado: a URL semeada == objeto live (HTTP 200, 2.05 MB). O **slug é único** entre ativos (índice parcial `WHERE deleted_at IS NULL`).
+- **Área imprimível semeada = valor inicial** (`uv_rect` placeholder); calibração visual fica no admin (`P7-ADM-01`).
 
 ## Follow-ups
 - [ ] **Validar que o GLB existe na chave do slug** no seed/upload — hoje um slug com typo gera `glb_url` que **404** silenciosamente (o acoplamento slug↔caminho está garantido, mas não a existência do objeto). *Quando:* ao automatizar o upload pelo admin (cruza com `P7-ASSET-01`). → README da fase.
-- [ ] **Calibrar a área imprimível da caneca** (projetor real) — o seed traz placeholder. *Quando:* `P7-ADM-01` (editor visual). → README da fase.
+- [ ] **Calibrar a região de UV imprimível da caneca** — o seed traz `uv_rect` placeholder. *Quando:* `P7-ADM-01` (picker 2D + preview 3D). → README da fase.
 - [ ] **Múltiplas áreas imprimíveis** (ex.: camiseta frente/verso) — a caneca usa **1**; o schema suporta N. *Quando:* ao entrar um modelo multi-face. → README da fase.

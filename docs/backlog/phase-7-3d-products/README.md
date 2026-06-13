@@ -9,7 +9,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 ## Decisões de entrada (doc 30 — não redecidir)
 - **1º modelo = caneca branca de cerâmica** (`glb-models/ceramic-mug-3d-model.glb`, source 4K ~56 MB → pré-processar).
 - Editor = **imagem + transform + texto**. **Sem troca de cor do produto na V1** (recolor = follow-up). Arte = **só raster (PNG/JPG)**.
-- Lib = **react-three-fiber + drei**; **2 painéis** (2D edita / 3D gira-zoom-move); área imprimível = **decal projetado**, **editável no admin**.
+- Lib = **react-three-fiber + drei**; **2 painéis** (2D = região de UV / 3D mostra na superfície); área imprimível = **região de UV** (a arte é mapeada pela UV do GLB → cola na superfície real), **editável no admin** (picker 2D + preview 3D).
 - Assistida = **link público (`public_token`) + confirmação de contato** (sem conta; logado é Fase 8).
 - **Snapshot client-side** (canvas→PNG) na aprovação; pedido **congela** `state_json` + `version_id` + snapshot.
 
@@ -27,7 +27,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 |---|----|------|--------|-----------|
 | 1 | [P7-ASSET-01](./P7-ASSET-01-glb-preprocessing-pipeline.md) | Pipeline de pré-processamento do GLB (4K→web, Draco) + CDN | ✅ done | — |
 | 2 | [P7-CAT-01](./P7-CAT-01-platform-3d-catalog.md) | Catálogo 3D da plataforma: tabelas + seed da caneca | ✅ done | P7-ASSET-01 |
-| 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + editor visual da área | todo | P7-CAT-01 |
+| 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + **editor visual 3D** da área imprimível | ✅ done | P7-CAT-01 |
 | 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | todo | P7-CAT-01 |
 | 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | todo | P7-PROD-01 |
 | 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | todo | P7-SESS-01, P7-CAT-01 |
@@ -57,9 +57,15 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Vitrine expõe variações + disponibilidade** (Fase 3, `P3-SF-01`/`P3-SF-02`; movido da Fase 6) → **`P7-SF-02`**.
 
 **Da própria fase** (preencher conforme as tasks fecham):
-- [ ] **QA visual da caneca v1** (`simplify 0.15`, 292k tris) — gerada/subida sem inspeção 3D; **conferir quando o `P7-EDITOR-01` renderizar** (alça/bordas). Se distorcer, regenerar com ratio maior (ou sem simplify) → **v2** + reseed. Origem: `P7-ASSET-01`.
+- [ ] **QA visual da caneca v1** (`simplify 0.25`, 491k tris, 2.05 MB) — **conferir quando o `P7-EDITOR-01` renderizar na vitrine** (alça/bordas no zoom do cliente). Se distorcer, regenerar com ratio maior (ou sem simplify) → **v2** + reseed. Origem: `P7-ASSET-01`.
 - [ ] **Validar existência do GLB na chave do slug** (seed/upload) — slug com typo → `glb_url` 404 silencioso; o acoplamento slug↔caminho é garantido, a existência não. Origem: `P7-CAT-01`.
-- [ ] **Calibrar a área imprimível da caneca** (projetor real; o seed traz placeholder) → **`P7-ADM-01`** (editor visual). Origem: `P7-CAT-01`.
+- [ ] **QA visual no browser do editor 3D** (`P7-ADM-01`) — a caneca carrega? o retângulo projeta certo? arrastar/girar/redimensionar fluido? Não inspecionável fora do browser. Origem: `P7-ADM-01`.
+- [ ] **e2e Playwright do admin 3D** (lista/toggle/editar área). Origem: `P7-ADM-01`.
+- [ ] **Costura da UV cilíndrica** (`--cylindrical-uv`): a emenda em `u=0/1` (atrás) não é dividida → uma faixa que cruza as costas mostra uma listra. OK pra faixa frontal; pra volta 360° precisa **split de vértices na costura**. Origem: `P7-ASSET-01`.
+- [ ] **UV cilíndrica assume eixo Y + cilindro**: distorce um pouco onde a peça foge do cilindro (lábio/cônico) e fica torta se o modelo não estiver em pé. Pra produtos não-cilíndricos, unwrap limpo (Blender). Origem: `P7-ASSET-01`.
+- [ ] **CORS do CDN reproduzível em produção** — o GLB carrega cross-origin no `three.js`; o CloudFront precisa devolver `Access-Control-Allow-Origin` (response-headers-policy `SimpleCORS`). Ligado **manualmente no dev** (console); falta no provisionamento de prod/IaC. Vale pro admin **e pra vitrine** (`P7-EDITOR-01`). Origem: `P7-ADM-01` (doc [30 §6](../../concepts/30_3d_customization_technical_design.md)).
+- [ ] **Calibrar a região de UV imprimível da caneca** (o seed traz um retângulo placeholder) — fazer **visualmente** no admin (picker 2D de UV + preview 3D na superfície + Salvar). Origem: `P7-CAT-01`/`P7-ADM-01`.
+- [ ] **Aspecto da arte do cliente no editor da vitrine** — o admin já mostra o picker nas proporções reais da superfície (`onAspect`/`computeUnwrapAspect`); o **editor do storefront** deve enquadrar o canvas de upload no **aspecto físico da `uv_rect`** (`(Δu·circunferência) ÷ (Δv·altura)`), pra o cliente mandar arte na proporção certa (a faixa da caneca é ~2:1, não quadrada). Origem: `P7-ADM-01` → `P7-EDITOR-02`.
 - [ ] **Múltiplas áreas imprimíveis** (camiseta frente/verso) — caneca usa 1; schema suporta N. Origem: `P7-CAT-01`.
 - [ ] **Recolor do produto** (paleta + material nomeado + seletor) — fora da V1 (doc [30 §12](../../concepts/30_3d_customization_technical_design.md)). Origem: `P7-EDITOR-02`.
 - [ ] **Arte vetorial (SVG/PDF)** — V1 é só raster. Origem: `P7-EDITOR-02`.

@@ -4,7 +4,7 @@ title: Admin — habilitar/desabilitar + editor visual da área imprimível
 phase: 7
 etapa: "Etapa 2 — Admin: habilitar/desabilitar + editar a área imprimível"
 area: ADM
-status: todo
+status: done
 depends_on: [P7-CAT-01]
 blocks: []
 tests: [integration]
@@ -45,12 +45,19 @@ O admin **não cria** modelos (GLB é seed), mas **governa** o catálogo e **aju
 - **Cobrir:** integração — toggle muda visibilidade; update da área persiste e valida (retângulo dentro de limites); só modelos ativos aparecem pro lojista.
 
 ## Definition of Done
-- [ ] Admin habilita/desabilita e **edita a área** (persistido na versão); editar **não** altera pedido congelado.
-- [ ] **Modos de falha mapeados** — parâmetros inválidos (retângulo fora) → 422; editar versão em uso → vale só pra sessões novas. → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Admin **habilita/desabilita** (modelo) e **edita a área/limites** (versão, persistido); editar afeta só **sessões novas** (o congelamento copia no pedido → `P7-ORD-01`).
+- [x] **Modos de falha mapeados** — área malformada (sem `id`) → **422** (testado); modelo/versão inexistente → **404** (testado); editar versão vale só p/ sessões novas (design). → tratados.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- O **componente de mapeamento da área** é a base da **[Fase 12](../phase-12-merchant-3d-generation.md)** (Etapa 3) — manter genérico (não acoplar ao "platform").
+- **Backend:** 3 rotas em `platform_admin` (`GET /platform/3d-models`, `PATCH /platform/3d-models/{model_id}`, `PATCH /platform/3d-models/versions/{version_id}`), gated `platform.3d_models.view`/`.manage` (já no catálogo de permissões). Lógica/validação em `customization.services`. **6 testes** ✅.
+- **Frontend-admin:** tela **"Modelos 3D"** (`/_layout/models-3d`) — lista + ativar/desativar + **editor visual 3D da área** + campos numéricos (size_cm/proporção/camadas) + JSON p/ `text_config`/`art_limits`; coluna GLB com **Ver 3D** (viewer read-only `ModelViewer3D`, girar/zoom) e **Baixar**. Client OpenAPI regenerado.
+- **CORS do CDN:** o GLB carrega cross-origin no `three.js`; foi preciso ligar `Access-Control-Allow-Origin` no CloudFront (response-headers-policy `SimpleCORS` + invalidação). Sem código — config de CDN (doc [30 §6](../../concepts/30_3d_customization_technical_design.md)); reproduzir em prod (Follow-up no README).
+- **Editor visual da área = região de UV** (`components/Models3D/{AreaEditor3D,UvRectPicker}.tsx`): `@react-three/fiber` + `@react-three/drei` + `three` (adicionados ao `frontend-admin`; `bun.lock` atualizado). **Picker 2D** (`UvRectPicker`) = painel do espaço UV com retângulo arrastável/redimensionável; **preview 3D** (`AreaEditor3D`) carrega o GLB (`useGLTF`, Draco), `OrbitControls`, e pinta a `uv_rect` **na superfície real** via um overlay com a UV do mesh (acompanha a curvatura/dobras). A arte/área é **mapeada pela UV do GLB** (não projeção) → cola na superfície. Chunk **lazy** (~270 KB gzip). É o **componente reusável na Fase 12**.
+- **Picker proporcional à superfície** (não quadrado): o `AreaEditor3D` mede a geometria (`computeUnwrapAspect` — `r` mediano em XZ, vão em Y → `2πr ÷ h`) e devolve o aspecto via `onAspect`; o `UvRectPicker` aplica `aspect-ratio`, então a região aparece nas proporções reais (a faixa da caneca é ~2,5× mais larga que alta) e não engana o lojista com um quadrado. Doc [30 §3](../../concepts/30_3d_customization_technical_design.md).
+- **Auto-enquadramento** (`AreaEditor3D` **e** `ModelViewer3D`): a câmera usa o `Bounds` do drei (`fit clip observe`) — enquadra o modelo qualquer que seja a escala real do GLB (a caneca tem ~0,9 unidades, não metros), então a câmera **nunca começa dentro** do modelo. Ambos os 3D carregam a URL com `?v=<versionId>` (cache-bust do browser).
 
 ## Follow-ups
-- [ ] **e2e do admin (Playwright)** do editor de área — *Quando:* infra de e2e do admin. → README da fase.
+- [ ] **QA visual no browser** do editor 3D (a caneca carrega? o retângulo projeta certo na superfície? arrastar/girar/redimensionar fluido?) — não dá pra inspecionar 3D fora do browser. Origem: `P7-ADM-01`. → README da fase.
+- [ ] **e2e Playwright** do admin 3D (lista/toggle/editar área) — *Quando:* infra de e2e do admin. → README da fase.
+- [ ] **Aspecto da arte do cliente na vitrine** — o admin já enquadra o picker no aspecto físico da superfície; o editor do storefront (`P7-EDITOR-02`) deve enquadrar o upload no aspecto da `uv_rect` pra o cliente mandar arte na proporção certa (faixa ~2:1, não quadrada). → README da fase.

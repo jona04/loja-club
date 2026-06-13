@@ -8,7 +8,7 @@
 
 Docs de referência: [30](../concepts/30_3d_customization_technical_design.md), [22](../concepts/22_product_customization_3d.md), [07](../concepts/07_database_strategy.md), [13](../concepts/13_performance_cache_and_cdn.md), [14](../concepts/14_security_strategy.md), [10](../concepts/10_storefront_and_layouts.md), [09](../concepts/09_merchant_dashboard.md), [25](../concepts/25_platform_admin.md), [16](../concepts/16_testing_strategy.md).
 
-> **Decisões de entrada (doc 30):** **1 modelo inicial = caneca branca de cerâmica** (GLB já gerado no Tripo3D); editor = **imagem + transform + texto** (**sem troca de cor do produto** na V1); arte **só raster (PNG/JPG)**; assistida = **link público + confirmação de contato** (sem conta). Lib = **react-three-fiber + drei**; área imprimível = **decal projetado**, **parametrizado no banco e editável no admin** (mesma ferramenta que o lojista usa na [Fase 12](./phase-12-merchant-3d-generation.md)).
+> **Decisões de entrada (doc 30):** **1 modelo inicial = caneca branca de cerâmica** (GLB já gerado no Tripo3D); editor = **imagem + transform + texto** (**sem troca de cor do produto** na V1); arte **só raster (PNG/JPG)**; assistida = **link público + confirmação de contato** (sem conta). Lib = **react-three-fiber + drei**; área imprimível = **região de UV** (a arte é mapeada pela UV do GLB e **cola na superfície real** — enrola na caneca, acompanha dobras), **editável no admin** (picker 2D + preview 3D; mesma ferramenta que o lojista usa na [Fase 12](./phase-12-merchant-3d-generation.md)).
 
 > **Catálogo da plataforma, não por loja.** Os modelos 3D são **públicos** (da Kriar), **populados por seed pelo dev**. O **admin** **habilita/desabilita** e **edita a área imprimível** (parâmetros no banco). O caminho "**o lojista gera o próprio GLB via API externa**" é a **[Fase 12](./phase-12-merchant-3d-generation.md)**.
 
@@ -26,7 +26,7 @@ Docs de referência: [30](../concepts/30_3d_customization_technical_design.md), 
 > Modelos **da plataforma** (sem `store_id`); o **GLB** vem por seed, a **área imprimível/limites** ficam em JSON no banco (editáveis no admin). Padrão do registro de templates (Fase 4): conteúdo por seed.
 - [ ] **Pré-processamento do GLB (gate da pipeline)** — o source vem **sempre em 4K (~56 MB)**; otimizar pra web (textura 4K → ~1–2K, decimate < ~150k tri, **Draco**) derrubando pra **poucos MB**, **automatizável via `gltf-transform`** (sem Blender). O GLB **otimizado** sobe ao **CDN** (`public/3d-models/<slug>/v<N>/model.glb`). Origem dos arquivos = `glb-models/`. Doc [30 §1](../concepts/30_3d_customization_technical_design.md).
 - [ ] Tabelas **platform-owned**: `platform_3d_models` (`name`, `category`, `slug`, `is_active`, soft delete) + `platform_3d_model_versions` (`model_id`, `version`, `glb_url`, `printable_areas` JSON, `text_config` JSON, `art_limits` JSON, `is_active`). Campos/índices no doc [07](../concepts/07_database_strategy.md); JSONs no doc [30 §3/§8](../concepts/30_3d_customization_technical_design.md).
-- [ ] **Definir a área imprimível** da caneca (projetor da faixa frontal) + **seed** do modelo (GLB no CDN + `printable_areas` + `text_config` + `art_limits`), populado programaticamente (análogo a `seed_content_templates`/`import_assets`).
+- [ ] **Definir a área imprimível** da caneca (**região de UV**) + **seed** do modelo (GLB no CDN + `printable_areas` + `text_config` + `art_limits`), populado programaticamente (análogo a `seed_content_templates`/`import_assets`).
 
 ## Etapa 2 — Admin: habilitar/desabilitar + editar a área imprimível
 > O admin **não cria** modelos (GLB é seed). Governa o catálogo **e ajusta os parâmetros** da área/limites — a **mesma ferramenta de mapeamento** que o lojista usará na [Fase 12](./phase-12-merchant-3d-generation.md).
@@ -44,7 +44,7 @@ Docs de referência: [30](../concepts/30_3d_customization_technical_design.md), 
 
 ## Etapa 5 — Editor 3D no storefront (react-three-fiber)
 - [ ] **Layout de 2 painéis** (doc [30 §2](../concepts/30_3d_customization_technical_design.md)): **painel 2D** (retângulo da área imprimível — arrastar/escalar/rotacionar **imagem** e **texto** dentro da área) + **painel 3D ao vivo** (`OrbitControls`: **girar/zoom/mover** a câmera). Sincronização automática 2D → decal no 3D. Responsivo: mobile empilha/abas.
-- [ ] Carregar o GLB da **versão escolhida** (CDN, Draco, lazy); camadas **imagem** (upload raster) + **texto** (fonte de conjunto fechado) aplicadas via **decal** na área; **autosave**; restaurar pela `guest_session_id`.
+- [ ] Carregar o GLB da **versão escolhida** (CDN, Draco, lazy); camadas **imagem** (upload raster) + **texto** (fonte de conjunto fechado) compostas na **região de UV** (mapeadas pela UV → colam na superfície); **autosave**; restaurar pela `guest_session_id`.
 - [ ] **Aprovação** obrigatória antes do carrinho: gera o **snapshot** (canvas → PNG, doc [30 §5](../concepts/30_3d_customization_technical_design.md)) e chama o endpoint de aprovar. **Sem troca de cor do produto** (fora da V1).
 
 ## Etapa 6 — Carrinho/pedido: congelar personalização

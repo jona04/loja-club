@@ -9,11 +9,14 @@ Pipeline that turns a heavy **4K source GLB** (e.g. a Tripo3D export, ~56 MB) in
 ```bash
 cd scripts/glb
 npm install                     # once
-node optimize-glb.mjs ../../glb-models/ceramic-mug-3d-model.glb dist/mug.glb --texture-size 2048
-# optional: add --simplify 0.6 to also decimate the mesh
+# mug (cylindrical product): simplify + clean cylindrical UV for the print:
+node optimize-glb.mjs ../../glb-models/ceramic-mug-3d-model.glb dist/mug.glb \
+  --texture-size 2048 --simplify 0.15 --cylindrical-uv
 ```
 
-Pipeline: `dedup` + `weld` + (optional) `simplify` + downscale textures to a max edge + **Draco** mesh compression. Texture **format is kept** (only resized) so it stays broadly loadable by three.js. Prints the size/triangle/texture before→after.
+Pipeline: `dedup` + `weld` + (optional) `simplify` + (optional) **`--cylindrical-uv`** + downscale textures to a max edge + **Draco**. Texture **format is kept** (only resized). Prints size/triangle/texture before→after.
+
+**`--cylindrical-uv`** adds a clean cylindrical UV as a second channel (`TEXCOORD_1`): `u` = angle around the Y axis, `v` = height. The original `TEXCOORD_0` (baked textures) is kept; the **printable art uses channel 1**, so a UV rectangle maps to a continuous band on the surface (a real unwrap, not a projection). Needed because the Tripo auto-UV is fragmented. Use it for **cylindrical products** (mug, bottle); models with a clean baked UV (e.g. a Blender-unwrapped fabric) don't need it.
 
 Test (in-memory sample, no network/heavy asset):
 

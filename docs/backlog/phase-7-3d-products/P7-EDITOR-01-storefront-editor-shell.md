@@ -27,7 +27,7 @@ A **casca** do editor 3D do storefront: o layout de **2 painéis** (2D edita / 3
 - **Autosave** do `state_json` (debounce → `PUT` da sessão, `P7-SESS-01`); **restaurar** pela `guest_session_id`.
 
 ## Fora de escopo (o que NÃO entra)
-- Camadas de **imagem/texto**, **decal**, **aprovação**, **snapshot**, **link público**: `P7-EDITOR-02`.
+- Camadas de **imagem/texto**, **composição na UV**, **aprovação**, **snapshot**, **link público**: `P7-EDITOR-02`.
 - Backend de sessão: `P7-SESS-01`.
 
 ## Arquivos a criar/alterar

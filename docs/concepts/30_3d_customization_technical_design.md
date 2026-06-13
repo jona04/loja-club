@@ -13,21 +13,21 @@
 | **Arte aceita** | **Só raster: PNG/JPG** (vetor/SVG e PDF ficam como follow-up — ver Fora de escopo). |
 | **Personalização assistida** | **Link público compartilhável** pra ver; **aprovar/comprar pede confirmação de contato** (e-mail/telefone), **sem conta** (a conta do cliente é a Fase 8). |
 | **Lib do editor** | **react-three-fiber** (`@react-three/fiber`) + **`@react-three/drei`**, componente client-only no storefront Next.js, carregado sob demanda. (Engenharia — justificada abaixo.) |
-| **Área imprimível** | **Decal projetado sobre o mesh** (projetor com retângulo limitado), **não** dependente da UV do GLB. **Parametrizada e guardada no banco** (não hardcoded) — **editável no admin** dos modelos 3D públicos; é o **mesmo mecanismo de mapeamento** que o lojista vai usar na Fase 12 pro próprio GLB. (Engenharia — justificada abaixo.) |
+| **Área imprimível** | **Região de UV** do modelo (retângulo no espaço UV 0..1). A arte é composta numa textura e **mapeada pela UV do GLB**, então **cola na superfície real** — enrola na caneca, acompanha dobras de tecido, qualquer geometria. **Parametrizada no banco**, **editável no admin** (picker 2D de UV + preview 3D ao vivo); é o mesmo mecanismo que o lojista usa na [Fase 12](../backlog/phase-12-merchant-3d-generation.md). (Engenharia — justificada abaixo.) |
 | **Snapshot** | Gerado **no cliente** (canvas → PNG) e enviado como imagem de aprovação. (Engenharia.) |
 
 ## 1. Pipeline do asset GLB (o que o dev faz antes do seed)
 
 > **Origem dos GLBs:** os modelos a subir ficam em **`glb-models/`** na raiz do repo (gitignored — binário pesado). A caneca está em `glb-models/ceramic-mug-3d-model.glb`. **Ao subir um novo modelo público, o dev parte dessa pasta.**
 
-O Tripo3D entrega um GLB com **topologia/UV automáticas** — bom pra visualização, **não confiável** pra mapear área de impressão por UV. Além disso o source **vem sempre em 4K** (texturas 4096²) → **pesado** (a caneca crua tem ~56 MB, longe de web-ready). Por isso **todo GLB passa por um pré-processamento obrigatório** antes de virar seed. Checklist para a caneca:
+O Tripo3D entrega um GLB com **UV automática FRAGMENTADA** — `TEXCOORD_0` preenche 0..1, mas em **ilhas espalhadas** (otimizadas pra bake, não pra uma faixa contínua). Um retângulo de UV nessa UV cai em **pedaços soltos** pela peça. Por isso, pra produtos **cilíndricos** (caneca, garrafa), o pré-processamento **gera uma UV cilíndrica limpa** (`--cylindrical-uv`) que a arte usa. O source **vem sempre em 4K** (texturas 4096²) → **pesado** (~56 MB). Pré-processamento **obrigatório** antes do seed. Checklist para a caneca:
 
-1. **Importar** o GLB do Tripo no Blender.
-2. **Escala real e orientação:** dimensionar pro tamanho físico (caneca ≈ 9,5 cm de altura, ø ≈ 8 cm), **Y-up**, origem na base, centralizada em XZ. A escala real importa pro aviso de baixa resolução (DPI) e pra proporção do decal.
-3. **Pré-processamento (otimização web — obrigatório, o gate da pipeline):** o source 4K precisa virar web-ready **antes** do resto — reamostrar texturas **4K → ~1–2K**, **reduzir geometria** (decimate, **< ~150k triângulos**) e aplicar **Draco**. Derruba os ~56 MB pra **poucos MB**. **Automatizável por CLI (`gltf-transform`)**, sem Blender; só o passo 5 (área imprimível) é manual/visual.
-4. **Materiais limpos:** a superfície cerâmica fica com seu **material branco** (a V1 **não** troca a cor do produto). Um material **nomeado** pra superfície só será necessário quando o recolor voltar (follow-up, §12).
-5. **Definir a(s) área(s) imprimível(is):** um **projetor planar** em espaço-modelo cobrindo a faixa frontal da caneca (o "wrap" onde a arte vai). Guardar a **transform do projetor** + o **tamanho do retângulo em cm** + a **proporção** no banco (ver §3). O seed só dá o **valor inicial**; depois isso é **editável no admin** (§3).
-6. **Exportar a versão final** — 1 GLB (já otimizado/Draco do passo 3) por versão.
+1. **Importar** o GLB de `glb-models/`.
+2. **Escala/orientação:** o modelo deve ficar **em pé e centralizado** (Y-up). A caneca do Tripo vem ~0,9 unidade e centrada; se vier torta, endireitar no Tripo (o editor auto-enquadra qualquer escala). A UV cilíndrica assume o eixo no Y.
+3. **Pré-processamento (otimização web):** reamostrar texturas **4K → ~1–2K**, `simplify` (a malha; o look branco da cerâmica não denuncia a distorção da UV assada) e **Draco**. Derruba ~56 MB pra ~1–1,5 MB. CLI `gltf-transform`.
+4. **Re-unwrap (cilíndrico) pra produtos cilíndricos — `--cylindrical-uv`:** gera uma UV limpa (`u`=ângulo em volta do eixo, `v`=altura) como **2º canal `TEXCOORD_1`**, **preservando** o `TEXCOORD_0` (texturas assadas). A **arte usa o canal 1** → um retângulo de UV vira uma **faixa contínua** colada na superfície. Modelos com unwrap limpo (ex.: tecido desembrulhado no Blender) **não** precisam — usam o `TEXCOORD_0` deles.
+5. **Definir a(s) área(s) imprimível(is):** a **região de UV** (no canal usado) onde a arte vai (ver §3). Seed dá o **valor inicial**; **editável no admin** (picker 2D + preview 3D).
+6. **Exportar a versão final** — 1 GLB (otimizado/Draco) por versão.
 7. **Subir ao CDN da plataforma** sob chave **imutável e versionada** (`public/3d-models/<slug>/v<N>/model.glb`) via `app.core.storage.public_url`.
 8. **Seed** de `platform_3d_models` + `platform_3d_model_versions` apontando pra essa URL, com áreas imprimíveis e limites de arte (ver §3 e §8). Mesmo padrão de `seed_content_templates`/`demo_store` — mas aqui o seed dá só o **estado inicial**: a **área imprimível e os limites são editáveis no admin** depois (§3).
 
@@ -39,18 +39,18 @@ O Tripo3D entrega um GLB com **topologia/UV automáticas** — bom pra visualiza
 
 O editor tem **dois painéis lado a lado** que se atualizam **em tempo real**:
 
-- **Painel 2D (área de edição):** um **retângulo plano** com a proporção da área imprimível (no caso da caneca, a faixa frontal). É **onde o cliente edita** — arrasta, escala e rotaciona a **imagem** e o **texto**, sempre **dentro** do retângulo (nada vaza pros lados/fundo). É o WYSIWYG plano, fácil de posicionar com precisão.
-- **Painel 3D (preview ao vivo):** a **caneca (GLB)** renderizada; o cliente **gira** (orbit), **dá zoom** e **move** (pan) pra ver de todos os ângulos. Usa `OrbitControls` (drei): arrastar = rotacionar · scroll/pinça = **zoom** · botão direito / dois dedos = mover.
-- **Sincronização automática:** qualquer mudança no painel 2D **aplica na hora** o decal sobre a caneca 3D. Os dois painéis leem o **mesmo estado** (`state_json`/camadas) — uma fonte só, sem cópia divergente. O 3D é só **visualização** (girar/zoom/mover a câmera); a **edição** acontece no retângulo 2D.
+- **Painel 2D (área de edição):** a **região imprimível desembrulhada** (o retângulo de UV achatado). É **onde o cliente edita** — arrasta, escala e rotaciona a **imagem** e o **texto**, sempre **dentro** da região. É o WYSIWYG plano.
+- **Painel 3D (preview ao vivo):** o modelo (GLB) renderizado com a arte **mapeada pela UV** → ela aparece **na superfície real** (enrola na caneca, acompanha dobras). O cliente **gira/zoom/move** a câmera (`OrbitControls`).
+- **Sincronização automática:** a arte do painel 2D é **composta na textura** (na sub-região de UV) e o 3D mostra na hora, **na superfície**. Os dois leem o **mesmo estado** (`state_json`/camadas) — uma fonte só.
 
 ```text
 ┌──────────────────────────┬──────────────────────────┐
-│   Painel 2D (editar)      │   Painel 3D (preview)     │
+│  Painel 2D (UV desembrul.)│   Painel 3D (preview)     │
 │  ┌────────────────────┐   │         ___               │
-│  │   [ sua arte ]     │   │        (   )  ← caneca    │
-│  │    João & Maria    │   │     girar / zoom / mover  │
-│  └────────────────────┘   │                           │
-│  retângulo = área          │   OrbitControls (câmera)  │
+│  │   [ sua arte ]     │   │        (•••) ← arte na    │
+│  │    João & Maria    │   │              superfície   │
+│  └────────────────────┘   │     girar / zoom / mover  │
+│  região de UV imprimível   │   (mapeada pela UV)       │
 └──────────────────────────┴──────────────────────────┘
 ```
 
@@ -60,45 +60,35 @@ O editor tem **dois painéis lado a lado** que se atualizam **em tempo real**:
 
 - **react-three-fiber + drei**, componente **client-only** (`"use client"`), **lazy-loaded** (`next/dynamic`, `ssr: false`) — o editor não entra no bundle da página de produto até o cliente clicar em **Personalizar**.
 - **Carregamento do GLB:** `useGLTF` (drei) com **DRACOLoader** apontando o decoder; URL = CDN da versão escolhida. `Suspense` com placeholder enquanto carrega.
-- **Camadas (layers):** lista ordenada; cada camada é `image` (textura raster enviada) ou `text` (renderizada num canvas → textura). Cada camada vive **dentro de uma área imprimível** e tem transform própria (offset, escala, rotação) + z-order.
-- **Aplicação na peça — decal:** cada camada vira um **decal** projetado sobre o mesh da área (via projetor da versão; `DecalGeometry`/material com a textura da camada). O preview renderizado é a **fonte de verdade visual** (o que o cliente vê é o que ele aprova).
-- **Texto:** renderizado num `<canvas>` 2D (conteúdo + fonte + tamanho + cor) → `CanvasTexture` → vira camada decal como uma imagem. **Fontes:** conjunto pequeno e embutido (web-safe + 2–3 display) carregado via `FontFace`; sem upload de fonte na V1.
-- **Transform UI:** mover/escalar/rotacionar a camada selecionada (handles 2D sobre a área, não gizmo 3D livre — mantém dentro do retângulo imprimível).
+- **Camadas (layers):** lista ordenada; cada camada é `image` (raster enviado) ou `text` (renderizada num canvas). Cada camada vive **dentro da região de UV** com transform própria (offset, escala, rotação) + z-order.
+- **Aplicação na peça — composição na UV:** todas as camadas são desenhadas num **canvas** posicionado na **sub-região de UV** da área; esse canvas vira a textura (sobreposta ao basecolor, mesma UV do mesh) → o three mapeia pela **UV do GLB** e a arte **cola na superfície real** (curva/dobras). O preview é a **fonte de verdade visual**.
+- **Texto:** renderizado num `<canvas>` 2D (conteúdo + fonte + tamanho + cor). **Fontes:** conjunto pequeno e embutido (web-safe + 2–3 display) via `FontFace`; sem upload de fonte na V1.
+- **Transform UI:** mover/escalar/rotacionar a camada (handles 2D sobre a região desembrulhada — mantém dentro da área).
 - **Autosave:** debounce (~1–2 s) que faz `PUT` do `state_json` na sessão. Restaurável pela `guest_session_id`.
 - **Aprovação:** botão habilita só com ≥1 camada válida; ao aprovar, o editor **gera o snapshot** (§5) e chama o endpoint de aprovar.
 
 ## 3. Representação da área imprimível
 
-Cada **versão do modelo** define 1+ **áreas imprimíveis**. Para a caneca, **1 área** (faixa frontal). A estrutura é **guardada no banco** em `platform_3d_model_versions` (não hardcoded) e é **editável no admin** — o seed só dá o valor inicial:
+Cada **versão do modelo** define 1+ **áreas imprimíveis**. Cada área é uma **região do espaço UV** do modelo (um retângulo em UV 0..1). Para a caneca, **1 área**. Guardada no banco em `platform_3d_model_versions`, **editável no admin** — o seed só dá o valor inicial:
 
 ```jsonc
 {
   "id": "front",
   "label": "Frente",
-  "target_mesh": "body",        // mesh onde o decal é projetado
-  "projector": {                 // espaço-modelo (metros, Y-up)
-    "position": [0, 0.05, 0.041],
-    "normal":   [0, 0, 1],       // direção da projeção
-    "up":       [0, 1, 0],
-    "size_m":   [0.18, 0.085]    // largura x altura do retângulo no mundo
-  },
-  "size_cm":      [18.0, 8.5],   // mesma área em cm → DPI/aviso de resolução
-  "aspect_ratio": 2.1,           // guia de proporção recomendada
-  "max_layers":   5
+  "uv_rect": { "u0": 0.05, "v0": 0.3, "u1": 0.95, "v1": 0.7 },  // retângulo no espaço UV (0..1)
+  "max_layers": 5
 }
 ```
 
-- O **decal** projeta a textura da camada sobre `target_mesh` usando `projector`; o retângulo limita a área (nada "vaza" pra fora).
-- `size_cm` + a resolução da imagem enviada ⇒ **DPI estimado** ⇒ **aviso de baixa resolução** (não bloqueia, só avisa).
-- A proporção é **guia**, não trava: o cliente pode escalar dentro do limite.
+- A arte é composta na **sub-região de UV** da textura; o **mesh usa essa UV** → a arte **cola na superfície real** (enrola na caneca, acompanha dobras de tecido, qualquer geometria). É o jeito certo de aplicar imagem em superfície arbitrária.
+- No admin, o **picker 2D** mostra o espaço UV (0..1) com o retângulo **arrastável/redimensionável**; o **preview 3D** mostra a região na superfície **ao vivo** (acompanhando a curvatura). O admin ajusta até cobrir a faixa desejada.
+- O picker 2D é **proporcional à superfície desembrulhada** (não quadrado): o preview 3D mede a geometria e devolve o **aspecto** (largura/altura) — pra um cilindro, `circunferência ÷ altura` (`2πr ÷ h`, `r` = raio mediano em XZ, `h` = vão em Y). Assim a região imprimível aparece nas proporções reais (a faixa de uma caneca é bem mais larga que alta) e o lojista enxerga o formato verdadeiro da arte.
 
-**O que é um "decal" projetado (em linguagem simples):** é como um **carimbo/adesivo** que a gente "projeta" sobre a superfície da peça. Imagine apontar um projetor pra frente da caneca: a imagem da arte é jogada na superfície curva e "gruda" nela, acompanhando a curvatura. O `projector` (posição, direção, tamanho) diz **de onde** e **com que tamanho** esse carimbo é projetado; o retângulo limita pra arte não vazar pros lados/fundo. Vantagem: funciona em **qualquer** formato de malha sem depender da UV (o "mapa plano" do modelo), que no GLB do Tripo vem automática e bagunçada.
+**Por que UV e não projeção (em linguagem simples):** uma projeção plana/cilíndrica é uma **aproximação** — ela "flutua" e não cola em superfície curva/ondulada arbitrária (um tecido com dobras desliza). As **coordenadas UV** do modelo dizem, pra cada ponto da malha, qual ponto da textura fica ali; com elas a arte **segue a superfície real**. É exatamente pra isso que as UVs existem.
 
-> **Por que decal e não UV:** a UV do Tripo é automática e imprevisível; depender dela quebraria a cada novo asset. O projetor é definido pelo dev (valor inicial no seed) e ajustável no admin, e é robusto a qualquer topologia. Custo: leve distorção em superfícies muito curvas — mitigado pelo preparo no Blender e pelo retângulo limitado; o **preview é a verdade**. **Vamos validar na caneca real** antes de fechar (se o resultado não ficar bom, a alternativa é uma região de UV dedicada feita no Blender).
-
-> **Editável no admin (e seam da Fase 12):** os parâmetros da área (`projector`, `size_cm`, `aspect_ratio`, `max_layers`) e os `art_limits` são **editados por uma ferramenta visual no admin** dos modelos 3D públicos — o dev semeia o inicial, mas dá pra **refinar sem novo deploy**. Essa **mesma ferramenta de mapear a área** é a que o **lojista** vai usar na **[Fase 12](../backlog/phase-12-merchant-3d-generation.md)** pra mapear o GLB que ele mesmo gerar — por isso ela nasce genérica desde a Fase 7.
+> **Requisito — uma UV LIMPA** (onde um retângulo de UV = uma faixa **contígua**). A UV automática do Tripo é **fragmentada** (ilhas espalhadas) → não serve. Soluções: **(a) produtos cilíndricos** (caneca, garrafa) → o pré-processamento gera uma **UV cilíndrica limpa** (`--cylindrical-uv`, §1) num 2º canal; **(b) outros** → unwrap limpo no **Blender** (ou a UV própria do modelo, se boa). **Atenção:** auto-unwrap genérico (`xatlas`) re-empacota em ilhas — **fragmenta de novo**, não dá faixa contígua.
 >
-> **Editar a área x pedido congelado:** editar os parâmetros afeta **sessões novas**. Pedidos/itens já aprovados **não mudam** — eles guardam o **snapshot** (a imagem aprovada, §5) e o `state_json` (§7); a edição da área não re-renderiza nada que já foi congelado.
+> **Editar a área x pedido congelado:** editar a `uv_rect` afeta **sessões novas**. Pedidos/itens já aprovados **não mudam** — guardam o **snapshot** (§5) e o `state_json` (§7). A **mesma ferramenta de mapeamento** (picker 2D + preview 3D) é a que o lojista usa na **[Fase 12](../backlog/phase-12-merchant-3d-generation.md)**.
 
 ## 4. `state_json` — o contrato que vai/volta/congela
 
@@ -132,7 +122,7 @@ Estado único, versionado por schema, suficiente pra **restaurar o editor**, **r
 }
 ```
 
-- `transform.x/y` são **normalizados [0..1] dentro da área** (não pixels) — independem da resolução de tela.
+- `transform.x/y` são **normalizados [0..1] dentro da região de UV imprimível** (não pixels) — independem da resolução de tela.
 - `font` e os limites são **validados contra a versão** no backend (não confiar no cliente).
 - Mudar o `schema_version` exige migração/compat — pedidos antigos guardam o schema com que foram criados.
 
@@ -165,6 +155,8 @@ O split `public/` × `private/` é **top-level** (o `public/` já é a convenç�
 - **Validação de upload:** mime `image/png`/`image/jpeg`; tamanho máx. (ex.: **15 MB**); dimensão mínima → **aviso** de baixa resolução (não bloqueia). Sanitizar (strip de metadados).
 - **Nunca** expor o arquivo original em URL pública permanente. Auditar acesso do lojista (doc [14](./14_security_strategy.md)).
 - Tudo separado por `store_id` (mixin de scoping); sessão/upload/cart/order item carregam `store_id`.
+
+> **CORS no CDN (obrigatório pro 3D):** o GLB é carregado pelo `three.js` via **fetch cross-origin** (admin e vitrine → CloudFront), então o CDN **precisa** devolver `Access-Control-Allow-Origin` — senão o navegador bloqueia (`NetworkError`). Solução: response-headers-policy **`SimpleCORS`** na distribuição (+ invalidar o cache ao ligar). Configurado no dev; **reproduzir no provisionamento de produção**.
 
 ## 7. Versionamento e congelamento no pedido (INV-P5)
 
@@ -206,7 +198,7 @@ As tabelas já estão nomeadas no doc [07](./07_database_strategy.md). O design 
 - **Falha ao gerar snapshot:** bloqueia a aprovação com retry; nunca aprovar sem snapshot.
 - **Sessão expirada (30 dias) no meio da edição:** autosave responde "expirada"; o editor oferece **clonar** num rascunho novo.
 - **Duas abas na mesma sessão:** autosave é **last-write-wins** (aceitável na V1).
-- **Decal distorcido** em malha muito curva/Tripo: mitigado no preparo (Blender) + retângulo limitado; o preview é a verdade.
+- **UV ruim/distorcida** (unwrap fraco) → arte distorcida na superfície: mitigado **preservando a UV** no preprocess (decimate conservador) e, pra modelos sem UV boa, **auto-unwrap**; o preview é a verdade.
 - **Glifo ausente** na fonte embutida: fonte de fallback + aviso.
 - **Pedido x sessão:** o snapshot é **copiado** pra chave do pedido no congelamento — apagar a sessão depois não quebra o pedido.
 

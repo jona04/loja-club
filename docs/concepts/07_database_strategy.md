@@ -155,7 +155,7 @@ Exemplos:
 Campos do **catálogo da plataforma** (Fase 7, **sem `store_id`**) — detalhe e JSONs no doc [30](./30_3d_customization_technical_design.md):
 
 - `platform_3d_models`: `name`, `category`, `slug`, `is_active` (+ soft delete).
-- `platform_3d_model_versions`: `model_id` (FK), `version` (int), `glb_url` (CDN), `printable_areas` (JSON — projetor/retângulo/limites por área), `text_config` (JSON — fontes/limites de texto), `art_limits` (JSON — mimes/tamanho/dimensão mín), `is_active`. **GLB imutável** (novo GLB = nova versão); **área/limites editáveis no admin** dentro da versão.
+- `platform_3d_model_versions`: `model_id` (FK), `version` (int), `glb_url` (CDN), `printable_areas` (JSON — **região de UV** + limites por área; a arte é mapeada pela UV do modelo, colando na superfície real), `text_config` (JSON — fontes/limites de texto), `art_limits` (JSON — mimes/tamanho/dimensão mín), `is_active`. **GLB imutável** (novo GLB = nova versão); **área/limites editáveis no admin** dentro da versão.
 
 Campos importantes em `customization_sessions`:
 
