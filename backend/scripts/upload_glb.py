@@ -17,21 +17,9 @@ import sys
 from pathlib import Path
 
 from app.core import storage
+from app.modules.customization.storage import model_glb_key
 
 _CONTENT_TYPE = "model/gltf-binary"
-
-
-def model_key(slug: str, version: int) -> str:
-    """Build the versioned public key for a catalog GLB.
-
-    Args:
-        slug: The model slug (e.g. ``ceramic-mug``).
-        version: The model version number (1-based, immutable).
-
-    Returns:
-        The object key ``public/3d-models/{slug}/v{version}/model.glb``.
-    """
-    return f"public/3d-models/{slug}/v{version}/model.glb"
 
 
 def upload_glb(local_path: Path, slug: str, version: int) -> str:
@@ -48,7 +36,7 @@ def upload_glb(local_path: Path, slug: str, version: int) -> str:
     Raises:
         FileNotFoundError: If ``local_path`` does not exist.
     """
-    key = model_key(slug, version)
+    key = model_glb_key(slug, version)
     with local_path.open("rb") as fileobj:
         storage.upload_fileobj(key, fileobj, _CONTENT_TYPE)
     return storage.public_url(key)

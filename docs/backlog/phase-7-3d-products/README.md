@@ -26,7 +26,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | # | ID | Task | Status | Depende de |
 |---|----|------|--------|-----------|
 | 1 | [P7-ASSET-01](./P7-ASSET-01-glb-preprocessing-pipeline.md) | Pipeline de pré-processamento do GLB (4K→web, Draco) + CDN | ✅ done | — |
-| 2 | [P7-CAT-01](./P7-CAT-01-platform-3d-catalog.md) | Catálogo 3D da plataforma: tabelas + seed da caneca | todo | P7-ASSET-01 |
+| 2 | [P7-CAT-01](./P7-CAT-01-platform-3d-catalog.md) | Catálogo 3D da plataforma: tabelas + seed da caneca | ✅ done | P7-ASSET-01 |
 | 3 | [P7-ADM-01](./P7-ADM-01-admin-catalog-and-area-editor.md) | Admin: habilitar/desabilitar + editor visual da área | todo | P7-CAT-01 |
 | 4 | [P7-PROD-01](./P7-PROD-01-merchant-link-model-to-product.md) | Painel lojista: escolher do catálogo + vincular ao produto | todo | P7-CAT-01 |
 | 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | todo | P7-PROD-01 |
@@ -57,7 +57,10 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Vitrine expõe variações + disponibilidade** (Fase 3, `P3-SF-01`/`P3-SF-02`; movido da Fase 6) → **`P7-SF-02`**.
 
 **Da própria fase** (preencher conforme as tasks fecham):
-- [ ] **QA visual da caneca v1** (`simplify 0.15`, 292k tris) — gerada/subida sem inspeção 3D; **conferir quando o `P7-EDITOR-01` renderizar** (alça/bordas). Se distorcer, regenerar com ratio maior (ou sem simplify) → **v2** + reseed (`P7-CAT-01` ainda não consome). Origem: `P7-ASSET-01`.
+- [ ] **QA visual da caneca v1** (`simplify 0.15`, 292k tris) — gerada/subida sem inspeção 3D; **conferir quando o `P7-EDITOR-01` renderizar** (alça/bordas). Se distorcer, regenerar com ratio maior (ou sem simplify) → **v2** + reseed. Origem: `P7-ASSET-01`.
+- [ ] **Validar existência do GLB na chave do slug** (seed/upload) — slug com typo → `glb_url` 404 silencioso; o acoplamento slug↔caminho é garantido, a existência não. Origem: `P7-CAT-01`.
+- [ ] **Calibrar a área imprimível da caneca** (projetor real; o seed traz placeholder) → **`P7-ADM-01`** (editor visual). Origem: `P7-CAT-01`.
+- [ ] **Múltiplas áreas imprimíveis** (camiseta frente/verso) — caneca usa 1; schema suporta N. Origem: `P7-CAT-01`.
 - [ ] **Recolor do produto** (paleta + material nomeado + seletor) — fora da V1 (doc [30 §12](../../concepts/30_3d_customization_technical_design.md)). Origem: `P7-EDITOR-02`.
 - [ ] **Arte vetorial (SVG/PDF)** — V1 é só raster. Origem: `P7-EDITOR-02`.
 - [ ] **Múltiplas faces/áreas** (ex.: camiseta frente/verso) — a caneca usa 1 área. Origem: `P7-CAT-01`.
