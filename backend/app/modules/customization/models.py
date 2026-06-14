@@ -256,3 +256,77 @@ class CustomizationUpload(
     size_bytes: int = Field(ge=0)
     width: int | None = Field(default=None)
     height: int | None = Field(default=None)
+
+
+class CustomizationCartItem(
+    UUIDMixin,
+    TimestampMixin,
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    table=True,
+):
+    """Links a cart line to its approved customization session (doc 30 §7).
+
+    One active link per cart line (partial unique index). When the cart becomes
+    an order, the session is **frozen** into ``customization_order_items``.
+    """
+
+    __tablename__ = "customization_cart_items"
+    __table_args__ = (
+        Index(
+            "ix_customization_cart_items_store_cart_item",
+            "store_id",
+            "cart_item_id",
+            unique=True,
+            postgresql_where=text("deleted_at IS NULL"),
+        ),
+    )
+
+    cart_item_id: uuid.UUID = Field(foreign_key="cart_items.id", index=True)
+    customization_session_id: uuid.UUID = Field(
+        foreign_key="customization_sessions.id", index=True
+    )
+
+
+class CustomizationOrderItem(
+    UUIDMixin,
+    TimestampMixin,
+    SoftDeleteMixin,
+    StoreScopedMixin,
+    table=True,
+):
+    """A frozen copy of a customization on an order line (INV-P5, doc 30 §7).
+
+    Independent of the live session: holds the pinned ``version_id``, the
+    ``state_json`` as approved, and the snapshot copied to the order's private
+    prefix. Editing the catalog area/version or the session later never changes
+    a placed order.
+    """
+
+    __tablename__ = "customization_order_items"
+    __table_args__ = (
+        Index("ix_customization_order_items_store_order", "store_id", "order_id"),
+        Index(
+            "ix_customization_order_items_store_order_item",
+            "store_id",
+            "order_item_id",
+            unique=True,
+        ),
+    )
+
+    order_id: uuid.UUID = Field(foreign_key="order_orders.id", index=True)
+    order_item_id: uuid.UUID = Field(foreign_key="order_items.id", index=True)
+    customization_session_id: uuid.UUID = Field(
+        foreign_key="customization_sessions.id", index=True
+    )
+    platform_3d_model_version_id: uuid.UUID = Field(
+        foreign_key="platform_3d_model_versions.id", index=True
+    )
+    state_json: dict[str, object] = Field(
+        default_factory=dict,
+        sa_column=Column(JSON),
+        description="The approved editor state, frozen at order time",
+    )
+    snapshot_key: str | None = Field(
+        default=None, max_length=500, description="Snapshot copied to the order prefix"
+    )

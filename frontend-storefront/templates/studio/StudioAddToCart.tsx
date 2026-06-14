@@ -19,6 +19,17 @@ export function StudioAddToCart({ product }: { product: StorefrontProduct }) {
   const cart = useCart()
   const [qty, setQty] = useState(1)
 
+  if (isCustomizable(product)) {
+    return (
+      <Link
+        href={`/products/${product.slug}/personalizar`}
+        className="flex items-center justify-center gap-2 rounded-md bg-black py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+      >
+        <i className="fa-solid fa-cube" /> Personalizar em 3D
+      </Link>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
@@ -50,14 +61,6 @@ export function StudioAddToCart({ product }: { product: StorefrontProduct }) {
           Adicionar ao carrinho
         </button>
       </div>
-      {isCustomizable(product) && (
-        <Link
-          href={`/products/${product.slug}/personalizar`}
-          className="flex items-center justify-center gap-2 rounded-md border border-gray-300 py-3.5 text-sm font-medium text-gray-700 transition-colors hover:border-black hover:text-black"
-        >
-          <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
-        </Link>
-      )}
     </div>
   )
 }

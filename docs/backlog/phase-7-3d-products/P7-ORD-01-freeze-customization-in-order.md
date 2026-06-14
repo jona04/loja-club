@@ -4,7 +4,7 @@ title: Carrinho/pedido — congelar a personalização aprovada
 phase: 7
 etapa: "Etapa 6 — Carrinho/pedido: congelar personalização"
 area: ORD
-status: todo
+status: done
 depends_on: [P7-SESS-01, P7-EDITOR-02]
 blocks: []
 tests: [integration]
@@ -46,12 +46,17 @@ A personalização **aprovada** vira item de carrinho e é **congelada** no pedi
 - **Cobrir:** integração — `image_3d_customizable` **só** entra com `approved`; criar pedido copia estado/versão/snapshot; **alterar a sessão depois não muda o pedido**; isolamento por loja.
 
 ## Definition of Done
-- [ ] Item customizável só entra com sessão aprovada; pedido **congela** estado+versão+snapshot (chave do pedido).
-- [ ] **Modos de falha mapeados** — add sem `approved` → 422 `customization_required`; cópia do snapshot falha → pedido não confirma; editar área/versão depois não afeta o congelado. → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Item customizável só entra com sessão **aprovada** (do mesmo guest + produto); pedido **congela** estado+versão+snapshot na chave do pedido.
+- [x] **Modos de falha mapeados** — add sem `approved` (ou sessão de outro guest/produto/status) → **422 `customization_required`**; cópia do snapshot falha → exceção propaga → `create_order` não commita (pedido não confirma); editar a sessão/versão depois **não** muda o congelado (deep copy + chave própria). Cobertos por testes.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Reusa o seam da Fase 6 (`assert_addable_to_cart(has_approved_customization=...)`).
+- **Tabelas** `customization_cart_items` (link cart line → sessão; índice parcial único `store_id+cart_item_id`) + `customization_order_items` (cópia congelada: `state_json` deep-copy, `platform_3d_model_version_id`, `snapshot_key` na chave do pedido; índices `store_id+order_id` e `store_id+order_item_id` único). Migration `1f99190368ad` (`alembic check` vazio).
+- **Lógica** em `customization/orders.py` (`resolve_approved_session`/`link_session_to_cart_item`/`freeze_order_item`) — separada de `sessions.py`. **Sem importar `cart`/`orders`** (só ids), pra não criar ciclo; `cart` e `orders` é que importam `customization.orders`.
+- **Carrinho:** `add_item` exige a sessão aprovada pra `image_3d_customizable` (reusa o seam `assert_addable_to_cart(has_approved_customization=...)` da Fase 6), **não mescla** linhas customizáveis (cada arte é uma linha), e liga `CustomizationCartItem` + marca a sessão `added_to_cart`.
+- **Pedido:** `orders._freeze_item` faz flush do `OrderItem` e chama `freeze_order_item` → copia o snapshot pra `private/<store>/orders/<order_id>/snapshot.png` (download+upload), grava o `customization_order_items` e marca a sessão `ordered`.
+- **Caminho de compra na vitrine** (pra não deixar gap de UX): `addToCart` aceita `customizationSessionId`; o editor, após **aprovar**, mostra **"Adicionar ao carrinho"** (manda a sessão); os 3 templates **escondem o add direto** em produtos customizáveis (só "Personalizar" → aprovar → adicionar), evitando o 422.
 
 ## Follow-ups
 - [ ] **Limpeza de uploads órfãos** de sessões que não viraram pedido (mantendo o que é do pedido) — *Quando:* retenção (cruza com `P7-SESS-01`). → README da fase.
+- [ ] **Cópia do snapshot via copy-object** (server-side S3) em vez de download+upload — *Quando:* perf/escala. → README da fase.

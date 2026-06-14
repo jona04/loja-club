@@ -7,6 +7,7 @@ from sqlmodel import Session, col, select
 
 from app.modules.customization.enums import CustomizationSessionStatus
 from app.modules.customization.models import (
+    CustomizationCartItem,
     CustomizationProductSettings,
     CustomizationSession,
     CustomizationUpload,
@@ -256,6 +257,28 @@ def list_session_uploads(
             .order_by(col(CustomizationUpload.created_at))
         ).all()
     )
+
+
+def get_cart_item_link(
+    *, session: Session, store_id: uuid.UUID, cart_item_id: uuid.UUID
+) -> CustomizationCartItem | None:
+    """Return the active customization link for a cart line, if any.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        cart_item_id: The cart line id.
+
+    Returns:
+        The link row, or ``None`` if the line has no customization.
+    """
+    return session.exec(
+        select(CustomizationCartItem).where(
+            CustomizationCartItem.store_id == store_id,
+            CustomizationCartItem.cart_item_id == cart_item_id,
+            col(CustomizationCartItem.deleted_at).is_(None),
+        )
+    ).first()
 
 
 def list_expirable_sessions(

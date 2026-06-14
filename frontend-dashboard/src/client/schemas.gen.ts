@@ -24,6 +24,18 @@ export const AddItemInputSchema = {
             minimum: 1,
             title: 'Quantity',
             default: 1
+        },
+        customization_session_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Customization Session Id'
         }
     },
     type: 'object',

@@ -19,6 +19,19 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
   const cart = useCart()
   const [qty, setQty] = useState(1)
 
+  if (isCustomizable(product)) {
+    return (
+      <div className="mt-4">
+        <Link
+          href={`/products/${product.slug}/personalizar`}
+          className="flex w-full items-center justify-center gap-2 rounded-sm bg-brand-900 py-4 text-base font-medium text-white shadow-sm transition-colors hover:bg-black"
+        >
+          <i className="fa-solid fa-cube" /> Personalizar em 3D
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="mb-6">
@@ -57,14 +70,6 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
         >
           Adicionar ao carrinho
         </button>
-        {isCustomizable(product) && (
-          <Link
-            href={`/products/${product.slug}/personalizar`}
-            className="flex w-full items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white py-4 text-sm font-medium text-brand-900 transition-colors hover:bg-gray-50"
-          >
-            <i className="fa-solid fa-cube text-gray-400" /> Personalizar em 3D
-          </Link>
-        )}
       </div>
     </>
   )

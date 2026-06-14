@@ -18,6 +18,8 @@ vi.mock("@/lib/customization-actions", () => ({
   approveCustomization: vi.fn(),
 }))
 
+vi.mock("@/lib/cart-actions", () => ({ addToCart: vi.fn() }))
+
 vi.mock("@/lib/customizer/use-session-images", () => ({
   useSessionImages: () => new Map(),
 }))

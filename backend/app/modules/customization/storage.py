@@ -51,3 +51,19 @@ def customization_upload_key(
         The key ``private/{store_id}/customizations/{session_id}/{filename}``.
     """
     return f"private/{store_id}/customizations/{session_id}/{filename}"
+
+
+def customization_order_key(
+    store_id: uuid.UUID, order_id: uuid.UUID, filename: str
+) -> str:
+    """Return the private S3 key for a frozen order's customization asset.
+
+    Args:
+        store_id: The owning store (top-level isolation prefix).
+        order_id: The order the frozen copy belongs to.
+        filename: The object's leaf name.
+
+    Returns:
+        The key ``private/{store_id}/orders/{order_id}/{filename}``.
+    """
+    return f"private/{store_id}/orders/{order_id}/{filename}"

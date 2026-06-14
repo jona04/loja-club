@@ -32,7 +32,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | 5 | [P7-SESS-01](./P7-SESS-01-customization-sessions-backend.md) | Sessões de personalização (backend) + assistida | ✅ done | P7-PROD-01 |
 | 6 | [P7-EDITOR-01](./P7-EDITOR-01-storefront-editor-shell.md) | Editor storefront: 2 painéis + GLB + orbit/zoom + autosave | ✅ done | P7-SESS-01, P7-CAT-01 |
 | 7 | [P7-EDITOR-02](./P7-EDITOR-02-layers-approval-snapshot.md) | Editor: camadas (imagem+texto) + aprovação + snapshot + link público | ✅ done | P7-EDITOR-01 |
-| 8 | [P7-ORD-01](./P7-ORD-01-freeze-customization-in-order.md) | Carrinho/pedido: congelar a personalização | todo | P7-SESS-01, P7-EDITOR-02 |
+| 8 | [P7-ORD-01](./P7-ORD-01-freeze-customization-in-order.md) | Carrinho/pedido: congelar a personalização | ✅ done | P7-SESS-01, P7-EDITOR-02 |
 | 9 | [P7-OPS-01](./P7-OPS-01-merchant-operate-and-assisted.md) | Painel lojista: operar personalizações + montar assistida | todo | P7-SESS-01 |
 | 10 | [P7-SF-02](./P7-SF-02-storefront-variant-selection.md) | Vitrine: seleção de variação (não-3D, da Fase 6) | todo | — |
 
@@ -77,6 +77,8 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **e2e Playwright do fluxo de personalização** (browser) → depende da infra `P3-SF-03`. Origem: `P7-EDITOR-02`.
 - [ ] **Fontes web no editor** (Inter/Roboto/Montserrat carregadas) + aviso de glifo ausente — hoje o canvas cai no `sans-serif` do SO. Origem: `P7-EDITOR-02`.
 - [ ] **Handles 2D ricos** (escala/rotação por alça, além de sliders + arrastar). Origem: `P7-EDITOR-02`.
+- [ ] **Limpeza de uploads órfãos** de sessões que não viraram pedido (mantendo o que é do pedido). Origem: `P7-ORD-01`/`P7-SESS-01`.
+- [ ] **Cópia do snapshot via S3 copy-object** (em vez de download+upload) ao congelar — perf/escala. Origem: `P7-ORD-01`.
 - [ ] **Limpeza de arquivos (S3) de sessões expiradas** mantendo histórico de negócio — política de retenção. Origem: `P7-SESS-01`.
 - [ ] **Anti-abuso no endpoint público** (rate limit do `public_token`) — hardening (Fase 10). Origem: `P7-SESS-01`.
 - [x] **Strip de metadados/re-encode da imagem** no upload — **resolvido em `P7-EDITOR-02`** (`_sanitize_image` re-encoda via PIL → remove EXIF; snapshot idem). Origem: `P7-SESS-01`.

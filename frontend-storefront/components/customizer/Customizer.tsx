@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { LayerPanel } from "@/components/customizer/LayerPanel"
 import { Panels } from "@/components/customizer/Panels"
 import type { StorefrontProduct } from "@/lib/api"
+import { addToCart } from "@/lib/cart-actions"
 import {
   approveCustomization,
   uploadCustomizationArt,
@@ -70,6 +71,8 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
   const [approving, setApproving] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
   const [approved, setApproved] = useState(false)
+  const [addingToCart, setAddingToCart] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
   const captureRef = useRef<(() => string) | null>(null)
 
   const seeded = useRef(false)
@@ -173,6 +176,20 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
     }
   }
 
+  const onAddToCart = async () => {
+    if (!session) return
+    setAddingToCart(true)
+    setActionError(null)
+    try {
+      await addToCart(product.id, 1, session.id)
+      setAddedToCart(true)
+    } catch (e) {
+      setActionError((e as Error).message)
+    } finally {
+      setAddingToCart(false)
+    }
+  }
+
   const noEditor = webgl === false || status === "error"
   const loading = status === "loading" || webgl === null
 
@@ -202,15 +219,29 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
       ) : approved ? (
         <div className="space-y-4 rounded-md border border-green-200 bg-green-50 p-6 text-sm text-green-800">
           <p className="font-medium">Personalização aprovada! 🎉</p>
-          <p>
-            Sua arte foi salva. Volte ao produto para adicionar ao carrinho.
-          </p>
-          <Link
-            href={`/products/${product.slug}`}
-            className="inline-block rounded-md bg-green-700 px-4 py-2 font-medium text-white"
-          >
-            Voltar ao produto
-          </Link>
+          {addedToCart ? (
+            <>
+              <p>Adicionado ao carrinho.</p>
+              <Link
+                href={`/products/${product.slug}`}
+                className="inline-block rounded-md bg-green-700 px-4 py-2 font-medium text-white"
+              >
+                Continuar comprando
+              </Link>
+            </>
+          ) : (
+            <>
+              <p>Sua arte foi salva. Adicione ao carrinho para finalizar.</p>
+              <button
+                type="button"
+                disabled={addingToCart}
+                onClick={onAddToCart}
+                className="inline-block rounded-md bg-green-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+              >
+                {addingToCart ? "Adicionando…" : "Adicionar ao carrinho"}
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <div className="space-y-6">

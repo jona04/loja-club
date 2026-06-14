@@ -7,6 +7,7 @@ export type AddItemInput = {
     product_id: string;
     variant_id?: (string | null);
     quantity?: number;
+    customization_session_id?: (string | null);
 };
 
 /**

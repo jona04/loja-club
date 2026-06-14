@@ -17,6 +17,7 @@ from app.modules.cart.models import CartCart, CartItem
 from app.modules.catalog.models import InventoryItem, Product
 from app.modules.customers.models import CustomerProfile
 from app.modules.customers.schemas import AddressInput, CustomerOrderRow
+from app.modules.customization import orders as customization_orders
 from app.modules.orders.enums import OrderStatus
 from app.modules.orders.models import (
     Order,
@@ -161,22 +162,30 @@ def _shipping_cost(method: ShippingMethod) -> int:
 def _freeze_item(session: Session, order: Order, item: CartItem) -> None:
     """Freeze a cart line into an order line (immutable snapshot).
 
-    Fase 7 extends this to also copy the approved customization into
-    ``customization_order_items`` for the same order item.
+    Also copies the line's approved customization (if any) into
+    ``customization_order_items`` — state + pinned version + snapshot — so the
+    order never depends on the live session (INV-P5).
     """
     product = session.get(Product, item.product_id)
-    session.add(
-        OrderItem(
-            store_id=order.store_id,
-            order_id=order.id,
-            product_id=item.product_id,
-            variant_id=item.variant_id,
-            name=product.name if product else "",
-            quantity=item.quantity,
-            unit_price_amount_minor=item.unit_price_amount_minor,
-            unit_price_currency=item.unit_price_currency,
-            line_total_amount_minor=item.unit_price_amount_minor * item.quantity,
-        )
+    order_item = OrderItem(
+        store_id=order.store_id,
+        order_id=order.id,
+        product_id=item.product_id,
+        variant_id=item.variant_id,
+        name=product.name if product else "",
+        quantity=item.quantity,
+        unit_price_amount_minor=item.unit_price_amount_minor,
+        unit_price_currency=item.unit_price_currency,
+        line_total_amount_minor=item.unit_price_amount_minor * item.quantity,
+    )
+    session.add(order_item)
+    session.flush()
+    customization_orders.freeze_order_item(
+        session=session,
+        store_id=order.store_id,
+        order_id=order.id,
+        order_item_id=order_item.id,
+        cart_item_id=item.id,
     )
 
 
