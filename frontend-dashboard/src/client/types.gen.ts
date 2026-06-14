@@ -469,6 +469,22 @@ export type CustomerSummary = {
 };
 
 /**
+ * Operational production status of an ordered customization (doc 22).
+ *
+ * A separate axis from the session lifecycle: it lives on the frozen
+ * ``customization_order_items`` row and is advanced by the merchant as they
+ * produce the art. It starts at ``received`` when the order is placed.
+ *
+ * - ``received``: art received (initial, set at order time).
+ * - ``reviewing``: the merchant is evaluating the art.
+ * - ``needs_contact``: the merchant needs to talk to the customer.
+ * - ``approved_for_production``: cleared to produce.
+ * - ``in_production``: being produced.
+ * - ``production_done``: production finished (terminal).
+ */
+export type CustomizationProductionStatus = 'received' | 'reviewing' | 'needs_contact' | 'approved_for_production' | 'in_production' | 'production_done';
+
+/**
  * Lifecycle of a customer's 3D customization session (doc 30 §4).
  *
  * - ``draft``: being edited; autosave writes the ``state_json`` here.
@@ -581,6 +597,50 @@ export type MembershipStatus = 'invited' | 'active' | 'removed';
  * Read by the storefront API (``P3-SF-01``) to select the header/footer menu.
  */
 export type MenuLocation = 'header' | 'footer';
+
+/**
+ * A session's full detail for the merchant: art + downloads + order link.
+ */
+export type MerchantSessionDetail = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
+    snapshot_url: (string | null);
+    composite_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+    product_name: string;
+    is_assisted: boolean;
+    order_id: (string | null);
+    order_item_id: (string | null);
+    production_status: (CustomizationProductionStatus | null);
+};
+
+/**
+ * A store's customization session as a row in the merchant panel list.
+ *
+ * Lightweight (one presigned thumbnail); the full art + downloads are in the
+ * detail. ``production_status`` is present only once the session is ordered.
+ */
+export type MerchantSessionListItem = {
+    id: string;
+    product_id: string;
+    product_name: string;
+    status: CustomizationSessionStatus;
+    is_assisted: boolean;
+    snapshot_url: (string | null);
+    created_at: string;
+    updated_at: string;
+    approved_at: (string | null);
+    order_id: (string | null);
+    order_item_id: (string | null);
+    production_status: (CustomizationProductionStatus | null);
+};
 
 /**
  * Generic message response.
@@ -752,6 +812,11 @@ export type Page_CategoryPublic_ = {
 
 export type Page_CustomerSummary_ = {
     data: Array<CustomerSummary>;
+    count: number;
+};
+
+export type Page_MerchantSessionListItem_ = {
+    data: Array<MerchantSessionListItem>;
     count: number;
 };
 
@@ -930,6 +995,13 @@ export type ProductCreate = {
     price_currency?: (string | null);
     is_featured?: boolean;
     category_ids: Array<(string)>;
+};
+
+/**
+ * Request to advance the production status of an ordered customization.
+ */
+export type ProductionStatusUpdate = {
+    production_status: CustomizationProductionStatus;
 };
 
 /**
@@ -1991,6 +2063,30 @@ export type CustomizationCreateAssistedSessionData = {
 };
 
 export type CustomizationCreateAssistedSessionResponse = (AssistedSessionPublic);
+
+export type CustomizationListCustomizationsData = {
+    limit?: number;
+    skip?: number;
+    status?: (CustomizationSessionStatus | null);
+    storeId: string;
+};
+
+export type CustomizationListCustomizationsResponse = (Page_MerchantSessionListItem_);
+
+export type CustomizationGetCustomizationData = {
+    sessionId: string;
+    storeId: string;
+};
+
+export type CustomizationGetCustomizationResponse = (MerchantSessionDetail);
+
+export type CustomizationUpdateProductionStatusData = {
+    requestBody: ProductionStatusUpdate;
+    sessionId: string;
+    storeId: string;
+};
+
+export type CustomizationUpdateProductionStatusResponse = (MerchantSessionDetail);
 
 export type CustomizationStartSessionData = {
     requestBody: SessionStart;

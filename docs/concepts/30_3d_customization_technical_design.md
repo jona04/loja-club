@@ -170,7 +170,7 @@ O split `public/` × `private/` é **top-level** (o `public/` já é a convenç�
 | **Snapshot** (mockup 3D) | **Privado** | idem; ao virar pedido, **copiado** pra `private/<store_id>/orders/<order_id>/...` (§7). Também é a imagem da linha no carrinho. |
 | **Composite** (arte de produção, §5) | **Privado** | `private/<store_id>/customizations/<session_id>/composite-*.png`; copiado pra `.../orders/...` no congelamento. **Não** público (é o design do cliente). |
 
-- **Validação de upload:** mime `image/png`/`image/jpeg`; tamanho máx. (ex.: **15 MB**); dimensão mínima → **aviso** de baixa resolução (não bloqueia). **Sanitização real:** o backend **re-encoda** a imagem (PIL) → remove EXIF/metadados (foto do cliente pode ter GPS) e valida; o snapshot/composite idem.
+- **Validação de upload:** mime `image/png`/`image/jpeg`; tamanho máx. (**30 MB**, [31 §4](./31_configuration_and_constants.md)); dimensão mínima → **aviso** de baixa resolução (não bloqueia). **Sanitização real:** o backend **re-encoda** a imagem (PIL) → remove EXIF/metadados (foto do cliente pode ter GPS) e valida; o snapshot/composite idem.
 - **Nunca** expor o arquivo original em URL pública permanente. Auditar acesso do lojista (doc [14](./14_security_strategy.md)).
 - Tudo separado por `store_id` (mixin de scoping); sessão/upload/cart/order item carregam `store_id`.
 

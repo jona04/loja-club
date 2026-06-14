@@ -4,7 +4,7 @@ title: Painel lojista — operar personalizações + montar assistida
 phase: 7
 etapa: "Etapa 7 — Painel do lojista: operar as personalizações"
 area: OPS
-status: todo
+status: done
 depends_on: [P7-SESS-01]
 blocks: []
 tests: [integration]
@@ -43,13 +43,19 @@ O lado **lojista**: ver as sessões/arte da própria loja, **baixar** os arquivo
 - **Cobrir:** integração — lojista vê só as sessões da própria loja; download por URL assinada; mudar status persiste; criar assistida gera `public_token` válido.
 
 ## Definition of Done
-- [ ] Lojista vê/baixa/atualiza status das personalizações da loja; cria assistida e obtém o link público.
-- [ ] **Modos de falha mapeados** — acesso a sessão de outra loja → 404/403; link assistido sem contato pré-cadastrado → erro. → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Lojista vê/baixa/atualiza status das personalizações da loja; cria assistida e obtém o link público.
+- [x] **Modos de falha mapeados** — acesso a sessão de outra loja → **404** (`get_session` é store-scoped); atualizar status de sessão **não-pedida** → **422 `not_ordered`**; link assistido sem contato pré-cadastrado → **403** no `/p/{token}/approve` (`P7-SESS-01`). → tratados/Follow-ups.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Visualização **quase em tempo real** = **polling** na V1 (doc [22](../../concepts/22_product_customization_3d.md)); WebSocket fica pra depois.
+- **Status de produção** = enum `CustomizationProductionStatus` (received…production_done, doc [22](../../concepts/22_product_customization_3d.md)) no **item do pedido** (`customization_order_items.production_status`, começa em `received` no congelamento) — **eixo separado** do `status` da sessão. O lojista avança no painel; uma sessão ainda **não-pedida** dá `not_ordered`.
+- **Rotas do painel** (`/stores/{store_id}/customizations`): listar (paginado, polling — `customization.sessions.view`), detalhe com URLs assinadas de snapshot/composite/uploads (`customization.files.download`), atualizar status (`customization.production_status.update`). Assistida (`create_assisted_session`) já existia (`P7-SESS-01`).
+- **Visualização quase em tempo real** = **polling** a cada **10 s** ([31 §4](../../concepts/31_configuration_and_constants.md)); WebSocket fica pra depois.
+- **Composite é a "arte de produção"** que a gráfica usa (o download principal); o snapshot é a prévia/mockup. Ambos privados (URL assinada).
+- **Link da assistida** = `VITE_STOREFRONT_URL` + `/p/{token}` (o token é global, não-scoped); usar o **domínio próprio da loja** é follow-up.
 
 ## Follow-ups
 - [ ] **Atualização ao vivo via WebSocket** (em vez de polling) — *Quando:* se a UX exigir. → README da fase.
 - [ ] **e2e Playwright** do painel de personalizações — → `P3-SF-03`/infra de e2e do painel. → README da fase.
+- [ ] **Link da assistida no domínio da loja** (hoje usa `VITE_STOREFRONT_URL` único) — usar o host primário da loja. → README da fase.
+- [ ] **Auditoria de acesso do lojista** aos arquivos da personalização (doc [22](../../concepts/22_product_customization_3d.md) §Segurança) — registrar quem baixou/visualizou. → README da fase.

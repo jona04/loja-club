@@ -74,6 +74,7 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | Teto de sanidade do transform = **20** | `customization.sessions._MAX_TRANSFORM` | const | Limite de `transform.x/y/scale/scale_y` no `state_json` — centros saem de [0,1] ao panear; só rejeita lixo (NaN/∞/absurdo). |
 | Server Action body = **50 MB** | `frontend-storefront/next.config.ts` (`serverActions.bodySizeLimit`) | const | Folga geral pro Next (default é **1 MB** → causava 413). O upload de arte (≤ 30 MB) + snapshot + composite vão por **Route Handlers** (`app/api/customizer/*`, via XHR p/ progresso), não Server Actions. |
 | Teto do payload de aprovação = **48 MB** | `frontend-storefront/lib/customizer/snapshot.APPROVE_PAYLOAD_LIMIT_BYTES` | const | Snapshot + composite; um pouco abaixo do body de 50 MB (folga p/ multipart). O cliente mostra o tamanho e barra se passar. |
+| Polling do painel de personalizações = **10 s** | `frontend-dashboard/.../customizations.POLL_INTERVAL_MS` | const | Atualização quase em tempo real da lista de sessões (doc [22](./22_product_customization_3d.md)); WebSocket é follow-up. |
 
 **Seed/DB da caneca** (`platform_3d_model_versions`, **editável no admin** — `P7-ADM-01`):
 
@@ -117,6 +118,7 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | `ProductType` | `catalog/enums.py` | `image`, `image_3d`, `image_3d_customizable` |
 | `ProductVariantStatus` | `catalog/enums.py` | `active`, `archived` |
 | `CustomizationSessionStatus` | `customization/enums.py` | `draft`, `approved`, `added_to_cart`, `ordered`, `abandoned`, `expired` |
+| `CustomizationProductionStatus` | `customization/enums.py` | `received`, `reviewing`, `needs_contact`, `approved_for_production`, `in_production`, `production_done` (eixo de produção no item do pedido, doc [22](./22_product_customization_3d.md)) |
 | `OrderStatus` | `orders/enums.py` | `pending_payment`, `paid`, `processing`, `shipped`, `delivered`, `canceled` |
 | `CheckoutStatus` | `checkout/enums.py` | `active`, `completed` |
 | `CartStatus` | `cart/enums.py` | `active`, `converted` |

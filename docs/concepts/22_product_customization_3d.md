@@ -273,7 +273,7 @@ No painel, o lojista deve conseguir:
 - ver parâmetros da personalização;
 - atualizar status operacional da produção.
 
-Status de arte sugeridos:
+**Status de produção** (`CustomizationProductionStatus`) — vive no **item do pedido** (`customization_order_items`, congelado), começa em `received` quando o pedido é feito e é avançado pelo lojista no painel:
 
 | Status | Significado |
 |---|---|
@@ -283,6 +283,8 @@ Status de arte sugeridos:
 | `approved_for_production` | Pode produzir |
 | `in_production` | Em produção |
 | `production_done` | Produção finalizada |
+
+> O painel lista as **sessões** da loja (atualização quase em tempo real por **polling**, [31 §4](./31_configuration_and_constants.md)); abre o detalhe pra **baixar** a arte de produção (composite) + prévia + uploads (URLs assinadas) e, quando a sessão virou pedido, **avançar o status de produção**. Montar **assistida** gera o `public_token` e o link pra o cliente aprovar.
 
 ## Admin da Kriar
 

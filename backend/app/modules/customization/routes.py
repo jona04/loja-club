@@ -9,17 +9,22 @@ guest cookie or a session ``public_token``) that drives the customer editor.
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, UploadFile
+from fastapi import APIRouter, Depends, Form, Query, UploadFile
 
 from app.api.deps import CurrentUser, SessionDep
+from app.core.api import Page, PageParams, pagination_params
 from app.modules.customers.deps import guest_session
 from app.modules.customers.models import CustomerGuestSession
-from app.modules.customization import services, sessions
+from app.modules.customization import panel, services, sessions
+from app.modules.customization.enums import CustomizationSessionStatus
 from app.modules.customization.schemas import (
     AssistedSessionCreate,
     AssistedSessionPublic,
     ContactConfirm,
+    MerchantSessionDetail,
+    MerchantSessionListItem,
     Platform3DModelPublic,
+    ProductionStatusUpdate,
     ProductModelLink,
     ProductModelSettingsPublic,
     SessionPublic,
@@ -123,6 +128,64 @@ def create_assisted_session(
         store_id=store_id,
         created_by=member.user_id,
         payload=payload,
+    )
+
+
+PanelParams = Annotated[PageParams, Depends(pagination_params)]
+
+
+@panel_router.get(
+    "/customizations",
+    response_model=Page[MerchantSessionListItem],
+    dependencies=[Depends(require_permission("customization.sessions.view"))],
+)
+def list_customizations(
+    store_id: uuid.UUID,
+    session: SessionDep,
+    params: PanelParams,
+    status: Annotated[CustomizationSessionStatus | None, Query()] = None,
+) -> Page[MerchantSessionListItem]:
+    """List the store's customization sessions (newest first; poll for updates)."""
+    items, count = panel.list_sessions(
+        session=session,
+        store_id=store_id,
+        status=status,
+        skip=params.skip,
+        limit=params.limit,
+    )
+    return Page(data=items, count=count)
+
+
+@panel_router.get(
+    "/customizations/{session_id}",
+    response_model=MerchantSessionDetail,
+    dependencies=[Depends(require_permission("customization.files.download"))],
+)
+def get_customization(
+    store_id: uuid.UUID, session_id: uuid.UUID, session: SessionDep
+) -> MerchantSessionDetail:
+    """Return a session's full art + presigned downloads + order link."""
+    return panel.get_session_detail(
+        session=session, store_id=store_id, session_id=session_id
+    )
+
+
+@panel_router.put(
+    "/customizations/{session_id}/production-status",
+    response_model=MerchantSessionDetail,
+    dependencies=[
+        Depends(require_permission("customization.production_status.update"))
+    ],
+)
+def update_production_status(
+    store_id: uuid.UUID,
+    session_id: uuid.UUID,
+    payload: ProductionStatusUpdate,
+    session: SessionDep,
+) -> MerchantSessionDetail:
+    """Advance the production status of an ordered customization."""
+    return panel.update_production_status(
+        session=session, store_id=store_id, session_id=session_id, payload=payload
     )
 
 

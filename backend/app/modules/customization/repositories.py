@@ -3,11 +3,12 @@
 import uuid
 from datetime import datetime
 
-from sqlmodel import Session, col, select
+from sqlmodel import Session, col, func, select
 
 from app.modules.customization.enums import CustomizationSessionStatus
 from app.modules.customization.models import (
     CustomizationCartItem,
+    CustomizationOrderItem,
     CustomizationProductSettings,
     CustomizationSession,
     CustomizationUpload,
@@ -177,6 +178,103 @@ def get_session(
             CustomizationSession.id == session_id,
             CustomizationSession.store_id == store_id,
             col(CustomizationSession.deleted_at).is_(None),
+        )
+    ).first()
+
+
+def list_store_sessions(
+    *,
+    session: Session,
+    store_id: uuid.UUID,
+    status: CustomizationSessionStatus | None,
+    skip: int,
+    limit: int,
+) -> tuple[list[CustomizationSession], int]:
+    """List a store's customization sessions (most recently updated first).
+
+    For the merchant panel's near-real-time view (doc 22): every non-deleted
+    session of the store, optionally filtered by status.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        status: Optional status filter.
+        skip: Offset.
+        limit: Page size.
+
+    Returns:
+        A ``(sessions, total)`` tuple.
+    """
+    count_stmt = (
+        select(func.count())
+        .select_from(CustomizationSession)
+        .where(
+            CustomizationSession.store_id == store_id,
+            col(CustomizationSession.deleted_at).is_(None),
+        )
+    )
+    list_stmt = select(CustomizationSession).where(
+        CustomizationSession.store_id == store_id,
+        col(CustomizationSession.deleted_at).is_(None),
+    )
+    if status is not None:
+        count_stmt = count_stmt.where(CustomizationSession.status == status)
+        list_stmt = list_stmt.where(CustomizationSession.status == status)
+    total = session.exec(count_stmt).one()
+    rows = list(
+        session.exec(
+            list_stmt.order_by(col(CustomizationSession.updated_at).desc())
+            .offset(skip)
+            .limit(limit)
+        ).all()
+    )
+    return rows, total
+
+
+def list_order_items_by_sessions(
+    *, session: Session, store_id: uuid.UUID, session_ids: list[uuid.UUID]
+) -> list[CustomizationOrderItem]:
+    """Return the store's frozen order items for the given session ids.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        session_ids: The customization session ids to look up.
+
+    Returns:
+        The matching (non-deleted) order items.
+    """
+    if not session_ids:
+        return []
+    return list(
+        session.exec(
+            select(CustomizationOrderItem).where(
+                CustomizationOrderItem.store_id == store_id,
+                col(CustomizationOrderItem.customization_session_id).in_(session_ids),
+                col(CustomizationOrderItem.deleted_at).is_(None),
+            )
+        ).all()
+    )
+
+
+def get_order_item_by_session(
+    *, session: Session, store_id: uuid.UUID, session_id: uuid.UUID
+) -> CustomizationOrderItem | None:
+    """Return the frozen order item for a session, if it was ordered.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        session_id: The customization session id.
+
+    Returns:
+        The order item, or ``None`` if the session is not in an order.
+    """
+    return session.exec(
+        select(CustomizationOrderItem).where(
+            CustomizationOrderItem.store_id == store_id,
+            CustomizationOrderItem.customization_session_id == session_id,
+            col(CustomizationOrderItem.deleted_at).is_(None),
         )
     ).first()
 

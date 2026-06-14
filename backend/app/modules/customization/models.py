@@ -20,7 +20,10 @@ from app.db.base import (
     TimestampMixin,
     UUIDMixin,
 )
-from app.modules.customization.enums import CustomizationSessionStatus
+from app.modules.customization.enums import (
+    CustomizationProductionStatus,
+    CustomizationSessionStatus,
+)
 
 
 class Platform3DModelBase(SQLModel):
@@ -336,4 +339,8 @@ class CustomizationOrderItem(
         default=None,
         max_length=500,
         description="Production composite copied to the order prefix",
+    )
+    production_status: CustomizationProductionStatus = Field(
+        default=CustomizationProductionStatus.received,
+        description="Operational production status (doc 22), advanced by the merchant",
     )

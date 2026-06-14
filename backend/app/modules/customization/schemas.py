@@ -8,7 +8,10 @@ from pydantic import field_validator
 from sqlmodel import SQLModel
 
 from app.modules.catalog.enums import ProductType
-from app.modules.customization.enums import CustomizationSessionStatus
+from app.modules.customization.enums import (
+    CustomizationProductionStatus,
+    CustomizationSessionStatus,
+)
 
 
 class Platform3DModelVersionPublic(SQLModel):
@@ -179,6 +182,46 @@ class SessionPublic(SQLModel):
     composite_url: str | None
     expires_at: datetime
     approved_at: datetime | None
+
+
+# --- Merchant panel: operate customizations (doc 22 / P7-OPS-01) ---
+
+
+class MerchantSessionListItem(SQLModel):
+    """A store's customization session as a row in the merchant panel list.
+
+    Lightweight (one presigned thumbnail); the full art + downloads are in the
+    detail. ``production_status`` is present only once the session is ordered.
+    """
+
+    id: uuid.UUID
+    product_id: uuid.UUID
+    product_name: str
+    status: CustomizationSessionStatus
+    is_assisted: bool
+    snapshot_url: str | None
+    created_at: datetime
+    updated_at: datetime
+    approved_at: datetime | None
+    order_id: uuid.UUID | None
+    order_item_id: uuid.UUID | None
+    production_status: CustomizationProductionStatus | None
+
+
+class MerchantSessionDetail(SessionPublic):
+    """A session's full detail for the merchant: art + downloads + order link."""
+
+    product_name: str
+    is_assisted: bool
+    order_id: uuid.UUID | None
+    order_item_id: uuid.UUID | None
+    production_status: CustomizationProductionStatus | None
+
+
+class ProductionStatusUpdate(SQLModel):
+    """Request to advance the production status of an ordered customization."""
+
+    production_status: CustomizationProductionStatus
 
 
 class AssistedSessionCreate(SQLModel):

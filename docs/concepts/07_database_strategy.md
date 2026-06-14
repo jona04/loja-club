@@ -176,7 +176,7 @@ approved_at
 ```
 
 O `state_json` guarda as **camadas** (imagem e texto), posição/escala/rotação e a área usada — schema canônico no doc [30 §4](./30_3d_customization_technical_design.md) (a **cor do produto** fica fora da V1).
-O vínculo com carrinho/pedido **não** fica na sessão: a personalização aprovada é copiada para `customization_cart_items` e, no pedido, para `customization_order_items` (congelamento — **P7-ORD-01**), pra o pedido não depender da sessão viva.
+O vínculo com carrinho/pedido **não** fica na sessão: a personalização aprovada é copiada para `customization_cart_items` e, no pedido, para `customization_order_items` (congelamento — **P7-ORD-01**), pra o pedido não depender da sessão viva. O `customization_order_items` carrega ainda o **`production_status`** (`CustomizationProductionStatus`, [31 §7](./31_configuration_and_constants.md)): o **eixo operacional de produção** (começa em `received`), avançado pelo lojista no painel (**P7-OPS-01**) — separado do `status` da sessão.
 
 Sessões de personalização expiram em 30 dias quando não viram pedido (TTL + agendamento da varredura em [31 §4](./31_configuration_and_constants.md)).
 Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio. A expiração é aplicada **também no acesso** (uma sessão vencida responde **410** em autosave/upload/aprovar/link público); o worker só faz a **faxina** (tira das listagens), então a regra não depende da hora em que ele roda.

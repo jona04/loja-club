@@ -24,3 +24,26 @@ class CustomizationSessionStatus(str, Enum):
     ordered = "ordered"
     abandoned = "abandoned"
     expired = "expired"
+
+
+class CustomizationProductionStatus(str, Enum):
+    """Operational production status of an ordered customization (doc 22).
+
+    A separate axis from the session lifecycle: it lives on the frozen
+    ``customization_order_items`` row and is advanced by the merchant as they
+    produce the art. It starts at ``received`` when the order is placed.
+
+    - ``received``: art received (initial, set at order time).
+    - ``reviewing``: the merchant is evaluating the art.
+    - ``needs_contact``: the merchant needs to talk to the customer.
+    - ``approved_for_production``: cleared to produce.
+    - ``in_production``: being produced.
+    - ``production_done``: production finished (terminal).
+    """
+
+    received = "received"
+    reviewing = "reviewing"
+    needs_contact = "needs_contact"
+    approved_for_production = "approved_for_production"
+    in_production = "in_production"
+    production_done = "production_done"

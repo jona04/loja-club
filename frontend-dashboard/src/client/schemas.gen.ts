@@ -1919,6 +1919,24 @@ export const CustomerSummarySchema = {
     description: 'A row in the panel customers list.'
 } as const;
 
+export const CustomizationProductionStatusSchema = {
+    type: 'string',
+    enum: ['received', 'reviewing', 'needs_contact', 'approved_for_production', 'in_production', 'production_done'],
+    title: 'CustomizationProductionStatus',
+    description: `Operational production status of an ordered customization (doc 22).
+
+A separate axis from the session lifecycle: it lives on the frozen
+\`\`customization_order_items\`\` row and is advanced by the merchant as they
+produce the art. It starts at \`\`received\`\` when the order is placed.
+
+- \`\`received\`\`: art received (initial, set at order time).
+- \`\`reviewing\`\`: the merchant is evaluating the art.
+- \`\`needs_contact\`\`: the merchant needs to talk to the customer.
+- \`\`approved_for_production\`\`: cleared to produce.
+- \`\`in_production\`\`: being produced.
+- \`\`production_done\`\`: production finished (terminal).`
+} as const;
+
 export const CustomizationSessionStatusSchema = {
     type: 'string',
     enum: ['draft', 'approved', 'added_to_cart', 'ordered', 'abandoned', 'expired'],
@@ -2222,6 +2240,224 @@ export const MenuLocationSchema = {
     description: `Where a store navigation menu renders on the storefront (doc 10).
 
 Read by the storefront API (\`\`P3-SF-01\`\`) to select the header/footer menu.`
+} as const;
+
+export const MerchantSessionDetailSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        product_name: {
+            type: 'string',
+            title: 'Product Name'
+        },
+        is_assisted: {
+            type: 'boolean',
+            title: 'Is Assisted'
+        },
+        order_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Id'
+        },
+        order_item_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Item Id'
+        },
+        production_status: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CustomizationProductionStatus'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at', 'product_name', 'is_assisted', 'order_id', 'order_item_id', 'production_status'],
+    title: 'MerchantSessionDetail',
+    description: "A session's full detail for the merchant: art + downloads + order link."
+} as const;
+
+export const MerchantSessionListItemSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        product_name: {
+            type: 'string',
+            title: 'Product Name'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        is_assisted: {
+            type: 'boolean',
+            title: 'Is Assisted'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        order_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Id'
+        },
+        order_item_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Item Id'
+        },
+        production_status: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CustomizationProductionStatus'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'product_name', 'status', 'is_assisted', 'snapshot_url', 'created_at', 'updated_at', 'approved_at', 'order_id', 'order_item_id', 'production_status'],
+    title: 'MerchantSessionListItem',
+    description: `A store's customization session as a row in the merchant panel list.
+
+Lightweight (one presigned thumbnail); the full art + downloads are in the
+detail. \`\`production_status\`\` is present only once the session is ordered.`
 } as const;
 
 export const MessageSchema = {
@@ -2835,6 +3071,25 @@ export const Page_CustomerSummary_Schema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'Page[CustomerSummary]'
+} as const;
+
+export const Page_MerchantSessionListItem_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/MerchantSessionListItem'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[MerchantSessionListItem]'
 } as const;
 
 export const Page_OrderSummary_Schema = {
@@ -3718,6 +3973,18 @@ export const ProductVariantStatusSchema = {
     enum: ['active', 'archived'],
     title: 'ProductVariantStatus',
     description: 'Lifecycle status of a product variant.'
+} as const;
+
+export const ProductionStatusUpdateSchema = {
+    properties: {
+        production_status: {
+            '$ref': '#/components/schemas/CustomizationProductionStatus'
+        }
+    },
+    type: 'object',
+    required: ['production_status'],
+    title: 'ProductionStatusUpdate',
+    description: 'Request to advance the production status of an ordered customization.'
 } as const;
 
 export const SessionPublicSchema = {
