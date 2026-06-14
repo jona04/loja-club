@@ -59,6 +59,7 @@ export type AssistedSessionPublic = {
     version: Platform3DModelVersionPublic;
     uploads: Array<UploadPublic>;
     snapshot_url: (string | null);
+    composite_url: (string | null);
     expires_at: string;
     approved_at: (string | null);
     public_token: string;
@@ -129,6 +130,7 @@ export type BillingPlanUpdate = {
 
 export type Body_customization_approve_public_session = {
     snapshot: string;
+    composite: string;
     email?: (string | null);
     phone?: (string | null);
     region?: (string | null);
@@ -136,6 +138,7 @@ export type Body_customization_approve_public_session = {
 
 export type Body_customization_approve_session = {
     snapshot: string;
+    composite: string;
 };
 
 export type Body_customization_upload_art = {
@@ -529,12 +532,18 @@ export type InventorySet = {
 };
 
 /**
- * A layer's placement, normalized [0..1] inside the printable UV region.
+ * A layer's placement in the printable region (doc 30 §4).
+ *
+ * ``x``/``y`` are the center in region units; they may fall **outside** [0,1]
+ * when a layer is larger than the region (panned so an edge meets the region
+ * edge). ``scale`` is the width fraction; ``scale_y`` (optional) is a free
+ * height fraction for non-uniform distortion (``None`` = natural aspect).
  */
 export type LayerTransform = {
     x: number;
     y: number;
     scale: number;
+    scale_y?: (number | null);
     rotation_deg?: number;
 };
 
@@ -1024,6 +1033,7 @@ export type SessionPublic = {
     version: Platform3DModelVersionPublic;
     uploads: Array<UploadPublic>;
     snapshot_url: (string | null);
+    composite_url: (string | null);
     expires_at: string;
     approved_at: (string | null);
 };

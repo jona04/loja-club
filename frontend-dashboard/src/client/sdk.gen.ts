@@ -1447,7 +1447,7 @@ export class CustomizationService {
     
     /**
      * Approve Session
-     * Approve the session with the client-side snapshot (freezes it).
+     * Approve the session with the snapshot + production composite (freezes it).
      * @param data The data for the request.
      * @param data.sessionId
      * @param data.formData

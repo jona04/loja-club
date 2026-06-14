@@ -13,11 +13,6 @@ vi.mock("next/dynamic", () => ({
 let webgl = true
 vi.mock("@/lib/webgl", () => ({ hasWebGL: () => webgl }))
 
-vi.mock("@/lib/customization-actions", () => ({
-  uploadCustomizationArt: vi.fn(),
-  approveCustomization: vi.fn(),
-}))
-
 vi.mock("@/lib/cart-actions", () => ({ addToCart: vi.fn() }))
 
 vi.mock("@/lib/customizer/use-session-images", () => ({

@@ -1,7 +1,10 @@
 import type { EditorLayer } from "@/lib/customizer/types"
 
-/** Texture resolution for the composited art (doc 31 §4). */
+/** Texture resolution for the 3D art overlay (doc 31 §4). */
 export const EDITOR_TEXTURE_SIZE = 1024
+
+/** Resolution (px width) of the high-quality production composite (doc 31 §4). */
+export const COMPOSITE_WIDTH = 2048
 
 // The largest allowed font occupies this fraction of the region height.
 const TEXT_MAX_HEIGHT_FRACTION = 0.6
@@ -17,47 +20,53 @@ function cssFont(key: string): string {
   return FONT_STACKS[key] ?? "sans-serif"
 }
 
-/** A pixel rectangle to paint into. */
-export interface Rect {
-  x: number
-  y: number
-  w: number
-  h: number
+/** The art to compose: ordered layers + their loaded images + the size cap. */
+export interface ArtScene {
+  layers: EditorLayer[]
+  images: Map<string, HTMLImageElement>
+  maxFontSize: number
 }
 
 /**
- * Paint the editor layers into a 2D context within `rect`, in z-order. Used for
- * both the 3D texture (rect = the UV sub-region × texture size) and the 2D panel
- * (rect = the whole panel) — one source of truth for what the art looks like.
+ * Render the art into a **physical art space**: a context whose pixel box `w×h`
+ * already has the printable region's real proportions (`w/h = regionAspect`).
  *
- * @param ctx - The 2D canvas context to draw into.
- * @param rect - The printable region in pixels.
- * @param layers - The editor layers (image/text).
- * @param images - Loaded images keyed by `upload_id` (image layers).
- * @param maxFontSize - The version's max text size (for the size mapping).
+ * Drawing here is undistorted by construction — an image keeps its natural
+ * aspect, text is not stretched. The 2D panel shows this directly; the 3D
+ * overlay draws this canvas into the (square) UV sub-region, which the cylindrical
+ * UV then maps back onto the real surface — so both sides look identical and the
+ * art never warps. This same render is the production composite.
+ *
+ * @param ctx - The 2D context to draw into.
+ * @param w - Physical-space width in px.
+ * @param h - Physical-space height in px.
+ * @param scene - The layers, loaded images and max font size.
  */
-export function paintLayers(
+export function renderArt(
   ctx: CanvasRenderingContext2D,
-  rect: Rect,
-  layers: EditorLayer[],
-  images: Map<string, HTMLImageElement>,
-  maxFontSize: number,
+  w: number,
+  h: number,
+  scene: ArtScene,
 ): void {
-  for (const layer of [...layers].sort((a, b) => a.z - b.z)) {
+  for (const layer of [...scene.layers].sort((a, b) => a.z - b.z)) {
     const t = layer.transform
     ctx.save()
-    ctx.translate(rect.x + t.x * rect.w, rect.y + t.y * rect.h)
+    ctx.translate(t.x * w, t.y * h)
     ctx.rotate((t.rotation_deg * Math.PI) / 180)
     if (layer.kind === "image") {
-      const img = images.get(layer.upload_id)
+      const img = scene.images.get(layer.upload_id)
       if (img && img.width > 0) {
-        const w = Math.max(1, t.scale * rect.w)
-        const h = w * (img.height / img.width)
-        ctx.drawImage(img, -w / 2, -h / 2, w, h)
+        const pw = Math.max(1, t.scale * w)
+        // Natural aspect unless the user opted into free distortion (scale_y).
+        const ph =
+          t.scale_y != null
+            ? Math.max(1, t.scale_y * h)
+            : pw * (img.height / img.width)
+        ctx.drawImage(img, -pw / 2, -ph / 2, pw, ph)
       }
     } else {
       const px =
-        (layer.font_size / maxFontSize) * rect.h * TEXT_MAX_HEIGHT_FRACTION
+        (layer.font_size / scene.maxFontSize) * h * TEXT_MAX_HEIGHT_FRACTION
       ctx.font = `${Math.max(1, px)}px ${cssFont(layer.font)}`
       ctx.fillStyle = layer.color
       ctx.textAlign = "center"
@@ -69,9 +78,44 @@ export function paintLayers(
 }
 
 /**
+ * Render the art to an offscreen canvas at physical proportions. Used for the 3D
+ * overlay (drawn into the UV sub-region) and the production composite.
+ *
+ * @param scene - The art to compose.
+ * @param regionAspect - The printable region's real width/height.
+ * @param width - The output width in px (height follows the aspect).
+ * @returns The rendered canvas.
+ */
+export function renderArtInto(
+  target: HTMLCanvasElement,
+  scene: ArtScene,
+  regionAspect: number,
+  width: number,
+): void {
+  const w = Math.max(1, Math.round(width))
+  const h = Math.max(1, Math.round(width / (regionAspect || 1)))
+  if (target.width !== w) target.width = w
+  if (target.height !== h) target.height = h
+  const ctx = target.getContext("2d")
+  if (!ctx) return
+  ctx.clearRect(0, 0, w, h)
+  renderArt(ctx, w, h, scene)
+}
+
+export function renderArtCanvas(
+  scene: ArtScene,
+  regionAspect: number,
+  width: number,
+): HTMLCanvasElement {
+  const canvas = document.createElement("canvas")
+  renderArtInto(canvas, scene, regionAspect, width)
+  return canvas
+}
+
+/**
  * Load an image for canvas compositing. `crossOrigin` is required so drawing the
  * (presigned S3) image does not taint the canvas — otherwise the approval
- * snapshot (`toDataURL`) would throw.
+ * snapshot/composite (`toDataURL`/`toBlob`) would throw.
  *
  * @param url - The image URL (presigned).
  * @returns The loaded image element.

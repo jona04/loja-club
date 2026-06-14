@@ -14,7 +14,6 @@ import { cookies, headers } from "next/headers"
 import type {
   CustomizationSession,
   CustomizationState,
-  UploadPublic,
 } from "@/lib/customizer/session-types"
 
 export type {
@@ -111,45 +110,6 @@ export async function saveCustomizationState(
     await call(`/storefront/customizations/${sessionId}/state`, {
       method: "PUT",
       body: JSON.stringify(state),
-    }),
-  )
-}
-
-/** Upload raster art (multipart) and get the recorded upload + presigned URL. */
-export async function uploadCustomizationArt(
-  sessionId: string,
-  formData: FormData,
-): Promise<UploadPublic> {
-  return parse<UploadPublic>(
-    await call(`/storefront/customizations/${sessionId}/uploads`, {
-      method: "POST",
-      body: formData,
-    }),
-  )
-}
-
-/** Approve a session with the client-side snapshot (freezes it). */
-export async function approveCustomization(
-  sessionId: string,
-  formData: FormData,
-): Promise<CustomizationSession> {
-  return parse<CustomizationSession>(
-    await call(`/storefront/customizations/${sessionId}/approve`, {
-      method: "POST",
-      body: formData,
-    }),
-  )
-}
-
-/** Approve a shared session via its public token (contact + snapshot multipart). */
-export async function approveCustomizationViaToken(
-  token: string,
-  formData: FormData,
-): Promise<CustomizationSession> {
-  return parse<CustomizationSession>(
-    await call(`/storefront/p/${token}/approve`, {
-      method: "POST",
-      body: formData,
     }),
   )
 }

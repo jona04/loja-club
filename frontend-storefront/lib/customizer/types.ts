@@ -3,14 +3,18 @@
  * Client-safe (no server imports) so both the editor and tests can use them.
  */
 
-/** A layer's placement, normalized [0..1] inside the printable UV region. */
+/** A layer's placement, normalized [0..1] inside the printable region. */
 export interface LayerTransform {
   /** Center X within the region (0..1). */
   x: number
   /** Center Y within the region (0..1). */
   y: number
-  /** Size as a fraction of the region width (images) / unused for text. */
+  /** Width as a fraction of the region width (images); image keeps its natural
+   * aspect unless `scale_y` is set. */
   scale: number
+  /** Optional height as a fraction of the region height — set only when the
+   * user opts into free (non-uniform) distortion; `null`/absent = natural. */
+  scale_y?: number | null
   rotation_deg: number
 }
 

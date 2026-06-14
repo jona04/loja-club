@@ -5,6 +5,8 @@ SaaS de ecommerce multi-tenant. Documentação conceitual em `docs/concepts/`; *
 ## Regra de ouro
 O código imita a lógica dos docs — **não inventar lógica de negócio nova**. Se uma limitação técnica impedir seguir o doc, atualizar o `.md` para refletir o código; **nunca** deixar doc e código divergentes. **Fonte de verdade = o doc em `docs/concepts/`, nunca a task**: se algo foi inventado/decidido ao implementar (incl. valores), tem que subir pro doc conceitual — task/README/memória só apontam.
 
+**Documentar a LÓGICA, não só o "o quê":** os docs conceituais têm que estar **completos** — algoritmos, fluxos e decisões não-óbvias (ex.: como a arte é renderizada/mapeada, como o congelamento funciona) ficam no doc da feature. Ao implementar algo não-trivial, escrever **como funciona** no `docs/concepts/` correspondente, na mesma mudança.
+
 ## Configuração e números mágicos
 **Todo número mágico, constante de config, default ou valor de tabela de configuração** (TTL, agendamento, limite, tamanho, porta, etc.) — no código **ou** em tabela — **tem que estar em [`docs/concepts/31_configuration_and_constants.md`](docs/concepts/31_configuration_and_constants.md)** (registro único; vira config em banco no futuro). Ao adicionar/alterar o valor no código, atualizar essa doc **na mesma mudança**. Enums também entram lá.
 

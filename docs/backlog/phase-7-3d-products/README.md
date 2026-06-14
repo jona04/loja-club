@@ -79,6 +79,8 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Handles 2D ricos** (escala/rotação por alça, além de sliders + arrastar). Origem: `P7-EDITOR-02`.
 - [ ] **Limpeza de uploads órfãos** de sessões que não viraram pedido (mantendo o que é do pedido). Origem: `P7-ORD-01`/`P7-SESS-01`.
 - [ ] **Cópia do snapshot via S3 copy-object** (em vez de download+upload) ao congelar — perf/escala. Origem: `P7-ORD-01`.
+- [ ] **Re-render server-side do composite** (fila/headless, fidelidade máxima) — hoje o cliente gera o retângulo de produção em alta-res no approve. Origem: `P7-EDITOR-02` (melhorias).
+- [ ] **Upload direto ao S3 (presigned PUT)** — a barra de progresso cobre só navegador→Next (a etapa Next→backend→S3 é opaca, mostra "Processando…"); presigned PUT dá progresso real até o CDN e tira a imagem grande do Next. Origem: `P7-EDITOR-02` (melhorias).
 - [ ] **Limpeza de arquivos (S3) de sessões expiradas** mantendo histórico de negócio — política de retenção. Origem: `P7-SESS-01`.
 - [ ] **Anti-abuso no endpoint público** (rate limit do `public_token`) — hardening (Fase 10). Origem: `P7-SESS-01`.
 - [x] **Strip de metadados/re-encode da imagem** no upload — **resolvido em `P7-EDITOR-02`** (`_sanitize_image` re-encoda via PIL → remove EXIF; snapshot idem). Origem: `P7-SESS-01`.

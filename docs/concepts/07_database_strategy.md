@@ -167,7 +167,8 @@ customer_id
 platform_3d_model_version_id   # versão fixada do catálogo (Fase 12 acrescenta o modelo da loja)
 status
 state_json
-snapshot_key                   # privado (URL assinada); copiado pro pedido ao congelar
+snapshot_key                   # mockup 3D, privado (URL assinada); copiado pro pedido; é a imagem do carrinho
+composite_key                  # arte de produção (retângulo achatado, alta-res), privado; copiado pro pedido
 created_by_user_id             # usuário da loja na personalização assistida (senão nulo)
 public_token                   # link público read-only da assistida (token opaco; ver doc 30 §9)
 expires_at

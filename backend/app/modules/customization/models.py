@@ -215,6 +215,8 @@ class CustomizationSession(
         default=None, description="Store user who assembled an assisted session"
     )
     snapshot_key: str | None = Field(default=None, max_length=500)
+    # The flat, high-res production art of the printable region (private).
+    composite_key: str | None = Field(default=None, max_length=500)
     public_token: str | None = Field(default=None, max_length=64)
     expires_at: datetime = Field(
         sa_type=DateTime(timezone=True),  # type: ignore
@@ -329,4 +331,9 @@ class CustomizationOrderItem(
     )
     snapshot_key: str | None = Field(
         default=None, max_length=500, description="Snapshot copied to the order prefix"
+    )
+    composite_key: str | None = Field(
+        default=None,
+        max_length=500,
+        description="Production composite copied to the order prefix",
     )

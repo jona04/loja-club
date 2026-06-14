@@ -340,7 +340,7 @@ def seed_platform_3d_models(*, session: Session) -> None:
             },
             art_limits={
                 "mimes": ["image/png", "image/jpeg"],
-                "max_bytes": 15 * 1024 * 1024,
+                "max_bytes": 30 * 1024 * 1024,
                 "min_dimension": 300,
             },
             is_active=True,

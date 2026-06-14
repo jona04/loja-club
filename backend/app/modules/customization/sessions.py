@@ -8,6 +8,7 @@ short-lived presigned URLs.
 """
 
 import io
+import math
 import secrets
 import uuid
 from datetime import datetime, timedelta
@@ -46,9 +47,12 @@ from app.modules.customization.storage import customization_upload_key
 SESSION_TTL = timedelta(days=30)
 SNAPSHOT_MIME = "image/png"
 _DEFAULT_MIMES = ("image/png", "image/jpeg")
-_DEFAULT_MAX_BYTES = 15 * 1024 * 1024
+_DEFAULT_MAX_BYTES = 30 * 1024 * 1024
 _DEFAULT_MIN_DIMENSION = 300
 _EXT = {"image/png": "png", "image/jpeg": "jpg"}
+# Sanity bound for layer transform values (doc 31 §4): centers can leave [0,1]
+# when a layer is panned (larger than the region); this just rejects garbage.
+_MAX_TRANSFORM = 20.0
 
 
 # --- internal helpers -------------------------------------------------------
@@ -92,6 +96,9 @@ def _to_session_public(
     snapshot_url = (
         storage.generate_presigned_url(obj.snapshot_key) if obj.snapshot_key else None
     )
+    composite_url = (
+        storage.generate_presigned_url(obj.composite_key) if obj.composite_key else None
+    )
     uploads = [
         _to_upload_public(u)
         for u in repositories.list_session_uploads(session=session, session_id=obj.id)
@@ -104,6 +111,7 @@ def _to_session_public(
         version=_version_public(version),
         uploads=uploads,
         snapshot_url=snapshot_url,
+        composite_url=composite_url,
         expires_at=obj.expires_at,
         approved_at=obj.approved_at,
     )
@@ -256,10 +264,18 @@ def _validate_state(
             )
         per_area[layer.area_id] = per_area.get(layer.area_id, 0) + 1
         t = layer.transform
-        if not (0.0 <= t.x <= 1.0 and 0.0 <= t.y <= 1.0) or t.scale <= 0:
+        # x/y may exceed [0,1]: a layer larger than the region is panned until an
+        # edge meets the region edge (doc 30 §3.1). The exact containment is the
+        # client's job + the composite clips; here we only sanity-bound the values
+        # (reject NaN/Infinity/absurd) and require a positive scale.
+        positions = [t.x, t.y]
+        sizes = [t.scale, *([t.scale_y] if t.scale_y is not None else [])]
+        if any(
+            not math.isfinite(v) or abs(v) > _MAX_TRANSFORM for v in positions
+        ) or any(not math.isfinite(s) or s <= 0 or s > _MAX_TRANSFORM for s in sizes):
             raise AppError(
                 "transform_out_of_range",
-                "Layer transform is out of the printable region",
+                "Layer transform is out of range",
                 status_code=422,
             )
         if layer.kind == "image":
@@ -524,29 +540,38 @@ def approve_session(
     obj: CustomizationSession,
     snapshot_data: bytes,
     snapshot_content_type: str,
+    composite_data: bytes,
+    composite_content_type: str,
 ) -> SessionPublic:
-    """Freeze a session: store the approval snapshot and mark it approved.
+    """Freeze a session: store the approval snapshot + composite, mark approved.
 
-    The current ``state_json`` is re-validated against the pinned version; the
-    snapshot (client-side PNG, doc 30 §5) is mandatory and stored privately.
+    The current ``state_json`` is re-validated against the pinned version. Two
+    PNGs are mandatory and stored privately: the **snapshot** (the 3D scene as
+    seen, doc 30 §5) and the **composite** (the flat, high-res production art of
+    the printable rectangle, doc 30 §5b).
 
     Args:
         session: Active database session.
         obj: The (owned) editable session.
         snapshot_data: The approval snapshot PNG bytes.
         snapshot_content_type: The snapshot MIME type (must be PNG).
+        composite_data: The production composite PNG bytes.
+        composite_content_type: The composite MIME type (must be PNG).
 
     Returns:
         The approved session DTO.
 
     Raises:
-        AppError: 409/410 if not editable; 422 if the snapshot is not a PNG or
-            the saved state is invalid.
+        AppError: 409/410 if not editable; 422 if a file is not a PNG, the design
+            is empty, or the saved state is invalid.
     """
     _require_editable(obj)
     if snapshot_content_type != SNAPSHOT_MIME:
         raise AppError("invalid_snapshot", "The snapshot must be a PNG", 422)
+    if composite_content_type != SNAPSHOT_MIME:
+        raise AppError("invalid_composite", "The composite must be a PNG", 422)
     clean_snapshot, _, _ = _sanitize_image(snapshot_data, SNAPSHOT_MIME)
+    clean_composite, _, _ = _sanitize_image(composite_data, SNAPSHOT_MIME)
     version = _pinned_version(session=session, obj=obj)
     state = _parse_state(obj.state_json)
     # Don't trust the client's gate: a frozen design must have ≥1 layer.
@@ -558,10 +583,16 @@ def approve_session(
     }
     _validate_state(state=state, version=version, upload_ids=upload_ids)
 
-    filename = f"snapshot-{uuid.uuid4().hex}.png"
-    key = customization_upload_key(obj.store_id, obj.id, filename)
-    storage.upload_fileobj(key, io.BytesIO(clean_snapshot), SNAPSHOT_MIME)
-    obj.snapshot_key = key
+    snapshot_key = customization_upload_key(
+        obj.store_id, obj.id, f"snapshot-{uuid.uuid4().hex}.png"
+    )
+    storage.upload_fileobj(snapshot_key, io.BytesIO(clean_snapshot), SNAPSHOT_MIME)
+    composite_key = customization_upload_key(
+        obj.store_id, obj.id, f"composite-{uuid.uuid4().hex}.png"
+    )
+    storage.upload_fileobj(composite_key, io.BytesIO(clean_composite), SNAPSHOT_MIME)
+    obj.snapshot_key = snapshot_key
+    obj.composite_key = composite_key
     obj.status = CustomizationSessionStatus.approved
     obj.approved_at = get_datetime_utc()
     session.add(obj)
@@ -698,6 +729,8 @@ def approve_via_token(
     contact: ContactConfirm,
     snapshot_data: bytes,
     snapshot_content_type: str,
+    composite_data: bytes,
+    composite_content_type: str,
 ) -> SessionPublic:
     """Approve a session through its public link, confirming the contact (§9).
 
@@ -707,6 +740,8 @@ def approve_via_token(
         contact: The email/phone the approver typed to prove who they are.
         snapshot_data: The approval snapshot PNG bytes.
         snapshot_content_type: The snapshot MIME type (must be PNG).
+        composite_data: The production composite PNG bytes.
+        composite_content_type: The composite MIME type (must be PNG).
 
     Returns:
         The approved session DTO.
@@ -722,6 +757,8 @@ def approve_via_token(
         obj=obj,
         snapshot_data=snapshot_data,
         snapshot_content_type=snapshot_content_type,
+        composite_data=composite_data,
+        composite_content_type=composite_content_type,
     )
 
 

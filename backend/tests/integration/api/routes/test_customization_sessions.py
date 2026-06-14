@@ -213,7 +213,8 @@ def test_autosave_rejects_transform_out_of_range(
     product = _customizable_product(db, store)
     body = _start(client, h, product)
     layer = _text_layer()
-    layer["transform"] = {"x": 1.5, "y": 0.5, "scale": 1.0, "rotation_deg": 0}
+    # Garbage value beyond the sanity bound (panning legitimately exceeds [0,1]).
+    layer["transform"] = {"x": 999.0, "y": 0.5, "scale": 1.0, "rotation_deg": 0}
     state = {
         "schema_version": 1,
         "model": body["state_json"]["model"],
@@ -222,6 +223,24 @@ def test_autosave_rejects_transform_out_of_range(
     resp = client.put(f"{SF}/customizations/{body['id']}/state", headers=h, json=state)
     assert resp.status_code == 422
     assert resp.json()["error"]["code"] == "transform_out_of_range"
+
+
+def test_autosave_allows_panned_layer_outside_unit_range(
+    client: TestClient, db: Session
+) -> None:
+    store, h = _published_store(db, "cust-pan")
+    product = _customizable_product(db, store)
+    body = _start(client, h, product)
+    layer = _text_layer()
+    # A layer larger than the region is panned: the center leaves [0,1] — allowed.
+    layer["transform"] = {"x": 0.3, "y": 1.39, "scale": 0.6, "rotation_deg": 0}
+    state = {
+        "schema_version": 1,
+        "model": body["state_json"]["model"],
+        "layers": [layer],
+    }
+    resp = client.put(f"{SF}/customizations/{body['id']}/state", headers=h, json=state)
+    assert resp.status_code == 200, resp.text
 
 
 def test_autosave_rejects_image_layer_without_upload(
@@ -329,13 +348,17 @@ def test_approve_freezes_and_blocks_edits(client: TestClient, db: Session) -> No
     approve = client.post(
         f"{SF}/customizations/{body['id']}/approve",
         headers=h,
-        files={"snapshot": ("snap.png", _png(size=(800, 800)), "image/png")},
+        files={
+            "snapshot": ("snap.png", _png(size=(800, 800)), "image/png"),
+            "composite": ("comp.png", _png(size=(1200, 480)), "image/png"),
+        },
     )
     assert approve.status_code == 200, approve.text
     approved = approve.json()
     assert approved["status"] == "approved"
     assert approved["approved_at"] is not None
     assert approved["snapshot_url"]
+    assert approved["composite_url"]  # high-res production art was stored
 
     # No more edits once approved.
     again = client.put(f"{SF}/customizations/{body['id']}/state", headers=h, json=state)
@@ -350,7 +373,10 @@ def test_approve_requires_png_snapshot(client: TestClient, db: Session) -> None:
     resp = client.post(
         f"{SF}/customizations/{body['id']}/approve",
         headers=h,
-        files={"snapshot": ("snap.jpg", _png(), "image/jpeg")},
+        files={
+            "snapshot": ("snap.jpg", _png(), "image/jpeg"),
+            "composite": ("comp.png", _png(), "image/png"),
+        },
     )
     assert resp.status_code == 422
 
@@ -364,7 +390,10 @@ def test_approve_requires_at_least_one_layer(client: TestClient, db: Session) ->
     resp = client.post(
         f"{SF}/customizations/{body['id']}/approve",
         headers=h,
-        files={"snapshot": ("snap.png", _png(size=(700, 700)), "image/png")},
+        files={
+            "snapshot": ("snap.png", _png(size=(700, 700)), "image/png"),
+            "composite": ("comp.png", _png(), "image/png"),
+        },
     )
     assert resp.status_code == 422
     assert resp.json()["error"]["code"] == "empty_design"
@@ -409,7 +438,10 @@ def test_assisted_create_and_public_approve(
     assert view.json()["id"] == body["id"]
 
     # Approving needs the matching contact.
-    snap = {"snapshot": ("snap.png", _png(size=(700, 700)), "image/png")}
+    snap = {
+        "snapshot": ("snap.png", _png(size=(700, 700)), "image/png"),
+        "composite": ("comp.png", _png(size=(1200, 480)), "image/png"),
+    }
     wrong = client.post(
         f"{SF}/p/{token}/approve", data={"email": "no@x.com"}, files=snap
     )

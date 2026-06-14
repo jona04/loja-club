@@ -6,10 +6,41 @@ import {
   useRef,
 } from "react"
 
-import { paintLayers } from "@/lib/customizer/compose"
+import { renderArt } from "@/lib/customizer/compose"
 import { clamp, type EditorLayer } from "@/lib/customizer/types"
 
 const BASE_WIDTH = 480
+
+/** Half width/height of an image layer as a fraction of the region. */
+function layerHalfExtent(
+  layer: EditorLayer,
+  images: Map<string, HTMLImageElement>,
+  aspect: number,
+): { halfW: number; halfH: number } {
+  if (layer.kind !== "image") return { halfW: 0, halfH: 0 }
+  const scale = layer.transform.scale
+  const img = images.get(layer.upload_id)
+  const halfW = scale / 2
+  const halfH =
+    layer.transform.scale_y != null
+      ? layer.transform.scale_y / 2
+      : img && img.width > 0
+        ? (scale * aspect * (img.height / img.width)) / 2
+        : scale / 2
+  return { halfW, halfH }
+}
+
+/**
+ * Clamp a layer's center on one axis so the layer can travel the whole region:
+ * if it is larger than the region it pans until an edge meets the region edge
+ * (always covering it); if smaller it stays fully inside. `half` is the layer's
+ * half-extent as a fraction of the region.
+ */
+function clampAxis(center: number, half: number): number {
+  return half >= 0.5
+    ? clamp(center, 1 - half, half)
+    : clamp(center, half, 1 - half)
+}
 
 interface Props {
   layers: EditorLayer[]
@@ -52,30 +83,44 @@ export function EditorCanvas2D({
     canvas.width = w
     canvas.height = h
     ctx.clearRect(0, 0, w, h)
-    paintLayers(ctx, { x: 0, y: 0, w, h }, layers, images, maxFontSize)
+    renderArt(ctx, w, h, { layers, images, maxFontSize })
     const selected = layers.find((l) => l.id === selectedId)
     if (selected) {
       ctx.strokeStyle = "rgba(234,88,12,0.9)"
       ctx.lineWidth = 2
-      const cx = selected.transform.x * w
-      const cy = selected.transform.y * h
+      // Pin the marker to the region edge so it never leaves the rectangle, even
+      // when a large layer's center is panned outside it.
+      const cx = clamp(selected.transform.x * w, 10, w - 10)
+      const cy = clamp(selected.transform.y * h, 10, h - 10)
       ctx.strokeRect(cx - 10, cy - 10, 20, 20)
     }
   }, [layers, images, maxFontSize, aspect, selectedId])
 
   const startDrag = (event: ReactPointerEvent) => {
     if (readOnly || !selectedId || !onMove) return
+    const layer = layers.find((l) => l.id === selectedId)
+    const box = canvasRef.current?.getBoundingClientRect()
+    if (!layer || !box) return
     event.preventDefault()
+    // Relative drag: remember where the layer was and where we grabbed, then
+    // move by the pointer delta — so a click never re-centers and the layer can
+    // travel the whole region.
+    const grabX = (event.clientX - box.left) / box.width
+    const grabY = (event.clientY - box.top) / box.height
+    const originX = layer.transform.x
+    const originY = layer.transform.y
+    const { halfW, halfH } = layerHalfExtent(layer, images, aspect)
     const move = (e: PointerEvent) => {
-      const box = canvasRef.current?.getBoundingClientRect()
-      if (!box) return
+      const b = canvasRef.current?.getBoundingClientRect()
+      if (!b) return
+      const dx = (e.clientX - b.left) / b.width - grabX
+      const dy = (e.clientY - b.top) / b.height - grabY
       onMove(
         selectedId,
-        clamp((e.clientX - box.left) / box.width, 0, 1),
-        clamp((e.clientY - box.top) / box.height, 0, 1),
+        clampAxis(originX + dx, halfW),
+        clampAxis(originY + dy, halfH),
       )
     }
-    move(event.nativeEvent)
     const up = () => {
       window.removeEventListener("pointermove", move)
       window.removeEventListener("pointerup", up)

@@ -247,6 +247,17 @@ export const AssistedSessionPublicSchema = {
             ],
             title: 'Snapshot Url'
         },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
         expires_at: {
             type: 'string',
             format: 'date-time',
@@ -270,7 +281,7 @@ export const AssistedSessionPublicSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'expires_at', 'approved_at', 'public_token'],
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at', 'public_token'],
     title: 'AssistedSessionPublic',
     description: 'An assisted session plus its shareable read-only public token.'
 } as const;
@@ -476,6 +487,11 @@ export const Body_customization_approve_public_sessionSchema = {
             contentMediaType: 'application/octet-stream',
             title: 'Snapshot'
         },
+        composite: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Composite'
+        },
         email: {
             anyOf: [
                 {
@@ -511,7 +527,7 @@ export const Body_customization_approve_public_sessionSchema = {
         }
     },
     type: 'object',
-    required: ['snapshot'],
+    required: ['snapshot', 'composite'],
     title: 'Body_customization-approve_public_session'
 } as const;
 
@@ -521,10 +537,15 @@ export const Body_customization_approve_sessionSchema = {
             type: 'string',
             contentMediaType: 'application/octet-stream',
             title: 'Snapshot'
+        },
+        composite: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Composite'
         }
     },
     type: 'object',
-    required: ['snapshot'],
+    required: ['snapshot', 'composite'],
     title: 'Body_customization-approve_session'
 } as const;
 
@@ -2084,6 +2105,17 @@ export const LayerTransformSchema = {
             type: 'number',
             title: 'Scale'
         },
+        scale_y: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Scale Y'
+        },
         rotation_deg: {
             type: 'number',
             title: 'Rotation Deg',
@@ -2093,7 +2125,12 @@ export const LayerTransformSchema = {
     type: 'object',
     required: ['x', 'y', 'scale'],
     title: 'LayerTransform',
-    description: "A layer's placement, normalized [0..1] inside the printable UV region."
+    description: `A layer's placement in the printable region (doc 30 §4).
+
+\`\`x\`\`/\`\`y\`\` are the center in region units; they may fall **outside** [0,1]
+when a layer is larger than the region (panned so an edge meets the region
+edge). \`\`scale\`\` is the width fraction; \`\`scale_y\`\` (optional) is a free
+height fraction for non-uniform distortion (\`\`None\`\` = natural aspect).`
 } as const;
 
 export const MediaPublicSchema = {
@@ -3724,6 +3761,17 @@ export const SessionPublicSchema = {
             ],
             title: 'Snapshot Url'
         },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
         expires_at: {
             type: 'string',
             format: 'date-time',
@@ -3743,7 +3791,7 @@ export const SessionPublicSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'expires_at', 'approved_at'],
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at'],
     title: 'SessionPublic',
     description: 'A customization session as the editor (or a read-only viewer) sees it.'
 } as const;

@@ -137,7 +137,10 @@ def _approve_session(
     approve = client.post(
         f"{SF}/customizations/{sid}/approve",
         headers=headers,
-        files={"snapshot": ("s.png", _png(), "image/png")},
+        files={
+            "snapshot": ("s.png", _png(), "image/png"),
+            "composite": ("c.png", _png(), "image/png"),
+        },
     )
     assert approve.status_code == 200, approve.text
     return sid
@@ -250,10 +253,34 @@ def test_order_freezes_customization(client: TestClient, db: Session, s3: Any) -
     assert isinstance(layers, list) and len(layers) == 1
     assert frozen.snapshot_key is not None
     assert frozen.snapshot_key.startswith(f"private/{store.id}/orders/{order.id}/")
-    # The snapshot was copied to the order prefix (exists on S3).
+    assert frozen.composite_key is not None
+    assert frozen.composite_key.startswith(f"private/{store.id}/orders/{order.id}/")
+    # Both assets were copied to the order prefix (exist on S3).
     s3.get_object(Bucket="loja-club-test", Key=frozen.snapshot_key)
+    s3.get_object(Bucket="loja-club-test", Key=frozen.composite_key)
     # The session is now marked ordered.
     assert sess.status == CustomizationSessionStatus.ordered
+
+
+@pytest.mark.usefixtures("s3")
+def test_cart_shows_customization_snapshot(client: TestClient, db: Session) -> None:
+    store, h = _published_store(db, "frz-cartimg")
+    product = _customizable_product(db, store)
+    sid = _approve_session(client, h, product)
+    add = client.post(
+        f"{CART}/items",
+        headers=h,
+        json={
+            "product_id": str(product.id),
+            "quantity": 1,
+            "customization_session_id": sid,
+        },
+    )
+    assert add.status_code == 200, add.text
+    # The product has no images; the line still shows an image — the snapshot.
+    line = add.json()["items"][0]
+    assert line["image_url"] is not None
+    assert "customizations" in line["image_url"]
 
 
 @pytest.mark.usefixtures("s3")

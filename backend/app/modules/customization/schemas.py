@@ -96,11 +96,18 @@ class ProductModelSettingsPublic(SQLModel):
 
 
 class LayerTransform(SQLModel):
-    """A layer's placement, normalized [0..1] inside the printable UV region."""
+    """A layer's placement in the printable region (doc 30 §4).
+
+    ``x``/``y`` are the center in region units; they may fall **outside** [0,1]
+    when a layer is larger than the region (panned so an edge meets the region
+    edge). ``scale`` is the width fraction; ``scale_y`` (optional) is a free
+    height fraction for non-uniform distortion (``None`` = natural aspect).
+    """
 
     x: float
     y: float
     scale: float
+    scale_y: float | None = None
     rotation_deg: float = 0.0
 
 
@@ -169,6 +176,7 @@ class SessionPublic(SQLModel):
     version: Platform3DModelVersionPublic
     uploads: list[UploadPublic]
     snapshot_url: str | None
+    composite_url: str | None
     expires_at: datetime
     approved_at: datetime | None
 

@@ -59,9 +59,24 @@ O **conteúdo** do editor: aplicar **imagem** e **texto** como camadas (decal) d
 - **Sessão/estado:** camadas tipadas (`lib/customizer/types`) vivem no `state_json` (autosave debounced do `P7-EDITOR-01`); uploads voltam no `SessionPublic.uploads` (presigned) pra **restaurar** camadas-imagem (não só as desta aba). 
 - **Link público** (`/p/[token]`, server-fetch read-only) reusa os 2 painéis + `Panels`; aprovar exige **confirmar contato** (e-mail/telefone) que o backend casa com o `CustomerProfile`.
 
+### Melhorias de qualidade (refinamento do editor — doc [30 §3.1/§5](../../concepts/30_3d_customization_technical_design.md))
+- **Compositor unificado (corrige distorção de imagem/texto + 2D≠3D):** a arte é renderizada **uma vez** num "espaço físico" (proporção real = `regionAspect`) por `compose.renderArt`; o 2D mostra direto e o 3D desenha esse canvas na sub-região de UV (a UV cilíndrica desfaz a compressão) → **sem esticar** e **2D idêntico ao 3D**. Imagem mantém **aspecto natural** por padrão; **distorcer** é opt-in (`scale_y` + botão "Distorcer").
+- **Cor 2D=3D:** `CanvasTexture.colorSpace = sRGB` no overlay (sem isso as cores divergiam).
+- **Composite de produção:** o cliente renderiza o **retângulo achatado em alta-res** (`COMPOSITE_WIDTH`) e envia **junto do approve** (sem fila); backend valida/re-encoda e guarda **privado** (`composite_key`), congelando no pedido. Approve falha se o composite falhar (garante envio).
+- **Imagem do carrinho = snapshot:** a linha de um item customizado mostra o **mockup 3D** (não a imagem genérica) → distingue 2 personalizações do mesmo produto.
+
+### Refinamentos de UX + resiliência de GPU
+- **Arrasto por extensão (não por centro):** o limite do arraste usa a **extensão da camada** (`clampAxis`) — imagem maior que a área **paneia** até a borda encostar (sempre cobre, sem buraco); menor fica **dentro**; o marcador vermelho fica **fixo na borda** (não some). Arraste **relativo** (pega no ponto e move pelo delta; clicar não recentraliza).
+- **Sempre uma camada selecionada:** se a seleção some (ex.: refresh), o editor seleciona a **camada do topo** automaticamente — o usuário sempre consegue arrastar.
+- **Ordem da lista = z:** o **topo da lista é a camada mais por cima** (z maior); `↑` traz pra frente, `↓` manda pra trás.
+- **Composite com fundo transparente** (PNG com alpha) — só a arte, pronto pra impressão (o xadrez do painel 2D é CSS, não entra).
+- **Mitigações de GPU (NVIDIA+Wayland é frágil):** canvas offscreen **reusado** no repaint (menos alocação); handler de **`webglcontextlost`** → mostra fallback em vez de tela preta. (Tentei remover o `preserveDrawingBuffer` pra economizar GPU, mas a captura ficou instável → **revertido**: o snapshot usa `toDataURL` com `preserveDrawingBuffer` ligado, que é confiável; o ganho era marginal.) Um crash de driver continua sendo do navegador/driver.
+- **Envio com progresso + limites (UX resolvida agora):** upload de arte (≤ **30 MB**/imagem) e aprovação (snapshot + composite) vão por **Route Handlers** (`app/api/customizer/*`, `lib/backend-proxy`) via **XHR** com **barra de progresso** (%, tamanho, velocidade, tempo restante — `ProgressBar`/`upload-xhr`); Server Action não reporta progresso. O editor **mostra o limite por imagem** e **barra antes de enviar** (imagem grande demais, ou payload de aprovação > 48 MB → avisa o tamanho). O `serverActions.bodySizeLimit` fica em **50 MB** (default do Next é **1 MB** → dava **413** "Body exceeded 1 MB limit").
+
 ## Follow-ups
 - [ ] **Recolor do produto** (paleta + material nomeado + seletor) — fora da V1 (doc [30 §12](../../concepts/30_3d_customization_technical_design.md)). → README da fase.
 - [ ] **Arte vetorial (SVG/PDF)** pra gráficas — *Quando:* depois da V1. → README da fase.
 - [ ] **e2e Playwright** do fluxo personalizar→aprovar→carrinho → `P3-SF-03`. → README da fase.
 - [ ] **Fontes web (Inter/Roboto/Montserrat) carregadas no editor** (hoje dependem da fonte do SO; sem isso o canvas usa o fallback) + **aviso de glifo ausente**. → README da fase.
 - [ ] **Handles 2D ricos** (escala/rotação por alça, não só sliders + arrastar) — polir UX. → README da fase.
+- [ ] **Progresso cobre só o trecho navegador→Next** (a etapa Next→backend→S3 é opaca → mostra "Processando…"). Pra progresso real até o CDN: **upload direto ao S3 via presigned PUT** (bypassa o Next; o backend só registra o objeto). → README da fase.

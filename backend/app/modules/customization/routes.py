@@ -212,20 +212,22 @@ async def approve_session(
     guest: GuestSession,
     session: SessionDep,
     snapshot: UploadFile,
+    composite: UploadFile,
 ) -> SessionPublic:
-    """Approve the session with the client-side snapshot (freezes it)."""
+    """Approve the session with the snapshot + production composite (freezes it)."""
     obj = sessions.get_guest_session(
         session=session,
         store_id=guest.store_id,
         session_id=session_id,
         guest_session_id=guest.guest_session_id,
     )
-    data = await snapshot.read()
     return sessions.approve_session(
         session=session,
         obj=obj,
-        snapshot_data=data,
+        snapshot_data=await snapshot.read(),
         snapshot_content_type=snapshot.content_type or "application/octet-stream",
+        composite_data=await composite.read(),
+        composite_content_type=composite.content_type or "application/octet-stream",
     )
 
 
@@ -243,16 +245,18 @@ async def approve_public_session(
     token: str,
     session: SessionDep,
     snapshot: UploadFile,
+    composite: UploadFile,
     email: Annotated[str | None, Form()] = None,
     phone: Annotated[str | None, Form()] = None,
     region: Annotated[str | None, Form()] = None,
 ) -> SessionPublic:
     """Approve a shared session after confirming the pre-registered contact."""
-    data = await snapshot.read()
     return sessions.approve_via_token(
         session=session,
         token=token,
         contact=ContactConfirm(email=email, phone=phone, region=region),
-        snapshot_data=data,
+        snapshot_data=await snapshot.read(),
         snapshot_content_type=snapshot.content_type or "application/octet-stream",
+        composite_data=await composite.read(),
+        composite_content_type=composite.content_type or "application/octet-stream",
     )

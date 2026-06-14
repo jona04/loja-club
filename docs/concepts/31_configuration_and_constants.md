@@ -64,12 +64,16 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 |---|---|---|---|
 | **Sessão = 30 dias** | `customization.sessions.SESSION_TTL` | const | TTL da sessão de personalização (doc [07](./07_database_strategy.md)). |
 | **Expiração: cron diário, 03:00 UTC** | `core/queue.WorkerSettings.cron_jobs` | const | Varre sessões `draft`/`approved` vencidas → `expired` + `deleted_at`. **Hora não-crítica:** a expiração também é aplicada **no acesso** (autosave/upload/approve/link vencido → **410**); o cron é só faxina. Granularidade diária basta pra janela de 30 dias. (É o 1º `cron_job`; sem convenção de agendamento ainda.) |
-| Upload: **15 MiB** máx. | `sessions._DEFAULT_MAX_BYTES` (fallback) / `art_limits.max_bytes` (seed/DB) | const + seed/DB | Tamanho máx. da arte enviada. |
+| Upload: **30 MiB** máx. | `sessions._DEFAULT_MAX_BYTES` (fallback) / `art_limits.max_bytes` (seed/DB) | const + seed/DB | Tamanho máx. **por imagem** enviada (o editor avisa o limite e barra antes de enviar). |
 | Upload: **`image/png`, `image/jpeg`** | `sessions._DEFAULT_MIMES` / `art_limits.mimes` | const + seed/DB | Tipos aceitos (raster). |
 | Upload: **dimensão mín. 300 px** | `sessions._DEFAULT_MIN_DIMENSION` / `art_limits.min_dimension` | const + seed/DB | Abaixo disso = **aviso** de baixa resolução (não bloqueia). |
 | Snapshot de aprovação = **PNG** | `sessions.SNAPSHOT_MIME` | const | Foto do canvas no approve (doc 30 §5). |
 | Autosave do editor = **1500 ms** (debounce) | `frontend-storefront/lib/use-customizer.AUTOSAVE_DEBOUNCE_MS` | const | Espera após a **última** edição antes de salvar o `state_json` (só dispara 1× quando o cliente para de editar; não salva durante o arrasto/rotação). |
-| Textura do editor = **1024 px** | `frontend-storefront/lib/customizer/compose.EDITOR_TEXTURE_SIZE` | const | Resolução do canvas da arte composta (qualidade/perf do overlay 3D). |
+| Textura do editor = **1024 px** | `frontend-storefront/lib/customizer/compose.EDITOR_TEXTURE_SIZE` | const | Resolução do canvas do overlay 3D (qualidade/perf do preview). |
+| Composite de produção = **2048 px** (largura) | `frontend-storefront/lib/customizer/compose.COMPOSITE_WIDTH` | const | Resolução do retângulo de produção (a arte achatada de alta qualidade, §5 doc 30). |
+| Teto de sanidade do transform = **20** | `customization.sessions._MAX_TRANSFORM` | const | Limite de `transform.x/y/scale/scale_y` no `state_json` — centros saem de [0,1] ao panear; só rejeita lixo (NaN/∞/absurdo). |
+| Server Action body = **50 MB** | `frontend-storefront/next.config.ts` (`serverActions.bodySizeLimit`) | const | Folga geral pro Next (default é **1 MB** → causava 413). O upload de arte (≤ 30 MB) + snapshot + composite vão por **Route Handlers** (`app/api/customizer/*`, via XHR p/ progresso), não Server Actions. |
+| Teto do payload de aprovação = **48 MB** | `frontend-storefront/lib/customizer/snapshot.APPROVE_PAYLOAD_LIMIT_BYTES` | const | Snapshot + composite; um pouco abaixo do body de 50 MB (folga p/ multipart). O cliente mostra o tamanho e barra se passar. |
 
 **Seed/DB da caneca** (`platform_3d_model_versions`, **editável no admin** — `P7-ADM-01`):
 
@@ -77,7 +81,7 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 |---|---|
 | `printable_areas` | 1 área `front`, `uv_rect` `{u0:0.2, v0:0.3, u1:0.8, v1:0.7}`, `max_layers: 5` |
 | `text_config` | `fonts: [inter, roboto, montserrat]`, `min_size: 8`, `max_size: 96` |
-| `art_limits` | `mimes: [image/png, image/jpeg]`, `max_bytes: 15 MiB`, `min_dimension: 300` |
+| `art_limits` | `mimes: [image/png, image/jpeg]`, `max_bytes: 30 MiB`, `min_dimension: 300` |
 
 **Pipeline GLB** ([`scripts/glb/optimize-glb.mjs`](../../scripts/glb/optimize-glb.mjs)):
 

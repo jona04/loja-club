@@ -311,16 +311,20 @@ def remove_coupon(*, session: Session, cart: CartCart) -> None:
 def _item_public(
     session: Session, store_id: uuid.UUID, item: CartItem
 ) -> CartItemPublic:
-    """Build a render-ready public line (product name/slug/first image)."""
+    """Build a render-ready public line (name/slug; customized art or 1st image)."""
     product = session.get(Product, item.product_id)
     images = list_images(session=session, store_id=store_id, product_id=item.product_id)
+    # A customized line shows its own snapshot so two designs are distinguishable.
+    custom_image = customization_orders.cart_item_image_url(
+        session=session, store_id=store_id, cart_item_id=item.id
+    )
     return CartItemPublic(
         id=item.id,
         product_id=item.product_id,
         variant_id=item.variant_id,
         name=product.name if product else "",
         slug=product.slug if product else "",
-        image_url=images[0].url if images else None,
+        image_url=custom_image or (images[0].url if images else None),
         quantity=item.quantity,
         unit_price_amount_minor=item.unit_price_amount_minor,
         unit_price_currency=item.unit_price_currency,

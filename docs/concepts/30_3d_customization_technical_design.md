@@ -90,6 +90,18 @@ Cada **versão do modelo** define 1+ **áreas imprimíveis**. Cada área é uma 
 >
 > **Editar a área x pedido congelado:** editar a `uv_rect` afeta **sessões novas**. Pedidos/itens já aprovados **não mudam** — guardam o **snapshot** (§5) e o `state_json` (§7). A **mesma ferramenta de mapeamento** (picker 2D + preview 3D) é a que o lojista usa na **[Fase 12](../backlog/phase-12-merchant-3d-generation.md)**.
 
+### 3.1 Compositor — renderização da arte (sem distorção)
+
+O editor compõe as camadas (imagem/texto) **num único "espaço físico de arte"**: um canvas cuja proporção (`w/h`) é a **proporção real** da região imprimível — `regionAspect = (Δu/Δv) × unwrapAspect`, onde `unwrapAspect = 2πr/h` (§3). Esse render é a **fonte única**:
+- **Painel 2D** mostra o espaço físico **direto** → o que o cliente vê é fiel.
+- **3D** desenha esse mesmo canvas na **sub-região de UV** (a textura é quadrada, `EDITOR_TEXTURE_SIZE`): `drawImage(art, u0·TEX, v0·TEX, Δu·TEX, Δv·TEX)`. A textura quadrada "comprime" a arte na horizontal, e a **UV cilíndrica desfaz** essa compressão na superfície → **sem distorção** e **idêntico ao 2D**.
+- **Imagem:** mantém o **aspecto natural** por padrão (`largura = scale·w`, `altura = largura·(imgH/imgW)`). Distorcer é **opt-in**: um botão "Distorcer" libera `scale_y` (largura/altura independentes) — começa no valor natural pra não dar salto.
+- **Texto:** renderizado no espaço físico (sem esticar); fonte de um conjunto fechado; cai num stack `sans-serif` se a fonte não estiver carregada.
+- **Cor:** o overlay 3D usa `CanvasTexture` com `colorSpace = sRGB` — sem isso as cores saem diferentes do painel 2D. Com isso, **a cor no 2D e no 3D batem**.
+- **Composite de produção (§5):** é exatamente esse render do espaço físico, em **alta resolução** (`COMPOSITE_WIDTH`, [31 §4](./31_configuration_and_constants.md)) — o retângulo achatado que a gráfica usa.
+
+> Constantes (`EDITOR_TEXTURE_SIZE`, `COMPOSITE_WIDTH`, autosave) em [31 §4](./31_configuration_and_constants.md). Implementação: `frontend-storefront/lib/customizer/{compose,aspect}.ts`.
+
 ## 4. `state_json` — o contrato que vai/volta/congela
 
 Estado único, versionado por schema, suficiente pra **restaurar o editor**, **renderizar o preview** e **congelar no pedido** sem depender da sessão viva:
@@ -122,7 +134,8 @@ Estado único, versionado por schema, suficiente pra **restaurar o editor**, **r
 }
 ```
 
-- `transform.x/y` são **normalizados [0..1] dentro da região de UV imprimível** (não pixels) — independem da resolução de tela.
+- `transform.x/y` = **centro** da camada em coordenadas normalizadas da região (não pixels) — independem da resolução de tela. **Podem sair de [0..1]** quando a camada é maior que a região (é "paneada" até a borda encostar, §3.1); o backend só **limita a um teto de sanidade** (`_MAX_TRANSFORM`, [31 §4](./31_configuration_and_constants.md)) — a contenção exata é do cliente e o composite recorta.
+- `transform.scale` = largura (fração da largura da região); `transform.scale_y?` = altura livre (distorção opt-in; ausente = aspecto natural).
 - `font` e os limites são **validados contra a versão** no backend (não confiar no cliente).
 - Mudar o `schema_version` exige migração/compat — pedidos antigos guardam o schema com que foram criados.
 
@@ -130,9 +143,13 @@ Estado único, versionado por schema, suficiente pra **restaurar o editor**, **r
 
 **O que é "snapshot no cliente" (em linguagem simples):** o editor 3D roda **no navegador do cliente** desenhando a cena 3D num `<canvas>`. "Snapshot no cliente" = quando o cliente clica em **Aprovar**, o próprio navegador **tira uma foto** desse canvas (a cena exatamente como está na tela) e gera um **PNG** — sem o servidor precisar re-renderizar o 3D. Esse PNG é a **"arte aprovada"**: é o que o lojista vê no pedido e o que fica **congelado**. A alternativa seria o **servidor** abrir o 3D e renderizar a imagem ("render no servidor/headless") — mais robusto, porém bem mais complexo (precisa de GPU/headless browser); por isso a V1 tira a foto no cliente.
 
-- Ao aprovar, o editor renderiza a cena num canvas e faz **`toDataURL('image/png')`** (a "foto" do canvas) → **1 snapshot frontal obrigatório** (a "arte aprovada"). Opcionalmente um segundo ângulo (3/4) pra ajudar o lojista.
-- O snapshot é **enviado** e guardado como **privado** (chave por `store_id`), junto do `state_json` e da `version_id`.
-- **A aprovação só conclui com snapshot gerado** — se a geração falhar (canvas "tainted", OOM), bloqueia e oferece retry; nunca aprovar sem snapshot.
+A aprovação gera e envia **dois PNGs obrigatórios** (ambos **privados**, por `store_id`):
+- **Snapshot** = a "foto" do canvas 3D (`gl.domElement.toDataURL('image/png')`, com `preserveDrawingBuffer`). É o **mockup** — mostra a caneca personalizada de um ângulo. Usado pra o cliente reconhecer o item (inclusive **a imagem da linha do carrinho** é o snapshot, pra distinguir 2 personalizações do mesmo produto) e pro lojista ver no pedido.
+- **Composite** = o **retângulo achatado** da área imprimível, renderizado no espaço físico (§3.1) em **alta resolução** (`COMPOSITE_WIDTH`). É a **arte de produção** (o que vai pra gráfica) — qualidade independente da tela, mostra a área inteira (não só um lado).
+- Os dois saem do **mesmo compositor** do editor (sem fila): o navegador renderiza, anexa no `approve` (multipart). **Se um falhar (canvas "tainted"/OOM), o approve falha** → garante que foi enviado; bloqueia e oferece retry; nunca aprova sem os dois.
+- O snapshot é capturado com **`toDataURL`** sobre um canvas com `preserveDrawingBuffer` (leitura confiável entre drivers — a prévia de produção não pode falhar silenciosamente). O composite tem **fundo transparente** (PNG com alpha) — só a arte, pronto pra impressão.
+- **Envio com progresso + limites:** o upload de arte (≤ 30 MB por imagem) e a aprovação (snapshot + composite) vão por **Route Handlers** (`app/api/customizer/*`) chamados via **XHR**, que reporta **progresso real** (%, tamanho, velocidade, tempo restante) — Server Action não reporta progresso. O Route Handler repassa host + cookie de convidado ao backend (igual à Server Action). O editor **mostra o limite por imagem** e **barra antes de enviar** se a imagem ou o payload de aprovação (≤ 48 MB) passar do teto ([31 §4](./31_configuration_and_constants.md)). O composite é **uma única imagem achatada** (não a soma dos uploads), então mais camadas **não** somam tamanho indefinidamente. O `serverActions.bodySizeLimit` (default **1 MB**) fica em **50 MB** como folga geral.
+- Re-render **server-side/headless** em altíssima fidelidade (fila) é follow-up; a V1 gera no cliente.
 
 ## 6. Storage e segurança
 
@@ -150,9 +167,10 @@ O split `public/` × `private/` é **top-level** (o `public/` já é a convenç�
 |---|---|---|
 | **GLB do catálogo** (plataforma) | **Público (CDN)**, imutável, versionado | `public/3d-models/<slug>/v<N>/model.glb` via `public_url` |
 | **Arte enviada pelo cliente** | **Privado** | `private/<store_id>/customizations/<session_id>/...`; **URL assinada** (`generate_presigned_url`) só pro editor/lojista |
-| **Snapshot/preview** | **Privado** | idem; ao virar pedido, **copiado** pra `private/<store_id>/orders/<order_id>/...` (§7) |
+| **Snapshot** (mockup 3D) | **Privado** | idem; ao virar pedido, **copiado** pra `private/<store_id>/orders/<order_id>/...` (§7). Também é a imagem da linha no carrinho. |
+| **Composite** (arte de produção, §5) | **Privado** | `private/<store_id>/customizations/<session_id>/composite-*.png`; copiado pra `.../orders/...` no congelamento. **Não** público (é o design do cliente). |
 
-- **Validação de upload:** mime `image/png`/`image/jpeg`; tamanho máx. (ex.: **15 MB**); dimensão mínima → **aviso** de baixa resolução (não bloqueia). Sanitizar (strip de metadados).
+- **Validação de upload:** mime `image/png`/`image/jpeg`; tamanho máx. (ex.: **15 MB**); dimensão mínima → **aviso** de baixa resolução (não bloqueia). **Sanitização real:** o backend **re-encoda** a imagem (PIL) → remove EXIF/metadados (foto do cliente pode ter GPS) e valida; o snapshot/composite idem.
 - **Nunca** expor o arquivo original em URL pública permanente. Auditar acesso do lojista (doc [14](./14_security_strategy.md)).
 - Tudo separado por `store_id` (mixin de scoping); sessão/upload/cart/order item carregam `store_id`.
 

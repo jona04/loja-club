@@ -95,6 +95,53 @@ def link_session_to_cart_item(
     session.add(cust_session)
 
 
+def cart_item_image_url(
+    *, session: Session, store_id: uuid.UUID, cart_item_id: uuid.UUID
+) -> str | None:
+    """Return the customization snapshot URL for a cart line, if customized.
+
+    Lets the cart show the customer's personalized mug photo instead of the
+    generic product image, so distinct customizations are distinguishable.
+
+    Args:
+        session: Active database session.
+        store_id: The owning store id.
+        cart_item_id: The cart line id.
+
+    Returns:
+        A presigned snapshot URL, or ``None`` if the line isn't customized.
+    """
+    link = repositories.get_cart_item_link(
+        session=session, store_id=store_id, cart_item_id=cart_item_id
+    )
+    if link is None:
+        return None
+    cust = repositories.get_session(
+        session=session, store_id=store_id, session_id=link.customization_session_id
+    )
+    if cust is None or not cust.snapshot_key:
+        return None
+    return storage.generate_presigned_url(cust.snapshot_key)
+
+
+def _copy_to_order(
+    source_key: str | None,
+    store_id: uuid.UUID,
+    order_id: uuid.UUID,
+    filename: str,
+) -> str | None:
+    """Copy a private asset to the order's prefix, or ``None`` if there is none.
+
+    Raises on failure so the order is not committed without its frozen assets.
+    """
+    if not source_key:
+        return None
+    data = storage.download(source_key)
+    dest = customization_order_key(store_id, order_id, filename)
+    storage.upload_fileobj(dest, io.BytesIO(data), SNAPSHOT_MIME)
+    return dest
+
+
 def freeze_order_item(
     *,
     session: Session,
@@ -130,13 +177,12 @@ def freeze_order_item(
     if cust_session is None:  # pragma: no cover - FK guarantees it exists
         return
 
-    frozen_snapshot_key: str | None = None
-    if cust_session.snapshot_key:
-        data = storage.download(cust_session.snapshot_key)
-        frozen_snapshot_key = customization_order_key(
-            store_id, order_id, "snapshot.png"
-        )
-        storage.upload_fileobj(frozen_snapshot_key, io.BytesIO(data), SNAPSHOT_MIME)
+    frozen_snapshot_key = _copy_to_order(
+        cust_session.snapshot_key, store_id, order_id, "snapshot.png"
+    )
+    frozen_composite_key = _copy_to_order(
+        cust_session.composite_key, store_id, order_id, "composite.png"
+    )
 
     session.add(
         CustomizationOrderItem(
@@ -148,6 +194,7 @@ def freeze_order_item(
             # Deep copy: the frozen order must never share state with the session.
             state_json=copy.deepcopy(cust_session.state_json),
             snapshot_key=frozen_snapshot_key,
+            composite_key=frozen_composite_key,
         )
     )
     cust_session.status = CustomizationSessionStatus.ordered

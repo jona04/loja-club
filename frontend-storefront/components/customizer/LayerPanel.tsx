@@ -2,11 +2,14 @@
 
 import { useRef } from "react"
 
+import { ProgressBar } from "@/components/customizer/ProgressBar"
+import { formatBytes } from "@/lib/customizer/format"
 import type {
   EditorLayer,
   LayerTransform,
   TextLayer,
 } from "@/lib/customizer/types"
+import type { UploadProgress } from "@/lib/customizer/upload-xhr"
 
 interface Props {
   layers: EditorLayer[]
@@ -15,12 +18,18 @@ interface Props {
   minFont: number
   maxFont: number
   uploading: boolean
+  /** Max bytes per uploaded image (from `art_limits`), for the limit hint + bar. */
+  maxBytes: number
+  /** Live upload progress, or null when idle. */
+  uploadProgress: UploadProgress | null
   onAddImage: (file: File) => void
   onAddText: () => void
   onSelect: (id: string) => void
   onUpdate: (layer: EditorLayer) => void
   onRemove: (id: string) => void
   onReorder: (id: string, dir: -1 | 1) => void
+  /** Toggle free (non-uniform) distortion for an image layer. */
+  onToggleDistort: (id: string, on: boolean) => void
 }
 
 /**
@@ -37,12 +46,15 @@ export function LayerPanel({
   minFont,
   maxFont,
   uploading,
+  maxBytes,
+  uploadProgress,
   onAddImage,
   onAddText,
   onSelect,
   onUpdate,
   onRemove,
   onReorder,
+  onToggleDistort,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const selected = layers.find((l) => l.id === selectedId) ?? null
@@ -85,49 +97,60 @@ export function LayerPanel({
           Adicionar texto
         </button>
       </div>
+      <p className="text-xs text-gray-400">
+        PNG ou JPG, até {formatBytes(maxBytes)} por imagem.
+      </p>
+      {uploading && (
+        <ProgressBar progress={uploadProgress} label="Enviando imagem…" />
+      )}
 
+      {/* Top of the list = topmost layer (highest z) — most intuitive. */}
       <ul className="divide-y rounded-md border">
         {layers.length === 0 && (
           <li className="p-3 text-sm text-gray-500">Nenhuma camada ainda.</li>
         )}
-        {layers.map((layer) => (
-          <li
-            key={layer.id}
-            className={`flex items-center justify-between gap-2 p-2 text-sm ${layer.id === selectedId ? "bg-orange-50" : ""}`}
-          >
-            <button
-              type="button"
-              onClick={() => onSelect(layer.id)}
-              className="flex-1 truncate text-left"
+        {[...layers]
+          .sort((a, b) => b.z - a.z)
+          .map((layer) => (
+            <li
+              key={layer.id}
+              className={`flex items-center justify-between gap-2 p-2 text-sm ${layer.id === selectedId ? "bg-orange-50" : ""}`}
             >
-              {layer.kind === "text" ? `Texto: ${layer.text || "—"}` : "Imagem"}
-            </button>
-            <div className="flex shrink-0 gap-1 text-gray-500">
               <button
                 type="button"
-                aria-label="Subir"
-                onClick={() => onReorder(layer.id, 1)}
+                onClick={() => onSelect(layer.id)}
+                className="flex-1 truncate text-left"
               >
-                ↑
+                {layer.kind === "text"
+                  ? `Texto: ${layer.text || "—"}`
+                  : "Imagem"}
               </button>
-              <button
-                type="button"
-                aria-label="Descer"
-                onClick={() => onReorder(layer.id, -1)}
-              >
-                ↓
-              </button>
-              <button
-                type="button"
-                aria-label="Remover"
-                onClick={() => onRemove(layer.id)}
-                className="text-red-600"
-              >
-                ✕
-              </button>
-            </div>
-          </li>
-        ))}
+              <div className="flex shrink-0 gap-1 text-gray-500">
+                <button
+                  type="button"
+                  aria-label="Subir"
+                  onClick={() => onReorder(layer.id, 1)}
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  aria-label="Descer"
+                  onClick={() => onReorder(layer.id, -1)}
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  aria-label="Remover"
+                  onClick={() => onRemove(layer.id)}
+                  className="text-red-600"
+                >
+                  ✕
+                </button>
+              </div>
+            </li>
+          ))}
       </ul>
 
       {selected && (
@@ -176,19 +199,54 @@ export function LayerPanel({
             </>
           )}
           {selected.kind === "image" && (
-            <Field label={`Tamanho (${selected.transform.scale.toFixed(2)})`}>
-              <input
-                type="range"
-                min={0.1}
-                max={1.5}
-                step={0.05}
-                value={selected.transform.scale}
-                onChange={(e) =>
-                  setTransform({ scale: Number(e.target.value) })
+            <>
+              <Field
+                label={
+                  selected.transform.scale_y != null
+                    ? `Largura (${selected.transform.scale.toFixed(2)})`
+                    : `Tamanho (${selected.transform.scale.toFixed(2)})`
                 }
-                className="w-full"
-              />
-            </Field>
+              >
+                <input
+                  type="range"
+                  min={0.1}
+                  max={1.5}
+                  step={0.05}
+                  value={selected.transform.scale}
+                  onChange={(e) =>
+                    setTransform({ scale: Number(e.target.value) })
+                  }
+                  className="w-full"
+                />
+              </Field>
+              <label className="flex items-center gap-2 text-xs font-medium text-gray-600">
+                <input
+                  type="checkbox"
+                  checked={selected.transform.scale_y != null}
+                  onChange={(e) =>
+                    onToggleDistort(selected.id, e.target.checked)
+                  }
+                />
+                Distorcer (largura/altura livres)
+              </label>
+              {selected.transform.scale_y != null && (
+                <Field
+                  label={`Altura (${selected.transform.scale_y.toFixed(2)})`}
+                >
+                  <input
+                    type="range"
+                    min={0.1}
+                    max={1.5}
+                    step={0.05}
+                    value={selected.transform.scale_y}
+                    onChange={(e) =>
+                      setTransform({ scale_y: Number(e.target.value) })
+                    }
+                    className="w-full"
+                  />
+                </Field>
+              )}
+            </>
           )}
           <Field
             label={`Rotação (${Math.round(selected.transform.rotation_deg)}°)`}

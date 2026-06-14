@@ -83,6 +83,7 @@ export function Panels({
             images={images}
             uvRect={uvRect}
             maxFontSize={maxFontSize}
+            artAspect={panelAspect}
             onAspect={onAspect}
             captureRef={captureRef}
           />

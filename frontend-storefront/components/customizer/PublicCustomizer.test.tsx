@@ -9,9 +9,6 @@ vi.mock("next/dynamic", () => ({
 vi.mock("@/lib/customizer/use-session-images", () => ({
   useSessionImages: () => new Map(),
 }))
-vi.mock("@/lib/customization-actions", () => ({
-  approveCustomizationViaToken: vi.fn(),
-}))
 
 import { PublicCustomizer } from "@/components/customizer/PublicCustomizer"
 

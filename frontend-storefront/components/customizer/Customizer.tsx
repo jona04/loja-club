@@ -5,14 +5,18 @@ import { useEffect, useRef, useState } from "react"
 
 import { LayerPanel } from "@/components/customizer/LayerPanel"
 import { Panels } from "@/components/customizer/Panels"
+import { ProgressBar } from "@/components/customizer/ProgressBar"
 import type { StorefrontProduct } from "@/lib/api"
 import { addToCart } from "@/lib/cart-actions"
-import {
-  approveCustomization,
-  uploadCustomizationArt,
-} from "@/lib/customization-actions"
+import { regionAspect } from "@/lib/customizer/aspect"
+import { formatBytes } from "@/lib/customizer/format"
 import type { UploadPublic } from "@/lib/customizer/session-types"
-import { snapshotFormData } from "@/lib/customizer/snapshot"
+import {
+  APPROVE_PAYLOAD_LIMIT_BYTES,
+  appendComposite,
+  formDataBytes,
+  snapshotFormData,
+} from "@/lib/customizer/snapshot"
 import {
   clamp,
   type EditorLayer,
@@ -20,6 +24,7 @@ import {
   newLayerId,
   type TextLayer,
 } from "@/lib/customizer/types"
+import { type UploadProgress, xhrUpload } from "@/lib/customizer/upload-xhr"
 import { useSessionImages } from "@/lib/customizer/use-session-images"
 import { useCustomizer } from "@/lib/use-customizer"
 import { hasWebGL } from "@/lib/webgl"
@@ -68,7 +73,13 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [aspect, setAspect] = useState(2.5)
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(
+    null,
+  )
   const [approving, setApproving] = useState(false)
+  const [approveProgress, setApproveProgress] = useState<UploadProgress | null>(
+    null,
+  )
   const [actionError, setActionError] = useState<string | null>(null)
   const [approved, setApproved] = useState(false)
   const [addingToCart, setAddingToCart] = useState(false)
@@ -89,6 +100,20 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
   const fonts = session?.version.text_config.fonts ?? ["inter"]
   const minFont = session?.version.text_config.min_size ?? 8
   const maxFont = session?.version.text_config.max_size ?? 96
+  const maxUploadBytes =
+    session?.version.art_limits.max_bytes ?? 30 * 1024 * 1024
+
+  // Always keep a layer selected (so the user can drag right away, even after a
+  // page refresh): if the selection is gone, fall back to the top layer.
+  useEffect(() => {
+    if (layers.length === 0) {
+      if (selectedId !== null) setSelectedId(null)
+      return
+    }
+    if (!layers.some((l) => l.id === selectedId)) {
+      setSelectedId(layers.reduce((a, b) => (b.z > a.z ? b : a)).id)
+    }
+  }, [layers, selectedId])
 
   const setLayers = (next: EditorLayer[]) => {
     if (state) setState({ ...state, layers: next })
@@ -96,12 +121,23 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
 
   const addImage = async (file: File) => {
     if (!session) return
+    if (file.size > maxUploadBytes) {
+      setActionError(
+        `Imagem muito grande (${formatBytes(file.size)}). O limite por imagem é ${formatBytes(maxUploadBytes)}.`,
+      )
+      return
+    }
     setUploading(true)
     setActionError(null)
+    setUploadProgress(null)
     try {
       const fd = new FormData()
       fd.append("file", file)
-      const up = await uploadCustomizationArt(session.id, fd)
+      const up = await xhrUpload<UploadPublic>(
+        `/api/customizer/${session.id}/upload`,
+        fd,
+        setUploadProgress,
+      )
       setUploads((u) => [...u, up])
       const layer: ImageLayer = {
         id: newLayerId(),
@@ -117,6 +153,7 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
       setActionError((e as Error).message)
     } finally {
       setUploading(false)
+      setUploadProgress(null)
     }
   }
 
@@ -159,20 +196,72 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
       updateLayer({ ...layer, transform: { ...layer.transform, x, y } })
   }
 
+  // Toggle free (non-uniform) distortion: seed `scale_y` at the natural height
+  // so turning it on doesn't jump, then the user adjusts width/height freely.
+  const toggleDistort = (id: string, on: boolean) => {
+    const layer = layers.find((l) => l.id === id)
+    if (!layer || layer.kind !== "image") return
+    if (!on) {
+      updateLayer({
+        ...layer,
+        transform: { ...layer.transform, scale_y: null },
+      })
+      return
+    }
+    const uv = session?.version.printable_areas[0]?.uv_rect ?? {
+      u0: 0,
+      v0: 0,
+      u1: 1,
+      v1: 1,
+    }
+    const img = images.get(layer.upload_id)
+    const ratio = img && img.width > 0 ? img.height / img.width : 1
+    const naturalScaleY =
+      layer.transform.scale * regionAspect(uv, aspect) * ratio
+    updateLayer({
+      ...layer,
+      transform: { ...layer.transform, scale_y: naturalScaleY },
+    })
+  }
+
   const onApprove = async () => {
     if (!session || !captureRef.current) return
     setApproving(true)
     setActionError(null)
+    setApproveProgress(null)
     try {
+      const uv = session.version.printable_areas[0]?.uv_rect ?? {
+        u0: 0,
+        v0: 0,
+        u1: 1,
+        v1: 1,
+      }
       const fd = await snapshotFormData(captureRef.current)
-      await approveCustomization(session.id, fd)
+      await appendComposite(
+        fd,
+        { layers, images, maxFontSize: maxFont },
+        regionAspect(uv, aspect),
+      )
+      if (formDataBytes(fd) > APPROVE_PAYLOAD_LIMIT_BYTES) {
+        setActionError(
+          `A arte ficou grande demais (${formatBytes(formDataBytes(fd))}). Reduza ou remova imagens e tente de novo.`,
+        )
+        return
+      }
+      await xhrUpload(
+        `/api/customizer/${session.id}/approve`,
+        fd,
+        setApproveProgress,
+      )
       setApproved(true)
-    } catch {
+    } catch (e) {
+      console.error("[customizer] approve failed:", e)
       setActionError(
         "Não foi possível gerar a prévia para aprovação. Tente novamente.",
       )
     } finally {
       setApproving(false)
+      setApproveProgress(null)
     }
   }
 
@@ -262,27 +351,36 @@ export function Customizer({ product }: { product: StorefrontProduct }) {
             minFont={minFont}
             maxFont={maxFont}
             uploading={uploading}
+            maxBytes={maxUploadBytes}
+            uploadProgress={uploadProgress}
             onAddImage={addImage}
             onAddText={addText}
             onSelect={setSelectedId}
             onUpdate={updateLayer}
             onRemove={removeLayer}
             onReorder={reorder}
+            onToggleDistort={toggleDistort}
           />
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              disabled={layers.length === 0 || approving}
-              onClick={onApprove}
-              className="rounded-md bg-black px-5 py-3 text-sm font-medium text-white disabled:opacity-50"
-            >
-              {approving ? "Aprovando…" : "Aprovar personalização"}
-            </button>
-            {layers.length === 0 && (
-              <span className="text-xs text-gray-500">
-                Adicione ao menos uma camada para aprovar.
-              </span>
-            )}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                disabled={layers.length === 0 || approving}
+                onClick={onApprove}
+                className="rounded-md bg-black px-5 py-3 text-sm font-medium text-white disabled:opacity-50"
+              >
+                {approving ? "Aprovando…" : "Aprovar personalização"}
+              </button>
+              {layers.length === 0 && (
+                <span className="text-xs text-gray-500">
+                  Adicione ao menos uma camada para aprovar.
+                </span>
+              )}
+            </div>
+            <ProgressBar
+              progress={approveProgress}
+              label="Enviando sua arte…"
+            />
           </div>
         </div>
       )}
