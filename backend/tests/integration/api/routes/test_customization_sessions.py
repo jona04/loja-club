@@ -279,6 +279,13 @@ def test_upload_and_reference_in_layer(client: TestClient, db: Session) -> None:
     resp = client.put(f"{SF}/customizations/{body['id']}/state", headers=h, json=state)
     assert resp.status_code == 200, resp.text
 
+    # The session carries its uploads (with presigned URLs) so the editor can
+    # restore image layers later, not only those added in this browser session.
+    got = client.get(f"{SF}/customizations/{body['id']}", headers=h).json()
+    assert len(got["uploads"]) == 1
+    assert got["uploads"][0]["id"] == upload["id"]
+    assert got["uploads"][0]["url"]
+
 
 @pytest.mark.usefixtures("s3")
 def test_upload_low_resolution_warns(client: TestClient, db: Session) -> None:
@@ -348,6 +355,21 @@ def test_approve_requires_png_snapshot(client: TestClient, db: Session) -> None:
     assert resp.status_code == 422
 
 
+@pytest.mark.usefixtures("s3")
+def test_approve_requires_at_least_one_layer(client: TestClient, db: Session) -> None:
+    store, h = _published_store(db, "cust-empty")
+    product = _customizable_product(db, store)
+    body = _start(client, h, product)
+    # No layers added → the backend rejects the approval (don't trust the UI).
+    resp = client.post(
+        f"{SF}/customizations/{body['id']}/approve",
+        headers=h,
+        files={"snapshot": ("snap.png", _png(size=(700, 700)), "image/png")},
+    )
+    assert resp.status_code == 422
+    assert resp.json()["error"]["code"] == "empty_design"
+
+
 def test_other_store_cannot_read_session(client: TestClient, db: Session) -> None:
     store_a, ha = _published_store(db, "cust-iso-a")
     _store_b, hb = _published_store(db, "cust-iso-b")
@@ -373,6 +395,13 @@ def test_assisted_create_and_public_approve(
     body = created.json()
     token = body["public_token"]
     assert body["status"] == "draft"
+
+    # The merchant assembles a design (OPS-01 UI); approval requires >=1 layer.
+    obj = db.get(CustomizationSession, uuid.UUID(body["id"]))
+    assert obj is not None
+    obj.state_json = {**obj.state_json, "layers": [_text_layer()]}
+    db.add(obj)
+    db.commit()
 
     # Public link opens read-only.
     view = client.get(f"{SF}/p/{token}")

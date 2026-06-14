@@ -68,7 +68,8 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | Upload: **`image/png`, `image/jpeg`** | `sessions._DEFAULT_MIMES` / `art_limits.mimes` | const + seed/DB | Tipos aceitos (raster). |
 | Upload: **dimensão mín. 300 px** | `sessions._DEFAULT_MIN_DIMENSION` / `art_limits.min_dimension` | const + seed/DB | Abaixo disso = **aviso** de baixa resolução (não bloqueia). |
 | Snapshot de aprovação = **PNG** | `sessions.SNAPSHOT_MIME` | const | Foto do canvas no approve (doc 30 §5). |
-| Autosave do editor = **800 ms** (debounce) | `frontend-storefront/lib/use-customizer.AUTOSAVE_DEBOUNCE_MS` | const | Espera após a última edição antes de salvar o `state_json`. |
+| Autosave do editor = **1500 ms** (debounce) | `frontend-storefront/lib/use-customizer.AUTOSAVE_DEBOUNCE_MS` | const | Espera após a **última** edição antes de salvar o `state_json` (só dispara 1× quando o cliente para de editar; não salva durante o arrasto/rotação). |
+| Textura do editor = **1024 px** | `frontend-storefront/lib/customizer/compose.EDITOR_TEXTURE_SIZE` | const | Resolução do canvas da arte composta (qualidade/perf do overlay 3D). |
 
 **Seed/DB da caneca** (`platform_3d_model_versions`, **editável no admin** — `P7-ADM-01`):
 

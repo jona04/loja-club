@@ -167,6 +167,7 @@ class SessionPublic(SQLModel):
     status: CustomizationSessionStatus
     state_json: dict[str, object]
     version: Platform3DModelVersionPublic
+    uploads: list[UploadPublic]
     snapshot_url: str | None
     expires_at: datetime
     approved_at: datetime | None

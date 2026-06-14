@@ -66,19 +66,43 @@ def _version_public(version: Platform3DModelVersion) -> Platform3DModelVersionPu
     )
 
 
+def _to_upload_public(upload: CustomizationUpload) -> UploadPublic:
+    """Map a stored upload to its DTO with a fresh presigned read URL."""
+    return UploadPublic(
+        id=upload.id,
+        mime=upload.mime,
+        size_bytes=upload.size_bytes,
+        width=upload.width,
+        height=upload.height,
+        url=storage.generate_presigned_url(upload.key),
+    )
+
+
 def _to_session_public(
-    *, obj: CustomizationSession, version: Platform3DModelVersion
+    *,
+    session: Session,
+    obj: CustomizationSession,
+    version: Platform3DModelVersion,
 ) -> SessionPublic:
-    """Build a session DTO, presigning the snapshot URL when present."""
+    """Build a session DTO, presigning the snapshot + each upload URL.
+
+    The uploads (with presigned URLs) let the editor render image layers on
+    restore, not just the ones added in the current browser session.
+    """
     snapshot_url = (
         storage.generate_presigned_url(obj.snapshot_key) if obj.snapshot_key else None
     )
+    uploads = [
+        _to_upload_public(u)
+        for u in repositories.list_session_uploads(session=session, session_id=obj.id)
+    ]
     return SessionPublic(
         id=obj.id,
         product_id=obj.product_id,
         status=obj.status,
         state_json=obj.state_json,
         version=_version_public(version),
+        uploads=uploads,
         snapshot_url=snapshot_url,
         expires_at=obj.expires_at,
         approved_at=obj.approved_at,
@@ -273,15 +297,38 @@ def _validate_state(
             )
 
 
-def _image_dimensions(data: bytes) -> tuple[int, int]:
-    """Return an image's (width, height), or raise 422 if it can't be decoded."""
+def _sanitize_image(data: bytes, content_type: str) -> tuple[bytes, int, int]:
+    """Decode, **re-encode** (strip metadata) and return (clean_bytes, w, h).
+
+    Re-encoding drops EXIF/embedded metadata — a customer's photo may carry GPS
+    and device data (privacy/security) — and rejects anything that is not a
+    readable image. The format is kept (PNG↔JPEG); JPEG is flattened to RGB.
+
+    Args:
+        data: The raw uploaded bytes.
+        content_type: The validated MIME type (``image/png`` or ``image/jpeg``).
+
+    Returns:
+        A ``(clean_bytes, width, height)`` tuple.
+
+    Raises:
+        AppError: 422 if the bytes are not a readable image.
+    """
+    fmt = "PNG" if content_type == "image/png" else "JPEG"
     try:
         with Image.open(io.BytesIO(data)) as img:
-            return int(img.width), int(img.height)
+            img.load()
+            width, height = int(img.width), int(img.height)
+            buffer = io.BytesIO()
+            if fmt == "JPEG":
+                img.convert("RGB").save(buffer, format="JPEG", quality=90)
+            else:
+                img.save(buffer, format="PNG")
     except (UnidentifiedImageError, OSError, ValueError) as exc:
         raise AppError(
             "invalid_image", "The file is not a readable image", status_code=422
         ) from exc
+    return buffer.getvalue(), width, height
 
 
 # --- public service API -----------------------------------------------------
@@ -318,7 +365,7 @@ def start_session(
         guest_session_id=guest_session_id,
     )
     if existing is not None:
-        return _to_session_public(obj=existing, version=version)
+        return _to_session_public(session=session, obj=existing, version=version)
     obj = CustomizationSession(
         store_id=store_id,
         product_id=product_id,
@@ -331,7 +378,7 @@ def start_session(
     session.add(obj)
     session.commit()
     session.refresh(obj)
-    return _to_session_public(obj=obj, version=version)
+    return _to_session_public(session=session, obj=obj, version=version)
 
 
 def get_guest_session(
@@ -366,7 +413,7 @@ def get_guest_session(
 def view_session(*, session: Session, obj: CustomizationSession) -> SessionPublic:
     """Return a session DTO for an already-loaded, ownership-checked session."""
     return _to_session_public(
-        obj=obj, version=_pinned_version(session=session, obj=obj)
+        session=session, obj=obj, version=_pinned_version(session=session, obj=obj)
     )
 
 
@@ -397,7 +444,7 @@ def autosave(
     session.add(obj)
     session.commit()
     session.refresh(obj)
-    return _to_session_public(obj=obj, version=version)
+    return _to_session_public(session=session, obj=obj, version=version)
 
 
 def add_upload(
@@ -442,18 +489,18 @@ def add_upload(
         )
     if len(data) > max_bytes:
         raise AppError("file_too_large", "The file exceeds the maximum size", 413)
-    width, height = _image_dimensions(data)
+    clean, width, height = _sanitize_image(data, content_type)
     low_resolution = min(width, height) < min_dimension
 
     filename = f"{uuid.uuid4().hex}.{_EXT.get(content_type, 'bin')}"
     key = customization_upload_key(obj.store_id, obj.id, filename)
-    storage.upload_fileobj(key, io.BytesIO(data), content_type)
+    storage.upload_fileobj(key, io.BytesIO(clean), content_type)
     upload = CustomizationUpload(
         store_id=obj.store_id,
         customization_session_id=obj.id,
         key=key,
         mime=content_type,
-        size_bytes=len(data),
+        size_bytes=len(clean),
         width=width,
         height=height,
     )
@@ -499,9 +546,12 @@ def approve_session(
     _require_editable(obj)
     if snapshot_content_type != SNAPSHOT_MIME:
         raise AppError("invalid_snapshot", "The snapshot must be a PNG", 422)
-    _image_dimensions(snapshot_data)
+    clean_snapshot, _, _ = _sanitize_image(snapshot_data, SNAPSHOT_MIME)
     version = _pinned_version(session=session, obj=obj)
     state = _parse_state(obj.state_json)
+    # Don't trust the client's gate: a frozen design must have ≥1 layer.
+    if not state.layers:
+        raise AppError("empty_design", "Add at least one layer before approving", 422)
     upload_ids = {
         u.id
         for u in repositories.list_session_uploads(session=session, session_id=obj.id)
@@ -510,14 +560,14 @@ def approve_session(
 
     filename = f"snapshot-{uuid.uuid4().hex}.png"
     key = customization_upload_key(obj.store_id, obj.id, filename)
-    storage.upload_fileobj(key, io.BytesIO(snapshot_data), SNAPSHOT_MIME)
+    storage.upload_fileobj(key, io.BytesIO(clean_snapshot), SNAPSHOT_MIME)
     obj.snapshot_key = key
     obj.status = CustomizationSessionStatus.approved
     obj.approved_at = get_datetime_utc()
     session.add(obj)
     session.commit()
     session.refresh(obj)
-    return _to_session_public(obj=obj, version=version)
+    return _to_session_public(session=session, obj=obj, version=version)
 
 
 def create_assisted_session(
@@ -568,7 +618,7 @@ def create_assisted_session(
     session.add(obj)
     session.commit()
     session.refresh(obj)
-    public = _to_session_public(obj=obj, version=version)
+    public = _to_session_public(session=session, obj=obj, version=version)
     return AssistedSessionPublic(**public.model_dump(), public_token=token)
 
 
@@ -600,7 +650,7 @@ def view_public_session(*, session: Session, token: str) -> SessionPublic:
     """Return the read-only session a public link points to (doc 30 §9)."""
     obj = _live_token_session(session=session, token=token)
     return _to_session_public(
-        obj=obj, version=_pinned_version(session=session, obj=obj)
+        session=session, obj=obj, version=_pinned_version(session=session, obj=obj)
     )
 
 

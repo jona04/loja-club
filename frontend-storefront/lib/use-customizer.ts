@@ -10,7 +10,7 @@ import {
 } from "@/lib/customization-actions"
 
 /** Debounce before autosaving the editor state (doc 31 §4). */
-export const AUTOSAVE_DEBOUNCE_MS = 800
+export const AUTOSAVE_DEBOUNCE_MS = 1500
 
 export type CustomizerStatus = "loading" | "ready" | "error"
 
@@ -41,6 +41,13 @@ export function useCustomizer(productId: string): CustomizerController {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   // Only autosave after a user edit, never on the initial load.
   const dirty = useRef(false)
+  // The session id for autosave, as a ref so the save effect doesn't depend on
+  // (and re-fire on) the session object — that would loop forever.
+  const sessionIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    sessionIdRef.current = session?.id ?? null
+  }, [session])
 
   useEffect(() => {
     let active = true
@@ -63,20 +70,25 @@ export function useCustomizer(productId: string): CustomizerController {
     }
   }, [productId])
 
+  // Debounced autosave. Depends only on `state` (the thing edits change); the
+  // session id comes from a ref, and we never write the save response back to
+  // state/session, so a save can't trigger another save.
   useEffect(() => {
-    if (!session || !state || !dirty.current) return
+    if (!state || !dirty.current) return
+    const sessionId = sessionIdRef.current
+    if (!sessionId) return
     if (timer.current) clearTimeout(timer.current)
     timer.current = setTimeout(() => {
+      dirty.current = false
       setSaving(true)
-      saveCustomizationState(session.id, state)
-        .then((s) => setSession(s))
+      saveCustomizationState(sessionId, state)
         .catch((e: Error) => setError(e.message))
         .finally(() => setSaving(false))
     }, AUTOSAVE_DEBOUNCE_MS)
     return () => {
       if (timer.current) clearTimeout(timer.current)
     }
-  }, [state, session])
+  }, [state])
 
   const setState = useCallback((next: CustomizationState) => {
     dirty.current = true

@@ -1,7 +1,7 @@
 "use server"
 
 /**
- * Server Actions for the 3D customization editor (P7-EDITOR-01).
+ * Server Actions for the 3D customization editor (P7-EDITOR-01/02).
  *
  * Like the cart, the browser cannot reach the backend directly (the API host is
  * docker-internal and the guest cookie is cross-origin). These run on the Next
@@ -11,55 +11,24 @@
 
 import { cookies, headers } from "next/headers"
 
+import type {
+  CustomizationSession,
+  CustomizationState,
+  UploadPublic,
+} from "@/lib/customizer/session-types"
+
+export type {
+  CustomizationSession,
+  CustomizationState,
+  PrintableArea,
+  SessionVersion,
+  UploadPublic,
+  UvRect,
+} from "@/lib/customizer/session-types"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8800"
 const GUEST_COOKIE = "guest_session_id"
 const GUEST_MAX_AGE = 60 * 60 * 24 * 30
-
-/** A printable region in the model's UV space (normalized 0..1). */
-export interface UvRect {
-  u0: number
-  v0: number
-  u1: number
-  v1: number
-}
-
-/** A printable area of the model version (UV region + limits). */
-export interface PrintableArea {
-  id?: string
-  label?: string
-  uv_rect: UvRect
-  max_layers?: number
-  [key: string]: unknown
-}
-
-/** The pinned catalog version the editor renders against. */
-export interface SessionVersion {
-  id: string
-  version: number
-  glb_url: string
-  printable_areas: PrintableArea[]
-  text_config: Record<string, unknown>
-  art_limits: Record<string, unknown>
-}
-
-/** The editor state contract (doc 30 §4); layers arrive in P7-EDITOR-02. */
-export interface CustomizationState {
-  schema_version: number
-  model: { model_id: string; version_id: string }
-  layers: unknown[]
-}
-
-/** A customization session as the editor sees it (mirrors `SessionPublic`). */
-export interface CustomizationSession {
-  id: string
-  product_id: string
-  status: string
-  state_json: CustomizationState
-  version: SessionVersion
-  snapshot_url: string | null
-  expires_at: string
-  approved_at: string | null
-}
 
 /** Re-emit the backend's guest cookie to the browser (same origin as Next). */
 async function persistGuestCookie(res: Response): Promise<void> {
@@ -89,7 +58,8 @@ async function call(path: string, init: RequestInit = {}): Promise<Response> {
   if (guest) {
     reqHeaders.cookie = `${GUEST_COOKIE}=${guest}`
   }
-  if (init.body) {
+  // Only set JSON for string bodies; FormData must keep its multipart boundary.
+  if (typeof init.body === "string") {
     reqHeaders["content-type"] = "application/json"
   }
 
@@ -141,6 +111,45 @@ export async function saveCustomizationState(
     await call(`/storefront/customizations/${sessionId}/state`, {
       method: "PUT",
       body: JSON.stringify(state),
+    }),
+  )
+}
+
+/** Upload raster art (multipart) and get the recorded upload + presigned URL. */
+export async function uploadCustomizationArt(
+  sessionId: string,
+  formData: FormData,
+): Promise<UploadPublic> {
+  return parse<UploadPublic>(
+    await call(`/storefront/customizations/${sessionId}/uploads`, {
+      method: "POST",
+      body: formData,
+    }),
+  )
+}
+
+/** Approve a session with the client-side snapshot (freezes it). */
+export async function approveCustomization(
+  sessionId: string,
+  formData: FormData,
+): Promise<CustomizationSession> {
+  return parse<CustomizationSession>(
+    await call(`/storefront/customizations/${sessionId}/approve`, {
+      method: "POST",
+      body: formData,
+    }),
+  )
+}
+
+/** Approve a shared session via its public token (contact + snapshot multipart). */
+export async function approveCustomizationViaToken(
+  token: string,
+  formData: FormData,
+): Promise<CustomizationSession> {
+  return parse<CustomizationSession>(
+    await call(`/storefront/p/${token}/approve`, {
+      method: "POST",
+      body: formData,
     }),
   )
 }

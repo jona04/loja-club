@@ -217,6 +217,13 @@ export const AssistedSessionPublicSchema = {
         version: {
             '$ref': '#/components/schemas/Platform3DModelVersionPublic'
         },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
         snapshot_url: {
             anyOf: [
                 {
@@ -251,7 +258,7 @@ export const AssistedSessionPublicSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'product_id', 'status', 'state_json', 'version', 'snapshot_url', 'expires_at', 'approved_at', 'public_token'],
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'expires_at', 'approved_at', 'public_token'],
     title: 'AssistedSessionPublic',
     description: 'An assisted session plus its shareable read-only public token.'
 } as const;
@@ -3687,6 +3694,13 @@ export const SessionPublicSchema = {
         version: {
             '$ref': '#/components/schemas/Platform3DModelVersionPublic'
         },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
         snapshot_url: {
             anyOf: [
                 {
@@ -3717,7 +3731,7 @@ export const SessionPublicSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'product_id', 'status', 'state_json', 'version', 'snapshot_url', 'expires_at', 'approved_at'],
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'expires_at', 'approved_at'],
     title: 'SessionPublic',
     description: 'A customization session as the editor (or a read-only viewer) sees it.'
 } as const;

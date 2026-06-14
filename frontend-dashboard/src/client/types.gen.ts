@@ -56,6 +56,7 @@ export type AssistedSessionPublic = {
         [key: string]: unknown;
     };
     version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
     snapshot_url: (string | null);
     expires_at: string;
     approved_at: (string | null);
@@ -1020,6 +1021,7 @@ export type SessionPublic = {
         [key: string]: unknown;
     };
     version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
     snapshot_url: (string | null);
     expires_at: string;
     approved_at: (string | null);

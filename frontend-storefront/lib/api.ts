@@ -215,4 +215,24 @@ export const listProducts = (
 export const getShippingMethods = (): Promise<ShippingMethodPublic[]> =>
   apiGet<ShippingMethodPublic[]>("/shipping-methods")
 
+/**
+ * Fetch a shared customization session by its public token (read-only, no host
+ * needed — the token is the credential). A missing/expired token → `notFound()`.
+ */
+export const getPublicCustomization = async (
+  token: string,
+): Promise<import("@/lib/customizer/session-types").CustomizationSession> => {
+  const res = await fetch(
+    `${API_URL}/api/v1/storefront/p/${encodeURIComponent(token)}`,
+    { cache: "no-store" },
+  )
+  if (res.status === 404 || res.status === 410) {
+    notFound()
+  }
+  if (!res.ok) {
+    throw new Error(`Storefront API ${res.status} for /p/${token}`)
+  }
+  return (await res.json()) as import("@/lib/customizer/session-types").CustomizationSession
+}
+
 export { formatPrice, whatsappLink } from "@/lib/format"

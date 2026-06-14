@@ -36,9 +36,22 @@ const SESSION: CustomizationSession = {
     text_config: {},
     art_limits: {},
   },
+  uploads: [],
   snapshot_url: null,
   expires_at: "2099-01-01T00:00:00Z",
   approved_at: null,
+}
+
+const TEXT_LAYER = {
+  id: "l1",
+  kind: "text" as const,
+  area_id: "front",
+  z: 0,
+  transform: { x: 0.5, y: 0.5, scale: 1, rotation_deg: 0 },
+  text: "Oi",
+  font: "inter",
+  font_size: 48,
+  color: "#222222",
 }
 
 describe("useCustomizer", () => {
@@ -74,7 +87,7 @@ describe("useCustomizer", () => {
     try {
       const { result } = renderHook(() => useCustomizer("p1"))
       await act(async () => {})
-      const next = { ...STATE, layers: [{ id: "l1" }] }
+      const next = { ...STATE, layers: [TEXT_LAYER] }
       act(() => result.current.setState(next))
       // Not yet — still within the debounce window.
       act(() => {
