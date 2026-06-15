@@ -49,10 +49,35 @@ class StorefrontTheme(SQLModel):
     settings: dict[str, object] = {}
 
 
+class StorefrontVariant(SQLModel):
+    """A purchasable variant on the product page (name + effective price + stock).
+
+    ``price_*`` is the **effective** price (the variant override, else the
+    product's). ``available_quantity`` is ``None`` when stock isn't tracked
+    (unlimited); ``in_stock`` already folds that in.
+    """
+
+    id: uuid.UUID
+    name: str
+    attributes: dict[str, str] | None = None
+    price_amount_minor: int
+    price_currency: str
+    in_stock: bool
+    available_quantity: int | None = None
+
+
 class StorefrontProduct(ProductPublic):
-    """A published product with its images, for storefront cards and detail."""
+    """A published product with its images, for storefront cards and detail.
+
+    On the product **detail** it also carries the active ``variants`` and stock
+    (``in_stock`` / ``available_quantity``, product-level for variant-less
+    products); cards/home leave ``variants`` empty.
+    """
 
     images: list[ImagePublic] = []
+    variants: list[StorefrontVariant] = []
+    in_stock: bool = True
+    available_quantity: int | None = None
 
 
 class StorefrontCategorySection(SQLModel):

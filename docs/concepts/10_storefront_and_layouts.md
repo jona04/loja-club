@@ -243,7 +243,7 @@ Deve mostrar:
 - botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
 
-> **Faseamento:** na Fase 3 a página é **informativa** (imagem/nome/preço/descrição). A **ação de compra** (adicionar ao carrinho), a **disponibilidade** (estoque) e a **seleção de variação** chegam na **Fase 6** (venda sem pagamento) — o `cart_item`/`order_item` guarda a **variação escolhida**, e a vitrine precisa expor variações + estoque no `StorefrontProduct` (hoje só imagem/nome/preço/descrição). **Produtos relacionados** = follow-up; **`Personalizar`** = Fase 7. O botão flutuante de WhatsApp (contato, em toda a loja, `whatsapp_number`) já existe desde a Fase 3.
+> **Faseamento:** na Fase 3 a página é **informativa** (imagem/nome/preço/descrição). A **ação de compra** (adicionar ao carrinho) chegou na **Fase 6**; a **seleção de variação + disponibilidade** na **Fase 7** (`P7-SF-02`). O `StorefrontProduct` (detalhe) expõe `variants` (preço efetivo = override ou do produto + `in_stock`) e o estoque do produto (`in_stock`/`available_quantity`); o seletor (3 templates) manda o `variant_id` no add-to-cart e **desabilita** variação/produto esgotado ("Esgotado"). Sem variação = compra direta. Disponibilidade = estoque rastreado (`catalog_inventory_items`) — sem linha = ilimitado, igual à checagem do carrinho; o carrinho **revalida** no add (409). **Produtos relacionados** = follow-up; **`Personalizar`** = Fase 7. O botão flutuante de WhatsApp já existe desde a Fase 3.
 
 Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
 O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.

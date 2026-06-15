@@ -132,9 +132,14 @@ Definidas no `compose.override.yml` (origem: [`P0-CFG-02`](../backlog/phase-0-fo
 | `DomainStatus` | `domains/enums.py` | `pending`, `active`, `failed`, `blocked` |
 | `SslStatus` | `domains/enums.py` | `pending`, `issued`, `failed` |
 | `PlatformRole` | `platform_admin/enums.py` | `platform_owner`, `platform_ops`, `platform_finance`, `platform_support`, `platform_catalog` |
-| `PaymentProvider` | `payments/enums.py` | `asaas_baas`, `mercado_pago` (`pagarme` futuro) |
-| `PaymentAccountMode` | `payments/enums.py` | `native`, `connected` |
-| `PaymentAccountStatus` | `payments/enums.py` | `pending`, `active`, `blocked`, `rejected` |
-| `PaymentStatus` | `payments/enums.py` | `created`, `pending`, `authorized`, `paid`, `refused`, `canceled`, `refunded`, `chargeback` |
+
+**Pagamentos (Fase 8 — planejado, ainda NÃO no código):** valores de referência pra quando os enums forem implementados (`payments/enums.py` ainda não existe).
+
+| Enum (planejado) | Valores |
+|---|---|
+| `PaymentProvider` | `asaas_baas`, `mercado_pago` (`pagarme` futuro) |
+| `PaymentAccountMode` | `native`, `connected` |
+| `PaymentAccountStatus` | `pending`, `active`, `blocked`, `rejected` |
+| `PaymentStatus` | `created`, `pending`, `authorized`, `paid`, `refused`, `canceled`, `refunded`, `chargeback` |
 
 > **Permissões de loja** (catálogo + mapa papel→permissão) **não** ficam aqui: fonte = [08](./08_modules_and_permissions.md) e `stores/permissions.py`.

@@ -5121,12 +5121,40 @@ export const StorefrontProductSchema = {
             type: 'array',
             title: 'Images',
             default: []
+        },
+        variants: {
+            items: {
+                '$ref': '#/components/schemas/StorefrontVariant'
+            },
+            type: 'array',
+            title: 'Variants',
+            default: []
+        },
+        in_stock: {
+            type: 'boolean',
+            title: 'In Stock',
+            default: true
+        },
+        available_quantity: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Available Quantity'
         }
     },
     type: 'object',
     required: ['name', 'slug', 'price_amount_minor', 'price_currency', 'id', 'store_id'],
     title: 'StorefrontProduct',
-    description: 'A published product with its images, for storefront cards and detail.'
+    description: `A published product with its images, for storefront cards and detail.
+
+On the product **detail** it also carries the active \`\`variants\`\` and stock
+(\`\`in_stock\`\` / \`\`available_quantity\`\`, product-level for variant-less
+products); cards/home leave \`\`variants\`\` empty.`
 } as const;
 
 export const StorefrontStoreSchema = {
@@ -5319,6 +5347,65 @@ export const StorefrontThemeSchema = {
 Read-only: a store with no settings yet falls back to the default template
 without creating a row. \`\`settings\`\` are the active template's schema-driven
 chrome values (defaults merged with the store's overrides).`
+} as const;
+
+export const StorefrontVariantSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        attributes: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Attributes'
+        },
+        price_amount_minor: {
+            type: 'integer',
+            title: 'Price Amount Minor'
+        },
+        price_currency: {
+            type: 'string',
+            title: 'Price Currency'
+        },
+        in_stock: {
+            type: 'boolean',
+            title: 'In Stock'
+        },
+        available_quantity: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Available Quantity'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'price_amount_minor', 'price_currency', 'in_stock'],
+    title: 'StorefrontVariant',
+    description: `A purchasable variant on the product page (name + effective price + stock).
+
+\`\`price_*\`\` is the **effective** price (the variant override, else the
+product's). \`\`available_quantity\`\` is \`\`None\`\` when stock isn't tracked
+(unlimited); \`\`in_stock\`\` already folds that in.`
 } as const;
 
 export const TemplateSettingsPublicSchema = {

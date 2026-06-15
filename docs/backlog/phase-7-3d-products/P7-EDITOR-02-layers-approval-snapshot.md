@@ -56,7 +56,7 @@ O **conteúdo** do editor: aplicar **imagem** e **texto** como camadas (decal) d
 - **UX resolvida agora (não adiada):** painel 2D **proporcional à superfície real** (`computeUnwrapAspect` × proporção da `uv_rect` = `regionAspect`), então a arte tem o formato certo (caneca ~2:1); arrastar a camada selecionada **clampa** o centro em [0,1] (fica dentro da área).
 - **Segurança resolvida agora (não adiada):** todo upload é **re-encodado** no backend (`_sanitize_image`, PIL) → **remove EXIF/metadados** (foto do cliente pode ter GPS) e valida; o snapshot idem. Imagens carregadas com `crossOrigin` pra não "tingir" o canvas (senão o `toDataURL` falha).
 - **Aprovação:** habilita com **≥1 camada** + snapshot; o backend **também exige ≥1 camada** (`empty_design` 422 — não confia no cliente) e snapshot PNG. Snapshot = `gl.domElement.toDataURL` (`preserveDrawingBuffer`) → multipart pro `approve`.
-- **Sessão/estado:** camadas tipadas (`lib/customizer/types`) vivem no `state_json` (autosave debounced do `P7-EDITOR-01`); uploads voltam no `SessionPublic.uploads` (presigned) pra **restaurar** camadas-imagem (não só as desta aba). 
+- **Sessão/estado:** camadas tipadas (`lib/customizer/types`) vivem no `state_json` (autosave debounced do `P7-EDITOR-01`); uploads voltam no `SessionPublic.uploads` (presigned) pra **restaurar** camadas-imagem (não só as desta aba).
 - **Link público** (`/p/[token]`, server-fetch read-only) reusa os 2 painéis + `Panels`; aprovar exige **confirmar contato** (e-mail/telefone) que o backend casa com o `CustomerProfile`.
 
 ### Melhorias de qualidade (refinamento do editor — doc [30 §3.1/§5](../../concepts/30_3d_customization_technical_design.md))

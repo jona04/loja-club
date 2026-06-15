@@ -98,6 +98,16 @@ export interface ProductImage {
   url: string
 }
 
+export interface StorefrontVariant {
+  id: string
+  name: string
+  attributes: Record<string, string> | null
+  price_amount_minor: number
+  price_currency: string
+  in_stock: boolean
+  available_quantity: number | null
+}
+
 export interface StorefrontProduct {
   id: string
   slug: string
@@ -108,6 +118,11 @@ export interface StorefrontProduct {
   price_currency: string
   is_featured: boolean
   images: ProductImage[]
+  /** Active variants (product detail only; empty on cards/home). */
+  variants: StorefrontVariant[]
+  /** Product-level availability (used when there are no variants). */
+  in_stock: boolean
+  available_quantity: number | null
 }
 
 export interface StorefrontCategorySection {

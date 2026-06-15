@@ -3,9 +3,11 @@
 import Link from "next/link"
 import { useState } from "react"
 
+import { VariantSelect } from "@/components/VariantSelect"
 import type { StorefrontProduct } from "@/lib/api"
 import { useCart } from "@/lib/cart"
 import { isCustomizable } from "@/lib/product"
+import { useVariantSelection } from "@/lib/use-variant-selection"
 
 /**
  * Aurora product actions (faithful to the template): a quantity stepper, the
@@ -18,6 +20,7 @@ import { isCustomizable } from "@/lib/product"
 export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
   const cart = useCart()
   const [qty, setQty] = useState(1)
+  const variant = useVariantSelection(product)
 
   if (isCustomizable(product)) {
     return (
@@ -34,6 +37,15 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
 
   return (
     <>
+      {variant.hasVariants && (
+        <VariantSelect
+          variants={variant.variants}
+          value={variant.selectedId}
+          onChange={variant.setSelectedId}
+          className="w-full rounded-sm border border-gray-200 bg-white px-3 py-2.5 text-brand-900"
+        />
+      )}
+
       <div className="mb-6">
         <span className="mb-2 block text-sm font-medium text-gray-700">
           Quantidade
@@ -64,11 +76,11 @@ export function AuroraAddToCart({ product }: { product: StorefrontProduct }) {
       <div className="mt-4 flex flex-col gap-4">
         <button
           type="button"
-          disabled={cart.loading}
-          onClick={() => cart.add(product.id, qty)}
+          disabled={cart.loading || !variant.canAdd}
+          onClick={() => cart.add(product.id, qty, variant.cartVariantId)}
           className="w-full rounded-sm bg-brand-900 py-4 text-base font-medium text-white shadow-sm transition-colors hover:bg-black disabled:opacity-60"
         >
-          Adicionar ao carrinho
+          {variant.outOfStock ? "Esgotado" : "Adicionar ao carrinho"}
         </button>
       </div>
     </>

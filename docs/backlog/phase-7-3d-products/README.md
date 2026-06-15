@@ -34,7 +34,7 @@ Docs de referência: **[30 — Design técnico](../../concepts/30_3d_customizati
 | 7 | [P7-EDITOR-02](./P7-EDITOR-02-layers-approval-snapshot.md) | Editor: camadas (imagem+texto) + aprovação + snapshot + link público | ✅ done | P7-EDITOR-01 |
 | 8 | [P7-ORD-01](./P7-ORD-01-freeze-customization-in-order.md) | Carrinho/pedido: congelar a personalização | ✅ done | P7-SESS-01, P7-EDITOR-02 |
 | 9 | [P7-OPS-01](./P7-OPS-01-merchant-operate-and-assisted.md) | Painel lojista: operar personalizações + montar assistida | ✅ done | P7-SESS-01 |
-| 10 | [P7-SF-02](./P7-SF-02-storefront-variant-selection.md) | Vitrine: seleção de variação (não-3D, da Fase 6) | todo | — |
+| 10 | [P7-SF-02](./P7-SF-02-storefront-variant-selection.md) | Vitrine: seleção de variação (não-3D, da Fase 6) | ✅ done | — |
 
 ## Ordem sugerida de execução
 
@@ -54,7 +54,7 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 > Item adiado vira checkbox aqui (origem + quando), e também na seção Follow-ups da task.
 
 **Esta fase fecha follow-ups de fases anteriores** (marcar `[x]` na origem ao concluir):
-- [ ] **Vitrine expõe variações + disponibilidade** (Fase 3, `P3-SF-01`/`P3-SF-02`; movido da Fase 6) → **`P7-SF-02`**.
+- [x] **Vitrine expõe variações + disponibilidade** (Fase 3, `P3-SF-01`/`P3-SF-02`; movido da Fase 6) → **resolvido em `P7-SF-02`** (`StorefrontProduct.variants` + estoque; seletor nos 3 templates).
 
 **Da própria fase** (preencher conforme as tasks fecham):
 - [ ] **QA visual da caneca v1** (`simplify 0.25`, 491k tris, 2.05 MB) — **conferir quando o `P7-EDITOR-01` renderizar na vitrine** (alça/bordas no zoom do cliente). Se distorcer, regenerar com ratio maior (ou sem simplify) → **v2** + reseed. Origem: `P7-ASSET-01`.
@@ -93,3 +93,7 @@ P7-SF-02 (variação na vitrine) — independente do 3D, pode ir a qualquer mome
 - [ ] **Chrome do template no editor** — `/personalizar` é standalone; aplicar o `Shell` do template ativo. Origem: `P7-EDITOR-01`.
 - [x] **Painel 2D proporcional à superfície** no storefront (`computeUnwrapAspect`/`regionAspect`) — **resolvido em `P7-EDITOR-02`**. Origem: `P7-EDITOR-01`.
 - [ ] **Sessão expirada no autosave → oferecer clonar** (hoje só mostra o 410). Origem: `P7-EDITOR-01`.
+- [ ] **Matriz de variação multi-opção** (cor × tamanho) se o catálogo ganhar múltiplos eixos. Origem: `P7-SF-02`.
+- [ ] **e2e Playwright da vitrine** (escolher variação → carrinho com `variant_id`; esgotado bloqueia) — depende da infra `P3-SF-03`. Origem: `P7-SF-02`.
+- [ ] **Invalidar cache do produto** ao mudar estoque/variação no painel (hoje ≤ 5 min defasado; o carrinho revalida no add). Origem: `P7-SF-02`.
+- [ ] **Preço da variação selecionada na página** (hoje o seletor mostra só nome + esgotado; o preço efetivo aparece no carrinho). Origem: `P7-SF-02`.

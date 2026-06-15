@@ -103,13 +103,15 @@ export async function getCart(): Promise<CartPublic> {
 }
 
 /**
- * Add a product to the cart. For `image_3d_customizable` products, pass the
- * approved `customizationSessionId` (the backend freezes it into the order).
+ * Add a product to the cart. Pass `variantId` for a product with variants, or
+ * the approved `customizationSessionId` for `image_3d_customizable` products
+ * (the backend freezes it into the order). The two are mutually exclusive.
  */
 export async function addToCart(
   productId: string,
   quantity: number,
   customizationSessionId?: string,
+  variantId?: string,
 ): Promise<CartPublic> {
   return parse<CartPublic>(
     await call("/storefront/cart/items", {
@@ -118,6 +120,7 @@ export async function addToCart(
         product_id: productId,
         quantity,
         customization_session_id: customizationSessionId ?? null,
+        variant_id: variantId ?? null,
       }),
     }),
   )

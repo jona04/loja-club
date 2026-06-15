@@ -4,7 +4,7 @@ title: Vitrine — seleção de variação (geral, não-3D)
 phase: 7
 etapa: "Etapa 8 — Vitrine: seleção de variação (geral, não-3D)"
 area: SF
-status: todo
+status: done
 depends_on: []
 blocks: []
 tests: [integration, e2e]
@@ -40,12 +40,19 @@ tests: [integration, e2e]
 - **Cobrir:** integração — payload público traz variações/estoque; e2e (`P3-SF-03`) — escolher variação → carrinho com o `variant_id` certo.
 
 ## Definition of Done
-- [ ] Vitrine mostra variações + disponibilidade; add-to-cart manda o `variant_id` certo (3 templates).
-- [ ] **Modos de falha mapeados** — variação **sem estoque** (desabilita/avisa); produto **sem variação** (compra direta). → tratados/Follow-ups.
-- [ ] **Itens adiados varridos** → Follow-ups + README.
+- [x] Vitrine mostra variações + disponibilidade; add-to-cart manda o `variant_id` certo (3 templates).
+- [x] **Modos de falha mapeados** — variação **sem estoque** → `<option>` desabilitada "(esgotado)" + botão "Esgotado" (não adiciona); produto **sem variação** → compra direta; produto sem estoque → "Esgotado". O carrinho ainda **revalida** o estoque no add (409). → tratados.
+- [x] **Itens adiados varridos** → Follow-ups + README.
 
 ## Notas / Reconciliações
-- Fecha o follow-up "**Vitrine expõe variações + disponibilidade**" (Fase 3, `P3-SF-01`/`P3-SF-02`) — marcar `[x]` na origem ao concluir.
+- **Backend:** `StorefrontProduct` (detalhe) ganhou `variants` (`StorefrontVariant`: preço efetivo = override ou do produto + `in_stock`/`available_quantity`) e o estoque do produto (`in_stock`/`available_quantity`). Disponibilidade = `catalog_inventory_items` (sem linha = ilimitado, espelha a checagem do carrinho). Variações **arquivadas** não aparecem. Só no **detalhe** (cards/home ficam leves).
+- **Cache:** o detalhe é cache-aside (300 s, [31 §3](../../concepts/31_configuration_and_constants.md)) → disponibilidade pode ficar ≤ 5 min defasada; aceitável porque o carrinho revalida (409). Invalidar o cache do produto ao mudar estoque/variação = follow-up.
+- **Frontend:** `useVariantSelection` (estado + disponibilidade) + `VariantSelect` (seletor compartilhado, estilizado por template); `addToCart`/`useCart.add` ganharam `variantId`. Default = 1ª variação em estoque.
+- **e2e:** **deferido** — não existe harness Playwright da **vitrine** ainda (o de e2e roda contra o painel:5180; vitrine = Next:3000). Depende da infra `P3-SF-03`, igual ao e2e do fluxo de personalização. Coberto por integração (backend) + unit (`useVariantSelection`).
+- Fecha o follow-up "**Vitrine expõe variações + disponibilidade**" (Fase 3) — marcado `[x]` no README.
 
 ## Follow-ups
 - [ ] **Matriz de variação multi-opção** (ex.: cor × tamanho) se o catálogo evoluir — *Quando:* se variações ganharem múltiplos eixos. → README da fase.
+- [ ] **e2e Playwright da vitrine** (escolher variação → carrinho com `variant_id`; esgotado bloqueia) — depende da infra `P3-SF-03`. → README da fase.
+- [ ] **Invalidar o cache do produto** ao mudar estoque/variação no painel (hoje ≤ 5 min defasado; o carrinho revalida). → README da fase.
+- [ ] **Preço da variação selecionada na página** (hoje o seletor mostra só nome + esgotado; o preço efetivo aparece no carrinho). → README da fase.

@@ -17,8 +17,14 @@ from sqlmodel.sql.expression import SelectOfScalar
 from app.core.api import AppError, PageParams
 from app.core.cache import cache_get, cache_set
 from app.modules.catalog import services as catalog_services
-from app.modules.catalog.enums import ProductStatus
-from app.modules.catalog.models import Category, Product, ProductCategory
+from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
+from app.modules.catalog.models import (
+    Category,
+    InventoryItem,
+    Product,
+    ProductCategory,
+    ProductVariant,
+)
 from app.modules.catalog.schemas import CategoryPublic
 from app.modules.content.models import ContentPage
 from app.modules.content.repositories import get_store_theme_settings
@@ -29,6 +35,7 @@ from app.modules.storefront.schemas import (
     StorefrontProduct,
     StorefrontStore,
     StorefrontTheme,
+    StorefrontVariant,
 )
 from app.modules.stores.models import Store, StoreSettings
 
@@ -57,6 +64,69 @@ def _to_storefront_product(*, session: Session, product: Product) -> StorefrontP
         session=session, store_id=product.store_id, product_id=product.id
     )
     return sp
+
+
+def _stock_map(*, session: Session, product: Product) -> dict[uuid.UUID | None, int]:
+    """Return tracked stock per ``variant_id`` (``None`` key = product-level).
+
+    A missing entry means stock isn't tracked for that (product, variant) — i.e.
+    unlimited — mirroring the cart's stock check.
+    """
+    rows = session.exec(
+        select(InventoryItem).where(
+            InventoryItem.store_id == product.store_id,
+            InventoryItem.product_id == product.id,
+            col(InventoryItem.deleted_at).is_(None),
+        )
+    ).all()
+    return {row.variant_id: row.quantity for row in rows}
+
+
+def _with_variants(
+    *, session: Session, sp: StorefrontProduct, product: Product
+) -> None:
+    """Attach the active variants + availability to a product detail in place.
+
+    Each variant gets its effective price (override, else the product's) and
+    ``in_stock`` from the tracked quantity (untracked = available). The product's
+    own ``in_stock`` is the product-level stock, used when there are no variants.
+    """
+    stock = _stock_map(session=session, product=product)
+
+    def availability(variant_id: uuid.UUID | None) -> tuple[bool, int | None]:
+        qty = stock.get(variant_id)
+        return (qty is None or qty > 0), qty
+
+    variants = session.exec(
+        select(ProductVariant)
+        .where(
+            ProductVariant.store_id == product.store_id,
+            ProductVariant.product_id == product.id,
+            ProductVariant.status == ProductVariantStatus.active,
+            col(ProductVariant.deleted_at).is_(None),
+        )
+        .order_by(col(ProductVariant.created_at))
+    ).all()
+    out: list[StorefrontVariant] = []
+    for v in variants:
+        in_stock, qty = availability(v.id)
+        out.append(
+            StorefrontVariant(
+                id=v.id,
+                name=v.name,
+                attributes=v.attributes,
+                price_amount_minor=(
+                    v.price_override_amount_minor
+                    if v.price_override_amount_minor is not None
+                    else product.price_amount_minor
+                ),
+                price_currency=(v.price_override_currency or product.price_currency),
+                in_stock=in_stock,
+                available_quantity=qty,
+            )
+        )
+    sp.variants = out
+    sp.in_stock, sp.available_quantity = availability(None)
 
 
 def _store_public(store: Store, settings: StoreSettings | None) -> StorefrontStore:
@@ -273,6 +343,7 @@ def get_product(*, session: Session, store: Store, slug: str) -> StorefrontProdu
     if product is None:
         raise AppError("product_not_found", "Product not found", status_code=404)
     sp = _to_storefront_product(session=session, product=product)
+    _with_variants(session=session, sp=sp, product=product)
     cache_set(
         f"{store.id}:product:{slug}", sp.model_dump_json(), ttl=_TTL, prefix="store"
     )
