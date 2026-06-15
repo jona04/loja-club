@@ -8,6 +8,8 @@
 > - **Personalização restrita a plano pago = Fase 8:** na Fase 7 qualquer lojista personaliza (livre, com o catálogo); na **Fase 8** (planos/pagamentos) a personalização fica restrita a **plano pago** (e a geração própria, Fase 12, também é premium).
 >
 > Este doc descreve a experiência (sessão, aprovação, congelar no pedido), válida pros **dois caminhos** — muda só a **origem do modelo** (catálogo da plataforma vs gerado pela loja).
+>
+> **Contrato técnico (como implementar) está no doc [30](./30_3d_customization_technical_design.md):** preparo do GLB, área imprimível (decal), editor (react-three-fiber), `state_json`, snapshot, storage/segurança e o link público da assistida.
 
 ## Objetivo
 
@@ -114,6 +116,8 @@ Produto `image_3d_customizable`:
 
 Cada modelo 3D deve definir quais partes podem ser alteradas.
 
+> **Na V1 (Fase 7):** imagem + texto + posição/escala/rotação dentro da área. A **cor do produto (recolor)** é **follow-up** — fora da V1 (doc [30 §12](./30_3d_customization_technical_design.md)).
+
 Exemplo para caneca:
 
 ```text
@@ -147,7 +151,7 @@ O modelo deve informar limites seguros:
 - aviso de baixa resolução quando possível.
 
 O estado salvo deve ser suficiente para restaurar o editor exatamente no ponto em que o cliente parou.
-Isso inclui textos, imagens, cor do produto, posição, escala, rotação, face/lado do modelo e área imprimível usada.
+Isso inclui textos, imagens, posição, escala, rotação, face/lado do modelo, área imprimível usada e — quando habilitada (fora da V1) — a cor do produto.
 
 ## Sessão de personalização
 
@@ -231,14 +235,12 @@ Fluxo:
 - O cliente **acessa a sua personalização** pelo e-mail/telefone que o lojista pré-cadastrou e **revisa**.
 - Ao **aprovar**, ele segue o **fluxo normal** — carrinho, pagamento etc. — **como se tivesse feito tudo sozinho** (a sessão aprovada vira item de carrinho/pedido pelas mesmas regras de Aprovação visual e Carrinho e pedido).
 
-**Acesso à personalização — decisão em aberto.** Ver a personalização criada pelo lojista pode:
+**Acesso à personalização — decidido** (doc [30 §9](./30_3d_customization_technical_design.md)): os **dois caminhos**:
 
-- **(a) exigir login** do cliente (com o e-mail/telefone pré-cadastrado) — depende da **conta do cliente (Fase 8)**; ou
-- **(b) ser um link público compartilhável** (sem login) — permite o cliente **compartilhar com amigos**, que veem o produto personalizado sem conta.
+- **Fase 7 — link público compartilhável** (read-only, sem login): o cliente vê e **compartilha com amigos**; **aprovar/comprar** pede só **confirmação de contato** (e-mail/telefone pré-cadastrado), **sem conta**.
+- **Fase 8 — logado:** com **conta do cliente**, ele também vê/aprova suas personalizações na **área do cliente**.
 
-Pode-se **combinar** (link público para *ver/compartilhar* + confirmação de contato/login para *aprovar e comprar*). A escolha fica para decidir mais à frente — ver doc [18](18_open_decisions.md).
-
-> **Quando:** junto com a personalização 3D (**Fase 7**); a parte de **login do cliente** depende da conta do cliente (**Fase 8**).
+> **Quando:** o link público + confirmação de contato é **Fase 7**; o acesso **logado** depende da conta do cliente (**Fase 8**).
 
 ## Carrinho e pedido
 
@@ -271,7 +273,7 @@ No painel, o lojista deve conseguir:
 - ver parâmetros da personalização;
 - atualizar status operacional da produção.
 
-Status de arte sugeridos:
+**Status de produção** (`CustomizationProductionStatus`) — vive no **item do pedido** (`customization_order_items`, congelado), começa em `received` quando o pedido é feito e é avançado pelo lojista no painel:
 
 | Status | Significado |
 |---|---|
@@ -282,11 +284,14 @@ Status de arte sugeridos:
 | `in_production` | Em produção |
 | `production_done` | Produção finalizada |
 
+> O painel lista as **sessões** da loja (atualização quase em tempo real por **polling**, [31 §4](./31_configuration_and_constants.md)); abre o detalhe pra **baixar** a arte de produção (composite) + prévia + uploads (URLs assinadas) e, quando a sessão virou pedido, **avançar o status de produção**. Montar **assistida** gera o `public_token` e o link pra o cliente aprovar.
+
 ## Admin da Kriar
 
-**A plataforma mantém um catálogo público de modelos 3D** (Fase 7), **populado por seed** pelo dev (com a área imprimível já definida — não há CRUD complexo no admin). O admin, no que toca a 3D, cuida de:
+**A plataforma mantém um catálogo público de modelos 3D** (Fase 7), **populado por seed** pelo dev (o GLB em si vem por seed — não há modelagem no admin). Os **parâmetros** (área imprimível, limites de arte) ficam **no banco e são editáveis no admin** — o seed dá só o valor inicial (doc [30](./30_3d_customization_technical_design.md)). O admin, no que toca a 3D, cuida de:
 
 - **habilitar/desabilitar** modelos do catálogo (visibilidade pro lojista) + preview;
+- **editar a área imprimível** e os limites do modelo (ferramenta visual de mapeamento) — a **mesma** que o lojista usará na [Fase 12](../backlog/phase-12-merchant-3d-generation.md) pro próprio GLB;
 - (**Fase 12**) configurar a **API de geração 3D** (provedor/chaves, limites de uso) pro caminho em que o **lojista gera o próprio GLB**;
 - moderar conteúdo/abuso, se necessário;
 - (Fase 8) amarrar a capacidade de personalizar ao **plano pago**.

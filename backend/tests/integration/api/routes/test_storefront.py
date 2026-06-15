@@ -6,8 +6,14 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 from app.core.cache import cache_get
-from app.modules.catalog.enums import ProductStatus
-from app.modules.catalog.models import Category, Product, ProductCategory
+from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
+from app.modules.catalog.models import (
+    Category,
+    InventoryItem,
+    Product,
+    ProductCategory,
+    ProductVariant,
+)
 from app.modules.content.models import (
     ContentPage,
     ContentStoreTemplateSettings,
@@ -195,3 +201,71 @@ def test_home_theme_settings_merges_defaults_and_overrides(
     # ...and unset fields fall back to the schema defaults.
     assert settings["hero_subtitle"] == ""
     assert settings["footer_contact"] == ""
+
+
+def test_product_exposes_variants_and_availability(
+    client: TestClient, db: Session
+) -> None:
+    store, host = _published_store(db, slug="sf-variants")
+    product = _product(db, store.id, slug="tee")  # 1500 USD
+    in_stock = ProductVariant(
+        store_id=store.id,
+        product_id=product.id,
+        name="P",
+        price_override_amount_minor=1800,
+        price_override_currency="USD",
+    )
+    out_of_stock = ProductVariant(store_id=store.id, product_id=product.id, name="M")
+    archived = ProductVariant(
+        store_id=store.id,
+        product_id=product.id,
+        name="G",
+        status=ProductVariantStatus.archived,
+    )
+    db.add(in_stock)
+    db.add(out_of_stock)
+    db.add(archived)
+    db.flush()
+    db.add(
+        InventoryItem(
+            store_id=store.id,
+            product_id=product.id,
+            variant_id=out_of_stock.id,
+            quantity=0,
+        )
+    )
+    db.flush()
+
+    body = client.get(f"{BASE}/products/tee", headers={"host": host}).json()
+    variants = {v["name"]: v for v in body["variants"]}
+    # The archived variant is hidden; the two active ones are exposed.
+    assert set(variants) == {"P", "M"}
+    assert variants["P"]["in_stock"] is True
+    assert variants["P"]["available_quantity"] is None  # untracked = unlimited
+    assert variants["P"]["price_amount_minor"] == 1800  # effective override
+    assert variants["M"]["in_stock"] is False
+    assert variants["M"]["available_quantity"] == 0
+    assert variants["M"]["price_amount_minor"] == 1500  # inherits the product
+
+
+def test_variantless_product_out_of_stock(client: TestClient, db: Session) -> None:
+    store, host = _published_store(db, slug="sf-stock")
+    product = _product(db, store.id, slug="mug")
+    db.add(
+        InventoryItem(
+            store_id=store.id, product_id=product.id, variant_id=None, quantity=0
+        )
+    )
+    db.flush()
+    body = client.get(f"{BASE}/products/mug", headers={"host": host}).json()
+    assert body["variants"] == []
+    assert body["in_stock"] is False
+    assert body["available_quantity"] == 0
+
+
+def test_untracked_product_is_in_stock(client: TestClient, db: Session) -> None:
+    store, host = _published_store(db, slug="sf-untracked")
+    _product(db, store.id, slug="pen")
+    body = client.get(f"{BASE}/products/pen", headers={"host": host}).json()
+    assert body["in_stock"] is True
+    assert body["available_quantity"] is None

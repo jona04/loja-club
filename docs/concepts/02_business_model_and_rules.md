@@ -10,9 +10,11 @@ O modelo recomendado para a V1 é:
 
 - mensalidade fixa por loja;
 - comissão percentual por venda via split de pagamento;
-- gateway responsável por receber, descontar taxa e repassar valores.
+- provider de pagamento responsável por receber, descontar taxa e repassar valores.
 
 A Kriar não deve reter valores dos lojistas.
+
+Na experiência de produto, essa camada aparece como **Kriar Pay**. Na Fase 8, o caminho inicial é **Kriar Pay Nativo com Asaas BaaS**; na Fase 13, a plataforma adiciona **Mercado Pago** como provider conectado. Kriar Pay é uma camada de produto/UX, não uma carteira interna da Kriar.
 
 ## Planos iniciais sugeridos
 
@@ -28,19 +30,19 @@ Também pode existir um plano inicial sem mensalidade:
 |---|---:|---:|---|
 | Free | R$ 0/mês | 5% | Bom para aquisição inicial |
 
-## Taxa do gateway
+## Taxa do provider
 
-A taxa do gateway é separada da comissão da Kriar.
+A taxa do provider de pagamento é separada da comissão da Kriar.
 
 Exemplo:
 
 Venda de R$ 100,00.
 
-- Gateway cobra R$ 4,00.
+- Provider cobra R$ 4,00.
 - Kriar cobra R$ 3,00.
 - Lojista recebe R$ 93,00.
 
-O valor exato dependerá do gateway, método de pagamento, parcelamento e prazo de recebimento.
+O valor exato dependerá do provider, método de pagamento, parcelamento e prazo de recebimento.
 
 ## Regras de responsabilidade
 
@@ -58,8 +60,8 @@ A Kriar fornece tecnologia. O lojista vende o produto.
 | Troca/devolução | Lojista |
 | Nota fiscal | Lojista |
 | Atendimento ao consumidor | Lojista |
-| Processamento do pagamento | Gateway |
-| Split de pagamento | Gateway |
+| Processamento do pagamento | Provider de pagamento |
+| Split de pagamento | Provider de pagamento |
 | Infraestrutura da loja | Kriar |
 | Modelos 3D publicados pela plataforma | Kriar |
 | Painel administrativo | Kriar |
@@ -78,7 +80,7 @@ A Kriar não deve:
 - agir como banco ou instituição financeira;
 - ser a vendedora oficial dos produtos.
 
-O gateway deve:
+O provider de pagamento deve:
 
 - processar o pagamento;
 - fazer KYC/cadastro do recebedor;
@@ -168,7 +170,7 @@ Ainda precisam ser detalhados:
 - política de arte enviada pelo cliente;
 - responsabilidade por produção personalizada;
 - política de suspensão de loja;
-- responsabilidade em caso de falha do gateway;
+- responsabilidade em caso de falha do provider de pagamento;
 - responsabilidade em caso de falha de entrega;
 - LGPD;
 - tratamento de dados pessoais de clientes finais.

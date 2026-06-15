@@ -15,9 +15,10 @@ from app.db.base import get_datetime_utc
 from app.modules.cart.enums import CartStatus
 from app.modules.cart.models import CartCart, CartItem
 from app.modules.cart.schemas import AddItemInput, CartItemPublic, CartPublic
-from app.modules.catalog.enums import ProductStatus, ProductVariantStatus
+from app.modules.catalog.enums import ProductStatus, ProductType, ProductVariantStatus
 from app.modules.catalog.models import InventoryItem, Product, ProductVariant
 from app.modules.catalog.services import assert_addable_to_cart, list_images
+from app.modules.customization import orders as customization_orders
 from app.modules.discounts import services as discount_services
 from app.modules.stores.models import Store
 
@@ -206,13 +207,28 @@ def add_item(*, session: Session, cart: CartCart, data: AddItemInput) -> None:
             needs customization (gate); 409 if stock is insufficient.
     """
     product = _get_published_product(session, cart.store_id, data.product_id)
-    assert_addable_to_cart(product)
+    # Customizable products require an approved session; each design is its own
+    # line (never merged with another), linked for freezing at order time.
+    cust_session = None
+    if product.type == ProductType.image_3d_customizable:
+        cust_session = customization_orders.resolve_approved_session(
+            session=session,
+            store_id=cart.store_id,
+            product_id=data.product_id,
+            guest_session_id=cart.guest_session_id or "",
+            session_id=data.customization_session_id,
+        )
+    assert_addable_to_cart(product, has_approved_customization=cust_session is not None)
     variant = (
         _get_variant(session, cart.store_id, data.product_id, data.variant_id)
         if data.variant_id is not None
         else None
     )
-    existing = _find_line(session, cart, data.product_id, data.variant_id)
+    existing = (
+        None
+        if cust_session is not None
+        else _find_line(session, cart, data.product_id, data.variant_id)
+    )
     new_total = (existing.quantity if existing else 0) + data.quantity
     _check_stock(session, cart.store_id, data.product_id, data.variant_id, new_total)
     if existing is not None:
@@ -220,17 +236,21 @@ def add_item(*, session: Session, cart: CartCart, data: AddItemInput) -> None:
         session.add(existing)
     else:
         price, currency = _resolve_price(product, variant)
-        session.add(
-            CartItem(
-                store_id=cart.store_id,
-                cart_id=cart.id,
-                product_id=data.product_id,
-                variant_id=data.variant_id,
-                quantity=data.quantity,
-                unit_price_amount_minor=price,
-                unit_price_currency=currency,
-            )
+        item = CartItem(
+            store_id=cart.store_id,
+            cart_id=cart.id,
+            product_id=data.product_id,
+            variant_id=data.variant_id,
+            quantity=data.quantity,
+            unit_price_amount_minor=price,
+            unit_price_currency=currency,
         )
+        session.add(item)
+        if cust_session is not None:
+            session.flush()
+            customization_orders.link_session_to_cart_item(
+                session=session, cart_item_id=item.id, cust_session=cust_session
+            )
     session.commit()
 
 
@@ -291,16 +311,20 @@ def remove_coupon(*, session: Session, cart: CartCart) -> None:
 def _item_public(
     session: Session, store_id: uuid.UUID, item: CartItem
 ) -> CartItemPublic:
-    """Build a render-ready public line (product name/slug/first image)."""
+    """Build a render-ready public line (name/slug; customized art or 1st image)."""
     product = session.get(Product, item.product_id)
     images = list_images(session=session, store_id=store_id, product_id=item.product_id)
+    # A customized line shows its own snapshot so two designs are distinguishable.
+    custom_image = customization_orders.cart_item_image_url(
+        session=session, store_id=store_id, cart_item_id=item.id
+    )
     return CartItemPublic(
         id=item.id,
         product_id=item.product_id,
         variant_id=item.variant_id,
         name=product.name if product else "",
         slug=product.slug if product else "",
-        image_url=images[0].url if images else None,
+        image_url=custom_image or (images[0].url if images else None),
         quantity=item.quantity,
         unit_price_amount_minor=item.unit_price_amount_minor,
         unit_price_currency=item.unit_price_currency,

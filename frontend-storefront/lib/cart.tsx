@@ -40,7 +40,11 @@ interface CartState {
   error: string | null
   open: () => void
   close: () => void
-  add: (productId: string, quantity?: number) => Promise<void>
+  add: (
+    productId: string,
+    quantity?: number,
+    variantId?: string,
+  ) => Promise<void>
   setQty: (itemId: string, quantity: number) => Promise<void>
   remove: (itemId: string) => Promise<void>
   refresh: () => Promise<void>
@@ -121,8 +125,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     error,
     open: () => setIsOpen(true),
     close: () => setIsOpen(false),
-    add: (productId, quantity = 1) =>
-      run(() => addToCart(productId, quantity), true),
+    add: (productId, quantity = 1, variantId) =>
+      run(() => addToCart(productId, quantity, undefined, variantId), true),
     setQty: (itemId, quantity) => run(() => updateCartItem(itemId, quantity)),
     remove: (itemId) => run(() => removeCartItem(itemId)),
     refresh,

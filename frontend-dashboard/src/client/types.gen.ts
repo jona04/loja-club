@@ -7,6 +7,7 @@ export type AddItemInput = {
     product_id: string;
     variant_id?: (string | null);
     quantity?: number;
+    customization_session_id?: (string | null);
 };
 
 /**
@@ -32,6 +33,36 @@ export type AddressInput = {
  */
 export type ApplyCouponInput = {
     code: string;
+};
+
+/**
+ * Request (panel) to assemble a session on a customer's behalf (doc 30 §9).
+ */
+export type AssistedSessionCreate = {
+    product_id: string;
+    name: string;
+    email?: (string | null);
+    phone?: (string | null);
+    region?: (string | null);
+};
+
+/**
+ * An assisted session plus its shareable read-only public token.
+ */
+export type AssistedSessionPublic = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
+    snapshot_url: (string | null);
+    composite_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+    public_token: string;
 };
 
 /**
@@ -95,6 +126,23 @@ export type BillingPlanUpdate = {
     commission_bps?: (number | null);
     description?: (string | null);
     is_active?: (boolean | null);
+};
+
+export type Body_customization_approve_public_session = {
+    snapshot: string;
+    composite: string;
+    email?: (string | null);
+    phone?: (string | null);
+    region?: (string | null);
+};
+
+export type Body_customization_approve_session = {
+    snapshot: string;
+    composite: string;
+};
+
+export type Body_customization_upload_art = {
+    file: string;
 };
 
 export type Body_login_login_access_token = {
@@ -420,6 +468,38 @@ export type CustomerSummary = {
     created_at: string;
 };
 
+/**
+ * Operational production status of an ordered customization (doc 22).
+ *
+ * A separate axis from the session lifecycle: it lives on the frozen
+ * ``customization_order_items`` row and is advanced by the merchant as they
+ * produce the art. It starts at ``received`` when the order is placed.
+ *
+ * - ``received``: art received (initial, set at order time).
+ * - ``reviewing``: the merchant is evaluating the art.
+ * - ``needs_contact``: the merchant needs to talk to the customer.
+ * - ``approved_for_production``: cleared to produce.
+ * - ``in_production``: being produced.
+ * - ``production_done``: production finished (terminal).
+ */
+export type CustomizationProductionStatus = 'received' | 'reviewing' | 'needs_contact' | 'approved_for_production' | 'in_production' | 'production_done';
+
+/**
+ * Lifecycle of a customer's 3D customization session (doc 30 §4).
+ *
+ * - ``draft``: being edited; autosave writes the ``state_json`` here.
+ * - ``approved``: the customer approved a snapshot; frozen for editing, ready
+ * to add to the cart.
+ * - ``added_to_cart``: an approved session that is in a cart.
+ * - ``ordered``: copied (frozen) into a placed order (terminal).
+ * - ``abandoned``: explicitly given up by the customer.
+ * - ``expired``: aged past ``expires_at`` and swept by the worker (terminal).
+ *
+ * Editing (autosave/upload) is allowed only in ``draft``; ``approved`` and
+ * beyond are immutable. Deleting a session is a soft delete, never a status.
+ */
+export type CustomizationSessionStatus = 'draft' | 'approved' | 'added_to_cart' | 'ordered' | 'abandoned' | 'expired';
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -468,6 +548,22 @@ export type InventorySet = {
 };
 
 /**
+ * A layer's placement in the printable region (doc 30 §4).
+ *
+ * ``x``/``y`` are the center in region units; they may fall **outside** [0,1]
+ * when a layer is larger than the region (panned so an edge meets the region
+ * edge). ``scale`` is the width fraction; ``scale_y`` (optional) is a free
+ * height fraction for non-uniform distortion (``None`` = natural aspect).
+ */
+export type LayerTransform = {
+    x: number;
+    y: number;
+    scale: number;
+    scale_y?: (number | null);
+    rotation_deg?: number;
+};
+
+/**
  * Public representation of an uploaded media file.
  */
 export type MediaPublic = {
@@ -501,6 +597,50 @@ export type MembershipStatus = 'invited' | 'active' | 'removed';
  * Read by the storefront API (``P3-SF-01``) to select the header/footer menu.
  */
 export type MenuLocation = 'header' | 'footer';
+
+/**
+ * A session's full detail for the merchant: art + downloads + order link.
+ */
+export type MerchantSessionDetail = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
+    snapshot_url: (string | null);
+    composite_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+    product_name: string;
+    is_assisted: boolean;
+    order_id: (string | null);
+    order_item_id: (string | null);
+    production_status: (CustomizationProductionStatus | null);
+};
+
+/**
+ * A store's customization session as a row in the merchant panel list.
+ *
+ * Lightweight (one presigned thumbnail); the full art + downloads are in the
+ * detail. ``production_status`` is present only once the session is ordered.
+ */
+export type MerchantSessionListItem = {
+    id: string;
+    product_id: string;
+    product_name: string;
+    status: CustomizationSessionStatus;
+    is_assisted: boolean;
+    snapshot_url: (string | null);
+    created_at: string;
+    updated_at: string;
+    approved_at: (string | null);
+    order_id: (string | null);
+    order_item_id: (string | null);
+    production_status: (CustomizationProductionStatus | null);
+};
 
 /**
  * Generic message response.
@@ -675,6 +815,11 @@ export type Page_CustomerSummary_ = {
     count: number;
 };
 
+export type Page_MerchantSessionListItem_ = {
+    data: Array<MerchantSessionListItem>;
+    count: number;
+};
+
 export type Page_OrderSummary_ = {
     data: Array<OrderSummary>;
     count: number;
@@ -713,6 +858,91 @@ export type Page_UserPublic_ = {
 export type Page_VariantPublic_ = {
     data: Array<VariantPublic>;
     count: number;
+};
+
+/**
+ * A catalog model for the admin (includes ``is_active`` + active version).
+ */
+export type Platform3DModelAdmin = {
+    id: string;
+    name: string;
+    category: string;
+    slug: string;
+    is_active: boolean;
+    active_version: (Platform3DModelVersionAdmin | null);
+};
+
+/**
+ * A catalog model plus its active version (or ``None`` if none active).
+ */
+export type Platform3DModelPublic = {
+    id: string;
+    name: string;
+    category: string;
+    slug: string;
+    active_version: (Platform3DModelVersionPublic | null);
+};
+
+/**
+ * Partial update of a catalog model's metadata/visibility.
+ */
+export type Platform3DModelUpdate = {
+    name?: (string | null);
+    category?: (string | null);
+    is_active?: (boolean | null);
+};
+
+/**
+ * A model version as seen by the admin (includes ``is_active``).
+ */
+export type Platform3DModelVersionAdmin = {
+    id: string;
+    version: number;
+    glb_url: string;
+    printable_areas: Array<{
+        [key: string]: unknown;
+    }>;
+    text_config: {
+        [key: string]: unknown;
+    };
+    art_limits: {
+        [key: string]: unknown;
+    };
+    is_active: boolean;
+};
+
+/**
+ * The active version of a catalog model, as exposed to the merchant.
+ */
+export type Platform3DModelVersionPublic = {
+    id: string;
+    version: number;
+    glb_url: string;
+    printable_areas: Array<{
+        [key: string]: unknown;
+    }>;
+    text_config: {
+        [key: string]: unknown;
+    };
+    art_limits: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * Partial update of a version's editor parameters/visibility.
+ */
+export type Platform3DModelVersionUpdate = {
+    printable_areas?: (Array<{
+    [key: string]: unknown;
+}> | null);
+    text_config?: ({
+    [key: string]: unknown;
+} | null);
+    art_limits?: ({
+    [key: string]: unknown;
+} | null);
+    is_active?: (boolean | null);
 };
 
 /**
@@ -765,6 +995,35 @@ export type ProductCreate = {
     price_currency?: (string | null);
     is_featured?: boolean;
     category_ids: Array<(string)>;
+};
+
+/**
+ * Request to advance the production status of an ordered customization.
+ */
+export type ProductionStatusUpdate = {
+    production_status: CustomizationProductionStatus;
+};
+
+/**
+ * Request to link a product to a catalog 3D model (merchant choice).
+ */
+export type ProductModelLink = {
+    platform_3d_model_id: string;
+    type: ProductType;
+    production_notes?: (string | null);
+};
+
+/**
+ * A product's current 3D-model link, for the merchant panel.
+ */
+export type ProductModelSettingsPublic = {
+    product_id: string;
+    type: ProductType;
+    platform_3d_model_id: string;
+    model_name: string;
+    model_slug: string;
+    model_category: string;
+    production_notes: (string | null);
 };
 
 /**
@@ -834,6 +1093,31 @@ export type ProductUpdate = {
 export type ProductVariantStatus = 'active' | 'archived';
 
 /**
+ * A customization session as the editor (or a read-only viewer) sees it.
+ */
+export type SessionPublic = {
+    id: string;
+    product_id: string;
+    status: CustomizationSessionStatus;
+    state_json: {
+        [key: string]: unknown;
+    };
+    version: Platform3DModelVersionPublic;
+    uploads: Array<UploadPublic>;
+    snapshot_url: (string | null);
+    composite_url: (string | null);
+    expires_at: string;
+    approved_at: (string | null);
+};
+
+/**
+ * Request to start (or resume) a customization session for a product.
+ */
+export type SessionStart = {
+    product_id: string;
+};
+
+/**
  * Fields accepted when creating a shipping method.
  */
 export type ShippingMethodCreate = {
@@ -886,6 +1170,45 @@ export type ShippingMethodUpdate = {
     is_active?: (boolean | null);
     price_amount_minor?: (number | null);
     min_order_amount_minor?: (number | null);
+};
+
+/**
+ * The full editor state (doc 30 §4): pinned model + ordered layers.
+ *
+ * Structural shape only; the version-specific rules (allowed fonts, area ids,
+ * per-area layer caps, referenced uploads) are enforced in the service against
+ * the pinned version — never trusting the client.
+ */
+export type StateJson = {
+    schema_version?: number;
+    model: StateModelRef;
+    layers?: Array<StateLayer>;
+};
+
+/**
+ * One layer of the editor state: a raster image or a text run.
+ */
+export type StateLayer = {
+    id: string;
+    kind: 'image' | 'text';
+    area_id: string;
+    z?: number;
+    transform: LayerTransform;
+    upload_id?: (string | null);
+    text?: (string | null);
+    font?: (string | null);
+    font_size?: (number | null);
+    color?: (string | null);
+};
+
+export type kind = 'image' | 'text';
+
+/**
+ * The catalog model + pinned version the state was built against.
+ */
+export type StateModelRef = {
+    model_id: string;
+    version_id: string;
 };
 
 /**
@@ -947,6 +1270,10 @@ export type StorefrontHome = {
 
 /**
  * A published product with its images, for storefront cards and detail.
+ *
+ * On the product **detail** it also carries the active ``variants`` and stock
+ * (``in_stock`` / ``available_quantity``, product-level for variant-less
+ * products); cards/home leave ``variants`` empty.
  */
 export type StorefrontProduct = {
     name: string;
@@ -966,6 +1293,9 @@ export type StorefrontProduct = {
     id: string;
     store_id: string;
     images?: Array<ImagePublic>;
+    variants?: Array<StorefrontVariant>;
+    in_stock?: boolean;
+    available_quantity?: (number | null);
 };
 
 /**
@@ -1003,6 +1333,25 @@ export type StorefrontTheme = {
     settings?: {
         [key: string]: unknown;
     };
+};
+
+/**
+ * A purchasable variant on the product page (name + effective price + stock).
+ *
+ * ``price_*`` is the **effective** price (the variant override, else the
+ * product's). ``available_quantity`` is ``None`` when stock isn't tracked
+ * (unlimited); ``in_stock`` already folds that in.
+ */
+export type StorefrontVariant = {
+    id: string;
+    name: string;
+    attributes?: ({
+    [key: string]: (string);
+} | null);
+    price_amount_minor: number;
+    price_currency: string;
+    in_stock: boolean;
+    available_quantity?: (number | null);
 };
 
 /**
@@ -1217,6 +1566,19 @@ export type UpdateItemInput = {
 export type UpdatePassword = {
     current_password: string;
     new_password: string;
+};
+
+/**
+ * A customer upload, with a short-lived presigned read URL.
+ */
+export type UploadPublic = {
+    id: string;
+    mime: string;
+    size_bytes: number;
+    width: (number | null);
+    height: (number | null);
+    url: string;
+    low_resolution?: boolean;
 };
 
 /**
@@ -1699,6 +2061,107 @@ export type CustomersGetCustomerData = {
 
 export type CustomersGetCustomerResponse = (CustomerDetail);
 
+export type CustomizationGetProductModelData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CustomizationGetProductModelResponse = ((ProductModelSettingsPublic | null));
+
+export type CustomizationLinkProductModelData = {
+    productId: string;
+    requestBody: ProductModelLink;
+    storeId: string;
+};
+
+export type CustomizationLinkProductModelResponse = (ProductModelSettingsPublic);
+
+export type CustomizationUnlinkProductModelData = {
+    productId: string;
+    storeId: string;
+};
+
+export type CustomizationUnlinkProductModelResponse = (void);
+
+export type CustomizationCreateAssistedSessionData = {
+    requestBody: AssistedSessionCreate;
+    storeId: string;
+};
+
+export type CustomizationCreateAssistedSessionResponse = (AssistedSessionPublic);
+
+export type CustomizationListCustomizationsData = {
+    limit?: number;
+    skip?: number;
+    status?: (CustomizationSessionStatus | null);
+    storeId: string;
+};
+
+export type CustomizationListCustomizationsResponse = (Page_MerchantSessionListItem_);
+
+export type CustomizationGetCustomizationData = {
+    sessionId: string;
+    storeId: string;
+};
+
+export type CustomizationGetCustomizationResponse = (MerchantSessionDetail);
+
+export type CustomizationUpdateProductionStatusData = {
+    requestBody: ProductionStatusUpdate;
+    sessionId: string;
+    storeId: string;
+};
+
+export type CustomizationUpdateProductionStatusResponse = (MerchantSessionDetail);
+
+export type CustomizationStartSessionData = {
+    requestBody: SessionStart;
+};
+
+export type CustomizationStartSessionResponse = (SessionPublic);
+
+export type CustomizationGetSessionData = {
+    sessionId: string;
+};
+
+export type CustomizationGetSessionResponse = (SessionPublic);
+
+export type CustomizationAutosaveSessionData = {
+    requestBody: StateJson;
+    sessionId: string;
+};
+
+export type CustomizationAutosaveSessionResponse = (SessionPublic);
+
+export type CustomizationUploadArtData = {
+    formData: Body_customization_upload_art;
+    sessionId: string;
+};
+
+export type CustomizationUploadArtResponse = (UploadPublic);
+
+export type CustomizationApproveSessionData = {
+    formData: Body_customization_approve_session;
+    sessionId: string;
+};
+
+export type CustomizationApproveSessionResponse = (SessionPublic);
+
+export type CustomizationViewPublicSessionData = {
+    token: string;
+};
+
+export type CustomizationViewPublicSessionResponse = (SessionPublic);
+
+export type CustomizationApprovePublicSessionData = {
+    formData: Body_customization_approve_public_session;
+    token: string;
+};
+
+export type CustomizationApprovePublicSessionResponse = (SessionPublic);
+
+export type DCatalogListModelsResponse = (Array<Platform3DModelPublic>);
+
 export type DiscountsListCouponsData = {
     storeId: string;
 };
@@ -1918,6 +2381,22 @@ export type PlatformAdminUploadTemplateThumbnailData = {
 };
 
 export type PlatformAdminUploadTemplateThumbnailResponse = (ThemeTemplateAdminPublic);
+
+export type PlatformAdminList3dModelsResponse = (Array<Platform3DModelAdmin>);
+
+export type PlatformAdminUpdate3dModelData = {
+    modelId: string;
+    requestBody: Platform3DModelUpdate;
+};
+
+export type PlatformAdminUpdate3dModelResponse = (Platform3DModelAdmin);
+
+export type PlatformAdminUpdate3dModelVersionData = {
+    requestBody: Platform3DModelVersionUpdate;
+    versionId: string;
+};
+
+export type PlatformAdminUpdate3dModelVersionResponse = (Platform3DModelVersionAdmin);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;

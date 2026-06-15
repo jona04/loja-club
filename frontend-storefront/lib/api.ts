@@ -9,6 +9,8 @@ import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { cache } from "react"
 
+import type { ProductType } from "@/lib/product"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8800"
 
 export interface StorefrontStore {
@@ -96,15 +98,31 @@ export interface ProductImage {
   url: string
 }
 
+export interface StorefrontVariant {
+  id: string
+  name: string
+  attributes: Record<string, string> | null
+  price_amount_minor: number
+  price_currency: string
+  in_stock: boolean
+  available_quantity: number | null
+}
+
 export interface StorefrontProduct {
   id: string
   slug: string
   name: string
   description: string | null
+  type: ProductType
   price_amount_minor: number
   price_currency: string
   is_featured: boolean
   images: ProductImage[]
+  /** Active variants (product detail only; empty on cards/home). */
+  variants: StorefrontVariant[]
+  /** Product-level availability (used when there are no variants). */
+  in_stock: boolean
+  available_quantity: number | null
 }
 
 export interface StorefrontCategorySection {
@@ -211,5 +229,25 @@ export const listProducts = (
 /** Fetch the host store's active shipping methods (for the checkout). */
 export const getShippingMethods = (): Promise<ShippingMethodPublic[]> =>
   apiGet<ShippingMethodPublic[]>("/shipping-methods")
+
+/**
+ * Fetch a shared customization session by its public token (read-only, no host
+ * needed — the token is the credential). A missing/expired token → `notFound()`.
+ */
+export const getPublicCustomization = async (
+  token: string,
+): Promise<import("@/lib/customizer/session-types").CustomizationSession> => {
+  const res = await fetch(
+    `${API_URL}/api/v1/storefront/p/${encodeURIComponent(token)}`,
+    { cache: "no-store" },
+  )
+  if (res.status === 404 || res.status === 410) {
+    notFound()
+  }
+  if (!res.ok) {
+    throw new Error(`Storefront API ${res.status} for /p/${token}`)
+  }
+  return (await res.json()) as import("@/lib/customizer/session-types").CustomizationSession
+}
 
 export { formatPrice, whatsappLink } from "@/lib/format"

@@ -11,6 +11,12 @@ vi.mock("@/client", () => ({
     updateProduct: vi.fn().mockResolvedValue({}),
     setInventory: vi.fn().mockResolvedValue({ quantity: 50 }),
   },
+  CustomizationService: {
+    getProductModel: vi.fn().mockResolvedValue(null),
+    linkProductModel: vi.fn().mockResolvedValue({}),
+    unlinkProductModel: vi.fn().mockResolvedValue(undefined),
+  },
+  DCatalogService: { listModels: vi.fn().mockResolvedValue([]) },
   MediaService: { uploadMedia: vi.fn() },
 }))
 
@@ -71,6 +77,7 @@ describe("EditProductDialog stock", () => {
         storeId="s1"
         product={product}
         canUpdate
+        canManage3d
         onClose={vi.fn()}
         onSaved={vi.fn()}
       />,

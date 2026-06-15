@@ -77,6 +77,12 @@ function Layout() {
           >
             Templates
           </Link>
+          <Link
+            to="/models-3d"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Modelos 3D
+          </Link>
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm">
           <span className="text-muted-foreground">{user?.email}</span>

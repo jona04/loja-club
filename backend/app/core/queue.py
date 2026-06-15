@@ -6,12 +6,14 @@ decoupled from the queue library. Tasks are registered in
 (``arq app.core.queue.WorkerSettings``).
 """
 
-from typing import Any
+from typing import Any, cast
 
-from arq import create_pool
+from arq import create_pool, cron
 from arq.connections import ArqRedis, RedisSettings
+from arq.typing import WorkerCoroutine
 
 from app.core.config import settings
+from app.modules.customization.tasks import expire_customization_sessions
 from app.modules.media.tasks import generate_image_variants
 from app.modules.notifications.tasks import send_order_email
 
@@ -86,5 +88,19 @@ async def dummy_task(ctx: dict[str, Any], marker: str) -> str:
 class WorkerSettings:
     """arq worker configuration (registered functions + Redis connection)."""
 
-    functions = [dummy_task, generate_image_variants, send_order_email]
+    functions = [
+        dummy_task,
+        generate_image_variants,
+        send_order_email,
+        expire_customization_sessions,
+    ]
+    # Sweep expired customization sessions once a day (03:00 UTC). The cast
+    # bridges arq's broad ``WorkerCoroutine`` protocol (it allows extra args).
+    cron_jobs = [
+        cron(
+            cast(WorkerCoroutine, expire_customization_sessions),
+            hour=3,
+            minute=0,
+        )
+    ]
     redis_settings = _redis_settings()

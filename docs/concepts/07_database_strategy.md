@@ -152,6 +152,11 @@ Exemplos:
 | `customization_cart_items` | Personalização aprovada no carrinho |
 | `customization_order_items` | Cópia congelada da personalização no pedido |
 
+Campos do **catálogo da plataforma** (Fase 7, **sem `store_id`**) — detalhe e JSONs no doc [30](./30_3d_customization_technical_design.md):
+
+- `platform_3d_models`: `name`, `category`, `slug`, `is_active` (+ soft delete).
+- `platform_3d_model_versions`: `model_id` (FK), `version` (int), `glb_url` (CDN), `printable_areas` (JSON — **região de UV** + limites por área; a arte é mapeada pela UV do modelo, colando na superfície real), `text_config` (JSON — fontes/limites de texto), `art_limits` (JSON — mimes/tamanho/dimensão mín), `is_active`. **GLB imutável** (novo GLB = nova versão); **área/limites editáveis no admin** dentro da versão.
+
 Campos importantes em `customization_sessions`:
 
 ```text
@@ -159,22 +164,22 @@ store_id
 product_id
 guest_session_id
 customer_id
-cart_id
-model_id
-model_version_id
+platform_3d_model_version_id   # versão fixada do catálogo (Fase 12 acrescenta o modelo da loja)
 status
 state_json
-preview_url
-approved_snapshot_url
+snapshot_key                   # mockup 3D, privado (URL assinada); copiado pro pedido; é a imagem do carrinho
+composite_key                  # arte de produção (retângulo achatado, alta-res), privado; copiado pro pedido
+created_by_user_id             # usuário da loja na personalização assistida (senão nulo)
+public_token                   # link público read-only da assistida (token opaco; ver doc 30 §9)
 expires_at
 approved_at
 ```
 
-O `state_json` guarda parâmetros como cor, posição, escala, rotação, imagem aplicada, textos e área utilizada.
-O pedido não deve depender da sessão viva: ao criar pedido, copiar a personalização para `customization_order_items`.
+O `state_json` guarda as **camadas** (imagem e texto), posição/escala/rotação e a área usada — schema canônico no doc [30 §4](./30_3d_customization_technical_design.md) (a **cor do produto** fica fora da V1).
+O vínculo com carrinho/pedido **não** fica na sessão: a personalização aprovada é copiada para `customization_cart_items` e, no pedido, para `customization_order_items` (congelamento — **P7-ORD-01**), pra o pedido não depender da sessão viva. O `customization_order_items` carrega ainda o **`production_status`** (`CustomizationProductionStatus`, [31 §7](./31_configuration_and_constants.md)): o **eixo operacional de produção** (começa em `received`), avançado pelo lojista no painel (**P7-OPS-01**) — separado do `status` da sessão.
 
-Sessões de personalização expiram em 30 dias quando não viram pedido.
-Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio.
+Sessões de personalização expiram em 30 dias quando não viram pedido (TTL + agendamento da varredura em [31 §4](./31_configuration_and_constants.md)).
+Ao expirar, marcar `status = expired` e `deleted_at`, sem hard delete do registro de negócio. A expiração é aplicada **também no acesso** (uma sessão vencida responde **410** em autosave/upload/aprovar/link público); o worker só faz a **faxina** (tira das listagens), então a regra não depende da hora em que ele roda.
 
 ### Cliente final
 
@@ -220,11 +225,31 @@ Login por código, senha ou Google sincroniza no mesmo customer via `customer_au
 
 | Tabela | Função |
 |---|---|
-| `payment_accounts` | Conta/recebedor do lojista |
+| `payment_accounts` | Conta/recebedor do lojista no provider ativo |
 | `payment_transactions` | Transações |
-| `payment_webhooks` | Eventos recebidos do gateway |
+| `payment_webhooks` | Eventos recebidos do provider |
 | `payment_split_rules` | Regras de comissão |
 | `payment_chargebacks` | Contestação/chargeback |
+
+`payment_accounts` deve nascer multi-provider, mesmo que a Fase 8 implemente só `asaas_baas`.
+
+Campos importantes:
+
+```text
+store_id
+provider                 # asaas_baas | mercado_pago | ...
+mode                     # native | connected
+provider_account_id
+provider_wallet_id       # quando o provider tiver carteira/wallet
+status                   # pending | active | blocked | rejected
+kyc_status
+capabilities             # JSON cacheado para a UX do painel
+external_dashboard_url
+provider_credentials_ref # referência segura para API key/token, não o segredo em texto puro
+metadata
+```
+
+O histórico de transações preserva o provider usado no momento da venda. Trocar o provider ativo da loja não reescreve pedidos antigos.
 
 ### Layout e conteúdo
 
@@ -330,11 +355,15 @@ A performance depende muito dos índices compostos com `store_id`.
 | `catalog_product_categories` | `product_id + category_id` único |
 | `catalog_inventory_items` | `store_id + product_id + variant_id` **único** |
 | `catalog_collections` | `store_id + slug` único quando ativo |
+| `platform_3d_models` | `slug` único quando ativo |
+| `platform_3d_models` | `category` |
+| `platform_3d_model_versions` | `model_id + version` único |
 | `customization_product_settings` | `store_id + product_id` único |
 | `customization_sessions` | `store_id + product_id + status` |
 | `customization_sessions` | `store_id + guest_session_id + status` |
 | `customization_sessions` | `store_id + customer_id + status` |
 | `customization_sessions` | `expires_at + status` |
+| `customization_sessions` | `public_token` único quando existir |
 | `customization_uploads` | `store_id + customization_session_id` |
 | `customization_cart_items` | `store_id + cart_item_id` único |
 | `customization_order_items` | `store_id + order_id` |
@@ -357,8 +386,8 @@ A performance depende muito dos índices compostos com `store_id`.
 | `order_orders` | `store_id + order_number` único |
 | `order_items` | `store_id + order_id` |
 | `order_status_history` | `store_id + order_id + created_at` |
-| `payment_transactions` | `store_id + gateway_transaction_id` |
-| `payment_webhooks` | `gateway_event_id` único |
+| `payment_transactions` | `store_id + provider + gateway_transaction_id` |
+| `payment_webhooks` | `provider + gateway_event_id` único |
 | `shipping_methods` | `store_id + type + is_active` |
 | `shipping_rates` | `store_id + shipping_method_id` |
 | `discount_coupons` | `store_id + code` único quando ativo |

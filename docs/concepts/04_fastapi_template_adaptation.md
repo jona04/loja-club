@@ -67,7 +67,7 @@ Alterações principais:
 5. Criar permissões por loja.
 6. Criar resolução de loja por domínio.
 7. Separar painel do lojista de storefront público.
-8. Adicionar gateway com split.
+8. Adicionar Kriar Pay/provider com split.
 9. Adicionar worker/fila.
 10. Adicionar upload para S3.
 11. Adicionar CDN para imagens e assets públicos.
@@ -198,7 +198,7 @@ Do template, os seguintes serviços não devem ficar expostos em produção:
 12. Criar admin interno em projeto frontend próprio.
 13. Adicionar S3/CDN.
 14. Adicionar Redis/fila.
-15. Adicionar gateway com split.
+15. Adicionar Kriar Pay/provider com split.
 16. Preparar dev online na AWS (EC2) com Traefik.
 17. Preparar produção AWS.
 

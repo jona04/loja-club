@@ -34,7 +34,7 @@ Um template tem **código** (componentes React + os **manifestos** `settings-sch
 - **Deploy dev na AWS + CI/CD + ops mínimo** → [Fase 9](../backlog/phase-9-platform-ops-and-dev-deploy.md).
 - **Segurança/observabilidade completas** (audit, hardening, retenção, restore) → [Fase 10](../backlog/phase-10-followups-and-hardening.md).
 - **Beta com lojas reais** + produção → [Fase 11](../backlog/phase-11-production.md).
-- **Habilitar/desabilitar modelos do catálogo 3D** (admin) → [Fase 7](../backlog/phase-7-3d-products.md); **config da API de geração 3D** → [Fase 12](../backlog/phase-12-merchant-3d-generation.md).
+- **Habilitar/desabilitar e editar a área imprimível dos modelos do catálogo 3D** (admin) → [Fase 7](../backlog/phase-7-3d-products.md); **config da API de geração 3D** → [Fase 12](../backlog/phase-12-merchant-3d-generation.md).
 
 ## Telas (referência)
 

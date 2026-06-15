@@ -12,6 +12,13 @@ from app.modules.checkout.routes import public_router as checkout_public_router
 from app.modules.checkout.routes import router as checkout_router
 from app.modules.content.routes import router as content_router
 from app.modules.customers.routes import router as customers_router
+from app.modules.customization.routes import (
+    panel_router as customization_panel_router,
+)
+from app.modules.customization.routes import router as customization_router
+from app.modules.customization.routes import (
+    storefront_router as customization_storefront_router,
+)
 from app.modules.discounts.routes import router as discounts_router
 from app.modules.media.routes import router as media_router
 from app.modules.orders.routes import router as orders_router
@@ -30,6 +37,9 @@ api_router.include_router(checkout_router)
 api_router.include_router(checkout_public_router)
 api_router.include_router(content_router)
 api_router.include_router(customers_router)
+api_router.include_router(customization_router)
+api_router.include_router(customization_panel_router)
+api_router.include_router(customization_storefront_router)
 api_router.include_router(discounts_router)
 api_router.include_router(media_router)
 api_router.include_router(orders_router)

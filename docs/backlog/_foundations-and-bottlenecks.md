@@ -2,7 +2,7 @@
 
 > **Não é uma fase.** É um doc de **referência cross-fase**: invariantes e decisões que a base precisa honrar, e os **gargalos** que, se ignorados, causam retrabalho caro. Cada item aponta **em qual fase/task** é implementado. Lido junto, dá a visão de sistema para ajustar a base cedo.
 
-> **Sequência de fases:** **3D/personalização = [Fase 7 — Produtos 3D](./phase-7-3d-products.md)** (modelos do **catálogo da plataforma**, populados por seed; o lojista escolhe) — a **geração pelo próprio lojista** (GLB via API + mapear área) é a **[Fase 12](./phase-12-merchant-3d-generation.md)**; **planos + pagamentos + pagamento em 2 etapas = Fase 8**. Os invariantes de personalização (congelar arte no pedido — INV-P5; arte privada — INV-S2) e de pagamento valem **a partir da fase** correspondente.
+> **Sequência de fases:** **3D/personalização = [Fase 7 — Produtos 3D](./phase-7-3d-products.md)** (modelos do **catálogo da plataforma**, populados por seed; o lojista escolhe) — a **geração pelo próprio lojista** (GLB via API + mapear área) é a **[Fase 12](./phase-12-merchant-3d-generation.md)**; **planos + Kriar Pay Nativo/Asaas BaaS + pagamento em 2 etapas = Fase 8**; **Kriar Pay multi-provider + Mercado Pago = Fase 13**. Os invariantes de personalização (congelar arte no pedido — INV-P5; arte privada — INV-S2) e de pagamento valem **a partir da fase** correspondente.
 
 Relaciona-se com: [03](../concepts/03_system_architecture.md), [06](../concepts/06_multitenancy_and_domains.md), [07](../concepts/07_database_strategy.md), [08](../concepts/08_modules_and_permissions.md), [11](../concepts/11_checkout_payments_and_split.md), [13](../concepts/13_performance_cache_and_cdn.md), [14](../concepts/14_security_strategy.md), [20](../concepts/20_api_contracts_todo.md), [23](../concepts/23_customer_identity_and_guest_checkout.md).
 
@@ -66,16 +66,16 @@ Relaciona-se com: [03](../concepts/03_system_architecture.md), [06](../concepts/
 - **INV-F5 — Todo e-mail é enfileirado no worker** (task `send_email` via `enqueue()`), **nunca enviado inline** na requisição: o request valida/prepara e enfileira; o worker renderiza (MJML) e envia (SMTP/SES), com retry. Vale para **todos** os e-mails — transacionais (recuperação de senha, convite de membro), de pedido e de billing. → task em `P0-CFG-04`; cada e-mail enfileira de onde nasce.
 - **INV-F6 — Clients de serviço externo: abrir uma vez, reusar, fechar num lugar só.** Cada client mora no seu módulo de `app/core/*` (coesão; e o `worker` também os usa, sem app FastAPI — por isso não vivem em `app.state`). O **lifespan (`app/main.py`) é o único ponto de shutdown** e libera todos.
   - **Sync** (pool conecta lazy; singleton de módulo): DB `engine` (`db`), Redis (`cache`), boto3/S3 (`storage`, client cacheado).
-  - **Async** (criados no event loop; lazy via accessor): pool do arq (`queue`) e **HTTP** (um `httpx.AsyncClient` compartilhado — gateway de pagamento, API de geração 3D etc. usam **esse**, não criam o próprio).
+  - **Async** (criados no event loop; lazy via accessor): pool do arq (`queue`) e **HTTP** (um `httpx.AsyncClient` compartilhado — provider de pagamento, API de geração 3D etc. usam **esse**, não criam o próprio).
   - **Por requisição** pega-se só uma *unidade de trabalho* — uma `Session`, um comando no pool, uma request — **nunca** um client novo. O domínio usa os accessors de `app/core/*`.
   - Cada módulo expõe `close*`/`dispose`; o lifespan chama todos (o worker libera os seus no próprio shutdown). Mapa dos clients em [`backend/README.md`](../backend/README.md). Em teste, `storage.reset_client()` recria o S3 dentro do `mock_aws`.
-- **GARGALO:** acoplar direto a um SDK (fila/storage/gateway) trava troca de provedor. Mitigação: interfaces finas desde já.
+- **GARGALO:** acoplar direto a um SDK (fila/storage/provider de pagamento) trava troca de provedor. Mitigação: interfaces finas desde já.
 
 ## 7. Pagamentos & split
 
-- **INV-P1 — Abstração de provedor de pagamento** (não assumir um único gateway BR; permitir multi-região, ex.: Stripe internacional). → Fase 8.
-- **INV-P2 — Confirmação só por webhook** assinado + **idempotente** (tabela `payment_webhooks`, `gateway_event_id` único). → Fase 8.
-- **INV-P3 — Nunca armazenar cartão**; dados sensíveis no gateway. → Fase 8.
+- **INV-P1 — Abstração de provedor de pagamento** (não assumir um único provider BR; permitir multi-região, ex.: Stripe internacional). → Fase 8.
+- **INV-P2 — Confirmação só por webhook** assinado + **idempotente** (tabela `payment_webhooks`, `provider + gateway_event_id` único). → Fase 8.
+- **INV-P3 — Nunca armazenar cartão**; dados sensíveis no provider. → Fase 8.
 - **INV-P4 — Split usa a comissão do plano**; Kriar não retém dinheiro. → Fase 8 (billing/payments).
 - **INV-P5 — Personalização aprovada é congelada no pedido** (cópia própria), independente da sessão viva. → Fase 6.
 
@@ -95,7 +95,7 @@ Relaciona-se com: [03](../concepts/03_system_architecture.md), [06](../concepts/
 
 ## 10. Testes
 
-**Princípio — INV-TEST-1:** testar **comportamento e intenção**, não implementação. Teste pelo **contrato público** (entradas → saídas/efeitos observáveis); assim resiste a refactor. O nome do teste expressa a intenção. **Mock só nas fronteiras reais** (rede, I/O, relógio, aleatoriedade, S3, gateway, e-mail).
+**Princípio — INV-TEST-1:** testar **comportamento e intenção**, não implementação. Teste pelo **contrato público** (entradas → saídas/efeitos observáveis); assim resiste a refactor. O nome do teste expressa a intenção. **Mock só nas fronteiras reais** (rede, I/O, relógio, aleatoriedade, S3, provider de pagamento, e-mail).
 
 **Pirâmide:** muitos **unit**, alguns **integração**, poucos **E2E**. Duas regras de bolso:
 - *empurre o teste pro nível mais barato que ainda pega o bug;*
@@ -119,8 +119,8 @@ Não duplicar cobertura de ramos no nível de cima.
 **Ferramentas:**
 - Backend: `pytest` com `tests/unit` e `tests/integration`; **isolamento por teste** (transação + rollback); `coverage` + `mypy strict`.
 - Frontend: **`vitest` + Testing Library** (unit/componente, foco em comportamento) + **Playwright** (E2E).
-- Mocks: **S3 via `moto`/botocore stubber**, gateway/e-mail/relógio/random nas fronteiras.
-- **Serviço externo real (S3/CloudFront/gateway):** além do **mock no CI**, um **smoke real env-gated** (roda com credenciais em local/dev; **pulado** sem secrets) prova que **provisionamento + credenciais funcionam de fato**. A task que depende do serviço **provisiona + verifica** (não assume que "alguém configurou"). → AWS na **Fase 2** (`P2-MEDIA-01`); gateway na **Fase 8**.
+- Mocks: **S3 via `moto`/botocore stubber**, provider de pagamento/e-mail/relógio/random nas fronteiras.
+- **Serviço externo real (S3/CloudFront/provider de pagamento):** além do **mock no CI**, um **smoke real env-gated** (roda com credenciais em local/dev; **pulado** sem secrets) prova que **provisionamento + credenciais funcionam de fato**. A task que depende do serviço **provisiona + verifica** (não assume que "alguém configurou"). → AWS na **Fase 2** (`P2-MEDIA-01`); provider de pagamento na **Fase 8**.
 
 **Onde:** fundação de testes em `P0-TEST-01`; unit de lógica pura junto de onde a lógica nasce (Money em `P0-MOD-05`; dedup/telefone na Fase 6; split na Fase 8); **fixtures/factories multi-tenant + testes de isolamento na Fase 1** (precisam de `Store`).
 
@@ -135,7 +135,7 @@ Não duplicar cobertura de ramos no nível de cima.
 | DEC-3 | Lib de fila | `arq` (async, Redis) | recomendado (`P0-CFG-04`) |
 | DEC-4 | Lib de telefone | `phonenumbers` (libphonenumber) | recomendado (Fase 6) |
 | DEC-5 | Paginação | **offset (`skip`/`limit`) + envelope `{data, count}`** | **decidido** (`P1-API-01`) |
-| DEC-6 | Gateway(s) de pagamento | abstrair; escolher BR (Pagar.me/MercadoPago/Asaas) + plano p/ internacional | **pendente** (Fase 8, doc [18](../concepts/18_open_decisions.md)) |
+| DEC-6 | Provider(s) de pagamento | abstrair; **Asaas BaaS primeiro** como Kriar Pay Nativo (Fase 8); Mercado Pago conectado depois (Fase 13); manter plano p/ internacional | **decidido para a entrada** (doc [18](../concepts/18_open_decisions.md)) |
 | DEC-7 | Provedor SMS/WhatsApp | a definir | **pendente** (Fase 8) |
 | DEC-8 | Storage local em dev | AWS S3 + CloudFront reais (sem MinIO) | **decidido** (Fase 2) |
 | DEC-9 | Runner de unit no frontend | `vitest` + Testing Library | **decidido** (`P0-TEST-01`) |
@@ -150,7 +150,7 @@ Não duplicar cobertura de ramos no nível de cima.
 1. **Retrofit de multi-moeda** → mitigado por `P0-MOD-05` (dinheiro global desde já).
 2. **Vazamento entre lojas** → guard central de `store_id` (Fase 1) + testes de isolamento.
 3. **Auth do cliente acoplada à do staff** → desenho separado desde a Fase 0.
-4. **Lock-in de gateway/storage/fila** → interfaces finas (`queue`, `storage`, `payments`).
+4. **Lock-in de provider de pagamento/storage/fila** → interfaces finas (`queue`, `storage`, `payments`).
 5. **Padrão de API tardio** → travar paginação/erro/response na Fase 1.
 6. **Idempotência de webhook/pedido** → tabela + Idempotency-Key.
 7. **Cache da vitrine inconsistente** → chaves + invalidação centralizadas.
@@ -174,7 +174,7 @@ Não duplicar cobertura de ramos no nível de cima.
 | Abstração de storage + URLs assinadas | Fase 2 |
 | Telefone E.164 / endereço país-aware / dedup | Fase 6 |
 | Congelar personalização no pedido | Fase 6 |
-| Idempotência de webhook + abstração de gateway | Fase 8 |
+| Idempotência de webhook + abstração de provider de pagamento | Fase 8 |
 | SMS/WhatsApp | Fase 8 |
 | Fundação de testes (layout, isolamento, mocks, vitest) | Fase 0 — `P0-TEST-01` |
 | Fixtures/factories multi-tenant + testes de isolamento | Fase 1 |

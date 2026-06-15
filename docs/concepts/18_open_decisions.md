@@ -20,33 +20,33 @@ Candidatos a avaliar:
 - [Tripo3D](https://www.tripo3d.ai/api)
 - [Hyper3D](https://hyper3d.ai/api-dashboard)
 
-Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a Fase 7. Ver [Fase 7](../backlog/phase-7-3d-products.md).
+Critérios: qualidade do GLB (web-ready), custo por geração, latência, formatos/texturas, limites de uso, licença do output, suporte a image→3D. **Pendente** — fechar ao iniciar a **Fase 12**. Ver [Fase 12](../backlog/phase-12-merchant-3d-generation.md).
 
-## Gateway principal
+## Provider principal de pagamento
 
-Opções:
-
-- Pagar.me;
-- Mercado Pago;
-- Asaas.
-
-Critérios:
-
-- qualidade do split;
-- facilidade de integração;
-- taxas;
-- confiança do consumidor;
-- suporte a Pix/cartão/boleto;
-- onboarding de recebedores;
-- webhooks;
-- documentação;
-- ambiente sandbox.
-
-Decisão pendente:
+Decisão fechada:
 
 ```text
-Escolher gateway principal da V1.
+Fase 8: Asaas BaaS como primeiro provider, exposto como Kriar Pay Nativo.
+Fase 13: Mercado Pago como provider conectado via OAuth.
 ```
+
+Motivos:
+
+- Asaas BaaS encaixa melhor na promessa de painel financeiro nativo da Kriar: o lojista opera dentro da Kriar, enquanto o Asaas processa pagamentos, cadastro financeiro, split e repasses.
+- Mercado Pago é forte em confiança/conversão e deve entrar como opção para lojistas que já usam MP, mas o modelo é de conta conectada/OAuth, não de BaaS nativo.
+- Pagar.me continua como possibilidade futura para escala, negociação ou necessidades específicas de marketplace.
+
+Regras arquiteturais:
+
+- o módulo `payments` deve ser multi-provider desde a Fase 8;
+- a Fase 8 implementa apenas `asaas_baas`;
+- o frontend fala em **Kriar Pay** e renderiza blocos por capabilities;
+- o provider ativo da loja fica em `payment_accounts`;
+- credenciais sensíveis do provider não ficam soltas em `metadata`;
+- a Kriar não retém valores e não vira carteira interna.
+
+Ver [Checkout, Payments and Split](./11_checkout_payments_and_split.md), [Fase 8](../backlog/phase-8-customer-account-and-payments.md) e [Fase 13](../backlog/phase-13-multiprovider-payments.md).
 
 ## Storefront Next.js
 
@@ -105,7 +105,7 @@ A mensalidade pode ser:
 - cobrada desde a V1;
 - cobrada depois;
 - simulada/manual no começo;
-- integrada ao gateway.
+- integrada ao provider de pagamento.
 
 Decisão pendente:
 
@@ -149,7 +149,7 @@ Definir visual exato dos 2 templates.
 Decisão assumida:
 
 ```text
-A V1 deve incluir personalização 3D de produtos com Three.js.
+A V1 deve incluir personalização 3D de produtos com Three.js (via react-three-fiber).
 ```
 
 Escopo definido:
@@ -161,26 +161,20 @@ Escopo definido:
 - arte aprovada fica congelada no pedido;
 - WhatsApp será o canal de conversa da V1.
 
-Decisões pendentes:
+Decidido (Fase 7 — doc [30](./30_3d_customization_technical_design.md)):
 
-```text
-Definir lista exata dos primeiros modelos 3D e formatos finais dos assets.
-```
+- **Primeiro modelo = caneca branca de cerâmica** (GLB do Tripo3D, preparado no Blender → GLB+Draco no CDN); outros entram pelo mesmo seed.
+- Arte do cliente = **só raster (PNG/JPG)** (SVG/PDF = follow-up).
+- **Sem troca de cor do produto na V1** (recolor = follow-up).
 
 ## Acesso à personalização criada pelo lojista (Fase 7/8)
 
 Contexto: na **personalização assistida pelo lojista** (o lojista monta a arte em nome do cliente, pré-cadastrado por e-mail/telefone — doc [22](22_product_customization_3d.md)), o cliente precisa **ver e aprovar** a personalização antes de comprar.
 
-Decisão pendente:
+Decidido (doc [30 §9](./30_3d_customization_technical_design.md)) — **os dois caminhos**:
 
-```text
-Ver/aprovar a personalização criada pelo lojista exige login do cliente,
-ou é um link público compartilhável (sem login)?
-```
-
-- **Exigir login:** mais controle/privacidade; depende da conta do cliente (Fase 8).
-- **Link público:** o cliente pode **compartilhar com amigos** (veem sem conta); aprovar/comprar ainda pode pedir confirmação de contato.
-- Provável: **suportar os dois** (link público para ver/compartilhar; login/confirmação para aprovar e comprar). Fechar ao entrar na Fase 7/8.
+- **Fase 7:** **link público compartilhável** (read-only) pra ver/compartilhar + **confirmação de contato** (e-mail/telefone) pra aprovar/comprar — **sem conta**.
+- **Fase 8:** com **conta do cliente**, ele também vê/aprova **logado** na área do cliente.
 
 ## Frete na V1
 

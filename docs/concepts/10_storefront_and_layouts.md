@@ -243,7 +243,7 @@ Deve mostrar:
 - botão `Personalizar`, quando o produto tiver modelo 3D vinculado;
 - produtos relacionados simples.
 
-> **Faseamento:** na Fase 3 a página é **informativa** (imagem/nome/preço/descrição). A **ação de compra** (adicionar ao carrinho), a **disponibilidade** (estoque) e a **seleção de variação** chegam na **Fase 6** (venda sem pagamento) — o `cart_item`/`order_item` guarda a **variação escolhida**, e a vitrine precisa expor variações + estoque no `StorefrontProduct` (hoje só imagem/nome/preço/descrição). **Produtos relacionados** = follow-up; **`Personalizar`** = Fase 7. O botão flutuante de WhatsApp (contato, em toda a loja, `whatsapp_number`) já existe desde a Fase 3.
+> **Faseamento:** na Fase 3 a página é **informativa** (imagem/nome/preço/descrição). A **ação de compra** (adicionar ao carrinho) chegou na **Fase 6**; a **seleção de variação + disponibilidade** na **Fase 7** (`P7-SF-02`). O `StorefrontProduct` (detalhe) expõe `variants` (preço efetivo = override ou do produto + `in_stock`) e o estoque do produto (`in_stock`/`available_quantity`); o seletor (3 templates) manda o `variant_id` no add-to-cart e **desabilita** variação/produto esgotado ("Esgotado"). Sem variação = compra direta. Disponibilidade = estoque rastreado (`catalog_inventory_items`) — sem linha = ilimitado, igual à checagem do carrinho; o carrinho **revalida** no add (409). **Produtos relacionados** = follow-up; **`Personalizar`** = Fase 7. O botão flutuante de WhatsApp já existe desde a Fase 3.
 
 Se o produto for personalizável, o caminho principal deve ser `Personalizar`.
 O cliente só deve adicionar ao carrinho depois de aprovar visualmente a arte.
@@ -254,11 +254,11 @@ O editor deve permitir personalização do produto usando modelo 3D.
 
 Recursos (Fase 7 — editor 3D do storefront):
 
-- carregar o modelo 3D do lojista (gerado via API);
-- upload de imagem/arte pelo cliente;
-- escrever nomes e frases dentro da area personalizável;
-- quando houver escrita permitir editar fonte, cores, tamanho e etc;
-- escolha de cor do produto quando o modelo permitir;
+- carregar o modelo 3D **do catálogo da plataforma** (versão escolhida, CDN);
+- **dois painéis**: edição 2D na área imprimível + preview 3D ao vivo (girar/zoom/mover) — doc [30 §2](./30_3d_customization_technical_design.md);
+- upload de imagem/arte (raster) pelo cliente;
+- escrever nomes e frases dentro da área personalizável;
+- quando houver escrita, editar fonte, **cor do texto**, tamanho etc;
 - mover arte e escrita dentro da área imprimível;
 - ajustar escala;
 - ajustar rotação;
@@ -344,7 +344,7 @@ Deve:
 - permitir entrega combinada quando habilitada pela loja;
 - criar pedido pendente;
 - anexar personalização aprovada ao pedido;
-- redirecionar ou integrar gateway;
+- redirecionar ou integrar provider de pagamento;
 - aguardar confirmação por webhook.
 
 Checkout não deve exigir senha ou cadastro prévio.
@@ -356,7 +356,7 @@ Quando o cliente escolher entrega combinada, o checkout deve mostrar uma mensage
 A loja entrará em contato após a compra para combinar a entrega.
 ```
 
-> **Sem gateway (Fase 6):** na venda sem pagamento, o checkout **cria o pedido pendente** e segue direto para a **confirmação** — sem redirecionar/integrar gateway nem esperar webhook (isso é a Fase 8). A confirmação mostra o **número do pedido**, as **políticas da loja** (troca/devolução/privacidade) e um **handoff por WhatsApp** com a mensagem pré-preenchida (pedido + itens) para combinar o pagamento. Ver [11 — Venda sem gateway (MVP local — Fase 6)](11_checkout_payments_and_split.md).
+> **Sem pagamento online (Fase 6):** na venda sem pagamento, o checkout **cria o pedido pendente** e segue direto para a **confirmação** — sem redirecionar/integrar provider nem esperar webhook (isso é a Fase 8). A confirmação mostra o **número do pedido**, as **políticas da loja** (troca/devolução/privacidade) e um **handoff por WhatsApp** com a mensagem pré-preenchida (pedido + itens) para combinar o pagamento. Ver [11 — Venda sem gateway (MVP local — Fase 6)](11_checkout_payments_and_split.md).
 
 ## Decisão canônica
 

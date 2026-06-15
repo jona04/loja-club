@@ -11,6 +11,8 @@ class AddItemInput(SQLModel):
     product_id: uuid.UUID
     variant_id: uuid.UUID | None = None
     quantity: int = Field(default=1, ge=1)
+    # Required for `image_3d_customizable` products: an approved session to freeze.
+    customization_session_id: uuid.UUID | None = None
 
 
 class UpdateItemInput(SQLModel):

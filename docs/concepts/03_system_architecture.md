@@ -29,7 +29,7 @@ A arquitetura terá:
 - storage de imagens;
 - storage de modelos 3D e artes enviadas por clientes;
 - CDN;
-- gateway de pagamento;
+- provider de pagamento;
 - fila/tarefas assíncronas;
 - observabilidade;
 - deploy com Docker.
@@ -127,7 +127,7 @@ O monólito será modular internamente. Cada domínio terá seu módulo próprio
 | `storefront` | dados para loja pública |
 | `cart` | carrinho |
 | `checkout` | fluxo de checkout |
-| `payments` | gateway, split e webhooks |
+| `payments` | Kriar Pay, providers de pagamento, split e webhooks |
 | `orders` | pedidos |
 | `customers` | clientes finais, guest sessions e histórico por loja |
 | `shipping` | frete e entrega |

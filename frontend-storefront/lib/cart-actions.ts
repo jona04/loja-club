@@ -102,15 +102,26 @@ export async function getCart(): Promise<CartPublic> {
   return parse<CartPublic>(await call("/storefront/cart"))
 }
 
-/** Add a product to the cart. */
+/**
+ * Add a product to the cart. Pass `variantId` for a product with variants, or
+ * the approved `customizationSessionId` for `image_3d_customizable` products
+ * (the backend freezes it into the order). The two are mutually exclusive.
+ */
 export async function addToCart(
   productId: string,
   quantity: number,
+  customizationSessionId?: string,
+  variantId?: string,
 ): Promise<CartPublic> {
   return parse<CartPublic>(
     await call("/storefront/cart/items", {
       method: "POST",
-      body: JSON.stringify({ product_id: productId, quantity }),
+      body: JSON.stringify({
+        product_id: productId,
+        quantity,
+        customization_session_id: customizationSessionId ?? null,
+        variant_id: variantId ?? null,
+      }),
     }),
   )
 }

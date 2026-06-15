@@ -156,7 +156,7 @@ Agrupar aqui:
 - checkout;
 - compra sem login obrigatório;
 - Pix/pagamento combinado no MVP;
-- gateway com split quando disponível;
+- Kriar Pay com split quando disponível;
 - WhatsApp com contexto do pedido;
 - retirada local;
 - frete fixo;
@@ -265,13 +265,13 @@ Agrupar aqui:
 - limites principais;
 - créditos de IA inclusos;
 - créditos extras;
-- diferença entre taxa do gateway e comissão da Kriar;
+- diferença entre taxa do provider e comissão da Kriar;
 - que a Kriar não retém dinheiro do lojista;
-- gateway/split quando disponível;
+- Kriar Pay/split quando disponível;
 - a loja é do lojista;
 - o vendedor oficial é o lojista;
 - a Kriar fornece tecnologia;
-- pagamentos são processados por gateway;
+- pagamentos são processados por provider de pagamento;
 - a Kriar não guarda saldo do lojista;
 - dados e arquivos ficam organizados por loja;
 - uploads e artes personalizadas precisam de privacidade;

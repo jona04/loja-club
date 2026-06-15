@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { type ReactNode, useState } from "react"
 
 import { CatalogService, type ProductPublic } from "@/client"
+import { Product3DModelSection } from "@/components/Catalog/Product3DModelSection"
 import { ProductImageUpload } from "@/components/Catalog/ProductImageUpload"
 import { StoreGate } from "@/components/Store/StoreGate"
 import { Badge } from "@/components/ui/badge"
@@ -91,6 +92,7 @@ export function ProductsScreen() {
   const canCreate = permissions.includes("catalog.product.create")
   const canUpdate = permissions.includes("catalog.product.update")
   const canDelete = permissions.includes("catalog.product.delete")
+  const canManage3d = permissions.includes("customization.models.assign")
 
   const productsQuery = useQuery({
     queryKey: ["products", storeId, page, pageSize],
@@ -450,6 +452,7 @@ export function ProductsScreen() {
           storeId={storeId}
           product={editing}
           canUpdate={canUpdate}
+          canManage3d={canManage3d}
           onClose={() => setEditing(null)}
           onSaved={invalidate}
         />
@@ -471,12 +474,14 @@ export function EditProductDialog({
   storeId,
   product,
   canUpdate,
+  canManage3d,
   onClose,
   onSaved,
 }: {
   storeId: string
   product: ProductPublic
   canUpdate: boolean
+  canManage3d: boolean
   onClose: () => void
   onSaved: () => void
 }) {
@@ -580,6 +585,12 @@ export function EditProductDialog({
             storeId={storeId}
             productId={product.id}
             canEdit={canUpdate}
+          />
+          <Product3DModelSection
+            storeId={storeId}
+            productId={product.id}
+            canManage={canManage3d}
+            onChanged={onSaved}
           />
         </div>
         <DialogFooter>

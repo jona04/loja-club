@@ -145,17 +145,20 @@ Arquivos enviados pelo cliente não devem seguir a mesma regra dos assets públi
 
 A Kriar não deve armazenar cartão.
 
-Dados sensíveis de pagamento devem ficar no gateway.
+Dados sensíveis de pagamento devem ficar no provider.
 
 Backend deve armazenar apenas:
 
-- ID da transação no gateway;
+- ID da transação no provider;
+- provider usado;
 - status;
 - valores;
 - método;
 - recebedor;
 - metadados mínimos;
 - eventos de webhook.
+
+Credenciais de provider, como API key de subconta Asaas BaaS, access token OAuth ou refresh token do Mercado Pago, não devem ficar soltas em `metadata`. O banco deve guardar uma referência segura (`provider_credentials_ref`) ou mecanismo equivalente.
 
 ## Webhooks
 
@@ -178,7 +181,7 @@ Adicionar rate limit para:
 - checkout;
 - criação de conta;
 - APIs públicas sensíveis;
-- webhooks, quando fizer sentido sem bloquear gateway.
+- webhooks, quando fizer sentido sem bloquear provider de pagamento.
 
 ## Segredos
 
@@ -190,7 +193,9 @@ Segredos devem ficar em:
 
 Não commitar:
 
-- chaves do gateway;
+- chaves de provider de pagamento;
+- API keys de subconta;
+- access/refresh tokens OAuth;
 - secrets JWT;
 - senhas do banco;
 - tokens AWS;

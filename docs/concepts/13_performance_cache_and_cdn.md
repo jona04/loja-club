@@ -152,7 +152,7 @@ Tarefas para fila:
 - processamento de webhook;
 - atualização de relatório;
 - limpeza de carrinhos abandonados;
-- sincronização com gateway;
+- sincronização com provider de pagamento;
 - rotinas de assinatura;
 - invalidação de caches pesados.
 
@@ -183,7 +183,7 @@ A lista completa fica em [Database Strategy](./07_database_strategy.md).
 - `store_id + created_at` em pedidos;
 - `store_id + customer_id` em pedidos;
 - `host` em domínios;
-- `gateway_event_id` em webhooks.
+- `provider + gateway_event_id` em webhooks.
 
 ## Checkout
 
@@ -218,7 +218,7 @@ Estado fica em:
 - PostgreSQL;
 - Redis;
 - S3;
-- gateway;
+- provider de pagamento;
 - fila.
 
 Assim, é possível subir mais containers para atender mais tráfego.

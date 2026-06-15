@@ -7,6 +7,7 @@ import {
   Palette,
   Settings,
   ShoppingCart,
+  Sparkles,
   Truck,
   Users,
 } from "lucide-react"
@@ -33,6 +34,12 @@ export const MENU_MODULES: MenuModule[] = [
     path: "/orders",
     icon: ShoppingCart,
     permission: "orders.view",
+  },
+  {
+    title: "Personalizações",
+    path: "/customizations",
+    icon: Sparkles,
+    permission: "customization.sessions.view",
   },
   {
     title: "Clientes",

@@ -24,6 +24,18 @@ export const AddItemInputSchema = {
             minimum: 1,
             title: 'Quantity',
             default: 1
+        },
+        customization_session_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Customization Session Id'
         }
     },
     type: 'object',
@@ -141,6 +153,137 @@ export const ApplyCouponInputSchema = {
     required: ['code'],
     title: 'ApplyCouponInput',
     description: 'Apply a coupon code to the cart.'
+} as const;
+
+export const AssistedSessionCreateSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone'
+        },
+        region: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Region'
+        }
+    },
+    type: 'object',
+    required: ['product_id', 'name'],
+    title: 'AssistedSessionCreate',
+    description: "Request (panel) to assemble a session on a customer's behalf (doc 30 §9)."
+} as const;
+
+export const AssistedSessionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        public_token: {
+            type: 'string',
+            title: 'Public Token'
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at', 'public_token'],
+    title: 'AssistedSessionPublic',
+    description: 'An assisted session plus its shareable read-only public token.'
 } as const;
 
 export const BillingPlanCreateSchema = {
@@ -335,6 +478,88 @@ export const BillingPlanUpdateSchema = {
     type: 'object',
     title: 'BillingPlanUpdate',
     description: 'Patch payload for a plan definition (unset fields are ignored).'
+} as const;
+
+export const Body_customization_approve_public_sessionSchema = {
+    properties: {
+        snapshot: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Snapshot'
+        },
+        composite: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Composite'
+        },
+        email: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Email'
+        },
+        phone: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Phone'
+        },
+        region: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Region'
+        }
+    },
+    type: 'object',
+    required: ['snapshot', 'composite'],
+    title: 'Body_customization-approve_public_session'
+} as const;
+
+export const Body_customization_approve_sessionSchema = {
+    properties: {
+        snapshot: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Snapshot'
+        },
+        composite: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'Composite'
+        }
+    },
+    type: 'object',
+    required: ['snapshot', 'composite'],
+    title: 'Body_customization-approve_session'
+} as const;
+
+export const Body_customization_upload_artSchema = {
+    properties: {
+        file: {
+            type: 'string',
+            contentMediaType: 'application/octet-stream',
+            title: 'File'
+        }
+    },
+    type: 'object',
+    required: ['file'],
+    title: 'Body_customization-upload_art'
 } as const;
 
 export const Body_login_login_access_tokenSchema = {
@@ -1694,6 +1919,42 @@ export const CustomerSummarySchema = {
     description: 'A row in the panel customers list.'
 } as const;
 
+export const CustomizationProductionStatusSchema = {
+    type: 'string',
+    enum: ['received', 'reviewing', 'needs_contact', 'approved_for_production', 'in_production', 'production_done'],
+    title: 'CustomizationProductionStatus',
+    description: `Operational production status of an ordered customization (doc 22).
+
+A separate axis from the session lifecycle: it lives on the frozen
+\`\`customization_order_items\`\` row and is advanced by the merchant as they
+produce the art. It starts at \`\`received\`\` when the order is placed.
+
+- \`\`received\`\`: art received (initial, set at order time).
+- \`\`reviewing\`\`: the merchant is evaluating the art.
+- \`\`needs_contact\`\`: the merchant needs to talk to the customer.
+- \`\`approved_for_production\`\`: cleared to produce.
+- \`\`in_production\`\`: being produced.
+- \`\`production_done\`\`: production finished (terminal).`
+} as const;
+
+export const CustomizationSessionStatusSchema = {
+    type: 'string',
+    enum: ['draft', 'approved', 'added_to_cart', 'ordered', 'abandoned', 'expired'],
+    title: 'CustomizationSessionStatus',
+    description: `Lifecycle of a customer's 3D customization session (doc 30 §4).
+
+- \`\`draft\`\`: being edited; autosave writes the \`\`state_json\`\` here.
+- \`\`approved\`\`: the customer approved a snapshot; frozen for editing, ready
+  to add to the cart.
+- \`\`added_to_cart\`\`: an approved session that is in a cart.
+- \`\`ordered\`\`: copied (frozen) into a placed order (terminal).
+- \`\`abandoned\`\`: explicitly given up by the customer.
+- \`\`expired\`\`: aged past \`\`expires_at\`\` and swept by the worker (terminal).
+
+Editing (autosave/upload) is allowed only in \`\`draft\`\`; \`\`approved\`\` and
+beyond are immutable. Deleting a session is a soft delete, never a status.`
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -1848,6 +2109,48 @@ export const InventorySetSchema = {
     description: 'Set the stock quantity for a product (optionally a specific variant).'
 } as const;
 
+export const LayerTransformSchema = {
+    properties: {
+        x: {
+            type: 'number',
+            title: 'X'
+        },
+        y: {
+            type: 'number',
+            title: 'Y'
+        },
+        scale: {
+            type: 'number',
+            title: 'Scale'
+        },
+        scale_y: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Scale Y'
+        },
+        rotation_deg: {
+            type: 'number',
+            title: 'Rotation Deg',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['x', 'y', 'scale'],
+    title: 'LayerTransform',
+    description: `A layer's placement in the printable region (doc 30 §4).
+
+\`\`x\`\`/\`\`y\`\` are the center in region units; they may fall **outside** [0,1]
+when a layer is larger than the region (panned so an edge meets the region
+edge). \`\`scale\`\` is the width fraction; \`\`scale_y\`\` (optional) is a free
+height fraction for non-uniform distortion (\`\`None\`\` = natural aspect).`
+} as const;
+
 export const MediaPublicSchema = {
     properties: {
         id: {
@@ -1937,6 +2240,224 @@ export const MenuLocationSchema = {
     description: `Where a store navigation menu renders on the storefront (doc 10).
 
 Read by the storefront API (\`\`P3-SF-01\`\`) to select the header/footer menu.`
+} as const;
+
+export const MerchantSessionDetailSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        product_name: {
+            type: 'string',
+            title: 'Product Name'
+        },
+        is_assisted: {
+            type: 'boolean',
+            title: 'Is Assisted'
+        },
+        order_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Id'
+        },
+        order_item_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Item Id'
+        },
+        production_status: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CustomizationProductionStatus'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at', 'product_name', 'is_assisted', 'order_id', 'order_item_id', 'production_status'],
+    title: 'MerchantSessionDetail',
+    description: "A session's full detail for the merchant: art + downloads + order link."
+} as const;
+
+export const MerchantSessionListItemSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        product_name: {
+            type: 'string',
+            title: 'Product Name'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        is_assisted: {
+            type: 'boolean',
+            title: 'Is Assisted'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        },
+        order_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Id'
+        },
+        order_item_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Order Item Id'
+        },
+        production_status: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CustomizationProductionStatus'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'product_name', 'status', 'is_assisted', 'snapshot_url', 'created_at', 'updated_at', 'approved_at', 'order_id', 'order_item_id', 'production_status'],
+    title: 'MerchantSessionListItem',
+    description: `A store's customization session as a row in the merchant panel list.
+
+Lightweight (one presigned thumbnail); the full art + downloads are in the
+detail. \`\`production_status\`\` is present only once the session is ordered.`
 } as const;
 
 export const MessageSchema = {
@@ -2552,6 +3073,25 @@ export const Page_CustomerSummary_Schema = {
     title: 'Page[CustomerSummary]'
 } as const;
 
+export const Page_MerchantSessionListItem_Schema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/MerchantSessionListItem'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'Page[MerchantSessionListItem]'
+} as const;
+
 export const Page_OrderSummary_Schema = {
     properties: {
         data: {
@@ -2702,6 +3242,265 @@ export const Page_VariantPublic_Schema = {
     type: 'object',
     required: ['data', 'count'],
     title: 'Page[VariantPublic]'
+} as const;
+
+export const Platform3DModelAdminSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        category: {
+            type: 'string',
+            title: 'Category'
+        },
+        slug: {
+            type: 'string',
+            title: 'Slug'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        },
+        active_version: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/Platform3DModelVersionAdmin'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'category', 'slug', 'is_active', 'active_version'],
+    title: 'Platform3DModelAdmin',
+    description: 'A catalog model for the admin (includes ``is_active`` + active version).'
+} as const;
+
+export const Platform3DModelPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        category: {
+            type: 'string',
+            title: 'Category'
+        },
+        slug: {
+            type: 'string',
+            title: 'Slug'
+        },
+        active_version: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'category', 'slug', 'active_version'],
+    title: 'Platform3DModelPublic',
+    description: 'A catalog model plus its active version (or ``None`` if none active).'
+} as const;
+
+export const Platform3DModelUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        category: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Category'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    title: 'Platform3DModelUpdate',
+    description: "Partial update of a catalog model's metadata/visibility."
+} as const;
+
+export const Platform3DModelVersionAdminSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        version: {
+            type: 'integer',
+            title: 'Version'
+        },
+        glb_url: {
+            type: 'string',
+            title: 'Glb Url'
+        },
+        printable_areas: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Printable Areas'
+        },
+        text_config: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Text Config'
+        },
+        art_limits: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Art Limits'
+        },
+        is_active: {
+            type: 'boolean',
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    required: ['id', 'version', 'glb_url', 'printable_areas', 'text_config', 'art_limits', 'is_active'],
+    title: 'Platform3DModelVersionAdmin',
+    description: 'A model version as seen by the admin (includes ``is_active``).'
+} as const;
+
+export const Platform3DModelVersionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        version: {
+            type: 'integer',
+            title: 'Version'
+        },
+        glb_url: {
+            type: 'string',
+            title: 'Glb Url'
+        },
+        printable_areas: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Printable Areas'
+        },
+        text_config: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Text Config'
+        },
+        art_limits: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'Art Limits'
+        }
+    },
+    type: 'object',
+    required: ['id', 'version', 'glb_url', 'printable_areas', 'text_config', 'art_limits'],
+    title: 'Platform3DModelVersionPublic',
+    description: 'The active version of a catalog model, as exposed to the merchant.'
+} as const;
+
+export const Platform3DModelVersionUpdateSchema = {
+    properties: {
+        printable_areas: {
+            anyOf: [
+                {
+                    items: {
+                        additionalProperties: true,
+                        type: 'object'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Printable Areas'
+        },
+        text_config: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Text Config'
+        },
+        art_limits: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Art Limits'
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        }
+    },
+    type: 'object',
+    title: 'Platform3DModelVersionUpdate',
+    description: "Partial update of a version's editor parameters/visibility."
 } as const;
 
 export const PlatformMeSchema = {
@@ -2922,6 +3721,79 @@ export const ProductCreateSchema = {
     description: 'Fields accepted when creating a product (status starts as ``draft``).'
 } as const;
 
+export const ProductModelLinkSchema = {
+    properties: {
+        platform_3d_model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Platform 3D Model Id'
+        },
+        type: {
+            '$ref': '#/components/schemas/ProductType'
+        },
+        production_notes: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Production Notes'
+        }
+    },
+    type: 'object',
+    required: ['platform_3d_model_id', 'type'],
+    title: 'ProductModelLink',
+    description: 'Request to link a product to a catalog 3D model (merchant choice).'
+} as const;
+
+export const ProductModelSettingsPublicSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        type: {
+            '$ref': '#/components/schemas/ProductType'
+        },
+        platform_3d_model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Platform 3D Model Id'
+        },
+        model_name: {
+            type: 'string',
+            title: 'Model Name'
+        },
+        model_slug: {
+            type: 'string',
+            title: 'Model Slug'
+        },
+        model_category: {
+            type: 'string',
+            title: 'Model Category'
+        },
+        production_notes: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Production Notes'
+        }
+    },
+    type: 'object',
+    required: ['product_id', 'type', 'platform_3d_model_id', 'model_name', 'model_slug', 'model_category', 'production_notes'],
+    title: 'ProductModelSettingsPublic',
+    description: "A product's current 3D-model link, for the merchant panel."
+} as const;
+
 export const ProductPublicSchema = {
     properties: {
         name: {
@@ -3101,6 +3973,108 @@ export const ProductVariantStatusSchema = {
     enum: ['active', 'archived'],
     title: 'ProductVariantStatus',
     description: 'Lifecycle status of a product variant.'
+} as const;
+
+export const ProductionStatusUpdateSchema = {
+    properties: {
+        production_status: {
+            '$ref': '#/components/schemas/CustomizationProductionStatus'
+        }
+    },
+    type: 'object',
+    required: ['production_status'],
+    title: 'ProductionStatusUpdate',
+    description: 'Request to advance the production status of an ordered customization.'
+} as const;
+
+export const SessionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/CustomizationSessionStatus'
+        },
+        state_json: {
+            additionalProperties: true,
+            type: 'object',
+            title: 'State Json'
+        },
+        version: {
+            '$ref': '#/components/schemas/Platform3DModelVersionPublic'
+        },
+        uploads: {
+            items: {
+                '$ref': '#/components/schemas/UploadPublic'
+            },
+            type: 'array',
+            title: 'Uploads'
+        },
+        snapshot_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snapshot Url'
+        },
+        composite_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Composite Url'
+        },
+        expires_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Expires At'
+        },
+        approved_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Approved At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'product_id', 'status', 'state_json', 'version', 'uploads', 'snapshot_url', 'composite_url', 'expires_at', 'approved_at'],
+    title: 'SessionPublic',
+    description: 'A customization session as the editor (or a read-only viewer) sees it.'
+} as const;
+
+export const SessionStartSchema = {
+    properties: {
+        product_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Product Id'
+        }
+    },
+    type: 'object',
+    required: ['product_id'],
+    title: 'SessionStart',
+    description: 'Request to start (or resume) a customization session for a product.'
 } as const;
 
 export const ShippingMethodCreateSchema = {
@@ -3310,6 +4284,140 @@ export const ShippingMethodUpdateSchema = {
     type: 'object',
     title: 'ShippingMethodUpdate',
     description: 'Partial update for a shipping method (``type`` is immutable).'
+} as const;
+
+export const StateJsonSchema = {
+    properties: {
+        schema_version: {
+            type: 'integer',
+            title: 'Schema Version',
+            default: 1
+        },
+        model: {
+            '$ref': '#/components/schemas/StateModelRef'
+        },
+        layers: {
+            items: {
+                '$ref': '#/components/schemas/StateLayer'
+            },
+            type: 'array',
+            title: 'Layers',
+            default: []
+        }
+    },
+    type: 'object',
+    required: ['model'],
+    title: 'StateJson',
+    description: `The full editor state (doc 30 §4): pinned model + ordered layers.
+
+Structural shape only; the version-specific rules (allowed fonts, area ids,
+per-area layer caps, referenced uploads) are enforced in the service against
+the pinned version — never trusting the client.`
+} as const;
+
+export const StateLayerSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            title: 'Id'
+        },
+        kind: {
+            type: 'string',
+            enum: ['image', 'text'],
+            title: 'Kind'
+        },
+        area_id: {
+            type: 'string',
+            title: 'Area Id'
+        },
+        z: {
+            type: 'integer',
+            title: 'Z',
+            default: 0
+        },
+        transform: {
+            '$ref': '#/components/schemas/LayerTransform'
+        },
+        upload_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Upload Id'
+        },
+        text: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Text'
+        },
+        font: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font'
+        },
+        font_size: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Font Size'
+        },
+        color: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Color'
+        }
+    },
+    type: 'object',
+    required: ['id', 'kind', 'area_id', 'transform'],
+    title: 'StateLayer',
+    description: 'One layer of the editor state: a raster image or a text run.'
+} as const;
+
+export const StateModelRefSchema = {
+    properties: {
+        model_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Model Id'
+        },
+        version_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Version Id'
+        }
+    },
+    type: 'object',
+    required: ['model_id', 'version_id'],
+    title: 'StateModelRef',
+    description: 'The catalog model + pinned version the state was built against.'
 } as const;
 
 export const StoreAdminDetailSchema = {
@@ -4013,12 +5121,40 @@ export const StorefrontProductSchema = {
             type: 'array',
             title: 'Images',
             default: []
+        },
+        variants: {
+            items: {
+                '$ref': '#/components/schemas/StorefrontVariant'
+            },
+            type: 'array',
+            title: 'Variants',
+            default: []
+        },
+        in_stock: {
+            type: 'boolean',
+            title: 'In Stock',
+            default: true
+        },
+        available_quantity: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Available Quantity'
         }
     },
     type: 'object',
     required: ['name', 'slug', 'price_amount_minor', 'price_currency', 'id', 'store_id'],
     title: 'StorefrontProduct',
-    description: 'A published product with its images, for storefront cards and detail.'
+    description: `A published product with its images, for storefront cards and detail.
+
+On the product **detail** it also carries the active \`\`variants\`\` and stock
+(\`\`in_stock\`\` / \`\`available_quantity\`\`, product-level for variant-less
+products); cards/home leave \`\`variants\`\` empty.`
 } as const;
 
 export const StorefrontStoreSchema = {
@@ -4211,6 +5347,65 @@ export const StorefrontThemeSchema = {
 Read-only: a store with no settings yet falls back to the default template
 without creating a row. \`\`settings\`\` are the active template's schema-driven
 chrome values (defaults merged with the store's overrides).`
+} as const;
+
+export const StorefrontVariantSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        attributes: {
+            anyOf: [
+                {
+                    additionalProperties: {
+                        type: 'string'
+                    },
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Attributes'
+        },
+        price_amount_minor: {
+            type: 'integer',
+            title: 'Price Amount Minor'
+        },
+        price_currency: {
+            type: 'string',
+            title: 'Price Currency'
+        },
+        in_stock: {
+            type: 'boolean',
+            title: 'In Stock'
+        },
+        available_quantity: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Available Quantity'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name', 'price_amount_minor', 'price_currency', 'in_stock'],
+    title: 'StorefrontVariant',
+    description: `A purchasable variant on the product page (name + effective price + stock).
+
+\`\`price_*\`\` is the **effective** price (the variant override, else the
+product's). \`\`available_quantity\`\` is \`\`None\`\` when stock isn't tracked
+(unlimited); \`\`in_stock\`\` already folds that in.`
 } as const;
 
 export const TemplateSettingsPublicSchema = {
@@ -4575,6 +5770,59 @@ export const UpdatePasswordSchema = {
     required: ['current_password', 'new_password'],
     title: 'UpdatePassword',
     description: 'Self password-change payload.'
+} as const;
+
+export const UploadPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        mime: {
+            type: 'string',
+            title: 'Mime'
+        },
+        size_bytes: {
+            type: 'integer',
+            title: 'Size Bytes'
+        },
+        width: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Width'
+        },
+        height: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Height'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        low_resolution: {
+            type: 'boolean',
+            title: 'Low Resolution',
+            default: false
+        }
+    },
+    type: 'object',
+    required: ['id', 'mime', 'size_bytes', 'width', 'height', 'url'],
+    title: 'UploadPublic',
+    description: 'A customer upload, with a short-lived presigned read URL.'
 } as const;
 
 export const UserCreateSchema = {
